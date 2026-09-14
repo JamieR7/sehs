@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEHS Resources</title>
+    <style>
+        /* CDL Primary & Secondary Brand Colors */
+        :root {
+            --cdl-blue: #004587;
+            --cdl-bright-blue: #1EB9DC;
+            --cdl-bright-red: #EF8162;
+        }
+
+        body {
+            /* Gotham is the primary font, falling back to standard sans-serif */
+            font-family: 'Gotham', 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa; /* Subtle off-white for a modern canvas */
+            color: var(--cdl-blue);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .header-container {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 70px 20px 50px;
+            text-align: center;
+            box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05); /* Sleek depth */
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 300; /* Gotham Light equivalent */
+            font-size: 42px;
+            color: var(--cdl-blue);
+            letter-spacing: -0.5px;
+        }
+
+        /* Using CDL Bright Blue for a modern text highlight */
+        .highlight {
+            color: var(--cdl-bright-blue);
+            font-weight: bold;
+        }
+
+        /* Emulating the MQ Carmen font rule for a short benefit phrase */
+        .benefit-text {
+            font-family: 'Georgia', serif; /* Fallback for MQ Carmen */
+            font-style: italic;
+            color: var(--cdl-bright-red);
+            font-size: 22px;
+            margin-top: 15px;
+        }
+
+        .container {
+            padding: 60px 20px;
+            max-width: 1000px; /* Expanded to allow single-line text */
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.7;
+            font-size: 18px;
+            margin-bottom: 50px;
+            color: #4a4a4a;
+            max-width: 100%; /* Removed the 600px restriction */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .welcome-text {
+            font-size: 22px;
+            color: var(--cdl-blue);
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        /* Modern Pill Buttons */
+        .btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--cdl-blue);
+            color: #ffffff;
+            padding: 20px 35px;
+            text-decoration: none;
+            font-weight: bold; /* Gotham Bold equivalent */
+            font-size: 16px;
+            border-radius: 50px; /* Creates the pill shape */
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 69, 135, 0.15);
+        }
+
+        /* Sleek hover state using the secondary palette */
+        .btn:hover {
+            background-color: var(--cdl-bright-blue);
+            transform: translateY(-4px); /* Lift effect */
+            box-shadow: 0 15px 25px rgba(30, 185, 220, 0.25);
+        }
+
+        .btn-icon {
+            font-size: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .btn-icon {
+            transform: translateX(6px); /* Arrow slides right on hover */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header-container">
+        <h1>Physical Education & <span class="highlight">Sports Science</span></h1>
+        <div class="benefit-text">Theory applied, skills acquired</div>
+    </div>
+
+    <div class="container">
+        <p>
+            <strong class="welcome-text">Welcome! 👋</strong>
+            Please select your course below to access syllabus materials, interactive apps, and exam training. 🧠🏆<br><br>
+            Remember Gary Player's wise words: <em>"The more I practice, the luckier I get!"</em> ⛳
+        </p>
+        
+        <div class="button-container">
+            <a href="/2wins/" class="btn">
+                Sports Exercise and Health Science IB
+                <span class="btn-icon">→</span>
+            </a>
+            <a href="/igcse/" class="btn">
+                Physical Education IGCSE
+                <span class="btn-icon">→</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
