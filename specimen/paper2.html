@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper 2 – Extended Response | IB SEHS Specimen</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #450a0a;
+            --primary-light: #7f1d1d;
+            --accent: #ef4444;
+            --accent-soft: rgba(239, 68, 68, 0.1);
+            --bg: #fef2f2;
+            --card-bg: #ffffff;
+            --text-main: #450a0a;
+            --text-dark: #000000;
+            --border: #fee2e2;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--primary);
+            background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 32px 32px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 80px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            transition: color 0.2s;
+        }
+
+        .header .back:hover {
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        /* Question Styles */
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .subtopic-badge {
+            background: var(--accent-soft);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .q-counter {
+            font-size: 12px;
+            font-weight: 600;
+            color: #991b1b;
+            opacity: 0.6;
+        }
+
+        .question-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        .context-block {
+            background: #fff5f5;
+            border-left: 4px solid var(--accent);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            line-height: 1.6;
+            color: #7f1d1d;
+            font-size: 16px;
+        }
+
+        /* Image Styling */
+        .fig-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .fig-box img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .fig-caption {
+            font-size: 13px;
+            font-weight: 700;
+            color: #7f1d1d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fig-placeholder {
+            background: #fff5f5;
+            border: 2px dashed #fca5a5;
+            color: #b91c1c;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 600;
+            margin: 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .fig-placeholder i {
+            font-size: 24px;
+            opacity: 0.8;
+        }
+
+        /* Part Styles */
+        .part-container {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            gap: 16px;
+        }
+
+        .part-label-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .part-label {
+            font-weight: 800;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .part-question {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            color: var(--text-dark);
+            width: 100%;
+        }
+
+        .marks-preview {
+            background: #fff1f2;
+            color: #be123c;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            background: #fffafa;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: inherit;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            background: white;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        /* Feedback Styles */
+        .result {
+            margin-top: 20px;
+            padding: 24px;
+            border-radius: 16px;
+            background: #fdfdfd;
+            border: 1px solid var(--border);
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .score-display {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .comment-section,
+        .hint-section {
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .comment-section h3 {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .comment-section p {
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .feedback-block {
+            margin-top: 20px;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .ans-header {
+            font-size: 12px;
+            font-weight: 800;
+            color: #991b1b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            opacity: 0.6;
+        }
+
+        .actual-ans {
+            background: #fee2e2;
+            border-left: 4px solid var(--accent);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #991b1b;
+            margin-bottom: 16px;
+        }
+
+        .explanation-block {
+            background: #fff1f2;
+            border: 1px solid #ffe4e6;
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: #be123c;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .explanation-body {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #450a0a;
+        }
+
+        /* Nav */
+        .question-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .random-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 14px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .reveal-btn {
+            padding: 14px 20px;
+            background: white;
+            color: #7f1d1d;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        /* Progress */
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+        }
+
+        .progress-wrapper {
+            flex: 1;
+            height: 10px;
+            background: #fff1f1;
+            border-radius: 10px;
+            margin-right: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .progress-text {
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--primary);
+            min-width: 130px;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            display: none;
+            margin-top: 15px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(239, 68, 68, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back"><i class="ph-bold ph-arrow-left"></i> BACK TO DASHBOARD</a>
+            <h1>📝 Paper 2 – Extended Response</h1>
+        </div>
+
+        <div id="examContainer"></div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-wrapper">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0% Complete</div>
+    </div>
+
+    <script>
+        const p2Questions = [
+            {
+                id: "P2_Q1",
+                type: "structured",
+                section: "B",
+                subtopic: "Rowing Analysis",
+                level: "HL",
+                title: "Question 1 — Rowing",
+                context: "Consider the following information about rowing. The rower sits on a moveable seat and holds the oar with two hands. The oar extends out to the side and passes through a metal hoop called an oarlock. The rower moves backwards and forwards, completing a 4-phase action which moves the blade through the water and then back to the catch position.<div class=\"fig-box\"><img src=\"images/HL2Q1fig1.png\" alt=\"Figure 1\"><div class=\"fig-caption\">Figure 1 - Fact file about rowing</div></div><div class=\"fig-box\"><img src=\"images/HL2Q1fig2.png\" alt=\"Figure 2\"><div class=\"fig-caption\">Figure 2 - The catch, drive and finish phases</div></div>",
+                parts: [
+                    {
+                        label: "(a)(i)",
+                        question: "Identify the type of lever.",
+                        marks: 1,
+                        answer: "✓ first class &lt;lever&gt;;<br><i>Accept \"second class lever\" as the end of the blade can act as fulcrum.</i>",
+                        studentExplanation: {
+                            title: "Lever Systems",
+                            icon: "📚",
+                            content: "In a <b>first-class lever</b>, the fulcrum sits <i>between</i> the effort and the load — like a seesaw. In the rowing oar, the <b>oarlock (fulcrum)</b> sits between the rower's hands (effort) and the blade (load). A <b>second-class lever</b> is also accepted because if you treat the <i>end of the blade</i> where it meets the water as the fixed point (fulcrum), the load (boat/oarlock resistance) sits between it and the effort (hands) — making it second class. Both interpretations are biomechanically valid depending on where you define the fulcrum.<br><br>📖 <b>Course Companion, pp. 300–303 (Chapter B.1.4)</b>"
+                        }
+                    },
+                    {
+                        label: "(a)(ii)",
+                        question: "Identify the fulcrum and the load on the oar.",
+                        marks: 2,
+                        answer: "Fulcrum: ✓ oarlock/gate;<br>Load: ✓ blade/cleaver;<br><i>Accept \"end of the blade\" for the fulcrum if \"second class lever\" given in (i).</i>",
+                        studentExplanation: {
+                            title: "Lever Components",
+                            icon: "📚",
+                            content: "The <b>three components of any lever</b> are the fulcrum (pivot point), the effort (applied force), and the load (resistance to be overcome). In the rowing oar:<br><br><b>Effort</b> = the rower's hands pulling the handle<br><b>Fulcrum</b> = the oarlock (the metal hoop through which the oar pivots)<br><b>Load</b> = the blade pushing against the water<br><br>This is consistent regardless of whether you classify it as first or second class. Note: the <i>load</i> is the resistance the blade faces from the water, not the boat itself.<br><br>📖 <b>Course Companion, pp. 300–303 (Chapter B.1.4)</b>"
+                        }
+                    },
+                    {
+                        label: "(a)(iii)",
+                        question: "Describe how the oar creates a mechanical advantage to accelerate the boat effectively.",
+                        marks: 2,
+                        answer: "✓ smaller distance between handle and fulcrum/oarlock OR longer distance between fulcrum/oarlock and blade;<br>✓ force applied &lt;to the water&gt; over longer distance/from the catch to the finish &lt;compared to distance moved by handle&gt;;",
+                        studentExplanation: {
+                            title: "Mechanical Advantage",
+                            icon: "📚",
+                            content: "<b>Mechanical advantage (MA) = effort arm ÷ load arm.</b> Because the blade end of the oar is <i>much longer</i> from the oarlock than the handle end, the blade travels through a large arc in the water even when the hands move only a small distance. This means the blade applies force over a greater distance, driving more water backward and propelling the boat forward with greater effectiveness. Although the MA here is actually less than 1 (meaning more effort is needed), the <i>speed and range of motion</i> at the blade end are amplified — this is the key biomechanical trade-off in rowing.<br><br>📖 <b>Course Companion, pp. 300–305 (Chapter B.1.4)</b>"
+                        }
+                    },
+                    {
+                        label: "(b)",
+                        question: "<div class=\"fig-box\"><img src=\"images/HL2Q1fig3.png\" alt=\"Figure 3\"><div class=\"fig-caption\">Figure 3 - The velocity of the boat at different stages of the stroke</div></div>Explain why the velocity decreases then increases after the blade enters water.",
+                        marks: 3,
+                        answer: "<b>Decrease:</b> ✓ &lt;blade entering water&gt; creates drag &lt;which decelerates the boat&gt;;<br>✓ resulting forces acting against direction of travel;<br><b>Increase:</b> ✓ effort force overcomes drag/forces against direction of travel &lt;to cause the velocity to rise&gt;;",
+                        studentExplanation: {
+                            title: "Fluid Mechanics & Forces",
+                            icon: "📚",
+                            content: "<b>Drag</b> is a resistive force that opposes motion through a fluid (water or air). When the blade enters the water at the catch, the sudden increase in drag briefly slows the boat — the drag force exceeds the propulsive force. As the drive phase progresses and the rower applies maximum force, the <i>effort force overcomes drag</i>, and net force acts in the direction of travel, accelerating the boat again. This explains the characteristic velocity dip seen in the graph at the catch position.<br><br>📖 <b>Course Companion, pp. 308–315 (Chapter B.2.1 — Newton's Laws & Forces)</b>"
+                        }
+                    },
+                    {
+                        label: "(c)",
+                        question: "<div class=\"fig-box\"><img src=\"images/HL2Q1fig4.png\" alt=\"Figure 4\"><div class=\"fig-caption\">Figure 4 - An indoor rowing training water tank</div></div>Evaluate the use of indoor water tanks for testing new blade designs.",
+                        marks: 2,
+                        answer: "<b>Strengths [1 max]:</b> ✓ control variables; ✓ manipulate variables; ✓ opportunity to collect more data;<br><b>Limitations [1 max]:</b> ✓ difficult to replicate natural conditions; ✓ outside conditions vary over the course; ✓ &lt;building/maintenance&gt; cost;",
+                        studentExplanation: {
+                            title: "Evaluating Experimental Design",
+                            icon: "📚",
+                            content: "This is a <b>Nature of Science (NOS)</b> question about experimental design. Indoor tanks allow scientists to isolate specific variables (e.g., water speed, blade angle) without interference from wind, currents, or waves — this improves <i>internal validity</i>. However, <i>ecological validity</i> is reduced: real-world rowing involves variable conditions (headwinds, waves, course bends) that a tank cannot replicate. Always present at least one strength and one limitation in an \"evaluate\" question, and try to link each point to the context (blade design).<br><br>📖 <b>Course Companion — NOS section; SEHS Guide pp. 22–23 (Tool 1: Experimental Techniques)</b>"
+                        }
+                    },
+                    {
+                        label: "(d)(i)",
+                        question: "Explain the body's acute responses to the stresses caused by a hot and humid environment.",
+                        marks: 4,
+                        answer: "✓ earlier sweat response/greater volume of sweat AND to maintain core body temperature at 37&lt;±1&gt;°C;<br>✓ sweat does not evaporate from body/cooling effect of evaporating sweat is lost AND body temperature increases faster;<br>✓ vasodilation of skin blood vessels occurs earlier AND to cool blood;<br>✓ working heart rates &lt;potentially&gt; higher AND to move blood to the skin earlier for cooling;",
+                        studentExplanation: {
+                            title: "Thermoregulation",
+                            icon: "📚",
+                            content: "The body uses <b>thermoregulation</b> to keep core temperature at ~37°C. In hot conditions, the hypothalamus triggers sweating and vasodilation. In <b>high humidity</b>, sweat cannot evaporate efficiently (the air is already saturated with moisture) — so the main cooling mechanism fails. As a result, the body temperature rises faster, heart rate climbs (cardiovascular drift), and vasodilation redirects blood to the skin, reducing delivery to working muscles. Note that in an \"explain\" question, you must always state the <i>mechanism AND the consequence</i> (linked with AND).<br><br>📖 <b>Course Companion — Chapter on Environment & Exercise (Thermoregulation section)</b>"
+                        }
+                    },
+                    {
+                        label: "(d)(ii)",
+                        question: "Outline how athletes' physical responses may influence their use of self-talk.",
+                        marks: 1,
+                        answer: "✓ increased self-talk &lt;strategies&gt; to manage awareness of increased stress on body/doubt on coping;<br>✓ increased negative self-talk in response to awareness of increased stress on body/doubt on coping;",
+                        studentExplanation: {
+                            title: "Self-Talk & Stress",
+                            icon: "📚",
+                            content: "<b>Self-talk</b> is the internal monologue athletes use during training and competition. When the body is under physiological stress (elevated heart rate, fatigue, heat), athletes become more aware of their discomfort, which can trigger <i>negative self-talk</i> (\"I can't keep going\") or provoke the deliberate use of <i>positive/instructional self-talk</i> to manage the discomfort. Either direction is valid — the key is linking the physical response to a change in self-talk behaviour.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Self-talk section)</b>"
+                        }
+                    },
+                    {
+                        label: "(e)",
+                        question: "A rower is in a boat with seven other rowers and a cox.<div class=\"fig-box\"><img src=\"images/HL2Q1fig5.png\" alt=\"Figure 5\"><div class=\"fig-caption\">Figure 5 - Rowing boat</div></div>The cox at the stern steers the boat and instructs the rowers using a microphone. Using examples, describe two types of distractors which the rower needs to manage.",
+                        marks: 2,
+                        answer: "<b>External:</b> ✓ auditory: opposition/cox voices/crowd OR visual: crowd/light/sun/other crews;<br><b>Internal:</b> ✓ self-doubt/personal issues/thought distractions/concerns about preparation;",
+                        studentExplanation: {
+                            title: "Attentional Focus",
+                            icon: "📚",
+                            content: "<b>Attentional focus</b> is the ability to direct mental concentration to relevant cues. Distractors disrupt this. They fall into two categories:<br><br><b>External distractors</b> come from the environment — sounds (crowd noise, a cox's instructions from another boat) or sights (sun glare off the water, opposing boat's movement)<br><b>Internal distractors</b> come from within the athlete — self-doubt, worrying about a past mistake, or anxiety about fitness preparation.<br><br>In a race, rowers must use focus strategies (e.g., attentional cues, process goals) to filter these out.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Attentional Focus section)</b>"
+                        }
+                    },
+                    {
+                        label: "(f)(i)",
+                        question: "Outline the change in ATP source during the rowing race.",
+                        marks: 3,
+                        answer: "✓ ATP produced throughout by aerobic respiration/oxidative system;<br>✓ limited supply of ATP/ATP-CP &lt;in muscle&gt; used at start &lt;of race&gt;;<br>✓ ATP produced by anaerobic respiration/phosphagen and anaerobic glycolysis;",
+                        studentExplanation: {
+                            title: "Energy Systems Continuum",
+                            icon: "📚",
+                            content: "The three energy systems operate along a <b>continuum</b>, not in isolation:<br><br><b>Phosphocreatine (ATP-CP/phosphagen) system</b> — provides immediate ATP for the explosive start (~0–10 seconds); very limited stores<br><b>Anaerobic glycolysis</b> — kicks in within seconds; produces ATP quickly without oxygen but generates lactate; dominant in early race stages<br><b>Aerobic oxidative system</b> — dominates throughout the 6-minute 50-second race, breaking down carbohydrates and fats with oxygen.<br><br>A 2000m rowing race is predominantly aerobic (~70–75%), but maximal efforts at the catch/drive phase repeatedly tap anaerobic sources.<br><br>📖 <b>Course Companion — Chapter on Energy Systems (ATP continuum)</b>"
+                        }
+                    },
+                    {
+                        label: "(f)(ii)",
+                        question: "Explain how endurance training influences VO₂max.",
+                        marks: 3,
+                        answer: "✓ stimulates physiological adaptations;<br>✓ increases heart stroke volume/cardiac output OR increases capillarisation of the muscles;<br>✓ improves oxygen transport rate &lt;around the body&gt;;",
+                        studentExplanation: {
+                            title: "VO₂max Adaptations",
+                            icon: "📚",
+                            content: "<b>VO₂max</b> is the maximum rate at which the body can consume oxygen and is the gold standard of aerobic fitness. Endurance training causes several adaptations that collectively raise VO₂max:<br><br><b>Cardiac adaptations:</b> increased stroke volume (more blood per beat) → higher cardiac output (Q = SV × HR)<br><b>Peripheral adaptations:</b> increased capillary density in muscles → better O₂ delivery and extraction<br><b>Haematological adaptations:</b> increased blood volume and haemoglobin → enhanced O₂ transport<br><br>Each adaptation improves the <b>Fick equation</b>: VO₂max = cardiac output × arteriovenous oxygen difference.<br><br>📖 <b>Course Companion — Chapter on Training & Physiology (VO₂max and Cardiac Adaptations)</b>"
+                        }
+                    },
+                    {
+                        label: "(f)(iii)",
+                        question: "Figure 6 shows the variation of lactate levels with power.<div class=\"fig-box\"><img src=\"images/HL2Q1fig6.png\" alt=\"Figure 6\"><div class=\"fig-caption\">Figure 6 - Variation of lactate levels with power</div></div>Explain why maintaining lactate at point X gives the fastest time.",
+                        marks: 1,
+                        answer: "✓ highest power output which can be maintained &lt;during the race&gt; OR above point X power output is higher but can only be maintained for a limited time;<br>✓ after point X, significant build-up of lactic acid/hydrogen ions;<br>✓ lactic acid/hydrogen ions inhibits muscle functions;",
+                        studentExplanation: {
+                            title: "Lactate Threshold",
+                            icon: "📚",
+                            content: "Point X on the graph represents the <b>lactate threshold (LT)</b> or <b>onset of blood lactate accumulation (OBLA)</b> — the highest exercise intensity at which lactate production equals lactate clearance. Maintaining this intensity for 1500m means the rower is at their highest <i>sustainable</i> power output. If they go above point X, lactate accumulates exponentially. It is actually the associated <b>hydrogen ions (H⁺)</b> that drop muscle pH and inhibit enzyme activity, cross-bridge cycling, and calcium release from the sarcoplasmic reticulum — leading to fatigue and force loss. Note: accept \"lactate\" for \"lactic acid\" as per the markscheme.<br><br>📖 <b>Course Companion — Chapter on Energy Systems (Lactate Threshold)</b>"
+                        }
+                    },
+                    {
+                        label: "(g)",
+                        question: "Suggest one fitness test for rowing potential.",
+                        marks: 2,
+                        answer: "✓ Harvard step/beep test AND measures aerobic fitness;<br>✓ standing broad jump/vertical jump AND measures leg power;<br>✓ sit and reach test AND measures flexibility;<br>✓ sit-up/push-up AND measures muscular endurance;",
+                        studentExplanation: {
+                            title: "Fitness Testing",
+                            icon: "📚",
+                            content: "This is a \"suggest with a reason\" question — you must name the test AND justify its relevance to rowing. Rowing demands high aerobic capacity, leg power, and muscular endurance, so any test measuring these components is valid. The key structure is: <b>test name → what it measures → why that's relevant to rowing</b>. e.g., \"Beep test, because it measures aerobic fitness (VO₂max), which is the dominant energy system in a 2000m race.\"<br><br>📖 <b>Course Companion — Chapter on Testing & Measurement</b>"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "P2_Q2",
+                type: "structured",
+                section: "B",
+                subtopic: "Psychology & Training",
+                level: "HL",
+                title: "Question 2 — Rowing Ergometer",
+                context: "An athlete is training on a rowing ergometer. A rowing ergometer provides real-time feedback of a range of different data such as stroke count, drive length, and force.<div class=\"fig-box\"><img src=\"images/HL2Q1fig7.png\" alt=\"Figure 7\"><div class=\"fig-caption\">Figure 7 - An athlete training on a rowing ergometer</div></div><div class=\"fig-box\"><img src=\"images/HL2Q1fig8.png\" alt=\"Figure 8\"><div class=\"fig-caption\">Figure 8 - Sample real-time feedback data from a rowing ergometer</div></div>",
+                parts: [
+                    {
+                        label: "(a)",
+                        question: "Explain why ergometer data can influence intrinsic motivation.",
+                        marks: 3,
+                        answer: "✓ allows to identify aspects of individual performance criteria OR comparison to standard/expected performance;<br>✓ opportunity to set/achieve goals OR adjust to maintain/improve performance;<br>✓ greater degree of self-determination OR allows autonomy/self-regulation;",
+                        studentExplanation: {
+                            title: "Intrinsic Motivation & SDT",
+                            icon: "📚",
+                            content: "<b>Intrinsic motivation</b> is driven by internal satisfaction, mastery, and enjoyment — not external rewards. According to <b>Self-Determination Theory (SDT)</b>, three psychological needs underpin intrinsic motivation: <i>autonomy</i>, <i>competence</i>, and <i>relatedness</i>. Real-time ergometer data satisfies:<br><br><b>Competence:</b> the athlete can see measurable improvements (e.g., lower split time)<br><b>Autonomy:</b> the athlete can self-regulate pace and adjust goals independently<br><b>Goal achievement:</b> hitting a personal best creates intrinsic satisfaction<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Self-Determination Theory & Motivation)</b>"
+                        }
+                    },
+                    {
+                        label: "(b)",
+                        question: "Outline the importance of an appropriate warm-up to reduce injury risk.",
+                        marks: 2,
+                        answer: "✓ increase body temperature/blood flow to working muscles leading to increased elasticity;<br>✓ increase range of motion &lt;mobility&gt;;<br>✓ more psychologically prepared for activity;",
+                        studentExplanation: {
+                            title: "Warm-up Principles",
+                            icon: "📚",
+                            content: "A warm-up raises <b>muscle and core temperature</b>, which:<br><br>Increases the elasticity of muscle and connective tissue (reducing the risk of tears)<br>Enhances <b>synovial fluid</b> production at joints, improving range of motion<br>Increases nerve conduction velocity, improving reaction times<br>Activates the <b>neuromuscular system</b>, improving motor unit recruitment patterns<br>Psychologically, it allows the athlete to focus and rehearse movement patterns.<br><br>Note that an \"outline\" question requires key points without full explanation.<br><br>📖 <b>Course Companion — Chapter on Training Principles (Warm-Up & Cool-Down)</b>"
+                        }
+                    },
+                    {
+                        label: "(c)",
+                        question: "Explain how resistance machine design minimizes injury risk.",
+                        marks: 3,
+                        answer: "✓ movements controlled through one plane of motion;<br>✓ adjustable seat height to enable machine to be adjusted to fit individual;<br>✓ ensures movement is from strongest position for joint and muscles being exercised;<br>✓ force limbs to work in unison AND so support the movement;<br>✓ resistance adapts to athlete's strength through hydraulic mechanisms;",
+                        studentExplanation: {
+                            title: "Equipment Design & Safety",
+                            icon: "📚",
+                            content: "Resistance machines minimize injury by <b>constraining movement</b> to safe, biomechanically optimal paths. Unlike free weights, machines guide the joint through a single plane, reducing shear forces and the risk of poor technique causing injury. <b>Adjustability</b> ensures the machine matches the individual's limb length and strength curve. Hydraulic or cam-based systems can match resistance to the body's natural strength curve (e.g., strongest at mid-range), reducing injury risk at weak joint positions.<br><br>📖 <b>Course Companion — Chapter on Training Methods & Equipment</b>"
+                        }
+                    },
+                    {
+                        label: "(d)",
+                        question: "Discuss the use of ergometer data for rower selection.",
+                        marks: 3,
+                        answer: "✓ data on performance not available by &lt;simple&gt; observation;<br>✓ standardized comparison;<br>✓ identify/select rower&lt;s&gt; with fastest rowing time;<br>✓ improvement in performance &lt;over time&gt; OR monitor athletes' response to training;<br><i>Accept specific examples such as peak force or drive length.</i>",
+                        studentExplanation: {
+                            title: "Testing for Selection",
+                            icon: "📚",
+                            content: "A \"discuss\" question requires both benefits and limitations. The <b>advantages</b> of ergometer data include objectivity (e.g., stroke rate, drive length, power in Watts), standardization (all rowers tested under the same conditions), and longitudinal tracking. <b>Limitations</b> include: ergometer performance doesn't perfectly replicate on-water rowing (no boat dynamics, no balance demands); individual data may not reflect team boat performance; psychological factors (competitiveness, anxiety) differ on an ergometer vs. competition. Always give a balanced answer in a \"discuss\" question.<br><br>📖 <b>Course Companion — Chapter on Testing & Assessment in Sport</b>"
+                        }
+                    },
+                    {
+                        label: "(e)",
+                        question: "State three benefits of mental toughness during preparation for elite competition.",
+                        marks: 3,
+                        answer: "✓ increase consistent approach to training;<br>✓ increase level of confidence;<br>✓ resilience to overcome adversity/challenges;<br>✓ managing high pressure situation;",
+                        studentExplanation: {
+                            title: "Mental Toughness",
+                            icon: "📚",
+                            content: "<b>Mental toughness</b> is defined as a multi-dimensional psychological construct that enables athletes to cope with and thrive under the pressure and challenges of elite sport. Key components include: <b>resilience</b> (bouncing back from setbacks), <b>confidence</b> (belief in ability), <b>constancy</b> (consistent effort), and <b>control</b> (managing emotions and focus). During <b>preparation</b>, these qualities translate to higher quality, more consistent training blocks — crucial for peaking at the right time.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Mental Toughness)</b>"
+                        }
+                    },
+                    {
+                        label: "(f)",
+                        question: "Outline the importance of goal disengagement for athlete wellbeing.",
+                        marks: 2,
+                        answer: "✓ enable athlete to adapt to the experience of unattainable goals;<br>✓ greater maintenance of focus;<br>✓ cope better with anxiety;<br>✓ reduce psychological distress;<br>✓ ameliorate patterns of biological dysregulation/physical health problems;",
+                        studentExplanation: {
+                            title: "Goal Disengagement",
+                            icon: "📚",
+                            content: "<b>Goal disengagement</b> refers to the psychological process of withdrawing commitment from a goal that has become unattainable (e.g., due to injury, selection failure). Persisting with an impossible goal creates chronic stress, frustration, and psychological distress. Research shows that athletes who can <b>disengage</b> and <b>re-engage</b> with new, achievable goals maintain better mental health, sleep quality, and hormonal balance. This is distinct from \"giving up\" — it's an adaptive coping strategy that preserves the athlete's overall wellbeing.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Goal Setting & Wellbeing)</b>"
+                        }
+                    },
+                    {
+                        label: "(g)",
+                        question: "Describe how a high ego orientation athlete's motivation may change against better opponents.",
+                        marks: 2,
+                        answer: "✓ as opponents' abilities increase athlete &lt;might&gt; get outplayed/beaten;<br>✓ &lt;likely result in&gt; levels of motivation &lt;to keep participating&gt; to diminish;",
+                        studentExplanation: {
+                            title: "Achievement Goal Theory",
+                            icon: "📚",
+                            content: "<b>Goal Orientation Theory</b> distinguishes between <b>ego orientation</b> (defining success as outperforming others) and <b>task orientation</b> (defining success as personal mastery/improvement). An athlete with high ego orientation relies entirely on <b>social comparison</b> to feel competent. When they compete against superior athletes and lose, their sense of competence is undermined, and — because they have no internal reference point for success — their motivation to continue drops significantly. This contrasts with task-oriented athletes, who can still feel successful even when losing, as long as they perform to their best.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Achievement Goal Theory)</b>"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "P2_Q3",
+                type: "structured",
+                section: "B",
+                subtopic: "Biomechanics & Physiology",
+                level: "HL",
+                title: "Question 3 — Ski Jumping",
+                context: "In ski jumping, an athlete skis down a steep ramp and attempts to jump the farthest distance with effective technique.",
+                parts: [
+                    {
+                        label: "(a)",
+                        question: "<div class=\"fig-box\"><img src=\"images/HL2Q1fig9.png\" alt=\"Figure 9\"><div class=\"fig-caption\">Figure 9 - Ski jump ramp</div></div>Outline the importance of maximizing impulse at point X on the ramp.",
+                        marks: 1,
+                        answer: "✓ greater speed/angle of projection AND greater distance;",
+                        studentExplanation: {
+                            title: "Impulse-Momentum Relationship",
+                            icon: "📚",
+                            content: "<b>Impulse = Force × Time (J = Ft)</b>. It equals the change in momentum (Δp = mΔv). At the end of the ramp (point X), the ski jumper must apply maximum force for as long as possible to maximize their take-off velocity and angle of projection. A greater impulse produces greater <b>momentum</b> (and therefore speed) at take-off, which directly determines the distance of the jump. Even a small increase in take-off velocity significantly increases jump distance because distance is proportional to the square of velocity in projectile motion.<br><br>📖 <b>Course Companion, pp. 319–321 (B.2.1 — Impulse-Momentum Relationship)</b>"
+                        }
+                    },
+                    {
+                        label: "(b)",
+                        question: "Figure 10 shows a ski jumper moving down the ski ramp.<div class=\"fig-box\"><img src=\"images/HL2Q1fig10.png\" alt=\"Figure 10\"><div class=\"fig-caption\">Figure 10 - Ski jumper</div></div>On a diagram, draw an arrow to represent the drag force acting on the ski jumper.",
+                        marks: 1,
+                        answer: "✓ [Arrow drawn opposing direction of motion / pointing back up the slope]<br><br><i>⚠️ This answer requires drawing on a diagram; the arrow must oppose the direction of motion. You may describe the arrow for your answer.</i>",
+                        studentExplanation: {
+                            title: "Fluid Mechanics & Drag Force",
+                            icon: "📚",
+                            content: "<b>Drag</b> is always a resistive force acting <b>opposite to the direction of motion</b>. As the ski jumper descends the ramp (moving forward and downward), drag acts backward and upward along the slope. When drawing force arrows: always start from the <b>centre of mass</b> of the object and point in the direction the force acts. Drag arises from both <b>form drag</b> (body shape) and <b>surface drag</b> (friction with air). Make sure your arrow is clearly opposing the direction of travel, not simply pointing upward.<br><br>📖 <b>Course Companion, pp. 326–340 (Chapter B.2.2 — Fluid Mechanics & Drag)</b>"
+                        }
+                    },
+                    {
+                        label: "(c)",
+                        question: "Outline how drag can be reduced during the ski jumper's descent.",
+                        marks: 2,
+                        answer: "<b>Surface drag [1 max]:</b> ✓ smooth surface of clothing/helmet; ✓ wax ski;<br><b>Form drag [1 max]:</b> ✓ streamlined body position / lean forwards / bend knees / crouch position / aerodynamic skis / closer-fitting clothing;",
+                        studentExplanation: {
+                            title: "Reducing Drag",
+                            icon: "📚",
+                            content: "There are two types of drag to consider:<br><br><b>Surface (skin friction) drag</b> — caused by friction between the clothing/ski surface and air. Reduced by using smooth, tight fabrics and waxed ski surfaces.<br><b>Form (pressure) drag</b> — caused by the shape of the body pushing air aside. Reduced by adopting a <b>streamlined, low-profile position</b> (crouching, leaning forward, parallel skis). A smaller cross-sectional area means less air resistance.<br><br>In answers, always distinguish which type of drag each strategy reduces for full marks.<br><br>📖 <b>Course Companion, pp. 326–340 (Chapter B.2.2 — Fluid Mechanics)</b>"
+                        }
+                    },
+                    {
+                        label: "(d)",
+                        question: "Muscle contraction allows the ski jumper to apply a force to jump. Outline the role of calcium ions when the muscles contract. Use section 11 in the data booklet.",
+                        marks: 2,
+                        answer: "✓ bind to troponin;<br>✓ changing &lt;troponin&gt; shape to expose the active site OR exposes active sites on actin;",
+                        studentExplanation: {
+                            title: "Sliding Filament Theory",
+                            icon: "📚",
+                            content: "In the <b>sliding filament theory</b>, muscle contraction begins when a nerve impulse triggers the sarcoplasmic reticulum to release <b>Ca²⁺ ions</b> into the sarcomere. These calcium ions bind to <b>troponin</b> (a regulatory protein on the thin actin filament). This causes troponin to shift the <b>tropomyosin</b> molecule that was blocking the myosin-binding sites on actin — exposing those active sites. Myosin heads can then attach, and the <b>power stroke</b> pulls actin toward the centre of the sarcomere. Without calcium, tropomyosin remains as a physical blocker and no contraction occurs.<br><br>📖 <b>Course Companion, pp. 295–297 (Sliding Filament Theory — roles of troponin and tropomyosin)</b>"
+                        }
+                    },
+                    {
+                        label: "(e)",
+                        question: "<div class=\"fig-box\"><img src=\"images/HL2Q1fig11.png\" alt=\"Figure 11\"><div class=\"fig-caption\">Figure 11 - A ski jumper in flight</div></div>Suggest how the ski jumper maximizes lift during flight.",
+                        marks: 1,
+                        answer: "✓ increase surface area;<br>✓ ski V-shaped;",
+                        studentExplanation: {
+                            title: "Bernoulli Effect & Lift",
+                            icon: "📚",
+                            content: "<b>Lift</b> is generated when air moves faster over one surface than the other, creating a pressure difference (<b>Bernoulli's principle</b>). Ski jumpers increase lift by:<br><br>Leaning their body forward at a low angle relative to the airflow, increasing the effective <b>surface area</b> presented to the airflow.<br>Positioning skis in a <b>V-shape</b> (rather than parallel), which increases the wing-like surface area and generates more upward lift force.<br><br>Greater lift extends time in the air and therefore increases jump distance. Modern V-style technique has significantly increased jump distances compared to the older parallel-ski style.<br><br>📖 <b>Course Companion, pp. 326–340 (Chapter B.2.2 — Lift and Bernoulli Effect)</b>"
+                        }
+                    },
+                    {
+                        label: "(f)",
+                        question: "Explain why the ski jumper would have an elevated heart rate during their descent from the start point.",
+                        marks: 2,
+                        answer: "✓ increased demand for oxygen by working muscles;<br>✓ nervous/stressed/increased anxiety;<br>✓ sympathetic nervous system stimulates increase in heart rate in response;",
+                        studentExplanation: {
+                            title: "Cardiovascular Response & Stress",
+                            icon: "📚",
+                            content: "Heart rate elevation has <b>both physiological and psychological</b> causes:<br><br><b>Physiological:</b> working muscles require more oxygen. The cardiovascular system responds by increasing cardiac output (via increased HR and stroke volume) to match oxygen supply to demand.<br><b>Psychological:</b> anticipatory anxiety and the stress of high-risk competition activate the <b>sympathetic nervous system</b> (fight-or-flight response), releasing <b>adrenaline</b> which directly stimulates the SA node to increase heart rate.<br><br>Both causes must be included for full marks.<br><br>📖 <b>Course Companion — Chapter on Cardiovascular Physiology & Psychology (Arousal and ANS)</b>"
+                        }
+                    },
+                    {
+                        label: "(g)",
+                        question: "Discuss how imagery can be used by the ski jumper to reduce their elevated heart rate.",
+                        marks: 2,
+                        answer: "✓ help focusing on performance rather than outcome;<br>✓ visualizing/imagining successful performance;<br>✓ increase confidence OR reduce stress/anxiety;",
+                        studentExplanation: {
+                            title: "Mental Imagery & Arousal",
+                            icon: "📚",
+                            content: "<b>Mental imagery</b> (also called visualization) is a psychological technique where the athlete recreates a vivid mental experience using all senses. When a ski jumper uses <b>calming imagery</b> (e.g., mentally rehearsing a smooth, successful jump), it reduces psychological arousal and anxiety, which lowers <b>sympathetic nervous system</b> activation. This can slow the heart rate by shifting the athlete's attentional focus from outcome worry (e.g., fear of crashing) to process cues (e.g., body position, timing). Imagery also builds confidence, which reduces anxiety and its physiological correlates including elevated HR.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Mental Imagery)</b>"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "P2_Q4",
+                type: "structured",
+                section: "B",
+                subtopic: "Physics & Psychology",
+                level: "HL",
+                title: "Question 4 — Bobsled",
+                context: "In bobsled (or bobsleigh), a team aims to get the sled to the bottom of an ice track as quickly as possible. The push-off phase at the start occurs when two athletes push the sled to accelerate it down the ice track.<div class=\"fig-box\"><img src=\"images/HL2Q1fig12.png\" alt=\"Figure 12\"><div class=\"fig-caption\">Figure 12 - Bobsled at the start of a race</div></div>",
+                parts: [
+                    {
+                        label: "(a)",
+                        question: "Explain why bobsled athletes wear spiked shoes.",
+                        marks: 2,
+                        answer: "✓ increase grip/friction;<br>✓ maximize &lt;resultant&gt; force/return force/forward force; <br><i>Accept \"prevent sliding backward/falling.\"</i>",
+                        studentExplanation: {
+                            title: "Friction & Newton's 3rd Law",
+                            icon: "📚",
+                            content: "The push-off phase requires athletes to apply maximum backward force onto the ice (Newton's 3rd Law) to receive a forward reaction force on the sled. If the athletes' shoes <b>slip</b> on the ice, they cannot transmit force efficiently. Spikes <b>increase the coefficient of static friction (μs)</b> between the shoe and ice, maximising the friction force (F = μs × FN). This means the athletes can push harder without slipping and therefore apply a greater net force to accelerate the sled. The greater the impulse during the push-off, the higher the entry velocity into the track.<br><br>📖 <b>Course Companion, pp. 315–318 (B.2.1 — Friction and Newton's Laws)</b>"
+                        }
+                    },
+                    {
+                        label: "(b)(i)",
+                        question: "The table presents data relevant in bobsled.<div class=\"fig-box\"><img src=\"images/HL2Tab1.png\" alt=\"Table 1\"><div class=\"fig-caption\">Table 1 - Bobsled data</div></div>Calculate the initial force, in N, required from the athletes to start the sled moving from rest. Use section 15 in the data booklet. (Given: Weight of empty sled = 1700 N, Coefficient of static friction = 0.03).",
+                        marks: 1,
+                        answer: "✓ &lt;F = μs FN&gt;<br>✓ &lt;F =&gt; 0.03 × 1700 = 51 &lt;N&gt;; <br><i>Accept \"50 N\" due to significant figures.</i>",
+                        studentExplanation: {
+                            title: "Static Friction Calculation",
+                            icon: "📚",
+                            content: "The formula for the <b>maximum static friction force</b> is:<br><br><b>Fs = μs × FN</b><br><br>where μs is the <b>coefficient of static friction</b> and F_N is the <b>normal force</b> (equal to the weight of the object on the surface). At rest with only the empty sled:<br>μs = 0.03<br>F_N = 1700 N (weight of empty sled)<br>F = 0.03 × 1700 = <b>51 N</b><br><br>This is the minimum force needed to overcome static friction and initiate movement. Note: once moving, <b>dynamic friction</b> (μd = ~0.01) is lower, so less force is needed to keep the sled moving.<br><br>📖 <b>Course Companion, pp. 315–318 (B.2.1 — Friction); Data Booklet Section 15</b>"
+                        }
+                    },
+                    {
+                        label: "(b)(ii)",
+                        question: "State the change in friction when the sled starts to move.",
+                        marks: 1,
+                        answer: "✓ reduction;",
+                        studentExplanation: {
+                            title: "Static vs. Dynamic Friction",
+                            icon: "📚",
+                            content: "There are two types of friction:<br><br><b>Static friction (μs):</b> acts when two surfaces are stationary relative to each other; is higher because molecular bonds form at the contact surfaces<br><b>Dynamic (kinetic) friction (μd):</b> acts when surfaces are already sliding; is lower because fewer bonds form at contact points<br><br>In bobsled: μs = 0.03 → μd ≈ 0.01. Once the sled starts moving, friction <b>drops</b> from static to dynamic, which is why it becomes easier to maintain the push once movement begins.<br><br>📖 <b>Course Companion, pp. 315–318 (B.2.1 — Friction)</b>"
+                        }
+                    },
+                    {
+                        label: "(c)",
+                        question: "Outline three benefits of undertaking motor imagery training during periods of forced rest due to injury.",
+                        marks: 3,
+                        answer: "✓ maintain and increase physical performance;<br>✓ support coping with stressors;<br>✓ improved mental wellbeing of athlete;<br>✓ maintain motivation of athlete;",
+                        studentExplanation: {
+                            title: "Imagery in Rehabilitation",
+                            icon: "📚",
+                            content: "<b>Motor imagery</b> activates many of the same neural pathways as physical practice (confirmed by fMRI studies showing similar cortical activation). During injury-enforced rest:<br><br><b>Physical performance</b> can be partially maintained: motor programs are rehearsed mentally, reducing skill decay<br><b>Psychological coping:</b> imagery can shift focus from fear of re-injury or frustration to positive performance scenarios<br><b>Motivation:</b> setting mental goals and imagery targets gives the athlete a purposeful activity during rehabilitation<br><b>Wellbeing:</b> reduces the psychological distress associated with enforced inactivity and identity threat that injured athletes often face.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Imagery & Rehabilitation)</b>"
+                        }
+                    },
+                    {
+                        label: "(d)",
+                        question: "Using a sporting example, outline the influence controlling rewards can have on intrinsic motivation.",
+                        marks: 2,
+                        answer: "✓ create overjustification effect OR diminish intrinsic motivation AND increase extrinsic motivation;<br>Example: ✓ money OR medal;",
+                        studentExplanation: {
+                            title: "Overjustification Effect",
+                            icon: "📚",
+                            content: "The <b>overjustification effect</b> occurs when an external reward is given for an activity the person was already intrinsically motivated to perform. Over time, the individual attributes their participation to the <b>reward</b> (external reason) rather than genuine enjoyment — and intrinsic motivation <b>diminishes</b>. For example, a young athlete who plays sport purely for the love of it may, after receiving financial bonuses, begin to feel they only participate \"for the money.\" If the reward is later removed, motivation can drop below the original baseline. This is a key consideration in <b>Self-Determination Theory</b>: controlling rewards undermine autonomy and can damage long-term engagement.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Self-Determination Theory & Rewards)</b>"
+                        }
+                    }
+                ]
+            },
+            {
+                id: "P2_Q5",
+                type: "structured",
+                section: "B",
+                subtopic: "Female Athletes & Learning",
+                level: "HL",
+                title: "Question 5 — Menstrual Cycle & Female Athletes",
+                context: "The diagram depicts the correlation between a typical female athlete's menstrual cycle and her body temperature.<div class=\"fig-box\"><img src=\"images/HL2fig13.png\" alt=\"Figure 13\"><div class=\"fig-caption\">Figure 13 - The menstrual cycle and body temperature</div></div>",
+                parts: [
+                    {
+                        label: "(a)(i)",
+                        question: "Explain how body temperature variations throughout the menstrual cycle affect hydration requirements.",
+                        marks: 3,
+                        answer: "✓ &lt;body&gt; temperature higher in luteal phase;<br>✓ sweat response earlier &lt;in luteal phase&gt;;<br>✓ need to hydrate more &lt;in luteal phase&gt;;",
+                        studentExplanation: {
+                            title: "Temperature & Hydration",
+                            icon: "📚",
+                            content: "The <b>menstrual cycle</b> has two main phases: the <b>follicular phase</b> (before ovulation) and the <b>luteal phase</b> (after ovulation). Progesterone levels rise in the luteal phase, causing a slight but consistent elevation in <b>basal body temperature (BBT)</b> of approximately 0.3–0.5°C. This higher baseline temperature means the sweating threshold is reached <b>earlier</b> during exercise, resulting in greater sweat losses at any given intensity. Athletes in the luteal phase therefore need to <b>increase fluid intake</b> before, during, and after training to compensate for the earlier and greater sweat response.<br><br>📖 <b>Course Companion — Chapter on Female Athlete Physiology & Menstrual Cycle</b>"
+                        }
+                    },
+                    {
+                        label: "(a)(ii)",
+                        question: "Outline why an athlete's training intensity would ideally vary based on the menstrual cycle.",
+                        marks: 2,
+                        answer: "✓ hormone fluctuations &lt;during the menstrual cycle&gt; can cause symptoms that impact responses to high-intensity training;<br>✓ lower intensity/longer recovery when symptoms present OR higher intensity when no symptoms;",
+                        studentExplanation: {
+                            title: "Cycle-Syncing Training",
+                            icon: "📚",
+                            content: "This is the basis of <b>cycle-syncing training</b> — periodizing training intensity around the hormonal phases of the menstrual cycle. Symptoms such as <b>fatigue, abdominal cramps, joint laxity</b> (due to relaxin), and reduced heat tolerance in the luteal phase can reduce the quality of training and increase injury risk. Conversely, the <b>mid-follicular phase</b> (just before ovulation) when oestrogen peaks is associated with higher strength, power, and pain tolerance. Ideally, high-intensity sessions are programmed around peak hormone states, and lower-intensity or recovery sessions during symptomatic phases — maximising adaptation and reducing injury/illness risk.<br><br>📖 <b>Course Companion — Chapter on Female Athlete Physiology</b>"
+                        }
+                    },
+                    {
+                        label: "(b)",
+                        question: "A female beach volleyball team plays a tournament in the following weather conditions: sunny, 27°C, high humidity, light wind. Explain how competing in this environment may influence a volleyball player's predominant energy system.",
+                        marks: 4,
+                        answer: "<b>Alt. 1:</b> ✓ heat and humidity lead to dehydration/increased sweating; ✓ decrease stroke volume AND increase HR &lt;to maintain cardiac output&gt;;<br><b>Alt. 2:</b> ✓ heat and humidity lead to overheating; ✓ redistribution of blood to skin AND decrease of blood to working muscle;<br>✓ high heart rates reached at lower intensities;<br>✓ increased reliance on anaerobic &lt;system&gt;;",
+                        studentExplanation: {
+                            title: "Heat Stress & Energy Systems",
+                            icon: "📚",
+                            content: "In hot/humid conditions, the cardiovascular system faces <b>competing demands</b>: it must deliver blood to working muscles (for exercise) AND to the skin (for cooling). This creates <b>cardiovascular strain</b>:<br><br>Via dehydration route: plasma volume falls → stroke volume decreases → heart rate rises to compensate (maintain cardiac output)<br>Via thermoregulation route: blood is shunted to the skin → muscles receive less O₂<br><br>Either way, athletes hit their <b>maximum heart rate at lower exercise intensities</b>, meaning aerobic capacity effectively decreases. Volleyball involves repeated sprints and jumps — the aerobic system can no longer support these demands adequately, so the body shifts to greater reliance on <b>anaerobic glycolysis</b>. This produces more lactate and leads to earlier fatigue.<br><br>📖 <b>Course Companion — Chapter on Environment & Exercise; Energy Systems</b>"
+                        }
+                    },
+                    {
+                        label: "(c)",
+                        question: "Discuss the use of self-talk following a contested referee decision.",
+                        marks: 3,
+                        answer: "✓ alters emotional response &lt;to stressor&gt; OR positive and negative impact;<br>✓ &lt;deliberate&gt; recall past positive experiences OR use helpful phrases/acronyms;<br>✓ negative &lt;unintentional&gt; self-talk reduces attentional focus;",
+                        studentExplanation: {
+                            title: "Self-Talk After Setbacks",
+                            icon: "📚",
+                            content: "Self-talk after a referee decision operates in two directions:<br><br><b>Positive/instructional self-talk:</b> deliberately using helpful phrases (\"Stay focused\", \"Next point\") can re-direct attention, regulate arousal, and prevent rumination. Athletes may use cue words or acronyms developed in training.<br><b>Negative self-talk:</b> automatic, unintentional inner criticism (\"That's so unfair\", \"I'm losing it\") consumes cognitive resources, narrows attentional focus, and can cause performance deterioration (known as <b>choking</b>).<br><br>A \"discuss\" answer needs both positive and negative impacts to be fully credited.<br><br>📖 <b>Course Companion — Chapter on Psychology of Sport (Self-Talk)</b>"
+                        }
+                    },
+                    {
+                        label: "(d)",
+                        question: "Outline two benefits of using a constraints-led approach when coaching the jump serve in volleyball.",
+                        marks: 2,
+                        answer: "✓ greater ability to adapt to situations/variability in game;<br>✓ &lt;assist in&gt; development of cognitive skills;<br>✓ increase motivation due to variability;",
+                        studentExplanation: {
+                            title: "Constraints-Led Approach",
+                            icon: "📚",
+                            content: "The <b>constraints-led approach (CLA)</b> is grounded in <b>ecological dynamics theory</b> and contrasts with traditional linear pedagogy. Rather than prescribing a fixed technique, the coach manipulates <b>task, environmental, and individual constraints</b> to guide the athlete toward functional solutions. For the jump serve, this might involve varying the target zone, adjusting the net height, or serving from different positions. Benefits include:<br><br><b>Adaptability:</b> athletes develop flexible movement solutions that transfer to game scenarios<br><b>Cognitive engagement:</b> athletes are required to problem-solve, enhancing decision-making skills<br><b>Motivation:</b> varied challenges maintain interest better than repetitive drills<br><br>📖 <b>Course Companion — Chapter on Skill Acquisition (Constraints-Led Approach & Ecological Dynamics)</b>"
+                        }
+                    },
+                    {
+                        label: "(e)",
+                        question: "Outline how a coach might structure training sessions to take advantage of the social learning theory to improve performance.",
+                        marks: 2,
+                        answer: "✓ create positively reinforcing and collaborative opportunities &lt;in groups/sub-teams&gt;;<br>✓ learn behaviours/attitudes/behavioural consequences from each other;",
+                        studentExplanation: {
+                            title: "Social Learning Theory",
+                            icon: "📚",
+                            content: "<b>Social Learning Theory (Bandura)</b> proposes that learning occurs through <b>observation, imitation, and reinforcement</b> within a social environment. Key mechanisms are:<br><br><b>Modelling:</b> athletes watch skilled peers or role models and replicate their behaviour<br><b>Vicarious reinforcement:</b> observing a teammate being rewarded for a behaviour increases the observer's motivation to copy it<br><b>Self-efficacy:</b> seeing similar others succeed raises one's own belief in capability<br><br>A coach can leverage this by pairing less-skilled players with more-skilled players, using peer coaching, creating team norms around effort and technique, and publicly recognising positive behaviours — creating a <b>mastery motivational climate</b> within the squad.<br><br>📖 <b>Course Companion — Chapter on Skill Acquisition & Coaching (Social Learning Theory)</b>"
+                        }
+                    }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let currentQ = p2Questions[0];
+        let answered = {}; // partLabel -> { status, studentInput, resultHTML }
+        let questionAttempts = {}; // partLabel -> count
+
+        function renderExam() {
+            const container = document.getElementById('examContainer');
+            currentQ = p2Questions[currentQIndex];
+
+            let partsHTML = currentQ.parts.map((p, idx) => {
+                const partId = `part_${idx}`;
+                const partKey = `${currentQ.id}_${p.label}`;
+                const state = answered[partKey] || { status: 'unanswered', studentInput: '' };
+
+                let feedbackHTML = '';
+                if (state.status === 'revealed' || state.status === 'marked') {
+                    feedbackHTML = state.resultHTML || '';
+                    if (!feedbackHTML && state.status === 'revealed') {
+                        let explanationHTML = '';
+                        if (p.studentExplanation) {
+                            const exp = typeof p.studentExplanation === 'string'
+                                ? { title: 'Topic Review', content: p.studentExplanation, icon: '💡' }
+                                : p.studentExplanation;
+
+                            explanationHTML = `
+                            <div class="explanation-block">
+                                <div class="explanation-title">${exp.icon || '💡'} ${exp.title || 'Student Explanation'}</div>
+                                <div class="explanation-body">${exp.content}</div>
+                            </div>`;
+                        }
+
+                        feedbackHTML = `
+                        <div class="feedback-block">
+                            <div class="ans-header">Mark Scheme:</div>
+                            <div class="actual-ans">${p.answer}</div>
+                            ${explanationHTML}
+                        </div>`;
+                    }
+                }
+
+                return `
+                <div class="part-container">
+                    <div class="score-row">
+                        <div class="part-label-wrapper" style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                            <span class="part-label">${p.label}</span>
+                            <div class="part-question">${p.question}</div>
+                        </div>
+                        <span class="marks-preview">[${p.marks} MARKS]</span>
+                    </div>
+                    <textarea id="${partId}" ${state.status !== 'unanswered' ? 'disabled' : ''} placeholder="Type your answer here...">${state.studentInput}</textarea>
+                    
+                    ${state.status === 'unanswered' ? `
+                    <div class="btn-row">
+                        <button class="submit-btn" id="submit_btn_${idx}" onclick="submitPart('${p.label}', ${idx})">Submit Answer</button>
+                        <button class="reveal-btn" id="reveal_btn_${idx}" onclick="revealPart('${p.label}', ${idx})">Show Mark Scheme</button>
+                    </div>
+                    <div class="loading" id="loading_${idx}"><div class="spinner"></div>AI Marking...</div>` : ''}
+                    
+                    <div id="result_${idx}">${feedbackHTML}</div>
+                </div>`;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="question-header">
+                    <span class="subtopic-badge">${currentQ.subtopic} · ${currentQ.level}</span>
+                    <span class="q-counter">Question ${currentQIndex + 1} / ${p2Questions.length}</span>
+                </div>
+                
+                <div class="card">
+                    <h2 class="question-title">${currentQ.title}</h2>
+                    <div class="context-block">${currentQ.context}</div>
+                    <div class="parts-container">
+                        ${partsHTML}
+                    </div>
+                </div>
+                
+                <div class="question-nav">
+                    <button class="nav-btn" id="prevBtn" onclick="navigateQuestion(-1)">← Previous</button>
+                    <button class="random-btn" onclick="loadRandomQuestion()">🎲</button>
+                    <button class="nav-btn" id="nextBtn" onclick="navigateQuestion(1)">Next →</button>
+                </div>`;
+
+            updateNavButtons();
+        }
+
+        async function submitPart(label, idx) {
+            const partId = `part_${idx}`;
+            const input = document.getElementById(partId).value.trim();
+            if (!input) { alert('Please type an answer first.'); return; }
+
+            const partKey = `${currentQ.id}_${label}`;
+            if (!questionAttempts[partKey]) questionAttempts[partKey] = 0;
+            questionAttempts[partKey]++;
+
+            const loadingEl = document.getElementById(`loading_${idx}`);
+            if (loadingEl) loadingEl.style.display = 'block';
+            document.getElementById(`submit_btn_${idx}`).disabled = true;
+            document.getElementById(`reveal_btn_${idx}`).disabled = true;
+
+            const part = currentQ.parts[idx];
+
+            try {
+                const response = await fetch('https://sehsexam.thatjamiebloke.workers.dev/mark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        questionId: partKey,
+                        question: part.question,
+                        markScheme: part.answer,
+                        maxMarks: part.marks,
+                        answer: input,
+                        attemptNumber: questionAttempts[partKey]
+                    }),
+                });
+
+                const data = await response.json();
+
+                let resultHTML = '';
+                if (data.error) {
+                    resultHTML = `<p style="color: red; margin-top: 10px;">AI Marking Error: ${data.error}</p>`;
+                } else {
+                    const percentage = Math.round((data.score / part.marks) * 100);
+
+                    let explanationHTML = '';
+                    if (part.studentExplanation) {
+                        const exp = typeof part.studentExplanation === 'string'
+                            ? { title: 'Topic Review', content: part.studentExplanation, icon: '💡' }
+                            : part.studentExplanation;
+
+                        explanationHTML = `
+                        <div class="explanation-block" style="margin-top: 16px;">
+                            <div class="explanation-title">${exp.icon || '💡'} ${exp.title || 'Student Explanation'}</div>
+                            <div class="explanation-body">${exp.content}</div>
+                        </div>`;
+                    }
+
+                    resultHTML = `
+                        <div class="result" style="display: block;">
+                            <div class="score-display">
+                                Score: ${data.score}/${part.marks} (${percentage}%)
+                            </div>
+                            <div class="comment-section" style="background: #e8f5e9; border-left: 4px solid #10b981;">
+                                <h3>✅ Strengths</h3>
+                                <p>${data.strengths}</p>
+                            </div>
+                            <div class="comment-section" style="background: #fff3e0; border-left: 4px solid #f59e0b;">
+                                <h3>📝 Areas to Improve</h3>
+                                <p>${data.improvements}</p>
+                            </div>
+                            <div class="hint-section" style="background: #e3f2fd; border-left: 4px solid #2196F3;">
+                                <h3>💡 Study Tip</h3>
+                                <p>${data.studyTip}</p>
+                            </div>
+                            
+                            <div class="feedback-block">
+                                <div class="ans-header">Mark Scheme:</div>
+                                <div class="actual-ans">${part.answer}</div>
+                            </div>
+                            ${explanationHTML}
+                        </div>
+                    `;
+                }
+
+                answered[partKey] = { status: 'marked', studentInput: input, resultHTML: resultHTML, score: data.score };
+                renderExam();
+                updateProgress();
+
+            } catch (error) {
+                console.error("AI Marking Error:", error);
+                alert("Failed to connect to AI marking service. Revealing mark scheme instead.");
+                revealPart(label, idx, input);
+            } finally {
+                const loadingEl = document.getElementById(`loading_${idx}`);
+                if (loadingEl) loadingEl.style.display = 'none';
+            }
+        }
+
+        function revealPart(label, idx, input = '') {
+            const partKey = `${currentQ.id}_${label}`;
+            const studentInput = input || document.getElementById(`part_${idx}`).value;
+
+            const p = currentQ.parts[idx];
+            let explanationHTML = '';
+            if (p.studentExplanation) {
+                const exp = typeof p.studentExplanation === 'string'
+                    ? { title: 'Topic Review', content: p.studentExplanation, icon: '💡' }
+                    : p.studentExplanation;
+
+                explanationHTML = `
+                <div class="explanation-block">
+                    <div class="explanation-title">${exp.icon || '💡'} ${exp.title || 'Student Explanation'}</div>
+                    <div class="explanation-body">${exp.content}</div>
+                </div>`;
+            }
+
+            const resultHTML = `
+                <div class="feedback-block">
+                    <div class="ans-header">Mark Scheme:</div>
+                    <div class="actual-ans">${p.answer}</div>
+                    ${explanationHTML}
+                </div>`;
+
+            answered[partKey] = { status: 'revealed', studentInput: studentInput, resultHTML: resultHTML, score: 0 };
+            renderExam();
+            updateProgress();
+        }
+
+        function navigateQuestion(direction) {
+            currentQIndex += direction;
+            if (currentQIndex < 0) currentQIndex = 0;
+            if (currentQIndex >= p2Questions.length) currentQIndex = p2Questions.length - 1;
+            renderExam();
+        }
+
+        function loadRandomQuestion() {
+            currentQIndex = Math.floor(Math.random() * p2Questions.length);
+            renderExam();
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentQIndex === 0;
+            document.getElementById('nextBtn').disabled = currentQIndex === p2Questions.length - 1;
+        }
+
+        function updateProgress() {
+            let totalParts = 0;
+            let answeredParts = 0;
+
+            let totalPoints = 0;
+            let awardedPoints = 0;
+
+            p2Questions.forEach(q => {
+                q.parts.forEach(p => {
+                    totalParts++;
+                    totalPoints += p.marks;
+                    if (answered[`${q.id}_${p.label}`]) {
+                        answeredParts++;
+                        awardedPoints += (answered[`${q.id}_${p.label}`].score || 0);
+                    }
+                });
+            });
+
+            const pct = Math.round((answeredParts / totalParts) * 100);
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').innerHTML =
+                `<span style="font-size: 18px; color: var(--accent); font-weight: 900;">${awardedPoints}</span> / ${totalPoints} Points · ${pct}%`;
+        }
+
+        window.onload = renderExam;
+    </script>
+</body>
+
+</html>

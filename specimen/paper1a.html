@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paper 1A HL – Multiple Choice | IB SEHS Specimen</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --primary: #1e1b4b;
+            --primary-light: #312e81;
+            --accent: #f59e0b;
+            --accent-soft: rgba(245, 158, 11, 0.1);
+            --bg: #f5f3ff;
+            --card-bg: #ffffff;
+            --text-main: #1e1b4b;
+            --text-dark: #000000;
+            --border: #e0e7ff;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--primary);
+            background-image: radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+            background-size: 32px 32px;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 120px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 35px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            transition: color 0.2s;
+        }
+
+        .header .back:hover {
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            letter-spacing: -1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .question-block {
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .subtopic-badge {
+            background: #eef2ff;
+            color: #4338ca;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .q-counter {
+            background: var(--accent);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .fig-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .fig-box img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-size: 15px;
+            text-align: left;
+            transition: all 0.2s;
+            font-family: inherit;
+            font-weight: 500;
+            color: var(--text-main);
+            width: 100%;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            border-color: var(--accent);
+            background: white;
+            transform: translateX(4px);
+        }
+
+        .option-btn.selected {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            box-shadow: 0 0 0 4px var(--accent-soft);
+        }
+
+        .option-btn.correct {
+            border-color: #10b981 !important;
+            background: #f0fdf4 !important;
+            color: #166534 !important;
+        }
+
+        .option-btn.wrong {
+            border-color: #ef4444 !important;
+            background: #fef2f2 !important;
+            color: #991b1b !important;
+        }
+
+        .option-letter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #cbd5e1;
+            font-weight: 800;
+            font-size: 14px;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .selected .option-letter {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .correct .option-letter {
+            border-color: #10b981;
+            background: #10b981;
+            color: white;
+        }
+
+        .wrong .option-letter {
+            border-color: #ef4444;
+            background: #ef4444;
+            color: white;
+        }
+
+        .explanation-block {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 2px solid var(--border);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            color: #475569;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation-body {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #475569;
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        /* Result Actions */
+        .actions-container {
+            text-align: center;
+            margin: 60px 0;
+            padding-bottom: 40px;
+        }
+
+        .submit-all-btn {
+            padding: 20px 48px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 20px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4);
+        }
+
+        .submit-all-btn:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 0 15px 35px rgba(245, 158, 11, 0.5);
+        }
+
+        .review-btn {
+            background: #334155;
+            color: white;
+            padding: 18px 36px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            display: none;
+            transition: all 0.2s;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        .review-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        /* Celebration Overlay */
+        #celebrationOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 27, 75, 0.98);
+            z-index: 3000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .legend-text {
+            font-size: 5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #fbbf24, #f59e0b, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+            text-shadow: 0 0 30px rgba(245, 158, 11, 0.5);
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .score-display-big {
+            font-size: 3em;
+            font-weight: 900;
+            color: #10b981;
+            margin-bottom: 40px;
+        }
+
+        .close-overlay-btn {
+            background: white;
+            color: var(--primary);
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s;
+        }
+
+        .close-overlay-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            gap: 20px;
+        }
+
+        .progress-wrapper {
+            flex: 1;
+            height: 12px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            font-weight: 800;
+            font-size: 15px;
+            color: var(--primary);
+            min-width: 180px;
+        }
+        
+        @media(max-width: 600px) {
+            .header h1 { font-size: 1.8em; }
+            .legend-text { font-size: 3em; }
+            .score-display-big { font-size: 2em; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="celebrationOverlay">
+        <div class="legend-text">🌟 SEHS LEGEND 🌟</div>
+        <div class="score-display-big">40 / 40 · 100% CORRECT</div>
+        <p style="font-size: 1.8em; max-width: 700px; margin-bottom: 40px; font-weight: 700;">Bravo - you are a
+            certified SEHS legend!!!!</p>
+        <button class="close-overlay-btn" onclick="hideCelebration()">BACK TO EXAM RESULTS</button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <a href="https://jamier7.github.io/specimen/index.html" class="back"><i class="ph-bold ph-arrow-left"></i> BACK TO DASHBOARD</a>
+            <h1><i class="ph-fill ph-circle-dashed text-amber-400"></i> Paper 1A HL – Specimen Paper</h1>
+        </div>
+
+        <div id="questionsContainer"></div>
+
+        <div class="actions-container">
+            <button class="submit-all-btn" id="submitAllBtn" onclick="howDidIDo()">HOW DID I DO?</button>
+            <div id="scoreSummary" style="display:none; margin-top: 30px;">
+                <h2 style="color: white; font-size: 2.5em; margin-bottom: 20px;" id="finalScoreLabel"></h2>
+                <button class="review-btn" id="reviewBtn" onclick="reviewResults()">Would you like to see where you went
+                    right and wrong?</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-bar-container">
+        <div class="progress-wrapper">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 40 Attempted</div>
+    </div>
+
+    <script>
+        const mcQuestions = [
+            {
+                id: "Q1", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is measured by a baroreceptor?",
+                options: ["Blood pressure", "Heart rate", "pH of the blood", "Carbon dioxide levels of the blood"],
+                answer: 0,
+                explanation: "Baroreceptors are pressure-sensitive nerve cells located in the aorta and carotid arteries. They detect changes in arterial blood pressure and send signals to the cardiovascular centre in the brain to help regulate it via the autonomic nervous system. They should not be confused with chemoreceptors (which detect O₂, CO₂ and H⁺) or proprioceptors (which detect movement and position)."
+            },
+            {
+                id: "Q2", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "How does epinephrine cause an increase in cardiac output?",
+                options: ["It decreases the contraction force in the myocardium.", "It increases heart rate by increasing the vagus nerve stimulation.", "It increases the contraction force in the myocardium.", "It decreases venous return and increases the stimulation rate of the sinoatrial node."],
+                answer: 2,
+                explanation: "Epinephrine (adrenaline) is released from the adrenal medulla and acts on cardiac tissue to increase both heart rate and the force of contraction (positive inotropic effect), thereby increasing stroke volume and cardiac output. Option B is wrong because the vagus nerve is parasympathetic and would slow the heart. Epinephrine acts via the sympathetic pathway, not the vagus nerve."
+            },
+            {
+                id: "Q3", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "During exercise, blood insulin levels decrease, but glucose uptake into muscle cells increases. How must other variables change to increase glucose uptake?",
+                options: ["Glucose concentration gradient: decrease | Insulin sensitivity: decrease", "Glucose concentration gradient: increase | Insulin sensitivity: increase", "Glucose concentration gradient: decrease | Insulin sensitivity: increase", "Glucose concentration gradient: increase | Insulin sensitivity: decrease"],
+                answer: 1,
+                explanation: "During exercise, working muscles rapidly consume glucose, keeping intracellular glucose low. This increases the concentration gradient (high blood glucose → low muscle cell glucose), driving more glucose in. Simultaneously, exercise increases insulin sensitivity — muscle cell receptors become more responsive to insulin, so even lower insulin levels are sufficient to facilitate glucose transport. These two mechanisms together maintain glucose uptake despite falling insulin levels."
+            },
+            {
+                id: "Q4", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What assists expiration?",
+                options: ["The elastic recoil of the diaphragm and intercostal muscles", "The constriction of the bronchioles", "The contraction of the diaphragm and intercostal muscles", "The contraction of the sternocleidomastoid muscle"],
+                answer: 0,
+                explanation: "At rest, expiration is a passive process driven by the elastic recoil of the lungs and the relaxation of the diaphragm and external intercostal muscles. As these structures recoil back, the thoracic volume decreases and air is pushed out. Active (forced) expiration uses the internal intercostals and abdominal muscles, but these are not listed. Option C is incorrect because contraction of the diaphragm and intercostals causes inspiration, not expiration."
+            },
+            {
+                id: "Q5", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which cardiovascular adaptation to endurance training will help to increase cardiac output?",
+                options: ["The decrease in size of the heart muscle", "The decrease in the stretch of the heart muscle", "The increase in size of the heart muscle", "The increase in blood pressure in the aorta"],
+                answer: 2,
+                explanation: "Endurance training causes cardiac hypertrophy — the heart muscle (especially the left ventricle) increases in size and strength. A larger, stronger ventricle can pump more blood per beat (greater stroke volume). Since cardiac output = stroke volume × heart rate, increasing stroke volume directly increases cardiac output. This is sometimes called 'athlete's heart.'"
+            },
+            {
+                id: "Q6", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What increases the risk of hyponatremia for an athlete running a marathon in hot and humid conditions?",
+                options: ["Excessive intake of water", "Limited intake of water", "Effective intake of electrolyte drinks that provide sodium", "Limited intake of water and salted pretzels"],
+                answer: 0,
+                explanation: "Hyponatremia is a dangerously low blood sodium concentration. Drinking excessive plain water dilutes the sodium already in the bloodstream, lowering its concentration. In hot/humid conditions, athletes also lose sodium through sweat, compounding the problem. Paradoxically, drinking too much water (overhydration) is a greater risk than dehydration for this condition. Electrolyte drinks (C) and salty snacks (D) would actually protect against hyponatremia."
+            },
+            {
+                id: "Q7", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What causes a decline in VO₂ max with increased age?",
+                options: ["Enhanced glucose tolerance and insulin sensitivity", "Decrease in maximum heart rate", "Increase in fat-free mass percentage", "Increase in stroke volume of the heart"],
+                answer: 1,
+                explanation: "VO₂ max declines with age primarily because maximum heart rate decreases (estimated as 220 − age). Since maximal cardiac output depends on maximum heart rate × stroke volume, a lower maximum heart rate directly limits the upper ceiling of oxygen delivery. Options A, C and D all describe positive physiological characteristics that would not explain a decline in aerobic capacity."
+            },
+            {
+                id: "Q8", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What describes an elite marathon runner's optimal race pace?",
+                options: ["The pace at maximum heart rate", "The pace where most of the energy is supplied by the oxidation of fatty acids", "The pace at which lactate is produced at the same rate as it is used", "The pace that can be sustained for the longest period of time"],
+                answer: 2,
+                explanation: "This describes the lactate threshold (also called maximal lactate steady state). At this pace, the rate of lactate production equals the rate of lactate clearance/utilisation, so blood lactate does not accumulate. Elite marathon runners race just at or slightly below this threshold to maximise pace without entering a state of rapidly rising lactate that would force them to slow down."
+            },
+            {
+                id: "Q9", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which activity is most likely to use energy derived from fat reserves?",
+                options: ["A basketball game (about 2 hours)", "A 2000 m rowing race (about 7–8 minutes)", "A 400 m sprint (about 1 minute)", "An Ironman Triathlon (about 11–12 hours)"],
+                answer: 3,
+                explanation: "Fat oxidation becomes the dominant fuel source during prolonged, low-to-moderate intensity exercise. An Ironman Triathlon lasts 11–12 hours, making it by far the most fat-dependent of the options. Short, intense activities (400 m sprint, rowing race) rely on the phosphagen system and anaerobic glycolysis. The basketball game uses mixed sources but at higher intensities than triathlon pacing."
+            },
+            {
+                id: "Q10", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which training set is likely to increase the energy available in the short term from the phosphagen system?",
+                options: ["Maximal intensity intervals lasting between 5 and 10 seconds with 60 seconds rest", "High-intensity intervals lasting between 30 and 60 seconds with 10-second rest intervals", "A long, continuous bout of exercise lasting at least 25 minutes", "A set of 10–12 repetitions of resistance exercise at 60–70% of 1 maximum repetition"],
+                answer: 0,
+                explanation: "The phosphagen system (ATP-PCr) provides energy for maximal efforts lasting up to ~10 seconds. To train this system, bouts must be very short and maximal, with long rest periods (e.g. 1:6 work-to-rest ratio) to allow full PCr resynthesis between sets. Option B has insufficient rest (too little recovery for PCr to replenish). Options C and D train aerobic and glycolytic systems respectively."
+            },
+            {
+                id: "Q11", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "An athlete begins to show signs of overtraining. How can the training programme be altered to maintain an effective training adaptation?",
+                options: ["Increase the frequency and maintain the intensity of each workout", "Increase the volume of training load by 15% each week", "Increase the frequency but drop the intensity below baseline measured values", "Decrease the rest and recovery phases"],
+                answer: 2,
+                explanation: "When an athlete shows overtraining symptoms (fatigue, declining performance, mood disturbance), the key is to reduce the training stimulus while still maintaining some activity. Dropping intensity well below baseline keeps the body moving (preventing complete detraining) while allowing recovery and rebuilding of physiological systems. Increasing volume (B) or reducing rest (D) would worsen overtraining syndrome."
+            },
+            {
+                id: "Q12", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which exercise routine improves an adult's bone density? I. 30 minutes brisk walking, II. 30 minutes swimming, III. Resistance training",
+                options: ["I and II only", "I and III only", "II and III only", "I, II and III"],
+                answer: 1,
+                explanation: "Bone density improves through weight-bearing and mechanical loading exercises. Brisk walking (I) is weight-bearing and applies ground reaction forces through bones. Resistance training (III) creates muscular tension that stresses bone, stimulating osteoblast activity. Swimming (II) is non-weight-bearing — the water supports the body — so it provides little mechanical loading to bones, making it ineffective for improving bone density."
+            },
+            {
+                id: "Q13", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "An athlete who lives at sea level moves to train in a high-altitude climate, resulting in a decreased plasma volume. How does decreased plasma volume alter the normal physiological function of the heart to compensate for the decrease in blood oxygen levels?",
+                options: ["Heart rate: decreases | Cardiac output: decreases", "Heart rate: increases | Cardiac output: increases", "Heart rate: decreases | Cardiac output: increases", "Heart rate: increases | Cardiac output: constant"],
+                answer: 3,
+                explanation: "A decrease in plasma volume reduces venous return, which lowers stroke volume (Frank-Starling mechanism). To compensate and maintain cardiac output at a similar level, the heart rate increases. Therefore, cardiac output remains approximately constant despite reduced stroke volume. Note that at altitude, the blood is also less oxygenated, intensifying this compensatory response."
+            },
+            {
+                id: "Q14", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is a valid consideration for exercise prescription in older athletes (over 65)?",
+                options: ["Resistance training should be avoided", "Balance training is of little benefit for older athletes", "Training should be limited to 15 minutes a week", "Aerobic exercises should focus on low-impact exercises"],
+                answer: 3,
+                explanation: "Older adults often experience reduced bone density, joint degeneration (e.g. osteoarthritis) and lower connective tissue resilience. Low-impact aerobic activities (cycling, swimming, walking) provide cardiovascular benefits while minimising joint stress and fracture risk. Resistance training (A) is actually recommended for older adults to preserve muscle mass and bone density. Balance training (B) is highly beneficial to prevent falls. Current guidelines recommend much more than 15 minutes per week (C)."
+            },
+            {
+                id: "Q15", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What describes the position of the patella relative to the metatarsals with reference to the hip joint?",
+                options: ["Posterior", "Inferior", "Proximal", "Distal"],
+                answer: 2,
+                explanation: "Proximal means closer to the point of reference (here, the hip joint), and distal means further away. The patella (kneecap) is closer to the hip than the metatarsals (foot bones), so the patella is proximal to the metatarsals with reference to the hip joint. Students often confuse proximal/distal with superior/inferior — remember that proximal/distal are always relative to a stated reference point."
+            },
+            {
+                id: "Q16", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is an example of circumduction?",
+                options: ["Shoulder joint topspin in tennis", "Shoulder joint overarm serve in tennis", "Pointing toes in ballet", "Turning head to breathe when swimming"],
+                answer: 1,
+                explanation: "Circumduction is a circular movement combining flexion, extension, abduction and adduction sequentially, creating a cone-shaped motion. The overarm serve involves the arm moving in a large circular arc at the shoulder joint — a classic example. Topspin (A) involves wrist rotation (not the full shoulder circumduction). Pointing toes (C) is plantarflexion. Head turning (D) is rotation."
+            },
+            {
+                id: "Q17", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which factors contribute to the total force produced at a motor unit? I. The number of muscle fibres, II. The muscle fibre type (type I or type II), III. The size of the motor unit",
+                options: ["I and II only", "I and III only", "II and III only", "I, II and III"],
+                answer: 3,
+                explanation: "All three factors affect force output. A motor unit with more fibres (I) contracts more tissue simultaneously. Type II fibres (II) generate greater force than type I fibres due to higher myosin ATPase activity and faster cross-bridge cycling. The size of the motor unit (III) is actually directly related to the number of fibres it innervates — larger motor units innervate more fibres and generate more force. Recruitment of higher-threshold motor units produces progressively greater force."
+            },
+            {
+                id: "Q18", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is the effect of reduced calcium during muscular contraction?",
+                options: ["Increased availability of ATP causes an increase in ATP detaching from the myosin", "Reduced availability of ATP causes an increase in ATP detaching from the myosin", "Reduction in number of exposed actin and myosin binding sites causes a decrease in cross-bridge cycling", "Increase in number of exposed actin and myosin binding sites causes an increase in cross-bridge cycling"],
+                answer: 2,
+                explanation: "Calcium (Ca²⁺) is essential for muscle contraction. It binds to troponin, causing a conformational change in tropomyosin that exposes the active binding sites on actin. Without sufficient calcium, tropomyosin remains blocking these sites, fewer actin-myosin cross-bridges form, and muscle force decreases. This is the direct molecular link between calcium availability and muscle contraction force."
+            },
+            {
+                id: "Q19", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What describes a second-class lever?",
+                options: ["Plantarflexion of the foot while jumping", "A bicep curl exercise", "Throwing a baseball", "Abduction of the shoulder joint"],
+                answer: 0,
+                explanation: "In a second-class lever, the load sits between the fulcrum and the effort. During plantarflexion (raising up on tiptoes/jumping), the fulcrum is the toe (ball of foot), the load is body weight (through the ankle/tibia), and the effort is the calf muscles pulling upward on the heel. This arrangement favours force production over speed/range of motion. A bicep curl (B) is a third-class lever."
+            },
+            {
+                id: "Q20", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "How will a surfer increase their stability to maintain balance on a surfboard?",
+                options: ["Base of support: wide | Centre of gravity: low", "Base of support: narrow | Centre of gravity: low", "Base of support: narrow | Centre of gravity: high", "Base of support: wide | Centre of gravity: high"],
+                answer: 0,
+                explanation: "Stability is maximised by a wide base of support (feet wide apart) and a low centre of gravity (crouching down). A wider base increases the area within which the line of gravity can shift before balance is lost. Lowering the centre of gravity makes it harder to topple over. Surfers instinctively adopt a wide, bent-knee stance for exactly this reason."
+            },
+            {
+                id: "Q21", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "An elite sprinter runs the 100 m. They reach 50 m in 6.47 seconds, and their velocity at this point is 11.5 m s⁻¹. They reach the finish line in a time of 10.82 seconds, crossing with a velocity of 11.5 m s⁻¹. What can be deduced from this data?",
+                options: ["The sprinter moves at constant speed throughout the race.", "The sprinter is still accelerating in the last 50 m.", "The sprinter moves at constant speed in the last 50 m.", "The sprinter decelerates in the last 50 m."],
+                answer: 2,
+                explanation: "Verification:<br>Last 50 m time: 10.82 − 6.47 = 4.35 s<br>Average speed for last 50 m: 50 ÷ 4.35 = 11.49 ≈ 11.5 m s⁻¹ ✓ (matches instantaneous velocity at both endpoints)<br>First 50 m average speed: 7.73 m s⁻¹ ≠ 11.5 m s⁻¹, so A is eliminated (not constant throughout)<br>Velocity does not increase after 50 m, so B is eliminated<br>Velocity does not drop, so D is eliminated"
+            },
+            {
+                id: "Q22", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "A golf coach provides feedback that focuses on the impact point between the golf club and the ball. Which phase are they commenting on?",
+                options: ["Preparatory", "Critical instant", "Force production", "Follow through"],
+                answer: 1,
+                explanation: "Movement analysis divides skills into phases. The critical instant is the single most important moment of a skill — the point at which the purpose of the movement is achieved. In golf, this is the moment of club-ball contact (impact). The preparatory phase is the backswing, force production is the downswing, and follow-through occurs after impact. Coaches often focus on the critical instant because it most directly determines outcome."
+            },
+            {
+                id: "Q23", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "How does wax spread on a surfboard assist a surfer to perform?",
+                options: ["It reduces the coefficient of kinetic friction of the surfboard.", "It increases the coefficient of kinetic friction of the surfboard.", "It increases the coefficient of static friction of the surfboard.", "It reduces the coefficient of static friction of the surfboard."],
+                answer: 2,
+                explanation: "Surf wax creates a textured, grip-enhancing surface on the board. Static friction is the force preventing two objects from sliding against each other. The surfer's feet need to stay put on the board (static, not sliding), so increasing static friction prevents the feet from slipping. Note: kinetic friction is the friction between two objects already moving relative to each other, which is not what wax is designed to affect."
+            },
+            {
+                id: "Q24", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Why does a baseball follow a curved trajectory when thrown with spin?",
+                options: ["Gravity acts unevenly on the ball.", "The air pressure on either side of the ball is different.", "The speed of one side of the ball is faster than the other.", "The spin creates turbulent air flow behind the ball."],
+                answer: 1,
+                explanation: "This is the Magnus effect. When a ball spins, it drags a layer of air around it. On one side, this spin-induced airflow moves in the same direction as the oncoming air, increasing air speed; on the other, it opposes it, decreasing air speed. By Bernoulli's principle, faster airflow = lower pressure. The pressure difference between the two sides creates a net force (Magnus force) that curves the ball's path. Option C (speed difference) is the mechanism that creates the pressure difference, but the pressure difference is the direct cause of the curved path — making B the better answer."
+            },
+            {
+                id: "Q25", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "In luge, an athlete slides down an ice track on a sled feet first, whilst in skeleton, an athlete slides head first. Which statement explains why luge is usually quicker over the same course for a given athlete on the same sled?",
+                options: ["Luge has a lower wave drag.", "Skeleton has a lower surface drag.", "Luge has a lower form drag.", "Skeleton has a lower form drag."],
+                answer: 2,
+                explanation: "Form drag is caused by the shape of an object moving through a fluid — a larger cross-sectional area creates greater form drag. In luge (feet-first), the athlete's feet and legs present a smaller, more streamlined frontal area to the oncoming air compared to skeleton (head-first), where the head and upper body create greater resistance. Luge athletes can tuck their body more aerodynamically, reducing form drag and allowing higher speeds."
+            },
+            {
+                id: "Q26", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which tackle in rugby is likely to produce an acute brain trauma injury to the tackler? (Note: Referencing the 4 tackle diagrams from the specimen paper)",
+                options: ["Position A: Proper side tackle with head behind", "Position B: Tackler falling backward securely", "Position C: Proper waist-level, head to the side", "Position D: Head in vulnerable, unprotected front position"],
+                answer: 3,
+                explanation: "The key concept is that a tackle where the tackler's head is in a vulnerable, unprotected position — particularly making initial contact with the head/neck rather than the shoulder — creates the greatest risk of acute brain trauma (e.g. concussion). Proper tackling technique emphasises 'head to the side, cheek to the cheek' to protect the head."
+            },
+            {
+                id: "Q27", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which methods will help to lower the risk of injury? I. Protective equipment, II. Flexibility training, III. Cardiovascular training",
+                options: ["I and II only", "I and III only", "II and III only", "I, II and III"],
+                answer: 0,
+                explanation: "Protective equipment (I) directly reduces impact forces on vulnerable body structures. Flexibility training (II) increases range of motion and reduces the risk of muscle strains and joint injuries during sudden movements. Cardiovascular training (III) improves general fitness but does not directly protect against musculoskeletal injuries — it is not primarily an injury-prevention tool in the same way."
+            },
+            {
+                id: "Q28", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which statement correctly describes an athlete's return to a sport after a verified concussion?",
+                options: ["The athlete should sit out for a day and return to full participation the following day.", "The athlete should sit out until symptoms have stopped and return the following day.", "The athlete should sit out until symptoms have stopped and return three days later.", "The athlete should sit out until symptoms have stopped and follow a progressive return to sport."],
+                answer: 3,
+                explanation: "Current evidence-based concussion protocols require complete symptom resolution first, followed by a stepwise, progressive return-to-sport (RTS) protocol. Each stage must be symptom-free before advancing. Stages typically include: rest → light aerobic exercise → sport-specific exercise → non-contact training → full-contact practice → return to competition. Returning too quickly risks second-impact syndrome, which can be fatal. No fixed timeline (1 day, 3 days) is appropriate — it must be symptom-guided."
+            },
+            {
+                id: "Q29", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "An athlete scoring high in conscientiousness and openness in a personality test is more likely to exhibit which of these behaviours in practice?",
+                options: ["Remain calm and help teammates", "Produce consistent effort and listen to coach instruction", "Remain quiet and listen to coach instruction", "Help teammates and produce consistent effort"],
+                answer: 1,
+                explanation: "From the Big Five personality traits: Conscientiousness is associated with being organised, disciplined and hardworking — this maps to consistent effort. Openness reflects curiosity, creativity and receptiveness to new experiences and information — this maps to listening to and accepting coach instruction. 'Remaining calm' (A, D) relates more to emotional stability/agreeableness, and 'remaining quiet' (C) relates more to introversion (not openness)."
+            },
+            {
+                id: "Q30", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "A coach wants a golfer to focus their attention on aspects of their game that they can control internally. What is represented by this scenario?",
+                options: ["Self-fulfilling prophecy", "Learned helplessness", "Attribution theory", "Mental toughness"],
+                answer: 2,
+                explanation: "Attribution theory examines how individuals explain the causes of their performance. Attributions can be classified as internal/external (locus of causality) and controllable/uncontrollable. By directing the golfer to focus on internally controllable factors (e.g. technique, effort, preparation), the coach is applying attribution theory to promote a sense of control and avoid learned helplessness. This also relates to the locus of control concept."
+            },
+            {
+                id: "Q31", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which phase of learning relies heavily on working memory and learning strategies?",
+                options: ["Cognitive", "Associative", "Autonomous", "Competence"],
+                answer: 0,
+                explanation: "Fitts and Posner's model describes three stages of motor learning. In the cognitive phase, the learner is consciously thinking through every aspect of the skill — relying heavily on working (short-term) memory and explicit strategies. Performance is inconsistent and effortful. In the associative phase, practice reduces cognitive demand. In the autonomous phase, the skill is automatic, requiring minimal conscious attention. 'Competence' (D) is not a standard phase in this model."
+            },
+            {
+                id: "Q32", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "A coach considers movement as a complex interaction between the body, the task and the environment. Which approach to motor learning is this?",
+                options: ["Ecological systems theory", "Schema theory", "Open-loop theory", "Closed-loop theory"],
+                answer: 0,
+                explanation: "Ecological systems theory (also called the constraints-led approach or ecological dynamics) views movement as emerging from the interaction between three constraints: the organism (body), the task and the environment. Rather than learning fixed motor programmes, the athlete learns to adapt movement patterns to changing constraints. This contrasts with schema theory (which focuses on stored generalised motor programmes) or loop theories (which focus on feedback mechanisms)."
+            },
+            {
+                id: "Q33", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What best describes the attentional focus of a tennis player trying to work out a strategy during a match?",
+                options: ["Internal, narrow", "Internal, broad", "External, narrow", "External, broad"],
+                answer: 1,
+                explanation: "Nideffer's model of attentional focus has two dimensions: internal/external (focus on thoughts vs. surroundings) and broad/narrow (wide scan vs. specific focus). Thinking through a strategy is an internal focus (inside the athlete's own mind). Analysing the overall game situation, opponent patterns, and multiple tactical options requires a broad scan of information. Therefore, strategic thinking = internal + broad."
+            },
+            {
+                id: "Q34", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "A soccer player explains to their sport psychologist that their aims for the upcoming season are to win top goal scorer and for the team to win the league. Which motivational orientation is shown by these aims?",
+                options: ["High task, high ego", "High task, low ego", "Low task, low ego", "Low task, high ego"],
+                answer: 3,
+                explanation: "Ego orientation focuses on demonstrating superiority over others and winning. Winning the top goal scorer award and winning the league are both outcome-based, comparative goals — classic ego orientation. Task orientation focuses on personal improvement, mastery, and effort. Neither aim mentions personal skill development or self-improvement — there is no evidence of task orientation here."
+            },
+            {
+                id: "Q35", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is a potential outcome of high self-determination and intrinsic motivation?",
+                options: ["Elevated anxiety", "Decreased enjoyment in the sport", "Elevated dropout rate", "Elevated self-regulation"],
+                answer: 3,
+                explanation: "According to Self-Determination Theory (SDT), highly intrinsically motivated athletes satisfy their basic psychological needs (competence, autonomy, relatedness). This leads to greater self-regulation — the ability to independently manage training, set goals, and persist. High intrinsic motivation is associated with lower anxiety, greater enjoyment, and lower dropout rates — making A, B and C incorrect."
+            },
+            {
+                id: "Q36", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which example of extrinsic motivation will enhance intrinsic motivation?",
+                options: ["An athlete receives positive verbal feedback about their effective pacing strategy in a race.", "An athlete receives an extraordinary meal from their parents following a competition.", "An athlete receives a trophy following a competition.", "An athlete receives a contract to play their sport at the professional level."],
+                answer: 0,
+                explanation: "Cognitive Evaluation Theory (part of SDT) states that extrinsic rewards enhance intrinsic motivation when they are informational (providing positive feedback about competence) rather than controlling. Verbal feedback praising a specific skill (pacing strategy) is informational — it increases the athlete's sense of competence. Trophies, meals, and contracts are tangible rewards that can undermine intrinsic motivation by shifting the perceived reason for participating from internal to external (the over-justification effect)."
+            },
+            {
+                id: "Q37", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which of these promote an ego motivational climate? I. Grouping players based on ability, II. Rewarding effort above outcome, III. Encouraging competition between teammates",
+                options: ["I and II only", "I and III only", "II and III only", "I, II and III"],
+                answer: 1,
+                explanation: "An ego/performance motivational climate emphasises social comparison, ability, and winning. Ability grouping (I) signals that worth is based on ability level. Encouraging competition between teammates (III) creates an environment where players compare themselves to one another — a hallmark of ego climate. Rewarding effort above outcome (II) is characteristic of a mastery/task climate, not an ego climate — it focuses on personal development rather than social comparison."
+            },
+            {
+                id: "Q38", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "Which is an example of a problem-focused coping strategy?",
+                options: ["A golfer studying the course before a tournament", "A sprinter meditating before a race", "A hockey player enjoying time with friends before a game", "A gymnast practising with a large crash mat"],
+                answer: 0,
+                explanation: "Problem-focused coping involves actively attempting to address and modify the source of stress. Studying the course (A) directly tackles the stressor (unfamiliarity with the course) by gaining useful information to improve performance. Meditation (B) and socialising (C) are emotion-focused strategies (managing the emotional response to stress). The crash mat (D) reduces physical risk but does not directly address a psychological stressor."
+            },
+            {
+                id: "Q39", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "A swimmer sets a goal to improve their flip turn by improving their technique. What type of goal is this?",
+                options: ["Ego", "Performance", "Task", "Process"],
+                answer: 1,
+                explanation: "In IB SEHS goal-setting theory, a performance goal focuses on achieving a specific standard of personal performance — improving a particular element of one's own athletic skill (here, the flip turn). It is self-referenced rather than comparative (which would be an outcome/ego goal). While 'technique' hints at process, the goal is framed around improving performance of the flip turn as a specific achievement, placing it in the performance goal category. Process goals would specify exact mechanical steps during the action."
+            },
+            {
+                id: "Q40", section: "Specimen", subtopic: "Paper 1A", level: "HL",
+                question: "What is not part of an imagery experience for a professional basketball player practising before their next away game?",
+                options: ["Imagining performing perfectly a three-point shot", "Imagining performing perfectly a block against the best forward", "Imagining staying relaxed and focused in the hostile crowded stadium", "Imagining being the best player scoring the most points"],
+                answer: 3,
+                explanation: "Effective imagery (mental rehearsal) should be realistic, specific and controllable. Imagining perfect three-point shots (A), effective defensive blocks (B) and managing arousal in a hostile environment (C) are all concrete, achievable, and relevant to preparation. Imagining 'being the best player scoring the most points' (D) is ego-oriented, vague, and outcome-focused — not a controllable, process-based mental rehearsal. Quality imagery targets specific skills and situations, not grandiose comparative fantasies."
+            }
+        ];
+
+        let userAnswers = {}; // qId -> chosenIndex
+        let isReviewMode = false;
+        let hasSubmitted = false;
+        const letters = ['A', 'B', 'C', 'D'];
+
+        function renderAllQuestions() {
+            const container = document.getElementById('questionsContainer');
+            const questions = mcQuestions;
+
+            container.innerHTML = questions.map((q, idx) => {
+                const selectedIdx = userAnswers[q.id];
+                
+                let statusEmoji = '';
+                if (hasSubmitted && selectedIdx !== undefined) {
+                    statusEmoji = (selectedIdx === q.answer) 
+                        ? '<span style="font-size: 24px; margin-left: 12px; line-height: 1;">✅</span>' 
+                        : '<span style="font-size: 24px; margin-left: 12px; line-height: 1;">❌</span>';
+                }
+
+                let optionsHTML = q.options.map((opt, i) => {
+                    let cls = (selectedIdx === i) ? 'selected' : '';
+                    if (isReviewMode) {
+                        if (selectedIdx !== undefined) {
+                            if (i === q.answer) cls += ' correct';
+                            else if (selectedIdx === i) cls += ' wrong';
+                        }
+                        cls += ' disabled';
+                    } else if (hasSubmitted) {
+                        cls += ' disabled';
+                    }
+                    return `
+                        <button class="option-btn ${cls}" onclick="selectOption('${q.id}', ${i})" ${(isReviewMode || hasSubmitted) ? 'disabled' : ''}>
+                            <span class="option-letter">${letters[i]}</span>
+                            <span>${opt.replace(/^[A-D]\.\s*/, '')}</span>
+                        </button>
+                    `;
+                }).join('');
+
+                let explanationHTML = '';
+                if (isReviewMode && selectedIdx !== undefined) {
+                    const content = q.explanation;
+                    explanationHTML = `
+                        <div class="explanation-block">
+                            <div class="explanation-title">💡 Analysis</div>
+                            <div class="explanation-body">${content}</div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="question-block" id="q_${q.id}">
+                        <div class="question-header">
+                            <div style="display: flex; align-items: center;">
+                                <span class="subtopic-badge">${q.subtopic} · ${q.level}</span>
+                                ${statusEmoji}
+                            </div>
+                            <span class="q-counter">Q${idx + 1}</span>
+                        </div>
+                        <p class="question-text">${q.question}</p>
+                        <div class="options">${optionsHTML}</div>
+                        ${explanationHTML}
+                    </div>
+                `;
+            }).join('');
+            
+            updateProgressBar();
+        }
+
+        function selectOption(qId, index) {
+            if (isReviewMode) return;
+            userAnswers[qId] = index;
+            renderAllQuestions();
+        }
+
+        function updateProgressBar() {
+            const total = mcQuestions.length;
+            const attempted = Object.keys(userAnswers).length;
+            const pct = Math.round((attempted / total) * 100);
+            
+            document.getElementById('progressFill').style.width = pct + '%';
+            document.getElementById('progressText').textContent = `${attempted} / ${total} Attempted`;
+        }
+
+        function howDidIDo() {
+            hasSubmitted = true;
+            const total = mcQuestions.length;
+            let correct = 0;
+            
+            mcQuestions.forEach(q => {
+                if (userAnswers[q.id] === q.answer) correct++;
+            });
+
+            const scorePct = Math.round((correct / total) * 100);
+            
+            document.getElementById('submitAllBtn').style.display = 'none';
+            document.getElementById('scoreSummary').style.display = 'block';
+            document.getElementById('finalScoreLabel').textContent = `Score: ${correct} / ${total} (${scorePct}%)`;
+
+            renderAllQuestions();
+
+            if (scorePct === 100) {
+                showCelebration(correct, total);
+            } else {
+                document.getElementById('reviewBtn').style.display = 'inline-block';
+            }
+        }
+
+        function showCelebration(correct, total) {
+            const overlay = document.getElementById('celebrationOverlay');
+            overlay.querySelector('.score-display-big').textContent = `${correct} / ${total} · 100% CORRECT`;
+            overlay.style.display = 'flex';
+            
+            // Start fireworks
+            const duration = 60 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 3001 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                }));
+            }, 500); // Slower interval for better performance over a minute
+            
+            overlay.dataset.intervalId = interval;
+        }
+
+        function hideCelebration() {
+            const overlay = document.getElementById('celebrationOverlay');
+            overlay.style.display = 'none';
+            if (overlay.dataset.intervalId) {
+                clearInterval(parseInt(overlay.dataset.intervalId));
+            }
+            reviewResults();
+        }
+
+        function reviewResults() {
+            isReviewMode = true;
+            document.getElementById('scoreSummary').style.display = 'none';
+            renderAllQuestions();
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderAllQuestions;
+    </script>
+</body>
+
+</html>
