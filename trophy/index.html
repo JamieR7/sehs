@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB Sports Science Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #004587 0%, #002d5a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .trophy-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%);
+            border-radius: 15px;
+        }
+
+        .streak-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+
+        .streak-item {
+            text-align: center;
+        }
+
+        .streak-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .streak-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #004587;
+        }
+
+        .streak-value.current {
+            color: #fbba07;
+        }
+
+        .streak-value.best {
+            color: #004587;
+        }
+
+        .streak-reset {
+            animation: shakeRed 0.5s ease;
+        }
+
+        @keyframes shakeRed {
+            0%, 100% { transform: translateX(0); color: #e73037; }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .trophy-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .trophy-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 8px;
+            background: white;
+            border-radius: 12px;
+            border: 3px solid #e0e0e0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .trophy-item.unlocked {
+            border-color: #fbba07;
+            box-shadow: 0 4px 12px rgba(251, 186, 7, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .trophy-item.unlocked:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 6px 16px rgba(251, 186, 7, 0.5);
+        }
+
+        .trophy-item.locked {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            cursor: default;
+        }
+
+        .trophy-image {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .trophy-number {
+            font-weight: 600;
+            font-size: 14px;
+            color: #004587;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #004587;
+            font-weight: 500;
+        }
+
+        h1 {
+            text-align: center;
+            color: #004587;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .question-box {
+            margin: 30px 0;
+        }
+
+        .question-number {
+            color: #004587;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 18px 24px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .option:hover {
+            border-color: #004587;
+            background: #f0f4f8;
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            border-color: #004587;
+            background: #004587;
+            color: white;
+        }
+
+        .option.correct {
+            border-color: #fbba07;
+            background: #fbba07;
+            color: #004587;
+            font-weight: 600;
+        }
+
+        .option.incorrect {
+            border-color: #e73037;
+            background: #e73037;
+            color: white;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .feedback {
+            margin: 20px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .feedback.correct {
+            background: #fff8e1;
+            color: #004587;
+            border: 2px solid #fbba07;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #e73037;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-primary {
+            background: #004587;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 69, 135, 0.4);
+            background: #003670;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 24px;
+            margin: 20px 0;
+            color: #004587;
+            font-weight: 600;
+        }
+
+        .results-container {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .final-score {
+            font-size: 48px;
+            color: #004587;
+            margin: 20px 0;
+            font-weight: 700;
+        }
+
+        .message {
+            font-size: 24px;
+            color: #666;
+            margin: 20px 0;
+        }
+
+        .trophy-display {
+            font-size: 80px;
+            margin: 30px 0;
+            animation: bounce 1s ease infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .btn-restart {
+            margin-top: 30px;
+            background: #004587;
+            color: white;
+        }
+
+        .btn-restart:hover {
+            background: #003670;
+        }
+
+        @media (max-width: 1024px) {
+            .trophy-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 25px;
+            }
+
+            .streak-container {
+                gap: 20px;
+            }
+
+            .streak-value {
+                font-size: 24px;
+            }
+            
+            .trophy-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 10px;
+            }
+            
+            .trophy-image {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .trophy-number {
+                font-size: 12px;
+            }
+            
+            h1 {
+                font-size: 26px;
+            }
+            
+            .question-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="trophy-section">
+            <h2 style="text-align: center; color: #004587; margin-bottom: 20px;">🏆 Trophy Collection</h2>
+            
+            <div class="streak-container">
+                <div class="streak-item">
+                    <div class="streak-label">Current Streak</div>
+                    <div class="streak-value current" id="currentStreak">0</div>
+                </div>
+                <div class="streak-item">
+                    <div class="streak-label">Best Streak</div>
+                    <div class="streak-value best" id="bestStreak">0</div>
+                </div>
+            </div>
+
+            <div class="trophy-grid" id="trophyGrid"></div>
+            <p class="progress-text" id="progressText">Progress: 0 of 12 trophies unlocked</p>
+        </div>
+
+        <h1>IB Sports Science Quiz</h1>
+        <p class="subtitle">Test your knowledge with real IB exam questions - Keep your streak alive!</p>
+        
+        <div id="quizArea">
+            <div class="question-box">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+            </div>
+            
+            <div id="feedback" class="feedback" style="display: none;"></div>
+            
+            <div class="score-display" id="scoreDisplay">Score: 0/0</div>
+            
+            <button class="btn btn-primary" id="nextBtn" style="display: none;">Next Question</button>
+        </div>
+        
+        <div id="resultsArea" style="display: none;">
+            <div class="results-container">
+                <h2 style="color: #004587;">Quiz Complete!</h2>
+                <div class="trophy-display" id="finalTrophy"></div>
+                <div class="final-score" id="finalScore"></div>
+                <div class="message" id="finalMessage"></div>
+                <button class="btn btn-restart" onclick="location.reload()">Start New Quiz</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load questions first -->
+    <script src="questions.js"></script>
+    
+    <!-- Then quiz logic -->
+    <script>
+        const trophies = [
+            { milestone: 1, image: "Trophys/FIFA.png", name: "FIFA World Cup" },
+            { milestone: 3, image: "Trophys/Calcutta%20Cup.png", name: "Calcutta Cup" },
+            { milestone: 5, image: "Trophys/FIVB.png", name: "FIVB World Championship Trophy" },
+            { milestone: 7, image: "Trophys/The%20Ashes.png", name: "The Ashes" },
+            { milestone: 10, image: "Trophys/Snooker.png", name: "The Silver Lady" },
+            { milestone: 13, image: "Trophys/Americas%20cup.png", name: "America's Cup" },
+            { milestone: 17, image: "Trophys/Larry%20O'Brien.png", name: "Larry O'Brien Trophy" },
+            { milestone: 21, image: "Trophys/Davis%20Cup.png", name: "Davis Cup" },
+            { milestone: 25, image: "Trophys/Ryder%20Cup.png", name: "Ryder Cup" },
+            { milestone: 30, image: "Trophys/Venus%20Rosewater.png", name: "Venus Rosewater Dish" },
+            { milestone: 35, image: "Trophys/Olympic%20gold.png", name: "Olympic Gold Medal" },
+            { milestone: 40, image: "Trophys/Yellow%20jersey.png", name: "Yellow Jersey" }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let currentStreak = 0;
+        let bestStreak = 0;
+        let selectedAnswer = null;
+        let quizQuestions = [];
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function initQuiz() {
+            quizQuestions = shuffleArray(allQuestions).slice(0, 40);
+            displayTrophies();
+            loadQuestion();
+        }
+
+        function openTrophy(imagePath, isUnlocked) {
+            if (isUnlocked) {
+                window.open(imagePath, '_blank');
+            }
+        }
+
+        function updateStreakDisplay() {
+            const currentStreakEl = document.getElementById('currentStreak');
+            const bestStreakEl = document.getElementById('bestStreak');
+            
+            currentStreakEl.textContent = currentStreak;
+            bestStreakEl.textContent = bestStreak;
+            
+            currentStreakEl.classList.remove('streak-reset');
+        }
+
+        function displayTrophies() {
+            const trophyGrid = document.getElementById('trophyGrid');
+            trophyGrid.innerHTML = '';
+            
+            trophies.forEach(trophy => {
+                const isUnlocked = bestStreak >= trophy.milestone;
+                const trophyItem = document.createElement('div');
+                trophyItem.className = `trophy-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+                trophyItem.title = isUnlocked ? `Click to view ${trophy.name}` : `🔒 ${trophy.name} (Need ${trophy.milestone} streak)`;
+                trophyItem.onclick = () => openTrophy(trophy.image, isUnlocked);
+                trophyItem.innerHTML = `
+                    <img src="${trophy.image}" alt="${trophy.name}" class="trophy-image">
+                    <div class="trophy-number">${trophy.milestone}</div>
+                `;
+                trophyGrid.appendChild(trophyItem);
+            });
+            
+            const unlockedCount = trophies.filter(t => bestStreak >= t.milestone).length;
+            document.getElementById('progressText').textContent = 
+                `Progress: ${unlockedCount} of ${trophies.length} trophies unlocked`;
+        }
+
+        function loadQuestion() {
+            if (currentQuestion >= quizQuestions.length) {
+                showResults();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestion];
+            selectedAnswer = null;
+            
+            document.getElementById('questionNumber').textContent = 
+                `Question ${currentQuestion + 1} of ${quizQuestions.length}`;
+            document.getElementById('questionText').textContent = question.q;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option';
+                optionDiv.textContent = option;
+                optionDiv.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}/${currentQuestion}`;
+        }
+
+        function selectAnswer(index) {
+            if (selectedAnswer !== null) return;
+            
+            selectedAnswer = index;
+            const question = quizQuestions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            options.forEach(opt => opt.classList.add('disabled'));
+            
+            if (index === question.correct) {
+                options[index].classList.add('correct');
+                score++;
+                currentStreak++;
+                if (currentStreak > bestStreak) {
+                    bestStreak = currentStreak;
+                }
+                showFeedback(true);
+                updateStreakDisplay();
+                displayTrophies();
+            } else {
+                options[index].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                currentStreak = 0;
+                showFeedback(false);
+                const currentStreakEl = document.getElementById('currentStreak');
+                currentStreakEl.classList.add('streak-reset');
+                updateStreakDisplay();
+                displayTrophies();
+            }
+            
+            currentQuestion++;
+            document.getElementById('scoreDisplay').textContent = `Score: ${score}/${currentQuestion}`;
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function showFeedback(isCorrect) {
+            const feedback = document.getElementById('feedback');
+            feedback.style.display = 'block';
+            feedback.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+            feedback.textContent = isCorrect ? '✓ Correct! Streak +1' : '✗ Incorrect - Streak Reset!';
+        }
+
+        function showResults() {
+            document.getElementById('quizArea').style.display = 'none';
+            document.getElementById('resultsArea').style.display = 'block';
+            
+            const percentage = (score / quizQuestions.length) * 100;
+            const finalScore = document.getElementById('finalScore');
+            const finalMessage = document.getElementById('finalMessage');
+            const finalTrophy = document.getElementById('finalTrophy');
+            
+            finalScore.innerHTML = `${score}/${quizQuestions.length} (${percentage.toFixed(1)}%)<br><small style="font-size: 24px;">Best Streak: ${bestStreak}</small>`;
+            
+            if (percentage >= 90) {
+                finalMessage.textContent = 'Outstanding! IB Level 7! 🌟';
+                finalTrophy.textContent = '🏆';
+            } else if (percentage >= 80) {
+                finalMessage.textContent = 'Excellent! IB Level 6!';
+                finalTrophy.textContent = '🥇';
+            } else if (percentage >= 70) {
+                finalMessage.textContent = 'Great work! IB Level 5!';
+                finalTrophy.textContent = '🥈';
+            } else if (percentage >= 60) {
+                finalMessage.textContent = 'Good effort! IB Level 4!';
+                finalTrophy.textContent = '🥉';
+            } else {
+                finalMessage.textContent = 'Keep practicing!';
+                finalTrophy.textContent = '📚';
+            }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', loadQuestion);
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
