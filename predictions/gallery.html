@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Predictions Gallery | IB SEHS Predictor</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .prediction-card {
+            transition: all 0.3s ease;
+        }
+
+        .prediction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+
+<body style="background: linear-gradient(135deg, #004587 0%, #002a52 100%); min-height: 100vh;">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md sticky top-0 z-50" style="border-bottom: 3px solid #fbba07;">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="landing.html" class="flex items-center gap-2 hover:opacity-80 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="#004587" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span class="font-semibold" style="color: #004587;">Back to Home</span>
+                </a>
+            </div>
+            <h1 class="text-xl font-bold" style="color: #004587;">
+                Student Predictions <span style="color: #fbba07;">Gallery</span>
+            </h1>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 py-12">
+
+        <!-- Filters Section -->
+        <div class="bg-white rounded-xl p-6 mb-8 shadow-lg">
+            <h2 class="text-lg font-bold mb-4" style="color: #004587;">Filter Predictions</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Topic Filter -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2" style="color: #666;">Topic</label>
+                    <select id="topicFilter"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#fbba07]">
+                        <option value="">All Topics</option>
+                        <option value="A">A. Exercise Physiology & Nutrition</option>
+                        <option value="B">B. Biomechanics</option>
+                        <option value="C">C. Sports Psychology</option>
+                    </select>
+                </div>
+
+                <!-- Subtopic Filter -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2" style="color: #666;">Subtopic</label>
+                    <select id="subtopicFilter"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#fbba07]">
+                        <option value="">All Subtopics</option>
+                        <option value="A.1.1">A.1.1 Inter-system communication</option>
+                        <option value="A.1.2">A.1.2 Maintaining homeostasis</option>
+                        <option value="A.1.3">A.1.3 Transport</option>
+                        <option value="A.2.1">A.2.1 Water and electrolyte balance</option>
+                        <option value="A.2.2">A.2.2 Fuelling for health/performance</option>
+                        <option value="A.2.3">A.2.3 Energy systems</option>
+                        <option value="A.3.1">A.3.1 Qualities of training</option>
+                        <option value="A.3.2">A.3.2 Health benefits of activity</option>
+                        <option value="A.3.3">A.3.3 Fatigue and recovery</option>
+                        <option value="B.1.1">B.1.1 Anatomical position and movement</option>
+                        <option value="B.1.2">B.1.2 Connective tissues and joints</option>
+                        <option value="B.1.3">B.1.3 Muscular function</option>
+                        <option value="B.1.4">B.1.4 Levers in movement</option>
+                        <option value="B.2.1">B.2.1 Newton's laws of motion</option>
+                        <option value="B.2.2">B.2.2 Fluid mechanics</option>
+                        <option value="B.2.3">B.2.3 Movement analysis</option>
+                        <option value="B.3">B.3 Injury causes and prevention</option>
+                        <option value="C.1">C.1 Individual differences</option>
+                        <option value="C.2.1">C.2.1 Motor learning processes</option>
+                        <option value="C.2.2">C.2.2 Attentional control</option>
+                        <option value="C.3">C.3 Motivation</option>
+                        <option value="C.4.1">C.4.1 Arousal and anxiety</option>
+                        <option value="C.4.2">C.4.2 Coping</option>
+                        <option value="C.5">C.5 Psychological skills</option>
+                    </select>
+                </div>
+
+                <!-- Search -->
+                <div>
+                    <label class="block text-sm font-semibold mb-2" style="color: #666;">Search Username</label>
+                    <input type="text" id="searchInput" placeholder="Type username..."
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#fbba07]">
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon Notice -->
+        <div class="text-center py-20">
+            <div class="inline-block p-6 rounded-full mb-6" style="background: rgba(251, 186, 7, 0.1);">
+                <span style="font-size: 64px;">🔮</span>
+            </div>
+            <h2 class="text-3xl font-bold text-white mb-4">Let's see what your classmates have been predicting...</h2>
+            <p class="text-lg mb-8" style="color: rgba(255, 255, 255, 0.8);">
+                Loading predictions from the database ✨
+            </p>
+            <a href="predict.html" class="inline-block px-8 py-4 rounded-lg text-white font-semibold text-lg"
+                style="background: linear-gradient(135deg, #fbba07 0%, #e0a800 100%);">
+                Submit Your Predictions →
+            </a>
+        </div>
+
+        <!-- Predictions Grid (Will be populated dynamically) -->
+        <div id="predictionsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" style="display: none;">
+            <!-- Prediction cards will be inserted here via JavaScript -->
+        </div>
+
+    </div>
+
+    <!-- Config -->
+    <script src="config.js"></script>
+
+    <script>
+        let allPredictions = [];
+        let filteredPredictions = [];
+
+        // Load predictions from backend
+        async function loadPredictions() {
+            const comingSoon = document.querySelector('.text-center.py-20');
+            const grid = document.getElementById('predictionsGrid');
+
+            try {
+                const response = await fetch(`${CONFIG.API_URL}?action=get-public-predictions`);
+                const result = await response.json();
+
+                if (result.success && result.predictions.length > 0) {
+                    allPredictions = result.predictions;
+                    filteredPredictions = allPredictions;
+
+                    // Hide "coming soon", show grid
+                    comingSoon.style.display = 'none';
+                    grid.style.display = 'grid';
+
+                    renderPredictions();
+                } else {
+                    // No predictions yet
+                    comingSoon.querySelector('h2').textContent = 'No predictions yet — be the first! 🚀';
+                    comingSoon.querySelector('p').textContent = 'Head over to the predictor and share your exam strategy with the class.';
+                }
+            } catch (error) {
+                console.error('Error loading predictions:', error);
+                comingSoon.querySelector('h2').textContent = 'Oops — couldn\'t load predictions 😕';
+                comingSoon.querySelector('p').textContent = 'Please check your connection and try again.';
+            }
+        }
+
+        // Render prediction cards
+        function renderPredictions() {
+            const grid = document.getElementById('predictionsGrid');
+            grid.innerHTML = '';
+
+            filteredPredictions.forEach((pred, index) => {
+                const card = document.createElement('div');
+                card.className = 'prediction-card bg-white rounded-lg p-5 shadow-lg border border-gray-200';
+
+                // Truncate long questions
+                const questionPreview = pred.question;
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex items-center gap-2">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white" style="background: ${getColorForUsername(pred.username)};">
+                                ${pred.username.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="font-bold" style="color: #004587;">${escapeHtml(pred.username)}</div>
+                                <div class="text-xs text-gray-500">${pred.unitCode} • ${pred.level.toUpperCase()} • ${pred.paper.toUpperCase()}</div>
+                            </div>
+                        </div>
+                        <span class="text-lg font-bold font-mono" style="color: #fbba07;">${pred.predictedPoints}pts</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="text-xs uppercase text-gray-500 mb-1">Question(s)</div>
+                        <div class="text-sm text-gray-700 leading-relaxed" style="white-space: pre-line;">${escapeHtml(questionPreview)}</div>
+                    </div>
+                    
+                    <div class="mb-3 mark-scheme-container-${index}" style="display: none;">
+                        <div class="text-xs uppercase text-gray-500 mb-1">Mark Scheme</div>
+                        <div class="text-sm text-gray-700 bg-gray-50 p-3 rounded border border-gray-200 leading-relaxed" style="white-space: pre-line;">${escapeHtml(pred.markScheme)}</div>
+                    </div>
+                    
+                    <button onclick="toggleMarkScheme(${index})" class="w-full py-2 px-4 rounded text-sm font-semibold transition mark-scheme-btn-${index}" style="background: #f8f9fa; color: #004587; border: 1px solid #e0e0e0;">
+                        🔍 Reveal Mark Scheme
+                    </button>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Toggle mark scheme visibility
+        function toggleMarkScheme(index) {
+            const container = document.querySelector(`.mark-scheme-container-${index}`);
+            const btn = document.querySelector(`.mark-scheme-btn-${index}`);
+
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                btn.textContent = '🔒 Hide Mark Scheme';
+                btn.style.background = 'linear-gradient(135deg, #fbba07 0%, #e0a800 100%)';
+                btn.style.color = 'white';
+                btn.style.border = 'none';
+            } else {
+                container.style.display = 'none';
+                btn.textContent = '🔍 Reveal Mark Scheme';
+                btn.style.background = '#f8f9fa';
+                btn.style.color = '#004587';
+                btn.style.border = '1px solid #e0e0e0';
+            }
+        }
+
+        // Filter predictions
+        function applyFilters() {
+            const topicFilter = document.getElementById('topicFilter').value;
+            const subtopicFilter = document.getElementById('subtopicFilter').value;
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredPredictions = allPredictions.filter(pred => {
+                const matchesTopic = !topicFilter || pred.unitCode.startsWith(topicFilter);
+                const matchesSubtopic = !subtopicFilter || pred.unitCode === subtopicFilter;
+                const matchesSearch = !searchQuery || pred.username.toLowerCase().includes(searchQuery);
+
+                return matchesTopic && matchesSubtopic && matchesSearch;
+            });
+
+            renderPredictions();
+        }
+
+        // Helper: Generate consistent color for username
+        function getColorForUsername(username) {
+            const colors = ['#004587', '#fbba07', '#e0a800', '#003366', '#d4a017', '#0066cc'];
+            let hash = 0;
+            for (let i = 0; i < username.length; i++) {
+                hash = username.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return colors[Math.abs(hash) % colors.length];
+        }
+
+        // Helper: Escape HTML to prevent XSS
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Event listeners
+        document.getElementById('topicFilter').addEventListener('change', applyFilters);
+        document.getElementById('subtopicFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+        // Load on page load
+        loadPredictions();
+    </script>
+
+</body>
+
+</html>
