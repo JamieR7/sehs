@@ -1,0 +1,181 @@
+/* =====================================================
+   IB SEHS 2026 VIDEO REPOSITORY - STYLES
+   ===================================================== */
+
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', Arial, 'Helvetica Neue', sans-serif;
+    background: linear-gradient(135deg, #004587 0%, #002a52 100%);
+    color: #fff;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Header */
+.site-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.site-header h1 {
+    font-size: 3rem;
+    color: #fbba07;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 300;
+}
+
+/* Sections */
+.topic-section {
+    margin-bottom: 4rem;
+}
+
+.topic-section h2 {
+    color: #fbba07;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+    border-bottom: 4px solid rgba(251, 186, 7, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-weight: 700;
+}
+
+/* Grid Layout */
+.unit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* Unit Card */
+.unit-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.unit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.unit-label {
+    background: #fbba07;
+    color: #004587;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+    gap: 1rem;
+}
+
+.label-text {
+    flex: 1;
+}
+
+.label-emoji {
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.unit-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #fff;
+    flex: 1;
+}
+
+/* Video Link List */
+.video-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.video-link-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 1);
+    color: #004587;
+    text-decoration: none;
+    padding: 0.85rem 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    gap: 0.75rem;
+}
+
+.video-link-item:hover {
+    background: #fbba07;
+    color: #004587;
+    transform: scale(1.02);
+}
+
+.video-icon {
+    font-size: 1.2rem;
+}
+
+/* Link-specific Icons/Colors if needed */
+.url-podcast {
+    background-color: #f0f0f0;
+}
+
+.site-footer {
+    text-align: center;
+    margin-top: 5rem;
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .site-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .unit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .container {
+        padding: 0 1rem;
+    }
+}
