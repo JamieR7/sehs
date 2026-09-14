@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IB SEHS Paper 1B Exam Practice</title>
+    <!-- <link rel="icon" type="image/x-icon" href="favicon.ico"> -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #004587;
+            min-height: 100vh;
+            padding: 20px;
+            padding-bottom: 70px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; color: white; margin-bottom: 30px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+        .header p { font-size: 1.1em; opacity: 0.95; }
+        .ai-disclaimer {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .ai-disclaimer strong { display: block; margin-bottom: 5px; font-size: 15px; }
+        .controls {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .question-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-btn {
+            padding: 10px 20px;
+            background: #F2B406;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .nav-btn:hover:not(:disabled) { background: #E82F37; }
+        .nav-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .random-btn {
+            padding: 10px 20px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .random-btn:hover { background: #059669; }
+        
+        /* New Styles for Grouped Questions */
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .context-section {
+            background: #e3f2fd;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 6px solid #2196F3;
+            font-size: 1.05em;
+            line-height: 1.6;
+            color: #2c3e50;
+        }
+        .context-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #1976D2;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        /* Styles for Nicely Inserted Images */
+        .scenario-visual {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto; /* Centers the image */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border: 1px solid #bbdefb; /* Light blue border to match context */
+            background: white;
+            padding: 10px;
+        }
+
+        .sub-question-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .sub-question-card:hover {
+            border-color: #ced4da;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-right: 8px;
+            letter-spacing: 0.5px;
+        }
+        .badge-SL { background: #10b981; color: white; }
+        .badge-HL { background: #f59e0b; color: white; }
+        .subtopic-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e0e7ff;
+            color: #3730a3;
+            margin-right: 8px;
+        }
+
+        /* Question Type Badges */
+        .type-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .badge-calc { background: #9333ea; } /* Purple for Math */
+        .badge-eval { background: #ea580c; } /* Orange for Evaluation */
+        .badge-analysis { background: #0284c7; } /* Blue for Analysis */
+        .badge-know { background: #059669; } /* Green for Knowledge */
+        .badge-app { background: #4b5563; } /* Grey for Application */
+
+        .marks-badge {
+            background: #F2B406;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .question-text { 
+            font-size: 18px; 
+            line-height: 1.6; 
+            color: #1a1a1a; 
+            margin-bottom: 20px; 
+            font-weight: 500;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s;
+            margin-bottom: 10px;
+        }
+        textarea:focus { outline: none; border-color: #F2B406; }
+        
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+        .submit-btn {
+            flex: 2;
+            padding: 12px;
+            background: linear-gradient(135deg, #F2B406 0%, #d49e05 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(242, 180, 6, 0.4); }
+        
+        .dontknow-btn {
+            flex: 1;
+            padding: 12px;
+            background: #adb5bd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .dontknow-btn:hover {
+            transform: translateY(-2px);
+            background: #98a2ac;
+            box-shadow: 0 4px 12px rgba(173, 181, 189, 0.4);
+        }
+        
+        .loading { text-align: center; color: #F2B406; font-weight: 600; margin-top: 15px; display: none; }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #F2B406;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .result { margin-top: 20px; padding: 20px; border-radius: 8px; display: none; border: 1px solid #e0e0e0; }
+        .score-display { font-size: 20px; font-weight: bold; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #e0e0e0; }
+        
+        .comment-section, .hint-section, .mark-scheme-section { margin-top: 15px; padding: 15px; border-radius: 6px; }
+        .comment-section h3, .hint-section h3, .mark-scheme-section h3 { font-size: 13px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .comment-section p, .hint-section p, .mark-scheme-section p { margin: 0; line-height: 1.5; font-size: 15px; }
+        
+        .mark-scheme-section { background: #f8f9fa; border-left: 4px solid #6c757d; }
+        .honesty-message {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            color: #0c5460;
+            line-height: 1.6;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 55px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            gap: 15px;
+        }
+        .progress-wrapper {
+            flex: 1;
+            position: relative;
+            height: 28px;
+            background: #ffffff;
+            border-radius: 14px;
+            overflow: visible;
+            border: 2px solid #f0f0f0;
+            z-index: 1;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #ff8c00;
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+            z-index: 2;
+            width: 0%;
+        }
+        .progress-checkmarks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .checkpoint {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #666;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            transition: all 0.3s;
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            pointer-events: all;
+            cursor: help;
+            z-index: 4;
+        }
+        .checkpoint.achieved {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+            font-weight: bold;
+        }
+        .checkpoint:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            font-weight: 600;
+            z-index: 10;
+            pointer-events: none;
+        }
+        .checkpoint:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #333;
+            z-index: 10;
+        }
+        .you-marker {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            transition: left 0.5s ease;
+            z-index: 3;
+        }
+        .you-dot {
+            width: 14px;
+            height: 14px;
+            background: #ff8c00;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(255, 140, 0, 0.6);
+        }
+        .you-label {
+            position: absolute;
+            top: -28px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ff8c00;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            white-space: nowrap;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .progress-text {
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 500;
+            color: #004587;
+            font-size: 16px;
+            white-space: nowrap;
+            min-width: 280px;
+            letter-spacing: -0.02em;
+        }
+        .progress-text .points-display {
+            font-size: 22px;
+            color: #F2B406;
+            font-weight: 500;
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .milestone-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 2000;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .milestone-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .milestone-popup .emoji {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .milestone-popup .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #F2B406;
+            margin-bottom: 10px;
+            font-family: 'Gotham', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 IB SEHS Exam Practice</h1>
+            <p>Paper 1B Practice Questions</p>
+        </div>
+
+        <div class="ai-disclaimer">
+            <strong>⚠️ AI Marking Disclaimer</strong>
+            Watch out! This marking is done by AI. It's usually pretty good, but just like your teacher, it is occasionally clueless! Think you should have been given more marks? Perfect! That's critical thinking at work. Bring your disagreement to your teacher and classmates for some proper academic debate. The official IB mark schemes are still the final word.
+        </div>
+
+        <div class="controls">
+            <div class="question-nav">
+                <button class="nav-btn" id="prevBtn" onclick="navigateScenario(-1)">← Previous Group</button>
+                <button class="random-btn" onclick="loadRandomScenario()">🎲 Random Group</button>
+                <button class="nav-btn" id="nextBtn" onclick="navigateScenario(1)">Next Group →</button>
+            </div>
+        </div>
+
+        <!-- The Content Container -->
+        <div id="scenarioContainer"></div>
+
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+        <div class="progress-wrapper">
+            <div class="progress-fill" id="progressFill"></div>
+            <div class="progress-checkmarks">
+                <div class="checkpoint" style="left: 5%;" data-points="5" data-tooltip="5 pts: No longer clueless 🤷‍♂️"></div>
+                <div class="checkpoint" style="left: 10%;" data-points="10" data-tooltip="10 pts: Getting the vibe 🎯"></div>
+                <div class="checkpoint" style="left: 20%;" data-points="20" data-tooltip="20 pts: On a streak 🔥"></div>
+                <div class="checkpoint" style="left: 35%;" data-points="35" data-tooltip="35 pts: Built different 💪"></div>
+                <div class="checkpoint" style="left: 50%;" data-points="50" data-tooltip="50 pts: Actually goated 🐐"></div>
+                <div class="checkpoint" style="left: 75%;" data-points="75" data-tooltip="75 pts: Certified legend 👑"></div>
+                <div class="checkpoint" style="left: 100%;" data-points="100" data-tooltip="100 pts: Final boss down ⚔️"></div>
+            </div>
+            <div class="you-marker" id="youMarker">
+                <div class="you-dot"></div>
+                <div class="you-label">You</div>
+            </div>
+        </div>
+        <div class="progress-text" id="progressText"><span class="points-display">0</span> pts · Next: No longer clueless 🤷‍♂️ (5 away)</div>
+    </div>
+
+    <!-- Milestone Popup -->
+    <div class="milestone-popup" id="milestonePopup">
+        <div class="emoji" id="milestoneEmoji"></div>
+        <div class="title" id="milestoneTitle"></div>
+    </div>
+
+    <script>
+        // Grouped Questions Data Structure
+        const scenarios = [
+            {
+                id: "Scenario_Memory",
+                context: "A study examined effects of exercise on long-term memory. Participants were presented with a list of words before or after exercise. Recall of the list of words was measured twice: 60 minutes and 24 hours after being presented with the words. Participants were randomly assigned to one of three groups:\n- Control group\n- Words presented before exercise group\n- Words presented after exercise group.\nThe table shows the mean and standard deviation (SD) of the correct recall count of the words for the three groups.\n\n<img src='images/Scenario_Memory.png' class='scenario-visual' alt='Table showing mean and SD of correct recall count'>",
+                subtopic: "25M.1B.HL.TZ1.1",
+                questions: [
+                    { id: "PB001", marks: 1, level: "HL", question: "Identify the group and condition with the lowest mean recall count.", markScheme: "Control and 24-hour «recall count» ✔ Must include group and condition for credit." },
+                    { id: "PB002", marks: 1, level: "HL", question: "Calculate the difference between the standard deviation values for the words before exercise and words after exercise groups during the 60-minute recall count.", markScheme: "2.90 − 2.90 = 0.00 ✔ Accept 2.9 as alternative for 2.90. Accept 0 as alternative for 0.00." },
+                    { id: "PB003", marks: 2, level: "HL", question: "Using the data, analyse the standard deviations for the words before exercise and words after exercise groups during the 60-minute recall count.", markScheme: "Both SD are 2.90/ the same «value»/show no difference ✔ The SD is large «relative to the mean» which indicates lower reliability of the data ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Cardiac",
+                context: "A study examined changes in maximal cardiac output in response to high-intensity interval training (HIIT). Participants were divided into two groups: control group (no exercise) and test group (performed HIIT). The table shows the mean results for the control and test groups measured at baseline and post-treatment.\n\n<img src='images/Scenario_Cardiac.png' class='scenario-visual' alt='Table showing mean cardiac output results'>",
+                subtopic: "25M.1B.HL.TZ1.1",
+                questions: [
+                     { id: "PB007", marks: 1, level: "HL", question: "State the mean post-treatment cardiac output for the HIIT group.", markScheme: "22 «L/min» ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Arousal",
+                context: "Participants performed a response time task to measure performance on a bicycle ergometer at various arousal levels, from 20% to 90% of heart rate reserve. Response times for each arousal level are presented in the graph.\n\n<img src='images/Scenario_Arousal.png' class='scenario-visual' alt='Graph showing response times at various arousal levels'>",
+                subtopic: "25M.1B.HL.TZ1.101",
+                questions: [
+                    { id: "PB009", marks: 1, level: "HL", question: "Identify which arousal level(s) had the fastest response time.", markScheme: "60«%»/ 70«%» ✔" },
+                    { id: "PB010", marks: 1, level: "HL", question: "Calculate the difference in response time (in s) between the 20% arousal level and the 80% arousal level.", markScheme: "0.9−0.6 = 0.3 «sec» ✔" },
+                    { id: "PB011", marks: 4, level: "HL", question: "Using the data, discuss the association between arousal and performance.", markScheme: "Initial decrease in response time as arousal levels increase ✔ Arousal improves from a low state, so does the performance in terms of quicker response ✔ 60-70% HRR represents the fastest response time - indicates the optimal arousal level for performance ✔ As arousal levels continue to increase beyond optimal, the response time starts to increase, impairing performance ✔ High levels of arousal are not as detrimental to performance as low levels of arousal ✔ The graph supports the Inverted-U theory, showing an optimal level of arousal for performance «deviations from this level, whether lower or higher, are associated with poorer performance» ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Diabetes",
+                context: "A study examined the prevalence of type 2 diabetes across various population groups. The age-adjusted percentages of affected males and females are presented in the graph.\n\n<img src='images/Scenario_Diabetes.png' class='scenario-visual' alt='Graph showing prevalence of type 2 diabetes'>",
+                subtopic: "25M.1B.HL.TZ1.102",
+                questions: [
+                    { id: "PB012", marks: 1, level: "HL", question: "Identify the group with the highest age-adjusted percentage of type 2 diabetes.", markScheme: "A ✔" },
+                    { id: "PB013", marks: 1, level: "HL", question: "Calculate the difference in the percentage of type 2 diabetes between males and females in group E.", markScheme: "8−7=1«%» ✔ Accept 0.8 to 1.2 «%»." },
+                    { id: "PB014", marks: 2, level: "HL", question: "Based on the data, evaluate the claim that males in population group B have a higher age-adjusted percentage of type 2 diabetes compared to females.", markScheme: "Group B men have a higher percentage of diabetes than females ✔ Overlapping error bars for group B men and women may indicate a lack of statistical significance «in the difference in diabetes prevalence» ✔ A statistical test, such as a t-test, is necessary to confirm if the differences are statistically significant ✔" }
+                ]
+            },
+            {
+                id: "Scenario_ACL",
+                context: "A study investigated the relationship between psychological readiness for return to sport and predicted motor unit force (MUF) after anterior cruciate ligament (ACL) injury. Psychological readiness was measured using a return to sport after injury (RSI) questionnaire.\n\nFigure 1 shows the MUF generated at five different motor unit recruitment (MUR) percentages.\n\n<img src='images/Scenario_ACL.png' class='scenario-visual' alt='Figure 1: MUF generated at different MUR percentages'>",
+                subtopic: "25M.1B.HL.TZ2.1",
+                questions: [
+                    { id: "PB016", marks: 1, level: "HL", question: "Identify the group that showed the lowest vastus lateralis MUF.", markScheme: "RSI-low «group» ✔" },
+                    { id: "PB017", marks: 1, level: "HL", question: "Calculate the difference in MUF of the vastus lateralis between the RSI-high and RSI-low groups at 21–25% MUR.", markScheme: "28 – 18 = 10 «%» ✔ Accept any variation of workings and accurate answer using the following range 28-29 for RSI-High and 18-19 for RSI low." },
+                    { id: "PB018", marks: 3, level: "HL", question: "Based on the data presented in Figure 1, discuss the hypothesis that psychological readiness for return to sport is related to MUF.", markScheme: "RSI-High mirrors control MUF much closer than RSI–Low ✔ RSI-high MUFs are significantly higher than RSI-low MUFs since p<0.001 ✔ Therefore the data supports the hypothesis that RSI is related to MUF ✔ However RSI-high MUFs only mirrors the Control MUF up until the highest MUF %/point «where it does deviate %» ✔ However the data is valid for isometric contractions rather than isotonic ✔" },
+                    { id: "PB019", marks: 2, level: "HL", question: "Explain why it was important to include a control group in this study.", markScheme: "The control/ACL group is the group that does not receive the independent variable treatment/not had an ACL injury ✔ The control/ACL group allows for comparison to the experimental/RSI groups ✔ Including a control group ensures internal validity ✔" },
+                    { id: "PB020", marks: 1, level: "HL", question: "The study also assessed the biceps femoris MUF at different MUR percentages, which generated an R2 value of 0.27. Comment on the meaning of the value.", markScheme: "It quantifies the goodness of fit/strength of the correlation/relationship between % MUR and MUF, however, correlation does not establish causation in a relationship ✔ «Since R2 values range from 0−100%, where 0 is no correlation and 100% is an exact correlation/fit, then» 0.27 is a weak correlation ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Stretching_Table",
+                context: "A study investigated the effect of an 8-week static stretching programme on maximum strength. Participants were placed into two groups: Intervention group (IG) and Control group (CG). Measurements were recorded pre- and post-training and are presented in the table below.\n\n<img src='images/Scenario_Stretching_Table.png' class='scenario-visual' alt='Table of stretching study results'>",
+                subtopic: "25M.1B.HL.TZ3.1",
+                questions: [
+                    { id: "PB026", marks: 1, level: "HL", question: "Identify the group with the lower pre-training ISO mean.", markScheme: "Control group/CG/No stretching routine ✔" },
+                    { id: "PB027", marks: 2, level: "HL", question: "Determine the percentage change in the 1RM mean from pre-training to post-training for the intervention group.", markScheme: "(79.69−75.25) divided by 75.25 × 100 OR 4.44 divided by 75.25 × 100 OR Change between 1RM values divided by initial 1RM value x 100 ✔ 5.9/6% «increase» ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Stretching_Graph",
+                context: "The data from the investigation was made into a series of graphs. The graphs for 1RM, ISO and ROM are presented in Figure 1.\n\n<img src='images/Scenario_Stretching_Graph.png' class='scenario-visual' alt='Figure 1: Graphs for 1RM, ISO and ROM'>",
+                subtopic: "25M.1B.HL.TZ3.1",
+                questions: [
+                    { id: "PB029", marks: 2, level: "HL", question: "The coefficient of variation is the ratio of the standard deviation to the mean expressed as a percentage. Compare and contrast the coefficients of variation of the data represented in Figure 1(a) and Figure 1(b).", markScheme: "SD for Fig.1a/1RM is much lower than that for Fig.1b/ISO OR Mean for Fig.1a/1RM is much lower than that for Fig 1.b/ISO ✔ As a coefficient/percentage they are similar ✔" },
+                    { id: "PB030", marks: 2, level: "HL", question: "With reference to Figure 1(c), compare and contrast the reliability of the results for ROM for the control and intervention groups.", markScheme: "Compare: SD for CG pre- and post-training is similar, therefore similar reliability «of the data» OR SD for IG pre- and post-training is similar, therefore similar reliability «of the data» ✔ Contrast: SD for CG pre-test/post-test is smaller than IG, therefore CG data is more reliable ✔" },
+                    { id: "PB031", marks: 3, level: "HL", question: "Using Figure 1, comment on the impact of an 8-week static stretching programme on strength and flexibility.", markScheme: "8-week static stretching programme: Significantly improves 1RM ✔ Significantly decreases ROM ✔ There is no significant improvement in ISO ✔" }
+                ]
+            },
+            {
+                id: "Scenario_Swimming",
+                context: "A study investigated the effects of drag on elite swimmers. Data was collected for time to swim 400 m, stroke rate, stroke length and blood lactate using two conditions: Swimming while drafting (D) and Swimming alone (ND). Results are shown in the table.\n\n<img src='images/Scenario_Swimming.png' class='scenario-visual' alt='Table of swimming results'>",
+                subtopic: "24M.1B.HL.TZ2.2",
+                questions: [
+                    { id: "PB032", marks: 1, level: "HL", question: "Identify which group had the fastest mean 400 m time.", markScheme: "drafted <swimmers>; condition 1; Accept “D”" },
+                    { id: "PB033", marks: 2, level: "HL", question: "Using the data, identify the effect of drafting on the swimmers’ mean stroke rate and mean stroke length.", markScheme: "drafting decreases stroke rate; drafting increases stroke length;" }
+                ]
+            },
+            {
+                id: "Scenario_Sprinter",
+                context: "The diagram shows a distance–time graph for a 100m sprinter.\n\n<img src='images/Scenario_Sprinter.png' class='scenario-visual' alt='Distance-time graph for a 100m sprinter'>",
+                subtopic: "23N.1B.HL.TZ0.4",
+                questions: [
+                    { id: "PB037", marks: 1, level: "HL", question: "Analyse the graph between A–B.", markScheme: "<the sprinter is> accelerating✔ <the sprinter is> increasing speed/ velocity✔" },
+                    { id: "PB038", marks: 1, level: "HL", question: "Analyse the graph between B–C.", markScheme: "<the sprinter is> moving at constant/ uniform speed/ velocity✔" }
+                ]
+            },
+            {
+                id: "Scenario_Shoes_Table",
+                context: "In 2016, carbon fibre plate (CFP) shoes were introduced. The makers claimed that the shoes would improve times in long-distance running events. The effectiveness was investigated by recording the running times of a female athlete. Table 1 shows her mean 10 km time.\n\n<img src='images/Scenario_Shoes_Table.png' class='scenario-visual' alt='Table 1: Female athlete’s mean 10 km time'>",
+                subtopic: "SPM.1B.HL.TZ0.1",
+                questions: [
+                    { id: "PB040", marks: 1, level: "HL", question: "Calculate the percentage reduction in 10 km running time.", markScheme: "(40.05 − 38.98) ÷ 40.05 × 100 = 2.67 «%»" },
+                    { id: "PB041", marks: 2, level: "HL", question: "Explain why the study selected only races taking place at sea level.", markScheme: "altitude affects performance; controlled variable;" },
+                    { id: "PB042", marks: 2, level: "HL", question: "Explain two weaknesses of a study design based on one athlete.", markScheme: "insufficient data AND generalization/conclusion cannot be drawn; hormonal changes «in the female menstrual cycle» AND variation in performance; variation in mental health status AND variation in performance; variation in physical health status AND variation in performance; fitness changes AND variation in performance; individual response to competition AND affects motivation; environmental factors impact on psychological/physiological state AND variation in performance;" }
+                ]
+            },
+            {
+                id: "Scenario_Shoes_Graph",
+                context: "Long-distance records have been used to investigate the effect of the CFP shoes. Figure 1 shows annual world best marathon times.\n\n<img src='images/Scenario_Shoes_Graph.png' class='scenario-visual' alt='Figure 1: Annual world best marathon times'>",
+                subtopic: "SPM.1B.HL.TZ0.1",
+                questions: [
+                    { id: "PB043", marks: 3, level: "HL", question: "Using the data in Figure 1, discuss the hypothesis that the introduction of CFP shoes caused improvements in running performance after 2016.", markScheme: "Supporting hypothesis: between 2011 and 2016 no large improvement in performances / similar times; no running times between 2011 and 2016 faster than 138 minutes; Not supporting hypothesis: performances achieved by different athletes / under different conditions / in different races OR other shoes could have been used; small changes «in race times» OR not statistically significant OR insufficient data;" },
+                    { id: "PB044", marks: 2, level: "HL", question: "Evaluate the suitability of the line of best fit drawn in Figure 1.", markScheme: "Suitable: shows weak correlation after 2016; Not suitable: does not show how performances changed after 2016 OR should be two separate lines of best fit, one before and one after 2016;" }
+                ]
+            },
+            {
+                id: "Scenario_Shoes_Observation",
+                context: "A study of 2000 marathon runners was carried out. Their race times were recorded and photographs of each runner were used to identify their shoe type.\n\nA scatter graph was plotted to compare each athlete’s performance in consecutive marathon races run with traditional and CFP shoes.\n\n<img src='images/Scenario_Shoes_Observation.png' class='scenario-visual' alt='Figure 2: Scatter graph of marathon times'>",
+                subtopic: "SPM.1B.HL.TZ0.1",
+                questions: [
+                    { id: "PB045", marks: 2, level: "HL", question: "Discuss the reliability of using photographs to identify the type of shoe.", markScheme: "Reliable: «collecting» data from a primary source; «more» time to correctly identify shoes; technology helps to correctly identify shoes; Not reliable: possibility of misidentifying «similar looking» shoes;" },
+                    { id: "PB046", marks: 3, level: "HL", question: "Analyse the data in Figure 2.", markScheme: "Any of [2 max]: athletes above diagonal line slower with CFP shoes OR athletes below diagonal line faster with CFP shoes; «in general» males faster «than females»; greater variation in running times for females; Last marking point [1]: more athletes below the line AND CFP shoes faster marathon times;" },
+                    { id: "PB047", marks: 1, level: "HL", question: "In this study, the athletes chose which type of shoe to race in. Outline how the placebo effect could account for the change in race performances.", markScheme: "athletes believe claims/publicity AND could achieve better performances with CFP shoes «due to the placebo effect»;" },
+                    { id: "PB048", marks: 2, level: "HL", question: "Suggest two ways to reduce athlete bias in a study about shoe performance.", markScheme: "make shoes look the same OR prevent athletes from knowing the shoe type; double-blind experiment;" }
+                ]
+            },
+            {
+                id: "Scenario_Economy",
+                context: "An investigation compared the running economy of athletes on a treadmill wearing traditional or CFP shoes. Table 2 summarizes the athlete characteristics and Table 3 the rate of oxygen uptake (VO2).\n\n<img src='images/Scenario_Economy.png' class='scenario-visual' alt='Tables 2 and 3 showing athlete characteristics and VO2 results'>",
+                subtopic: "SPM.1B.HL.TZ0.2",
+                questions: [
+                    { id: "PB049", marks: 3, level: "HL", question: "Interpret the data in relation to the shoes.", markScheme: "«mean» VO2 «directly» proportional to rate of energy production «at the given speed» «by aerobic respiration»; lower VO2 for CFP shoes «at a given speed» suggests better running economy; standard deviation indicates difference not significant;" },
+                    { id: "PB050", marks: 2, level: "HL", question: "For the same shoe size, a traditional shoe had a mass of 118 g, and a CFP shoe had a mass of 205 g. Explain how this impacts the data.", markScheme: "lighter shoes should require less energy/give better running economy/lower «mean» VO2; «recorded» effect likely to be an underestimate for CFP;" },
+                    { id: "PB051", marks: 2, level: "HL", question: "Evaluate the use of a t-test to determine the significance of the results in Table 3.", markScheme: "Strength: two sets of «ratio/parametric» data OR two data sets large «enough»; Limitation: cohort/samples not randomized / not representative of general population;" }
+                ]
+            }
+        ];
+
+        let currentScenarioIndex = 0;
+        let totalPoints = 0;
+        let questionAttempts = {};
+        let milestones = {5: {emoji: '🤷‍♂️', title: 'No longer clueless'}, 10: {emoji: '🎯', title: 'Getting the vibe'}, 20: {emoji: '🔥', title: 'On a streak'}, 35: {emoji: '💪', title: 'Built different'}, 50: {emoji: '🐐', title: 'Actually goated'}, 75: {emoji: '👑', title: 'Certified legend'}, 100: {emoji: '⚔️', title: 'Final boss down'}};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initQuestions();
+        });
+
+        function initQuestions() {
+            if (scenarios.length === 0) {
+                document.getElementById('scenarioContainer').innerHTML = '<p>No questions found.</p>';
+            } else {
+                currentScenarioIndex = 0;
+                displayScenario(scenarios[currentScenarioIndex]);
+            }
+        }
+
+        function displayScenario(scenario) {
+            // Check existing attempt counts to maybe show mark scheme if revisited
+            const html = `
+                <div class="card">
+                    <div class="context-section">
+                        <span class="context-label">Scenario Context • ${scenario.subtopic}</span>
+                        ${formatText(scenario.context)}
+                    </div>
+                    
+                    <div class="sub-questions-list">
+                        ${scenario.questions.map((q, index) => renderSubQuestion(q, index)).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('scenarioContainer').innerHTML = html;
+            updateNavButtons();
+        }
+
+        function getQuestionType(questionText) {
+            const lower = questionText.toLowerCase();
+            if (lower.includes('calculate') || lower.includes('determine')) return { type: 'Calculation', icon: '🧮', class: 'badge-calc' };
+            if (lower.includes('evaluate') || lower.includes('discuss') || lower.includes('justify') || lower.includes('suggest')) return { type: 'Evaluation', icon: '⚖️', class: 'badge-eval' };
+            if (lower.includes('analyse') || lower.includes('analyze') || lower.includes('compare') || lower.includes('contrast')) return { type: 'Analysis', icon: '🔍', class: 'badge-analysis' };
+            if (lower.includes('define') || lower.includes('state') || lower.includes('identify') || lower.includes('outline')) return { type: 'Knowledge', icon: '📝', class: 'badge-know' };
+            return { type: 'Application', icon: '🧠', class: 'badge-app' };
+        }
+
+        function renderSubQuestion(q, index) {
+            const qType = getQuestionType(q.question);
+            return `
+                <div class="sub-question-card" id="card_${q.id}">
+                    <div class="question-header">
+                        <div>
+                            <span class="level-badge badge-${q.level}">${q.level}</span>
+                            <span class="subtopic-badge">Question ${index + 1}</span>
+                            <span class="type-badge ${qType.class}">${qType.icon} ${qType.type}</span>
+                        </div>
+                        <span class="marks-badge">[${q.marks} marks]</span>
+                    </div>
+                    <p class="question-text">${formatText(q.question)}</p>
+                    
+                    <textarea id="answer_${q.id}" placeholder="Type your answer here..."></textarea>
+                    
+                    <div class="btn-row">
+                        <button class="submit-btn" onclick="submitSingleAnswer('${q.id}')">Submit</button>
+                        <button class="dontknow-btn" onclick="handleSingleDontKnow('${q.id}')">🤷‍♂️ I Don't Know</button>
+                    </div>
+                    
+                    <div class="loading" id="loading_${q.id}">
+                        <div class="spinner"></div>
+                        Marking...
+                    </div>
+                    <div class="result" id="result_${q.id}"></div>
+                </div>
+            `;
+        }
+
+        function formatText(text) {
+            return text.replace(/\n/g, '<br>');
+        }
+
+        function navigateScenario(direction) {
+            currentScenarioIndex += direction;
+            if (currentScenarioIndex < 0) currentScenarioIndex = 0;
+            if (currentScenarioIndex >= scenarios.length) currentScenarioIndex = scenarios.length - 1;
+            displayScenario(scenarios[currentScenarioIndex]);
+            window.scrollTo(0, 0);
+        }
+
+        function loadRandomScenario() {
+            currentScenarioIndex = Math.floor(Math.random() * scenarios.length);
+            displayScenario(scenarios[currentScenarioIndex]);
+            window.scrollTo(0, 0);
+        }
+
+        function updateNavButtons() {
+            document.getElementById('prevBtn').disabled = currentScenarioIndex === 0;
+            document.getElementById('nextBtn').disabled = currentScenarioIndex === scenarios.length - 1;
+        }
+
+        function formatMarkScheme(markSchemeText) {
+            return markSchemeText
+                .replace(/✓/g, '✓<br><br>')
+                .replace(/✔/g, '✔<br><br>');
+        }
+
+        // --- SUBMISSION LOGIC FOR SINGLE QUESTIONS INSIDE A SCENARIO ---
+
+        async function submitSingleAnswer(qId) {
+            // Find question data
+            let questionData = null;
+            scenarios.forEach(s => {
+                const found = s.questions.find(q => q.id === qId);
+                if (found) questionData = found;
+            });
+
+            if (!questionData) return;
+
+            const answerInput = document.getElementById(`answer_${qId}`);
+            const answerText = answerInput.value.trim();
+            
+            if (!answerText) {
+                alert('Please type an answer before submitting.');
+                return;
+            }
+
+            if (!questionAttempts[qId]) questionAttempts[qId] = 0;
+            questionAttempts[qId]++;
+            const currentAttempt = questionAttempts[qId];
+
+            const loadingDiv = document.getElementById(`loading_${qId}`);
+            const resultDiv = document.getElementById(`result_${qId}`);
+            
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            try {
+                const body = {
+                    questionId: questionData.id,
+                    question: questionData.question,
+                    markScheme: questionData.markScheme,
+                    maxMarks: questionData.marks,
+                    answer: answerText,
+                    attemptNumber: currentAttempt,
+                };
+
+                const response = await fetch('https://sehsexam.thatjamiebloke.workers.dev/mark', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body),
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    displaySingleResult(qId, {
+                        score: 0,
+                        maxMarks: questionData.marks,
+                        strengths: 'Could not mark answer',
+                        improvements: data.error,
+                        studyTip: 'Please try again',
+                        markScheme: questionData.markScheme,
+                        currentAttempt: currentAttempt
+                    });
+                } else {
+                    displaySingleResult(qId, {
+                        score: data.score,
+                        maxMarks: questionData.marks,
+                        strengths: data.strengths,
+                        improvements: data.improvements,
+                        studyTip: data.studyTip,
+                        markScheme: questionData.markScheme,
+                        currentAttempt: currentAttempt
+                    });
+
+                    const oldPoints = totalPoints;
+                    totalPoints += data.score;
+                    updateProgressBar();
+
+                    Object.keys(milestones).forEach(pts => {
+                        if (oldPoints < pts && totalPoints >= pts) {
+                            showMilestone(pts);
+                        }
+                    });
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+                resultDiv.style.display = 'block';
+            } finally {
+                loadingDiv.style.display = 'none';
+            }
+        }
+
+        function displaySingleResult(qId, data) {
+            const resultDiv = document.getElementById(`result_${qId}`);
+            const percentage = Math.round((data.score / data.maxMarks) * 100);
+            const formattedMarkScheme = formatMarkScheme(data.markScheme);
+
+            let html = `
+                <div class="score-display">
+                    Score: ${data.score}/${data.maxMarks} (${percentage}%)
+                </div>
+                <div class="comment-section" style="background: #e8f5e9; border-left-color: #10b981;">
+                    <h3>✅ Strengths</h3>
+                    <p>${data.strengths}</p>
+                </div>
+                <div class="comment-section" style="background: #fff3e0; border-left-color: #f59e0b;">
+                    <h3>📝 Areas to Improve</h3>
+                    <p>${data.improvements}</p>
+                </div>
+                <div class="hint-section" style="background: #e3f2fd; border-left-color: #2196F3;">
+                    <h3>💡 Study Tip</h3>
+                    <p>${data.studyTip}</p>
+                </div>
+            `;
+
+            if (data.currentAttempt >= 2) {
+                html += `
+                <div class="mark-scheme-section">
+                    <h3>📋 Official Mark Scheme</h3>
+                    <p>${formattedMarkScheme}</p>
+                </div>
+                `;
+            } else {
+                html += `
+                <div class="mark-scheme-section">
+                    <h3>📋 Official Mark Scheme</h3>
+                    <p><em>Try again to see the mark scheme! 👀</em></p>
+                </div>
+                `;
+            }
+
+            resultDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+        }
+
+        function handleSingleDontKnow(qId) {
+            let questionData = null;
+            scenarios.forEach(s => {
+                const found = s.questions.find(q => q.id === qId);
+                if (found) questionData = found;
+            });
+
+            if (!questionData) return;
+
+            const resultDiv = document.getElementById(`result_${qId}`);
+            const formattedMarkScheme = formatMarkScheme(questionData.markScheme);
+
+            resultDiv.innerHTML = `
+                <div class="honesty-message">
+                    <h3>🌟 Honesty is the first step to learning!</h3>
+                    <p>Great job recognizing what you don't know. Take a moment to read the mark scheme below.</p>
+                </div>
+                <div class="mark-scheme-section" style="margin-top: 15px;">
+                    <h3>📋 Official Mark Scheme</h3>
+                    <p>${formattedMarkScheme}</p>
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        // --- PROGRESS BAR UTILS ---
+
+        function updateProgressBar() {
+            const percentage = (totalPoints / 100) * 100;
+            document.getElementById('progressFill').style.width = Math.min(percentage, 100) + '%';
+            document.getElementById('progressText').querySelector('.points-display').textContent = totalPoints;
+
+            const checkpoints = document.querySelectorAll('.checkpoint');
+            let nextMilestone = null;
+            checkpoints.forEach(cp => {
+                const points = parseInt(cp.getAttribute('data-points'));
+                if (totalPoints >= points) {
+                    cp.classList.add('achieved');
+                } else {
+                    cp.classList.remove('achieved');
+                    if (!nextMilestone) nextMilestone = points;
+                }
+            });
+
+            if (nextMilestone) {
+                const away = nextMilestone - totalPoints;
+                document.getElementById('progressText').innerHTML = `<span class="points-display">${totalPoints}</span> pts · Next: ${milestones[nextMilestone]?.emoji} ${milestones[nextMilestone]?.title} (${away} away)`;
+            } else {
+                document.getElementById('progressText').innerHTML = `<span class="points-display">${totalPoints}</span> pts · You're a legend! 👑`;
+            }
+
+            const youMarker = document.getElementById('youMarker');
+            youMarker.style.left = Math.min(percentage, 100) + '%';
+        }
+
+        function showMilestone(points) {
+            const milestone = milestones[points];
+            document.getElementById('milestoneEmoji').textContent = milestone.emoji;
+            document.getElementById('milestoneTitle').textContent = milestone.title;
+            const popup = document.getElementById('milestonePopup');
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>

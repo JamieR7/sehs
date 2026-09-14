@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SEHS Triangle Quiz</title>
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- DIFFICULTY SCREEN -->
+  <section id="difficulty-screen" class="screen active">
+    <div class="screen-content">
+      <h1>SEHS Triangle Quiz</h1>
+      <p class="subtitle">Choose a mode and question count.</p>
+
+      <div class="filter-section">
+        <h3>Difficulty</h3>
+        <div class="difficulty-grid">
+          <div class="difficulty-card" data-difficulty="rookie" tabindex="0">
+            <div class="difficulty-icon">🐣</div>
+            <h2>Rookie</h2>
+            <p>Plenty of silly answers</p>
+          </div>
+
+          <div class="difficulty-card" data-difficulty="varsity" tabindex="0">
+            <div class="difficulty-icon">🏅</div>
+            <h2>Varsity</h2>
+            <p>Balanced challenge</p>
+          </div>
+
+          <div class="difficulty-card" data-difficulty="pro" tabindex="0">
+            <div class="difficulty-icon">🔥</div>
+            <h2>Pro</h2>
+            <p>Serious business</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3>Question level</h3>
+        <div class="question-count-buttons" aria-label="Question level selection">
+          <button class="count-btn active" data-level-select="sl" type="button">SL only</button>
+          <button class="count-btn" data-level-select="slhl" type="button">SL + HL</button>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <h3>Questions</h3>
+        <div class="question-count-buttons">
+          <button class="count-btn active" data-count="10" type="button">10</button>
+          <button class="count-btn" data-count="20" type="button">20</button>
+          <button class="count-btn" data-count="30" type="button">30</button>
+          <button class="count-btn" data-count="all" type="button">All</button>
+        </div>
+      </div>
+
+      <div class="start-button-container">
+        <button id="start-quiz-btn" class="start-btn" type="button">Start</button>
+      </div>
+
+      <!-- Optional: keep if you already use these images -->
+      <div class="how-to-play">
+        <h2>How to play this quiz</h2>
+        <img src="images/Explainer.png" alt="How to play explainer" class="how-to-img" loading="lazy" />
+        <img src="images/Bertrand.png" alt="Bertrand" class="how-to-img" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section id="quiz-screen" class="screen">
+    <div class="screen-content">
+      <div class="quiz-header">
+        <div class="quiz-info">
+          <span>Mode</span>
+          <span id="difficulty-display">—</span>
+          <span class="divider">|</span>
+          <span>Q</span>
+          <span id="current-q">1</span><span>/</span><span id="total-q">10</span>
+          <span class="divider">|</span>
+          <span>Score</span>
+          <span id="score">10</span>
+        </div>
+        <button id="quit-btn" class="quit-btn" type="button">Quit</button>
+      </div>
+
+      <div class="question-container">
+        <div class="question-meta">
+          <div id="question-topic" class="question-topic"></div>
+          <div id="question-level" class="question-level"></div>
+        </div>
+        <div id="question-text" class="question-text"></div>
+      </div>
+
+      <!-- Option text display (read-only) -->
+      <div class="answers-grid" aria-label="Answer options read-only">
+        <button id="btn-A" class="answer-btn" type="button" tabindex="-1" aria-disabled="true">
+          <span class="answer-label">A</span>
+          <span class="answer-text"></span>
+        </button>
+        <button id="btn-B" class="answer-btn" type="button" tabindex="-1" aria-disabled="true">
+          <span class="answer-label">B</span>
+          <span class="answer-text"></span>
+        </button>
+        <button id="btn-C" class="answer-btn" type="button" tabindex="-1" aria-disabled="true">
+          <span class="answer-label">C</span>
+          <span class="answer-text"></span>
+        </button>
+      </div>
+
+      <!-- Triangle input -->
+      <div class="triangle-container">
+        <div class="triangle-instruction">Click the circle that best matches your confidence</div>
+
+        <svg class="confidence-triangle" viewBox="0 0 500 450" role="img" aria-label="Confidence triangle">
+          <polygon points="250,78 70,390 430,390" fill="#d9d9d9" stroke="#111" stroke-width="6" stroke-linejoin="round"></polygon>
+
+          <line x1="250" y1="78" x2="70" y2="390" stroke="#111" stroke-width="6"></line>
+          <line x1="250" y1="78" x2="430" y2="390" stroke="#111" stroke-width="6"></line>
+          <line x1="70"  y1="390" x2="430" y2="390" stroke="#111" stroke-width="6"></line>
+
+          <!-- Corner circles -->
+          <circle class="conf-circle" data-key="A" cx="250" cy="78" r="28"></circle>
+          <circle class="conf-circle" data-key="B" cx="70"  cy="390" r="28"></circle>
+          <circle class="conf-circle" data-key="C" cx="430" cy="390" r="28"></circle>
+
+          <!-- AB side circles -->
+          <circle class="conf-circle" data-key="ABcloseA" cx="205" cy="156" r="22"></circle>
+          <circle class="conf-circle" data-key="ABequal"  cx="160" cy="234" r="22"></circle>
+          <circle class="conf-circle" data-key="ABcloseB" cx="115" cy="312" r="22"></circle>
+
+          <!-- AC side circles -->
+          <circle class="conf-circle" data-key="ACcloseA" cx="295" cy="156" r="22"></circle>
+          <circle class="conf-circle" data-key="ACequal"  cx="340" cy="234" r="22"></circle>
+          <circle class="conf-circle" data-key="ACcloseC" cx="385" cy="312" r="22"></circle>
+
+          <!-- BC base circles -->
+<circle class="conf-circle" data-key="BCcloseB" cx="160" cy="390" r="22"></circle>
+<circle class="conf-circle" data-key="BCequal"  cx="250" cy="390" r="22"></circle>
+<circle class="conf-circle" data-key="BCcloseC" cx="340" cy="390" r="22"></circle>
+
+
+          <!-- Center -->
+          <circle class="conf-circle" data-key="center" cx="250" cy="286" r="26"></circle>
+
+          <!-- Labels -->
+          <text x="250" y="88"  text-anchor="middle" font-size="20" font-weight="800" fill="#111">A</text>
+          <text x="70"  y="398" text-anchor="middle" font-size="20" font-weight="800" fill="#111">B</text>
+          <text x="430" y="398" text-anchor="middle" font-size="20" font-weight="800" fill="#111">C</text>
+          <text x="250" y="293" text-anchor="middle" font-size="22" font-weight="900" fill="#111">?</text>
+        </svg>
+
+        <!-- Explain (left) + Next (right) -->
+        <div class="nav-buttons">
+          <button id="explain-btn" class="explain-btn" type="button">Explain</button>
+          <button id="next-btn" class="next-btn" type="button">Next</button>
+        </div>
+
+        <div id="explanation-box" class="explanation-box" aria-live="polite" hidden></div>
+      </div>
+    </div>
+
+    <!-- Points overlay -->
+    <div id="points-display" class="points-display" aria-live="polite">
+      <span id="points-text">+1 point</span>
+    </div>
+  </section>
+
+  <!-- RESULTS SCREEN -->
+  <section id="results-screen" class="screen">
+    <div class="screen-content">
+      <h1>Quiz Complete!</h1>
+
+      <div class="score-summary">
+        <div class="score-main">
+          <div id="final-score" class="score-value">0</div>
+          <div class="score-label">Final Score</div>
+        </div>
+        <div class="score-stats">
+          <div><strong id="correct-count">0</strong> positive</div>
+          <div><strong id="wrong-count">0</strong> non-positive</div>
+          <div><strong id="accuracy">0</strong>% accuracy</div>
+        </div>
+      </div>
+
+      <div id="performance-message" class="performance-message"></div>
+
+      <div class="topic-breakdown">
+        <h2>Performance by Topic</h2>
+        <div id="topic-list" class="topic-list"></div>
+      </div>
+
+      <div class="result-actions">
+        <button id="restart-btn" class="primary-btn" type="button">Restart</button>
+        <button id="change-difficulty-btn" class="secondary-btn" type="button">Change mode</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Load question bank FIRST -->
+  <script src="questions-db.js"></script>
+  <!-- Then app -->
+  <script src="app.js"></script>
+</body>
+</html>
