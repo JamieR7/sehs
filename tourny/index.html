@@ -12,24 +12,35 @@
     <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
 
-    <!-- THE LOCK: Forces the native 'dark' class to stay on without breaking styles -->
+    <!-- THE LOCK: Forces 'dark' onto BOTH html and body tags -->
     <script>
-      // 1. Add the dark class immediately before the page even draws
+      // 1. Add to HTML immediately
       document.documentElement.classList.add('dark');
       
-      // 2. Set the exact memory keys Shadcn UI uses
+      // 2. Set memory keys
       localStorage.setItem('vite-ui-theme', 'dark');
       localStorage.setItem('theme', 'dark');
       
-      // 3. The Security Guard: If React wakes up and tries to strip the 'dark' class, put it right back.
+      // 3. The Security Guard watching both tags
       const observer = new MutationObserver(() => {
+        // Check HTML
         if (!document.documentElement.classList.contains('dark')) {
           document.documentElement.classList.add('dark');
         }
+        // Check Body (if it has loaded yet)
+        if (document.body && !document.body.classList.contains('dark')) {
+          document.body.classList.add('dark');
+        }
       });
       
-      // Watch specifically for class changes on the HTML tag
+      // Start watching HTML immediately
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+      // Start watching Body as soon as it exists
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.classList.add('dark');
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      });
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -39,7 +50,8 @@
     <script type="module" crossorigin src="/tourny/assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="/tourny/assets/index-DMjbCzN_.css">
   </head>
-  <body>
+  <!-- Added class="dark" directly to the body tag here too -->
+  <body class="dark">
     <div id="root"></div>
   </body>
 </html>
