@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -18,6 +18,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Quick fix to force a dark background so white text is readable -->
+    <style>
+      body, html {
+        background-color: #0f172a !important; /* Sleek dark slate. Change to #004587 for CDL Blue! */
+        color: #ffffff !important; /* Ensures fallback text is white */
+      }
+    </style>
+
     <script type="module" crossorigin src="/tourny/assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="/tourny/assets/index-DMjbCzN_.css">
   </head>
