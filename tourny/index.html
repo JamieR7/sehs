@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -12,35 +12,28 @@
     <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
 
-    <!-- THE LOCK: Forces 'dark' onto BOTH html and body tags -->
+    <!-- THE MEMORY HIJACKER -->
     <script>
-      // 1. Add to HTML immediately
-      document.documentElement.classList.add('dark');
-      
-      // 2. Set memory keys
-      localStorage.setItem('vite-ui-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-      
-      // 3. The Security Guard watching both tags
-      const observer = new MutationObserver(() => {
-        // Check HTML
-        if (!document.documentElement.classList.contains('dark')) {
-          document.documentElement.classList.add('dark');
+      // 1. Force the system check to report Dark Mode
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = function(query) {
+        if (query.includes('dark')) {
+          return { matches: true, addEventListener: function(){}, removeEventListener: function(){} };
         }
-        // Check Body (if it has loaded yet)
-        if (document.body && !document.body.classList.contains('dark')) {
-          document.body.classList.add('dark');
-        }
-      });
-      
-      // Start watching HTML immediately
-      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        return { matches: false, addEventListener: function(){}, removeEventListener: function(){} };
+      };
 
-      // Start watching Body as soon as it exists
-      document.addEventListener('DOMContentLoaded', () => {
-        document.body.classList.add('dark');
-        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-      });
+      // 2. Intercept the app's memory (localStorage) checks
+      const originalGetItem = localStorage.getItem;
+      localStorage.getItem = function(key) {
+        const lowerKey = key.toLowerCase();
+        // If the app asks for anything related to theme, mode, or color, lie and say 'dark'
+        if (lowerKey.includes('theme') || lowerKey.includes('mode') || lowerKey.includes('color')) {
+          return 'dark';
+        }
+        // Otherwise, return normal memory items
+        return originalGetItem.call(window.localStorage, key);
+      };
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,8 +43,7 @@
     <script type="module" crossorigin src="/tourny/assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="/tourny/assets/index-DMjbCzN_.css">
   </head>
-  <!-- Added class="dark" directly to the body tag here too -->
-  <body class="dark">
+  <body>
     <div id="root"></div>
   </body>
 </html>
