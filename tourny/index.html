@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -12,50 +12,38 @@
     <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
 
-    <!-- 1. THE SECURITY GUARD: Forces the 'dark' class to stay on -->
+    <!-- THE MIND TRICK: Intercept the system theme check and force 'dark' -->
     <script>
-      // Immediately add the dark class
-      document.documentElement.classList.add('dark');
-
-      // Create an observer that watches the <html> element for class changes
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName === 'class') {
-            if (!document.documentElement.classList.contains('dark')) {
-              // If React removes it, instantly put it back
-              document.documentElement.classList.add('dark');
-            }
-          }
-        });
-      });
-
-      // Start watching the <html> tag immediately
-      observer.observe(document.documentElement, { attributes: true });
+      const originalMatchMedia = window.matchMedia;
+      window.matchMedia = function(query) {
+        // If the app asks the browser if the user prefers dark mode, always say TRUE
+        if (query === '(prefers-color-scheme: dark)') {
+          return {
+            matches: true,
+            media: query,
+            onchange: null,
+            addListener: function() {},
+            removeListener: function() {},
+            addEventListener: function() {},
+            removeEventListener: function() {},
+            dispatchEvent: function() { return true; }
+          };
+        }
+        return originalMatchMedia ? originalMatchMedia(query) : { matches: false };
+      };
       
-      // Also try to set generic theme keys just in case
-      localStorage.setItem('theme', 'dark');
-      localStorage.setItem('vite-ui-theme', 'dark');
+      // We also set the most common storage keys just in case it checks memory first
+      try {
+        localStorage.setItem('theme', 'dark');
+        localStorage.setItem('vite-ui-theme', 'dark');
+        localStorage.setItem('chakra-ui-color-mode', 'dark');
+      } catch (e) {}
     </script>
-
-    <!-- 2. THE IRONCLAD CSS OVERRIDE -->
-    <style>
-      /* Force the main backgrounds to dark slate regardless of app state */
-      html, body, #root {
-        background-color: #0f172a !important; 
-        color: #ffffff !important;
-        min-height: 100vh;
-      }
-
-      /* Force text colors in light mode if elements escape the dark class */
-      html:not(.dark) * {
-        color: #004587 !important; 
-        border-color: #004587 !important;
-      }
-    </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
     <script type="module" crossorigin src="/tourny/assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="/tourny/assets/index-DMjbCzN_.css">
   </head>
