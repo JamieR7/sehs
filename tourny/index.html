@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -12,32 +12,24 @@
     <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
 
-    <!-- THE MIND TRICK: Intercept the system theme check and force 'dark' -->
+    <!-- THE LOCK: Forces the native 'dark' class to stay on without breaking styles -->
     <script>
-      const originalMatchMedia = window.matchMedia;
-      window.matchMedia = function(query) {
-        // If the app asks the browser if the user prefers dark mode, always say TRUE
-        if (query === '(prefers-color-scheme: dark)') {
-          return {
-            matches: true,
-            media: query,
-            onchange: null,
-            addListener: function() {},
-            removeListener: function() {},
-            addEventListener: function() {},
-            removeEventListener: function() {},
-            dispatchEvent: function() { return true; }
-          };
-        }
-        return originalMatchMedia ? originalMatchMedia(query) : { matches: false };
-      };
+      // 1. Add the dark class immediately before the page even draws
+      document.documentElement.classList.add('dark');
       
-      // We also set the most common storage keys just in case it checks memory first
-      try {
-        localStorage.setItem('theme', 'dark');
-        localStorage.setItem('vite-ui-theme', 'dark');
-        localStorage.setItem('chakra-ui-color-mode', 'dark');
-      } catch (e) {}
+      // 2. Set the exact memory keys Shadcn UI uses
+      localStorage.setItem('vite-ui-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      
+      // 3. The Security Guard: If React wakes up and tries to strip the 'dark' class, put it right back.
+      const observer = new MutationObserver(() => {
+        if (!document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.add('dark');
+        }
+      });
+      
+      // Watch specifically for class changes on the HTML tag
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
