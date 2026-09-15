@@ -8,48 +8,48 @@
     <meta property="og:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://39688c16-30d2-4667-acdb-38e875e7ebb7-00-25oaf248cjrzz.spock.replit.dev/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@replit" />
-    <meta name="twitter:title" content="PE Tournament Planner" />
-    <meta name="twitter:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
-    <meta name="twitter:image" content="https://39688c16-30d2-4667-acdb-38e875e7ebb7-00-25oaf248cjrzz.spock.replit.dev/opengraph.jpg" />
-
+    
     <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
-    
-    <!-- 1. SCRIPT: Trick the app into starting in Dark Mode -->
+
+    <!-- 1. THE SECURITY GUARD: Forces the 'dark' class to stay on -->
     <script>
-      // Most React apps use one of these keys to remember your theme preference.
-      // Setting them before the app loads forces it to render in dark mode immediately.
+      // Immediately add the dark class
+      document.documentElement.classList.add('dark');
+
+      // Create an observer that watches the <html> element for class changes
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            if (!document.documentElement.classList.contains('dark')) {
+              // If React removes it, instantly put it back
+              document.documentElement.classList.add('dark');
+            }
+          }
+        });
+      });
+
+      // Start watching the <html> tag immediately
+      observer.observe(document.documentElement, { attributes: true });
+      
+      // Also try to set generic theme keys just in case
       localStorage.setItem('theme', 'dark');
       localStorage.setItem('vite-ui-theme', 'dark');
-      localStorage.setItem('chakra-ui-color-mode', 'dark');
     </script>
 
-    <!-- 2. STYLE: Fix Light Mode and secure Dark Mode -->
+    <!-- 2. THE IRONCLAD CSS OVERRIDE -->
     <style>
-      /* Keep Dark Mode sleek */
-      html.dark body {
+      /* Force the main backgrounds to dark slate regardless of app state */
+      html, body, #root {
         background-color: #0f172a !important; 
         color: #ffffff !important;
+        min-height: 100vh;
       }
 
-      /* Force readable colors if Light Mode is activated */
-      html:not(.dark) body {
-        background-color: #f8f9fa !important; /* Soft off-white */
-        color: #004587 !important; /* Your CDL Blue for high contrast */
-      }
-      
-      /* Target all internal elements in light mode to override the white text */
-      html:not(.dark) div, 
-      html:not(.dark) span, 
-      html:not(.dark) p, 
-      html:not(.dark) h1, 
-      html:not(.dark) h2, 
-      html:not(.dark) h3,
-      html:not(.dark) table,
-      html:not(.dark) td {
+      /* Force text colors in light mode if elements escape the dark class */
+      html:not(.dark) * {
         color: #004587 !important; 
+        border-color: #004587 !important;
       }
     </style>
 
