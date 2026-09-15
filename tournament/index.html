@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
@@ -8,20 +8,57 @@
     <meta property="og:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://39688c16-30d2-4667-acdb-38e875e7ebb7-00-25oaf248cjrzz.spock.replit.dev/opengraph.jpg" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@replit" />
-    <meta name="twitter:title" content="PE Tournament Planner" />
-    <meta name="twitter:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
-    <meta name="twitter:image" content="https://39688c16-30d2-4667-acdb-38e875e7ebb7-00-25oaf248cjrzz.spock.replit.dev/opengraph.jpg" />
-
+    
+    <title>PE Tournament Planner</title>
     <link rel="icon" type="image/png" href="/tourny/favicon.png" />
+
+    <script>
+      // 1. Pre-load the memory keys
+      localStorage.setItem('vite-ui-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
+      localStorage.setItem('chakra-ui-color-mode', 'dark');
+
+      // 2. The Active Defense Mechanism
+      const enforceDark = () => {
+        // Strip 'light' and enforce 'dark' on HTML tag
+        if (document.documentElement.classList.contains('light')) {
+            document.documentElement.classList.remove('light');
+        }
+        document.documentElement.classList.add('dark');
+
+        // Strip 'light' and enforce 'dark' on Body tag
+        if (document.body) {
+            if (document.body.classList.contains('light')) {
+                document.body.classList.remove('light');
+            }
+            document.body.classList.add('dark');
+        }
+      };
+
+      // Run immediately
+      enforceDark();
+
+      // Create a security guard that runs the defense mechanism anytime a class changes
+      const observer = new MutationObserver(enforceDark);
+      
+      // Watch the HTML tag immediately
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      
+      // Watch the Body tag as soon as it exists
+      document.addEventListener('DOMContentLoaded', () => {
+         enforceDark();
+         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      });
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    
     <script type="module" crossorigin src="/tourny/assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="/tourny/assets/index-DMjbCzN_.css">
   </head>
-  <body>
+  <body class="dark">
     <div id="root"></div>
   </body>
 </html>
