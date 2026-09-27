@@ -28,15 +28,37 @@
         .header-container {
             width: 100%;
             background-color: #ffffff;
-            padding: 70px 20px 50px;
+            padding: 40px 20px;
             text-align: center;
             box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05); /* Sleek depth */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 4px solid #E73037;
+        }
+
+        .header-title-area {
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .header-logo-area {
+            padding-left: 20px;
+        }
+
+        .header-logo-area img {
+            height: 60px;
+            width: auto;
+            object-contain: contain;
         }
 
         h1 {
             margin: 0;
             font-weight: 300; /* Gotham Light equivalent */
-            font-size: 42px;
+            font-size: 38px;
             color: var(--cdl-blue);
             letter-spacing: -0.5px;
         }
@@ -52,8 +74,8 @@
             font-family: 'Georgia', serif; /* Fallback for MQ Carmen */
             font-style: italic;
             color: var(--cdl-bright-red);
-            font-size: 22px;
-            margin-top: 15px;
+            font-size: 18px;
+            margin-top: 10px;
         }
 
         .container {
@@ -183,9 +205,17 @@
 </head>
 <body>
 
-    <div class="header-container">
-        <h1>IGCSE <span class="highlight">Physical Education</span></h1>
-        <div class="benefit-text">Preparation, Practice, Performance</div>
+    <div style="width: 100%; background-color: #ffffff;">
+        <div class="header-container">
+            <div class="header-title-area">
+                <h1>IGCSE <span class="highlight">Physical Education</span></h1>
+                <div class="benefit-text">Preparation, Practice, Performance</div>
+            </div>
+            <div class="header-logo-area">
+                <!-- Fixed relative path to match images/athletics-logo.png -->
+                <img src="images/athletics-logo.png" alt="Collège du Léman Athletics">
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -217,7 +247,7 @@
                     (2.2) - Diet and Energy Sources (Coming Soon)
                     <span class="btn-icon">○</span>
                 </a>
-                <a href="/IGExamPractice/" class="btn">
+                <a href="IGExamPractice/" class="btn">
                     (2.3 & 2.4) - Components of Fitness and Principles of Training
                     <span class="btn-icon">→</span>
                 </a>
