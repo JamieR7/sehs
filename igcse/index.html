@@ -57,7 +57,7 @@
         }
 
         .container {
-            padding: 60px 20px;
+            padding: 50px 20px;
             max-width: 1000px;
             text-align: center;
             width: 100%;
@@ -67,7 +67,7 @@
         p {
             line-height: 1.7;
             font-size: 18px;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             color: #4a4a4a;
             max-width: 100%;
             margin-left: auto;
@@ -81,10 +81,31 @@
             display: block;
         }
 
+        .topic-section {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 30px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 69, 135, 0.04);
+            border: 1px solid #eaeaea;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .topic-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--cdl-blue);
+            margin-bottom: 20px;
+            text-align: left;
+            padding-left: 15px;
+            border-left: 4px solid var(--cdl-bright-blue);
+        }
+
         .button-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
         }
 
@@ -94,32 +115,46 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 550px; /* Slightly wider to comfortably fit the chapter title */
+            max-width: 600px;
             background-color: var(--cdl-blue);
             color: #ffffff;
-            padding: 20px 35px;
+            padding: 18px 30px;
             text-decoration: none;
-            font-weight: bold; /* Gotham Bold equivalent */
-            font-size: 16px;
+            font-weight: bold;
+            font-size: 15px;
             border-radius: 50px; /* Creates the pill shape */
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 69, 135, 0.15);
+            box-shadow: 0 8px 15px rgba(0, 69, 135, 0.1);
             box-sizing: border-box;
         }
 
         /* Sleek hover state using the secondary palette */
         .btn:hover {
             background-color: var(--cdl-bright-blue);
-            transform: translateY(-4px); /* Lift effect */
-            box-shadow: 0 15px 25px rgba(30, 185, 220, 0.25);
+            transform: translateY(-3px); /* Lift effect */
+            box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
+        }
+
+        /* Disabled / Coming Soon button styling */
+        .btn-disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-disabled:hover {
+            background-color: #e5e7eb;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-icon {
-            font-size: 22px;
+            font-size: 20px;
             transition: transform 0.3s ease;
         }
 
-        .btn:hover .btn-icon {
+        .btn:hover:not(.btn-disabled) .btn-icon {
             transform: translateX(6px); /* Arrow slides right on hover */
         }
 
@@ -129,8 +164,8 @@
             color: var(--cdl-blue);
             border: 2px solid var(--cdl-blue);
             box-shadow: none;
-            margin-top: 20px;
             max-width: 450px;
+            margin: 10px auto 0 auto;
         }
 
         .btn-secondary:hover {
@@ -159,14 +194,60 @@
             Select an option below to test your knowledge against official exam mark schemes or review key course materials.
         </p>
         
-        <div class="button-container">
-            <!-- Link directly to the IGExamPractice folder -->
-            <a href="/IGExamPractice/" class="btn">
-                (2.3 & 2.4) - Components of Fitness and Principles of Training
-                <span class="btn-icon">→</span>
-            </a>
+        <!-- Topic 1 -->
+        <div class="topic-section">
+            <div class="topic-title">Topic 1: Anatomy and Physiology</div>
+            <div class="button-container">
+                <a href="#" class="btn btn-disabled">
+                    Module Resources (Coming Soon)
+                    <span class="btn-icon">○</span>
+                </a>
+            </div>
+        </div>
 
-            <!-- Back to main portal -->
+        <!-- Topic 2 -->
+        <div class="topic-section">
+            <div class="topic-title">Topic 2: Health, Fitness and Training</div>
+            <div class="button-container">
+                <a href="#" class="btn btn-disabled">
+                    (2.1) - Health and well-being (Coming Soon)
+                    <span class="btn-icon">○</span>
+                </a>
+                <a href="#" class="btn btn-disabled">
+                    (2.2) - Diet and Energy Sources (Coming Soon)
+                    <span class="btn-icon">○</span>
+                </a>
+                <a href="/IGExamPractice/" class="btn">
+                    (2.3 & 2.4) - Components of Fitness and Principles of Training
+                    <span class="btn-icon">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Topic 3 -->
+        <div class="topic-section">
+            <div class="topic-title">Topic 3: Skill Acquisition and Psychology</div>
+            <div class="button-container">
+                <a href="#" class="btn btn-disabled">
+                    Module Resources (Coming Soon)
+                    <span class="btn-icon">○</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Topic 4 -->
+        <div class="topic-section">
+            <div class="topic-title">Topic 4: Social, Cultural and Ethical Influences</div>
+            <div class="button-container">
+                <a href="#" class="btn btn-disabled">
+                    Module Resources (Coming Soon)
+                    <span class="btn-icon">○</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Back to main portal -->
+        <div style="text-align: center;">
             <a href="/" class="btn btn-secondary">
                 <span class="btn-icon btn-icon-back">←</span>
                 Back to Main Menu
