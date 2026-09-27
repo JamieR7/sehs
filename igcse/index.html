@@ -52,7 +52,7 @@
         .header-logo-area img {
             height: 60px;
             width: auto;
-            object-contain: contain;
+            object-fit: contain;
         }
 
         h1 {
@@ -137,7 +137,7 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px; /* Slightly wider to comfortably fit combined titles */
             background-color: var(--cdl-blue);
             color: #ffffff;
             padding: 18px 30px;
@@ -174,6 +174,8 @@
         .btn-icon {
             font-size: 20px;
             transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 15px;
         }
 
         .btn:hover:not(.btn-disabled) .btn-icon {
@@ -212,7 +214,6 @@
                 <div class="benefit-text">Preparation, Practice, Performance</div>
             </div>
             <div class="header-logo-area">
-                <!-- Fixed relative path to match images/athletics-logo.png -->
                 <img src="images/athletics-logo.png" alt="Collège du Léman Athletics">
             </div>
         </div>
@@ -240,11 +241,7 @@
             <div class="topic-title">Topic 2: Health, Fitness and Training</div>
             <div class="button-container">
                 <a href="#" class="btn btn-disabled">
-                    (2.1) - Health and well-being (Coming Soon)
-                    <span class="btn-icon">○</span>
-                </a>
-                <a href="#" class="btn btn-disabled">
-                    (2.2) - Diet and Energy Sources (Coming Soon)
+                    (2.1) - Health and well-being & (2.2) - Diet and Energy Sources (Coming Soon)
                     <span class="btn-icon">○</span>
                 </a>
                 <a href="IGExamPractice/" class="btn">
