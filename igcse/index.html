@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IGCSE PE - Coming Soon</title>
+    <title>IGCSE PE Resources - Collège du Léman</title>
     <style>
         /* CDL Primary & Secondary Brand Colors */
         :root {
@@ -13,10 +13,11 @@
         }
 
         body {
+            /* Gotham is the primary font, falling back to standard sans-serif */
             font-family: 'Gotham', 'Helvetica', 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background-color: #f8f9fa; /* Subtle off-white for a modern canvas */
             color: var(--cdl-blue);
             display: flex;
             flex-direction: column;
@@ -29,24 +30,26 @@
             background-color: #ffffff;
             padding: 70px 20px 50px;
             text-align: center;
-            box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05); /* Sleek depth */
         }
 
         h1 {
             margin: 0;
-            font-weight: 300;
+            font-weight: 300; /* Gotham Light equivalent */
             font-size: 42px;
             color: var(--cdl-blue);
             letter-spacing: -0.5px;
         }
 
+        /* Using CDL Bright Blue for a modern text highlight */
         .highlight {
             color: var(--cdl-bright-blue);
             font-weight: bold;
         }
 
+        /* Emulating the MQ Carmen font rule for a short benefit phrase */
         .benefit-text {
-            font-family: 'Georgia', serif;
+            font-family: 'Georgia', serif; /* Fallback for MQ Carmen */
             font-style: italic;
             color: var(--cdl-bright-red);
             font-size: 22px;
@@ -57,12 +60,8 @@
             padding: 60px 20px;
             max-width: 1000px;
             text-align: center;
-        }
-
-        h2 {
-            font-size: 36px;
-            color: var(--cdl-bright-red);
-            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         p {
@@ -74,6 +73,13 @@
             margin-left: auto;
             margin-right: auto;
         }
+        
+        .welcome-text {
+            font-size: 22px;
+            color: var(--cdl-blue);
+            margin-bottom: 15px;
+            display: block;
+        }
 
         .button-container {
             display: flex;
@@ -82,27 +88,29 @@
             align-items: center;
         }
 
+        /* Modern Pill Buttons */
         .btn {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
             width: 100%;
-            max-width: 350px;
+            max-width: 450px;
             background-color: var(--cdl-blue);
             color: #ffffff;
             padding: 20px 35px;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: bold; /* Gotham Bold equivalent */
             font-size: 16px;
-            border-radius: 50px;
+            border-radius: 50px; /* Creates the pill shape */
             transition: all 0.3s ease;
             box-shadow: 0 10px 20px rgba(0, 69, 135, 0.15);
+            box-sizing: border-box;
         }
 
+        /* Sleek hover state using the secondary palette */
         .btn:hover {
             background-color: var(--cdl-bright-blue);
-            transform: translateY(-4px);
+            transform: translateY(-4px); /* Lift effect */
             box-shadow: 0 15px 25px rgba(30, 185, 220, 0.25);
         }
 
@@ -112,27 +120,61 @@
         }
 
         .btn:hover .btn-icon {
-            transform: translateX(-6px); /* Arrow slides left on hover */
+            transform: translateX(6px); /* Arrow slides right on hover */
         }
+
+        /* Secondary Button Style for Navigation */
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--cdl-blue);
+            border: 2px solid var(--cdl-blue);
+            box-shadow: none;
+            margin-top: 20px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--cdl-blue);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 69, 135, 0.2);
+        }
+
+        .btn-secondary:hover .btn-icon-back {
+            transform: translateX(-6px); /* Back arrow slides left */
+        }
+
     </style>
 </head>
 <body>
 
     <div class="header-container">
-        <h1>Physical Education <span class="highlight">IGCSE</span></h1>
-        <div class="benefit-text">Cambridge IGCSE Syllabus</div>
+        <h1>IGCSE <span class="highlight">Physical Education</span></h1>
+        <div class="benefit-text">Preparation, Practice, Performance</div>
     </div>
 
     <div class="container">
-        <h2>🚧 Coming Soon! ⏳</h2>
         <p>
-            This section is currently under construction. Check back soon for new interactive apps, syllabus materials, and exam training modules! 🏃‍♂️🎾🏆
+            <strong class="welcome-text">Your IGCSE Hub 🎯</strong>
+            Select an option below to test your knowledge against official exam mark schemes or review key course materials.
         </p>
         
         <div class="button-container">
-            <a href="/" class="btn">
-                <span class="btn-icon">←</span>
-                Back to Main Hub
+            <!-- Link this to the HTML file you saved the Mega Quiz as -->
+            <a href="chapter7-quiz.html" class="btn">
+                Mega Quiz: Chapter 7 & Fundamentals
+                <span class="btn-icon">→</span>
+            </a>
+            
+            <!-- Placeholder for future resources -->
+            <a href="#" class="btn">
+                Syllabus & Coursework Guidelines
+                <span class="btn-icon">→</span>
+            </a>
+
+            <!-- Back to main portal -->
+            <a href="/" class="btn btn-secondary">
+                <span class="btn-icon btn-icon-back">←</span>
+                Back to Main Menu
             </a>
         </div>
     </div>
