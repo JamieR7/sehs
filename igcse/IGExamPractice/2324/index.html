@@ -70,7 +70,7 @@
             <div class="mb-2">
                 <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round5" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Back to IGCSE Hub
                 </a>
@@ -338,6 +338,32 @@
                 isOfficial: true
             },
 
+            // NEW HEALTH VS SKILL & REASONS FOR TESTING QUESTIONS
+            {
+                section: "Components of fitness",
+                marks: 2,
+                question: "Explain the difference between health-related fitness and skill-related fitness.",
+                markScheme: "<ul><li><strong>Health-related fitness:</strong> relates to the ability to meet the demands of the environment / general physical health and ability to carry out everyday tasks without undue fatigue.</li><li><strong>Skill-related fitness:</strong> relates to specific performance capabilities or motor skills needed to succeed in sports or physical activities (such as agility, balance, power).</li></ul>",
+                hint: "One is about general well-being and daily functioning; the other is specifically tuned for athletic/sports performance.",
+                isOfficial: true
+            },
+            {
+                section: "Components of fitness",
+                marks: 2,
+                question: "State two components of health-related fitness and two components of skill-related fitness.",
+                markScheme: "<strong>Health-related (any 2):</strong><br><ul><li>Cardiovascular endurance</li><li>Muscular strength</li><li>Muscular endurance</li><li>Flexibility</li><li>Body composition</li></ul><br><strong>Skill-related (any 2):</strong><br><ul><li>Agility</li><li>Balance</li><li>Coordination</li><li>Power</li><li>Reaction time</li><li>Speed</li></ul>",
+                hint: "Think stamina and strength vs. agility and coordination.",
+                isOfficial: true
+            },
+            {
+                section: "Reasons for fitness testing",
+                marks: 2,
+                question: "Explain why a coach or fitness instructor would repeat a fitness test with an athlete.",
+                markScheme: "Any 2 from:<br><ul><li>to monitor progress / measure improvement over time</li><li>to evaluate the effectiveness of a training programme</li><li>to check reliability / identify testing anomalies or human error</li><li>to provide motivation for the performer by showing gains in performance</li></ul>",
+                hint: "Think about checking if training is actually working and keeping the athlete motivated.",
+                isOfficial: true
+            },
+
             // AI GENERATED / SYLLABUS ALIGNED QUESTIONS (Amber Light)
             {
                 section: "Components of fitness",
@@ -438,14 +464,6 @@
             {
                 section: "Reasons for fitness testing",
                 marks: 2,
-                question: "Explain why a coach would repeat a fitness test.",
-                markScheme: "<ul><li>Improves reliability.</li><li>Identifies anomalies or errors.</li></ul>",
-                hint: "Why do scientists repeat experiments? Apply that logic to fitness testing.",
-                isOfficial: false
-            },
-            {
-                section: "Reasons for fitness testing",
-                marks: 2,
                 question: "Why might a coach compare results with normative data?",
                 markScheme: "<ul><li>Compare performance with others.</li><li>Identify strengths and weaknesses.</li><li>Assess suitability for activities.</li></ul>",
                 hint: "Normative data gives averages for age/gender. Why is knowing the average helpful?",
@@ -490,6 +508,7 @@
         ];
 
         let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
         let bypassActive = false;
 
         // DOM Elements
@@ -562,8 +581,23 @@
                 return;
             }
 
-            const randomIndex = Math.floor(Math.random() * filteredQuestions.length);
-            currentQuestion = filteredQuestions[randomIndex];
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
 
             // Setup Traffic Light UI
             trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
