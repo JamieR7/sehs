@@ -183,9 +183,9 @@
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
             <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
             <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
-            <div class="flex justify-end space-x-3">
-                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 hover:bg-gray-100 hidden">Cancel</button>
-                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm">Got it</button>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
             </div>
         </div>
     </div>
@@ -337,7 +337,7 @@
                 hint: "Think of SPORT (Specificity, Progression, Overload, Reversibility, Tedium). Pick two and apply them strictly to swimming.",
                 isOfficial: true
             },
-
+            
             // NEW HEALTH VS SKILL & REASONS FOR TESTING QUESTIONS
             {
                 section: "Components of fitness",
@@ -658,8 +658,8 @@
                 showModal(
                     "Are you sure?", 
                     "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
-                    "If you are sure that's all you've got", 
-                    "Let me add more",
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
                     () => {
                         bypassActive = true;
                         processReveal();
