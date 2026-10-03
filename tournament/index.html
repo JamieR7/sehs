@@ -8,9 +8,10 @@
     <meta property="og:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
     
     <title>PE Tournament Planner</title>
-    
-    <!-- Safely force dark mode without the infinite loop crash -->
+    <link rel="icon" type="image/png" href="./favicon.png" />
+
     <script>
+      // Safe dark mode enforcement (Stops the infinite loop crash on sehs.info)
       localStorage.setItem('vite-ui-theme', 'dark');
       localStorage.setItem('theme', 'dark');
       localStorage.setItem('chakra-ui-color-mode', 'dark');
@@ -20,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     
-    <!-- FIXED: Using relative paths (./) so it works inside the sehs.info/tournament/ subfolder -->
+    <!-- Fixed Relative Asset Paths -->
     <script type="module" crossorigin src="./assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DMjbCzN_.css">
   </head>
