@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-
+    
     <meta property="og:title" content="PE Tournament Planner" />
     <meta property="og:description" content="Simple 8-Team, 2-Court Group Tournament Manager" />
-    
     <title>PE Tournament Planner</title>
-    <link rel="icon" type="image/png" href="./favicon.png" />
 
-    <script>
-      // Safe dark mode enforcement (Stops the infinite loop crash on sehs.info)
-      localStorage.setItem('vite-ui-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-      localStorage.setItem('chakra-ui-color-mode', 'dark');
-    </script>
+    <!-- UI OVERRIDE: Force the page to allow scrolling so the Start button is visible -->
+    <style>
+      html, body, #root {
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow-y: auto !important;
+        padding-bottom: 60px !important; 
+      }
+    </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
     
-    <!-- Fixed Relative Asset Paths -->
     <script type="module" crossorigin src="./assets/index-BQeGg-zQ.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-DMjbCzN_.css">
   </head>
-  <body class="dark">
+  <body>
     <div id="root"></div>
   </body>
 </html>
