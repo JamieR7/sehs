@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE PE Revision - Collège du Léman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cdlBlue: '#004587',
+                        cdlRed: '#E73037',
+                        cdlGold: '#FBBA07',
+                        cdlBrightBlue: '#1EB9DC',
+                        cdlBrightRed: '#EF8162',
+                        cdlBrightYellow: '#FFE37E'
+                    },
+                    fontFamily: {
+                        gotham: ['Gotham', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Gotham', sans-serif; background-color: #f3f4f6; color: #004587; }
+        .btn-blue { background-color: #004587; color: white; transition: all 0.2s; }
+        .btn-blue:hover { background-color: #003366; }
+        .btn-gold { background-color: #FBBA07; color: #004587; transition: all 0.2s; }
+        .btn-gold:hover { background-color: #e5a806; }
+        .btn-red { background-color: #E73037; color: white; transition: all 0.2s; }
+        .btn-red:hover { background-color: #cc2a31; }
+        
+        .modal-overlay {
+            background-color: rgba(0, 69, 135, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        
+        .highlight-text {
+            font-weight: 700;
+            color: #1EB9DC;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            color: #111827 !important; 
+            background-color: #ffffff !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        select option {
+            color: #111827 !important;
+            background-color: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white rounded-t-xl shadow-md p-6 border-b-4 border-cdlRed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="mb-2">
+                <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to IGCSE Hub
+                </a>
+            </div>
+            <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
+            <h2 class="text-lg font-bold text-gray-500">Chapter 6 - Health, Fitness and Diet</h2>
+        </div>
+        <div class="hidden sm:block flex-shrink-0">
+            <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-4xl bg-white shadow-lg rounded-b-xl p-6 md:p-8 flex flex-col space-y-6">
+        
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="w-full sm:w-2/3">
+                <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
+                <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="all">All Sections (Random)</option>
+                    <option value="What is health?">What is health?</option>
+                    <option value="What is fitness?">What is fitness?</option>
+                    <option value="Diet and Nutrients">Diet and Nutrients</option>
+                    <option value="Energy Balance and Requirements">Energy Balance and Requirements</option>
+                    <option value="Respiration and Energy">Respiration and Energy</option>
+                </select>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-end">
+                <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
+                    Load Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-container" class="hidden flex flex-col space-y-4">
+            
+            <!-- Traffic Light Indicator -->
+            <div id="traffic-light-banner" class="flex items-start p-3 rounded-md border text-sm font-bold w-full transition-colors">
+                <div id="traffic-light-dot" class="w-4 h-4 rounded-full mr-3 mt-0.5 flex-shrink-0"></div>
+                <div id="traffic-light-text" class="text-gray-700 leading-tight"></div>
+            </div>
+
+            <div class="flex justify-between items-start pt-2">
+                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+            </div>
+            
+            <div class="flex flex-col space-y-2">
+                <label for="user-answer" class="text-sm font-bold text-gray-600">Your Answer:</label>
+                <textarea id="user-answer" rows="5" class="w-full p-4 border-2 border-gray-200 rounded-md focus:outline-none focus:border-cdlBrightBlue resize-none text-gray-800" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                <button id="btn-hint" class="text-cdlBlue font-bold underline hover:text-cdlBrightBlue text-sm flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Need a hint?
+                </button>
+                <button id="btn-reveal" class="w-full sm:w-auto btn-gold px-8 py-3 rounded-md font-bold shadow-md text-lg">
+                    Reveal Mark Scheme
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden bg-cdlBrightYellow bg-opacity-30 border-l-4 border-cdlGold p-4 rounded-r-md mt-4">
+                <p class="text-sm text-gray-600 mb-2 italic"><strong>Note:</strong> If you're asking for a hint, you should probably come back here later to see if you can manage without one!</p>
+                <p id="display-hint" class="font-bold text-cdlBlue"></p>
+            </div>
+        </div>
+
+        <!-- Mark Scheme Display -->
+        <div id="mark-scheme-container" class="hidden mt-6 border-t-2 border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-cdlRed mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Mark Scheme
+            </h3>
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+                <!-- Mark scheme content injected here -->
+            </div>
+
+            <!-- Metacognitive Prompt -->
+            <div class="mt-6 bg-cdlBlue text-white p-5 rounded-md shadow-inner">
+                <h4 class="font-bold text-cdlBrightBlue mb-2 text-sm uppercase tracking-wider">Reflection</h4>
+                <p id="display-reflection" class="text-lg font-light"></p>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next" class="btn-blue px-6 py-3 rounded-md font-bold shadow-md flex items-center">
+                    Next Question
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
+            <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
+            <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // OFFICIAL PAST PAPER QUESTIONS (Green Light)
+            {
+                section: "What is fitness?",
+                marks: 1,
+                question: "Define the term fitness.",
+                markScheme: "The ability to cope with / meet the demands of the environment.",
+                hint: "Think about how your body handles its daily surroundings and tasks.",
+                isOfficial: true
+            },
+            {
+                section: "What is health?",
+                marks: 2,
+                question: "Describe two requirements for good social health and well-being.",
+                markScheme: "Any 2 of:<br><ul><li>essential human needs are met;</li><li>friendship and support;</li><li>having value within society;</li><li>ability to mix with others;</li></ul>",
+                hint: "How do you interact with other people and your community?",
+                isOfficial: true
+            },
+            {
+                section: "What is health?",
+                marks: 2,
+                question: "Explain the relationship between health and fitness.",
+                markScheme: "Any 2 of:<br><ul><li>a decrease in fitness because of ill-health / unable to train (lowers fitness);</li><li>an increase in fitness because of good health / able to train (increases fitness);</li><li>increase in fitness despite ill-health / unhealthy but still able to train and keep fit;</li><li>exercise and fitness can have positive effects on physical / mental / social health;</li></ul>",
+                hint: "Think about how being sick affects your ability to exercise, or how exercising affects your overall well-being.",
+                isOfficial: true
+            },
+            {
+                section: "What is health?",
+                marks: 3,
+                question: "Describe three mental health benefits a performer might gain from playing in a sports team.",
+                markScheme: "Any 3 from:<br><ul><li>increases the ability to cope with stress (as playing in a team provides opportunity to share experiences with others);</li><li>increases the ability to control emotions (as the player has to deal with the setbacks that occur in sport whilst being supported by team members);</li><li>improves self-esteem / self-confidence (when the team play well);</li><li>mixing with others / making friends prevents a sense of isolation;</li><li>increases motivation (as team members can encourage / support a person);</li></ul>",
+                hint: "Think about emotions, stress, and confidence when playing with others.",
+                isOfficial: true
+            },
+            {
+                section: "Diet and Nutrients",
+                marks: 4,
+                question: "Carbohydrates are an important nutrient in a balanced diet. State two other nutrients and describe a different function of each nutrient.",
+                markScheme: "1 mark for stating each nutrient (2 marks max). 1 mark for describing each function (2 marks max).<br><ul><li><strong>Fats:</strong> provide protection for major organs / helps maintain the body temperature / acts as an energy source / store of vitamins;</li><li><strong>Protein:</strong> aids the development of muscle tissue / helps build muscle size / helps repair muscle tissue / can be used as an energy source;</li><li><strong>Water:</strong> prevents dehydration / replaces lost water / reduces the viscosity of the blood / allows the body to control body temperature;</li></ul>",
+                hint: "Think about what builds muscle, what insulates the body, or what keeps you hydrated.",
+                isOfficial: true
+            },
+            {
+                section: "Diet and Nutrients",
+                marks: 3,
+                question: "Explain why water is a vital part of a marathon runner's diet.",
+                markScheme: "Any 3 from:<br><ul><li>prevents dehydration;</li><li>regulates body temperature / reduces the possibility of heat exhaustion;</li><li>assists in removing waste products;</li><li>carries nutrients to muscles;</li><li>delays fatigue;</li><li>maintains mental alertness / improves decision making;</li><li>essential to aid recovery;</li><li>aids digestion;</li></ul>",
+                hint: "Think about what happens when you sweat and how fluid affects your temperature and brain.",
+                isOfficial: true
+            },
+            {
+                section: "Energy Balance and Requirements",
+                marks: 2,
+                question: "Explain why different people may have different energy needs.",
+                markScheme: "Any 2 from:<br><ul><li>males generally require more energy than females due to having bigger bodies;</li><li>teenagers generally require more energy than younger children as they are more active / are growing at a faster rate;</li><li>active people require more energy than those with a sedentary lifestyle as more energy is required when involved in physical activity;</li><li>performers with larger bodies require more energy than those with smaller bodies as more energy is required to keep warm;</li></ul>",
+                hint: "Compare a teenager vs a child, a male vs female, or an athlete vs a couch potato.",
+                isOfficial: true
+            },
+            {
+                section: "Energy Balance and Requirements",
+                marks: 1,
+                question: "State what happens to a performer when energy input exceeds energy output.",
+                markScheme: "Gain weight / become overweight / obese / fat;",
+                hint: "Think about the bank account: what happens if you put in more than you take out?",
+                isOfficial: true
+            },
+            {
+                section: "Respiration and Energy",
+                marks: 2,
+                question: "Describe how and where glucose is stored in the body.",
+                markScheme: "1 mark for how glucose is stored, 1 mark for where.<br><ul><li><strong>How (1 of):</strong> as glycogen; (excess glucose is stored) as fat;</li><li><strong>Where (1 of):</strong> muscles; liver;</li></ul>",
+                hint: "Think about the 'savings account' for energy and the organs/tissues that hold it.",
+                isOfficial: true
+            },
+            {
+                section: "Diet and Nutrients",
+                marks: 2,
+                question: "Suggest why a protein-rich diet is important when weight training.",
+                markScheme: "1 mark for each suggestion:<br><ul><li>muscle repair;</li><li>builds muscle and lean tissue (growth);</li><li>strengthens bones;</li><li>a single session can last a long time / could get hungry;</li></ul>",
+                hint: "Think about what happens to muscle fibers when you lift heavy weights.",
+                isOfficial: true
+            },
+            {
+                section: "Energy Balance and Requirements",
+                marks: 2,
+                question: "Explain why energy balance must be suitable for a performer.",
+                markScheme: "1 mark for each explanation.<br><ul><li>intake matches expenditure: maintain body weight / for good health / meet the physical demands of the activity;</li><li>intake exceeds expenditure: leads to weight gain / obesity / loss of flexibility / reduction in performance;</li><li>expenditure exceeds intake: leads to weight loss / tiredness / loss of muscle mass / prone to illness / injury;</li></ul>",
+                hint: "What happens if they eat too much? Too little? Just right?",
+                isOfficial: true
+            },
+
+            // AI GENERATED / SYLLABUS ALIGNED QUESTIONS (Amber Light)
+            {
+                section: "What is health?",
+                marks: 4,
+                question: "Fill in the blanks for the World Health Organization (WHO) definition of health: 'A state of complete _______, _______ and _______ well-being and not merely the absence of _______ or infirmity.'",
+                markScheme: "<ul><li>Physical</li><li>Mental</li><li>Social</li><li>Disease</li></ul>",
+                hint: "Think about the three-legged stool and what health is *not* just the absence of.",
+                isOfficial: false
+            },
+            {
+                section: "Respiration and Energy",
+                marks: 2,
+                question: "Explain the difference between aerobic and anaerobic respiration.",
+                markScheme: "<ul><li><strong>Aerobic respiration</strong> requires oxygen to release energy from glucose (used in low-moderate intensity, long duration exercise).</li><li><strong>Anaerobic respiration</strong> does not require oxygen and produces lactic acid (used in high intensity, short duration exercise).</li></ul>",
+                hint: "Think about which one uses oxygen and which one creates a burning sensation in the muscles.",
+                isOfficial: false
+            },
+            {
+                section: "What is health?",
+                marks: 3,
+                question: "Describe three characteristics of physical health and well-being.",
+                markScheme: "<ul><li>All body systems working well</li><li>Free from illness / injury / disease</li><li>Able to carry out everyday tasks</li></ul>",
+                hint: "Think about the mechanics of the body, the absence of sickness, and your daily routine.",
+                isOfficial: false
+            },
+            {
+                section: "What is health?",
+                marks: 2,
+                question: "Identify two features of social health and well-being.",
+                markScheme: "Any 2 from:<br><ul><li>Essential human needs are met</li><li>Friendship and support</li><li>Having value within society</li><li>Ability to mix with other people</li></ul>",
+                hint: "How does a person interact with their community and close circle?",
+                isOfficial: false
+            },
+            {
+                section: "What is fitness?",
+                marks: 2,
+                question: "Explain, using an example, how a person can have increased fitness despite ill health.",
+                markScheme: "<ul><li>A person can be unhealthy (e.g., suffering from a minor illness/disease) but still be able to train.</li><li><em>Example:</em> Continuing to participate in a training programme while carrying a minor cold, thereby increasing fitness.</li></ul>",
+                hint: "Is it possible to keep training even if you aren't 100% healthy? What happens to your fitness if you do?",
+                isOfficial: false
+            },
+            {
+                section: "What is fitness?",
+                marks: 3,
+                question: "State three lifestyle choices needed to maintain a good relationship between health and fitness.",
+                markScheme: "<ul><li>Live a healthy, active lifestyle</li><li>Eat a balanced diet</li><li>Maintain a level of fitness to help maintain health</li></ul>",
+                hint: "Think about daily activity, what goes on your plate, and keeping your body conditioned.",
+                isOfficial: false
+            },
+            {
+                section: "Energy Balance and Requirements",
+                marks: 3,
+                question: "Identify three comparisons where performers would have different energy needs.",
+                markScheme: "<ul><li>Males compared with females</li><li>Teenagers compared with children</li><li>Active lifestyles compared with sedentary lifestyles</li></ul>",
+                hint: "Think about gender, age groups, and how much people move.",
+                isOfficial: false
+            },
+            {
+                section: "Energy Balance and Requirements",
+                marks: 2,
+                question: "Explain what happens to unused energy in the body and the potential long-term effect.",
+                markScheme: "<ul><li>Unused energy is stored as fat.</li><li>This could eventually cause obesity.</li></ul>",
+                hint: "If the 'energy in' is higher than the 'energy out', where does it go and what condition can it lead to?",
+                isOfficial: false
+            },
+            {
+                section: "Respiration and Energy",
+                marks: 2,
+                question: "Describe the process of respiration in the context of energy production.",
+                markScheme: "<ul><li>Muscle cells release energy.</li><li>This energy is released from glucose.</li></ul>",
+                hint: "What do the muscle cells do, and what specific fuel do they use to do it?",
+                isOfficial: false
+            },
+            {
+                section: "Respiration and Energy",
+                marks: 3,
+                question: "State what glucose can be converted into and identify the two places it is stored in the body.",
+                markScheme: "<ul><li>Converted to glycogen</li><li>Stored in the muscles</li><li>Stored in the liver</li></ul>",
+                hint: "Think about the 'savings account' for energy. What is the new name for the glucose, and which two organs/tissues hold it?",
+                isOfficial: false
+            }
+        ];
+
+        // Conversational reflection prompts
+        const reflectionPrompts = [
+            "How did you do? Be honest with yourself—how many marks out of the total would you give your answer?",
+            "Did anything in the mark scheme surprise you?",
+            "If you dropped any marks here, what's your plan to make sure you nail it next time?",
+            "Did you use the exact terminology? Often, close isn't quite enough in the exam.",
+            "How could you have improved your answer to guarantee full marks?",
+            "What was the trickiest part of this question for you?",
+            "Which part of the mark scheme did you completely forget to include?",
+            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+        ];
+
+        let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
+        let bypassActive = false;
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const btnRandom = document.getElementById('btn-random');
+        const questionContainer = document.getElementById('question-container');
+        const displayQuestion = document.getElementById('display-question');
+        const displayMarks = document.getElementById('display-marks');
+        const userAnswer = document.getElementById('user-answer');
+        const btnReveal = document.getElementById('btn-reveal');
+        const btnHint = document.getElementById('btn-hint');
+        const hintBox = document.getElementById('hint-box');
+        const displayHint = document.getElementById('display-hint');
+        const markSchemeContainer = document.getElementById('mark-scheme-container');
+        const displayMarkScheme = document.getElementById('display-mark-scheme');
+        const displayReflection = document.getElementById('display-reflection');
+        const btnNext = document.getElementById('btn-next');
+        
+        // Traffic Light Elements
+        const trafficBanner = document.getElementById('traffic-light-banner');
+        const trafficDot = document.getElementById('traffic-light-dot');
+        const trafficText = document.getElementById('traffic-light-text');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalBtnPrimary = document.getElementById('modal-btn-primary');
+        const modalBtnSecondary = document.getElementById('modal-btn-secondary');
+
+        // Functions
+        function showModal(title, message, primaryText, secondaryText, onPrimaryClick, onSecondaryClick) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            
+            modalBtnPrimary.textContent = primaryText;
+            modalBtnPrimary.onclick = () => {
+                hideModal();
+                if (onPrimaryClick) onPrimaryClick();
+            };
+            
+            if (secondaryText) {
+                modalBtnSecondary.textContent = secondaryText;
+                modalBtnSecondary.classList.remove('hidden');
+                modalBtnSecondary.onclick = () => {
+                    hideModal();
+                    if (onSecondaryClick) onSecondaryClick();
+                };
+            } else {
+                modalBtnSecondary.classList.add('hidden');
+            }
+            
+            customModal.classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            customModal.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const selectedSection = sectionSelect.value;
+            let filteredQuestions = questions;
+            
+            if (selectedSection !== 'all') {
+                filteredQuestions = questions.filter(q => q.section === selectedSection);
+            }
+            
+            if (filteredQuestions.length === 0) {
+                showModal("Oops!", "No questions found for this section.", "OK");
+                return;
+            }
+
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
+
+            // Setup Traffic Light UI
+            trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
+            trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
+            
+            if (currentQuestion.isOfficial) {
+                trafficBanner.classList.add('bg-green-100', 'border-green-300');
+                trafficDot.classList.add('bg-green-500');
+                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+            } else {
+                trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
+                trafficDot.classList.add('bg-amber-500');
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+            }
+
+            // Reset UI
+            displayQuestion.textContent = currentQuestion.question;
+            displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
+            userAnswer.value = '';
+            userAnswer.disabled = false;
+            questionContainer.classList.remove('hidden');
+            markSchemeContainer.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            bypassActive = false;
+        }
+
+        function revealMarkScheme() {
+            const answer = userAnswer.value.trim();
+            
+            // Check for empty box
+            if (answer === '') {
+                showModal(
+                    "Hold up!", 
+                    "Oh no you don't! You have to write <em>something</em> before I show you the answer.<br><br>If that something is 'I don't know', that's fine, but take note: this is obviously an area you need to revisit again later.", 
+                    "Try again"
+                );
+                return;
+            }
+
+            // Check for "I don't know" variants
+            const idkVariants = ["i don't know", "idk", "i dunno", "no idea", "pass"];
+            const isIdk = idkVariants.some(variant => answer.toLowerCase().includes(variant));
+            
+            if (isIdk) {
+                processReveal();
+                return;
+            }
+
+            // Word count validation (approx > 50% of mark scheme words)
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = currentQuestion.markScheme;
+            const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
+            const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+
+            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+                showModal(
+                    "Are you sure?", 
+                    "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
+                    () => {
+                        bypassActive = true;
+                        processReveal();
+                    },
+                    () => {
+                        userAnswer.focus();
+                    }
+                );
+                return;
+            }
+
+            processReveal();
+        }
+
+        function processReveal() {
+            displayMarkScheme.innerHTML = currentQuestion.markScheme;
+            
+            // Generate Random Reflection Prompt
+            const randomPrompt = reflectionPrompts[Math.floor(Math.random() * reflectionPrompts.length)];
+            displayReflection.textContent = randomPrompt;
+
+            userAnswer.disabled = true;
+            markSchemeContainer.classList.remove('hidden');
+            
+            // Scroll to mark scheme smoothly
+            markSchemeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Event Listeners
+        btnRandom.addEventListener('click', loadQuestion);
+        
+        btnHint.addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.hint) {
+                displayHint.textContent = currentQuestion.hint;
+                hintBox.classList.remove('hidden');
+            }
+        });
+
+        btnReveal.addEventListener('click', revealMarkScheme);
+        btnNext.addEventListener('click', loadQuestion);
+
+        // Close modal if clicking outside the box
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
