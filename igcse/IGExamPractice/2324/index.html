@@ -91,6 +91,7 @@
             <div class="w-full sm:w-2/3">
                 <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
                 <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="latest-exam">Latest Exam (Sequential)</option>
                     <option value="all">All Sections (Random)</option>
                     <option value="Components of fitness">Components of fitness</option>
                     <option value="Test protocols">Test protocols</option>
@@ -105,7 +106,7 @@
             </div>
             <div class="w-full sm:w-1/3 flex justify-end">
                 <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
-                    Load Question
+                    Start Exam
                 </button>
             </div>
         </div>
@@ -192,6 +193,96 @@
 
     <script>
         const questions = [
+            // LATEST EXAM QUESTIONS (Sequential Mode)
+            {
+                section: "latest-exam",
+                marks: 1,
+                question: "Define muscular endurance.",
+                markScheme: "The ability of your muscles to work continuously without getting tired.",
+                hint: "Think about the ability to keep going without fatigue.",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 3,
+                question: "Define balance and explain the difference between static and dynamic balance using sporting examples.",
+                markScheme: "Balance is the ability to maintain a position/maintain the centre of gravity over the base of support.<br>Static balance is the ability to balance while not moving eg an arabesque on the beam in gymnastics.<br>Dynamic balance is the ability to balance when moving eg when landing a jump in ice skating.<br><em>Allow one mark for the difference between static and dynamic and one for each example.</em>",
+                hint: "Define the term generally, then contrast moving vs stationary with examples.",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 4,
+                question: "Outline the steps for carrying out a test for flexibility.",
+                markScheme: "<strong>Sit and Reach Test</strong><br><ul><li>Suitable Warm up</li><li>Remove shoes</li><li>Sit with feet flat against the box end and knees locked out</li><li>Reach forwards with both hands</li><li>Hold position for three seconds (no bouncing)</li><li>Measure score based on how far you reached (toe line is 0cm)</li><li>Repeat measurement for reliability</li></ul>",
+                hint: "Describe setting up and executing the Sit and Reach test step-by-step.",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 3,
+                question: "Explain VO2 max and outline two factors that might influence this.",
+                markScheme: "<strong>VO2 Max:</strong> the volume of oxygen that can be consumed while exercising at a maximal capacity.<br><br><strong>Factors (any 2):</strong><br><ul><li>Age – As we get older our VO2 Max declines.</li><li>Gender – Women have a lower VO2 Max for the same body weight.</li><li>Genetics – Dictate factors such as red blood cell content.</li><li>Lifestyle – Unhealthy habits such as poor diet or smoking can reduce VO2 Max.</li><li>Training – More fitness training the higher our VO2 Max.</li></ul>",
+                hint: "What does VO2 actually measure? Think about age, gender, or lifestyle for factors.",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 1,
+                question: "Name a test that can be used to estimate VO2max.",
+                markScheme: "Beep test / multi stage fitness test / Cooper 12 minute run",
+                hint: "Think of a continuous running test.",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 3,
+                question: "Explain specificity as a principle of training giving an example of its application.",
+                markScheme: "<ul><li>Means that training must be specific to the demands of the athletes activity to provide improvement.</li><li>Training must be specific to muscle groups/movements/energy systems/skills/current fitness.</li><li>Example: Marathon runners will focus on building aerobic capacity, not anaerobic system.</li></ul>",
+                hint: "Why shouldn't a weightlifter spend all their time jogging?",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 2,
+                question: "Outline two strategies that could be used to avoid tedium when designing a training programme.",
+                markScheme: "Any 2 from:<br><ul><li>Listening to music</li><li>Introduce competition</li><li>Train with others</li><li>Vary practices and sessions</li><li>Use a different environment</li><li>Use a different method of training/exercises</li></ul><br><em>Do not accept anything that would require a change in exercise intensity/load (this is progression).</em>",
+                hint: "Tedium means boredom. How do you stop training from getting boring?",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 3,
+                question: "Evaluate plyometrics as a method of training and identify what type of athlete would benefit from this method of training.",
+                markScheme: "Plyometrics is the use of jumps and dynamic movements to promote eccentric muscle exercises.<br><br><strong>Advantages:</strong><br><ul><li>providing a greater force/overload applied to the muscle than a simple concentric contraction</li><li>Very good at developing explosive power</li><li>Minimal equipment/space required</li></ul><strong>Disadvantages:</strong><br><ul><li>It places a very high level of stress on muscles, joints and soft tissues</li><li>High possibility of injury</li></ul><strong>Athlete:</strong><br>Ideal for athletes requiring power such as sprinters, weightlifters etc.",
+                hint: "What does bounding/jumping do well? What are the risks? Who needs it?",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 3,
+                question: "Identify the method of training identified below and consider the advantages and disadvantages of this method.<br><br><div class='bg-gray-100 p-3 mt-2 text-sm rounded shadow-inner border border-gray-200'>5 min Warm up (Exertion 3-4)<br>8 sets of: 30 seconds Speed (Exertion 9-10) followed by 2 min Recovery (Exertion 2-3)<br>10 min Cool Down</div>",
+                markScheme: "<strong>Method:</strong> High intensity interval training (HIIT)<br><br><strong>Advantages:</strong><br><ul><li>Rest periods allow recovery and allow numerous periods of very high intensity work</li><li>It can be applied to a number of different activities eg running, swimming, cycling etc.</li><li>Overload is easy to achieve - by doing more reps or sets or both / Can be adapted for different fitness levels</li><li>Requires little equipment/space depending on activity.</li></ul><strong>Disadvantages:</strong><br><ul><li>Can be boring</li><li>Can require high levels of motivation.</li><li>Needs to include rest to allow high intensity work</li><li>Requires good warm up to avoid injury.</li></ul>",
+                hint: "Look at the alternating periods of high effort (speed) and low effort (recovery).",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 2,
+                question: "Explain the physiological benefits of altitude training.",
+                markScheme: "<ul><li>the body compensates for the lack of oxygen in the atmosphere by producing more red blood cells</li><li>Therefore, more oxygen can be delivered to the muscles</li><li>an increase in muscle’s ability to cope with lactic acid / greater endurance</li><li>improvements in performance when returning to sea level</li></ul>",
+                hint: "How does the body adapt to having less oxygen in the air?",
+                isOfficial: true
+            },
+            {
+                section: "latest-exam",
+                marks: 2,
+                question: "The table below gives the results of a group of 16-year-old pupils who took part in the Cooper Test. Explain how this information would be useful for a coach.",
+                markScheme: "Any 2 from:<br><ul><li>Would allow assessment of CV endurance/estimation of VO2max.</li><li>Allows comparison between athletes.</li><li>Assesses suitability for different activities</li><li>Help in identifying an athletes strengths and weaknesses</li><li>Coach can use subsequent tests to monitoring improvements</li><li>Informing training programme design</li><li>Can provide a source of motivation for the athletes.</li></ul>",
+                hint: "Why do we test athletes? What does knowing their Cooper test score let a coach do next?",
+                isOfficial: true
+            },
+            
             // OFFICIAL PAST PAPER QUESTIONS (Green Light)
             {
                 section: "Reasons for warming up and cooling down",
@@ -477,20 +568,14 @@
                 hint: "Connect oxygen usage to energy production and tiredness over a long period.",
                 isOfficial: false
             },
-          {
-    section: "VO2 max (maximum oxygen uptake)",
-    marks: 2,
-    question: "Explain two factors affecting VO₂ max.",
-    markScheme: `Any two:<br><br>
-• Age – VO₂ max generally decreases as a person gets older.<br>
-• Gender – males typically have higher VO₂ max values due to larger heart and lung size and greater haemoglobin levels.<br>
-• Genetics – some people are naturally born with a greater aerobic capacity than others.<br>
-• Lifestyle – factors such as smoking, poor diet and inactivity can reduce VO₂ max.<br>
-• Training – regular aerobic training can increase VO₂ max by improving the body's ability to take in, transport and use oxygen.<br><br>
-(1 mark for each factor with an appropriate explanation.)`,
-    hint: "Think about things you can't control (DNA, getting older) and things you can (diet, running).",
-    isOfficial: false
-},
+            {
+                section: "VO2 max (maximum oxygen uptake)",
+                marks: 2,
+                question: "Explain two factors affecting VO₂ max.",
+                markScheme: "Any two:<br><br><ul><li>Age – VO₂ max generally decreases as a person gets older.</li><li>Gender – males typically have higher VO₂ max values due to larger heart and lung size and greater haemoglobin levels.</li><li>Genetics – some people are naturally born with a greater aerobic capacity than others.</li><li>Lifestyle – factors such as smoking, poor diet and inactivity can reduce VO₂ max.</li><li>Training – regular aerobic training can increase VO₂ max by improving the body's ability to take in, transport and use oxygen.</li></ul><br>(1 mark for each factor with an appropriate explanation.)",
+                hint: "Think about things you can't control (DNA, getting older) and things you can (diet, running).",
+                isOfficial: false
+            },
             {
                 section: "VO2 max (maximum oxygen uptake)",
                 marks: 2,
@@ -516,6 +601,7 @@
         let currentQuestion = null;
         let recentQuestions = []; // Anti-repeat session tracker
         let bypassActive = false;
+        let latestExamIndex = 0; // Tracks sequence for latest exam
 
         // DOM Elements
         const sectionSelect = document.getElementById('section-select');
@@ -578,8 +664,11 @@
             const selectedSection = sectionSelect.value;
             let filteredQuestions = questions;
             
-            if (selectedSection !== 'all') {
+            // Filter logic based on selection
+            if (selectedSection !== 'all' && selectedSection !== 'latest-exam') {
                 filteredQuestions = questions.filter(q => q.section === selectedSection);
+            } else if (selectedSection === 'latest-exam') {
+                filteredQuestions = questions.filter(q => q.section === 'latest-exam');
             }
             
             if (filteredQuestions.length === 0) {
@@ -587,22 +676,35 @@
                 return;
             }
 
-            // Filter out recently asked questions to avoid immediate repeats
-            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
-            
-            // If all questions in this category have been shown recently, reset history
-            if (availableQuestions.length === 0) {
-                recentQuestions = [];
-                availableQuestions = filteredQuestions;
-            }
+            // Route 1: Sequential Latest Exam Logic
+            if (selectedSection === 'latest-exam') {
+                if (latestExamIndex >= filteredQuestions.length) {
+                    showModal("Exam Complete!", "You have finished all questions in this paper. Returning to the first question.", "OK");
+                    latestExamIndex = 0; // Reset
+                }
+                currentQuestion = filteredQuestions[latestExamIndex];
+                latestExamIndex++;
+                btnNext.innerHTML = 'Next Question <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>';
+            } 
+            // Route 2: Random Anti-Repeat Logic for other categories
+            else {
+                let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+                
+                // If all questions in this category have been shown recently, reset history
+                if (availableQuestions.length === 0) {
+                    recentQuestions = [];
+                    availableQuestions = filteredQuestions;
+                }
 
-            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
-            currentQuestion = availableQuestions[randomIndex];
+                const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+                currentQuestion = availableQuestions[randomIndex];
 
-            // Track recent questions (store up to 4 recent picks)
-            recentQuestions.push(currentQuestion);
-            if (recentQuestions.length > 4) {
-                recentQuestions.shift();
+                // Track recent questions
+                recentQuestions.push(currentQuestion);
+                if (recentQuestions.length > 4) {
+                    recentQuestions.shift();
+                }
+                btnNext.innerHTML = 'Load Another <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>';
             }
 
             // Setup Traffic Light UI
@@ -616,11 +718,11 @@
             } else {
                 trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
                 trafficDot.classList.add('bg-amber-500');
-                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material.";
             }
 
             // Reset UI
-            displayQuestion.textContent = currentQuestion.question;
+            displayQuestion.innerHTML = currentQuestion.question; // changed to innerHTML to allow basic formatting in questions
             displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
             userAnswer.value = '';
             userAnswer.disabled = false;
@@ -695,6 +797,21 @@
         }
 
         // Event Listeners
+        
+        // Reset state when dropdown changes
+        sectionSelect.addEventListener('change', () => {
+            latestExamIndex = 0; // Reset sequential tracker
+            questionContainer.classList.add('hidden');
+            markSchemeContainer.classList.add('hidden');
+            
+            // Update button text contextually
+            if(sectionSelect.value === 'latest-exam') {
+                btnRandom.textContent = 'Start Exam';
+            } else {
+                btnRandom.textContent = 'Load Question';
+            }
+        });
+
         btnRandom.addEventListener('click', loadQuestion);
         
         btnHint.addEventListener('click', () => {
