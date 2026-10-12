@@ -96,8 +96,10 @@
             margin-right: auto;
         }
         
+        /* Updated Badge Styling */
         .welcome-text {
-            font-size: 22px;
+            font-size: 26px; 
+            font-weight: bold;
             color: var(--cdl-blue);
             margin-bottom: 15px;
             display: block;
@@ -137,23 +139,39 @@
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            max-width: 650px; /* Slightly wider to comfortably fit combined titles */
+            max-width: 750px; 
             background-color: var(--cdl-blue);
             color: #ffffff;
-            padding: 18px 30px;
+            padding: 16px 30px;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 15px;
-            border-radius: 50px; /* Creates the pill shape */
+            border-radius: 50px;
             transition: all 0.3s ease;
             box-shadow: 0 8px 15px rgba(0, 69, 135, 0.1);
             box-sizing: border-box;
         }
 
-        /* Sleek hover state using the secondary palette */
+        .btn-text-area {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .btn-title {
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 4px;
+        }
+
+        .btn-subtitle {
+            font-weight: 300;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        /* Sleek hover state */
         .btn:hover {
             background-color: var(--cdl-bright-blue);
-            transform: translateY(-3px); /* Lift effect */
+            transform: translateY(-3px);
             box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
         }
 
@@ -163,6 +181,11 @@
             color: #9ca3af;
             cursor: not-allowed;
             box-shadow: none;
+            pointer-events: none;
+        }
+
+        .btn-disabled .btn-subtitle {
+            color: #9ca3af;
         }
 
         .btn-disabled:hover {
@@ -179,8 +202,107 @@
         }
 
         .btn:hover:not(.btn-disabled) .btn-icon {
-            transform: translateX(6px); /* Arrow slides right on hover */
+            transform: translateX(6px);
         }
+
+        /* --- Summative Group Styling --- */
+        .summative-container {
+            display: flex;
+            width: 100%;
+            max-width: 750px;
+            gap: 10px; /* Tighter gap to make the whole block feel more cohesive */
+            align-items: stretch; 
+        }
+
+        .summative-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        /* Subitems inside a summative container */
+        .btn.btn-subitem {
+            max-width: none; 
+            background-color: #f4f7f9; 
+            color: var(--cdl-blue);
+            box-shadow: none;
+            border: 1px solid rgba(0, 69, 135, 0.1);
+            cursor: default; 
+            padding: 12px 20px; /* Reduced padding to streamline vertical height */
+            pointer-events: none; /* Prevents unwanted hover interactions */
+        }
+
+        .btn.btn-subitem:hover {
+            transform: none;
+            background-color: #f4f7f9;
+            box-shadow: none;
+        }
+
+        .btn.btn-subitem .btn-subtitle {
+            color: #666666; 
+        }
+
+        /* Vertical Clickable Pill */
+        .vertical-pill {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--cdl-blue);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 40px; 
+            padding: 15px 10px; /* Slimmer padding */
+            width: 45px; /* Slimmer width */
+            min-width: 45px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 69, 135, 0.1);
+        }
+
+        .vertical-pill:hover {
+            background-color: var(--cdl-bright-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
+        }
+
+        .vertical-pill-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            font-weight: bold;
+            font-size: 13px; /* Slightly smaller text */
+            letter-spacing: 1.5px; /* Tighter tracking to fit smaller height */
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .vertical-pill .btn-icon {
+            margin-left: 0; 
+        }
+
+        .vertical-pill:hover .btn-icon {
+            transform: translateX(4px); 
+        }
+
+        /* Vertical Disabled Pill */
+        .vertical-pill.btn-disabled {
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .vertical-pill.btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .vertical-pill.btn-disabled:hover .btn-icon {
+            transform: none;
+        }
+        /* ----------------------------------- */
 
         /* Secondary Button Style for Navigation */
         .btn-secondary {
@@ -200,7 +322,7 @@
         }
 
         .btn-secondary:hover .btn-icon-back {
-            transform: translateX(-6px); /* Back arrow slides left */
+            transform: translateX(-6px);
         }
 
     </style>
@@ -220,8 +342,10 @@
     </div>
 
     <div class="container">
+        
+        <span class="welcome-text">IGCSE Past Paper Hub 🎯</span>
+        
         <p>
-            <strong class="welcome-text">Your IGCSE Hub 🎯</strong>
             Select an option below to test your knowledge against official exam mark schemes or review key course materials.
         </p>
         
@@ -230,7 +354,31 @@
             <div class="topic-title">Topic 1: Anatomy and Physiology</div>
             <div class="button-container">
                 <a href="#" class="btn btn-disabled">
-                    Module Resources (Coming Soon)
+                    <div class="btn-text-area">
+                        <span class="btn-title">(1.1) Skeletal and Muscular System</span>
+                        <span class="btn-subtitle">Functions of the skeleton, joint types, movement, and muscle fibre types</span>
+                    </div>
+                    <span class="btn-icon">○</span>
+                </a>
+                <a href="#" class="btn btn-disabled">
+                    <div class="btn-text-area">
+                        <span class="btn-title">(1.2) Respiratory and Circulatory Systems</span>
+                        <span class="btn-subtitle">Mechanics of breathing, gaseous exchange, blood vessels, and cardiac output</span>
+                    </div>
+                    <span class="btn-icon">○</span>
+                </a>
+                <a href="#" class="btn btn-disabled">
+                    <div class="btn-text-area">
+                        <span class="btn-title">(1.3) Energy Supply and the Effects of Exercise</span>
+                        <span class="btn-subtitle">Aerobic/anaerobic respiration, recovery, EPOC, and short/long-term effects</span>
+                    </div>
+                    <span class="btn-icon">○</span>
+                </a>
+                <a href="#" class="btn btn-disabled">
+                    <div class="btn-text-area">
+                        <span class="btn-title">(1.4) Simple Biomechanics</span>
+                        <span class="btn-subtitle">Principles and applications of force, and levers</span>
+                    </div>
                     <span class="btn-icon">○</span>
                 </a>
             </div>
@@ -240,14 +388,57 @@
         <div class="topic-section">
             <div class="topic-title">Topic 2: Health, Fitness and Training</div>
             <div class="button-container">
-                <a href="IGExamPractice/HealthWellbeing/" class="btn">
-                    (2.1) - Health and well-being & (2.2) - Diet and Energy Sources
-                    <span class="btn-icon">→</span>
-                </a>
-                <a href="IGExamPractice/2324/" class="btn">
-                    (2.3 & 2.4) - Components of Fitness and Principles of Training
-                    <span class="btn-icon">→</span>
-                </a>
+                
+                <!-- Group 1: 2.1 & 2.2 -->
+                <div class="summative-container">
+                    <div class="summative-list">
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(2.1) Health and well-being</span>
+                                <span class="btn-subtitle">Physical, mental, and social health definitions and interactions</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(2.2) Diet and energy sources</span>
+                                <span class="btn-subtitle">Nutrients, energy balance, and sources of energy for performance</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="IGExamPractice/HealthWellbeing/" class="vertical-pill">
+                        <span class="vertical-pill-text">Summative</span>
+                        <span class="btn-icon">→</span>
+                    </a>
+                </div>
+
+                <!-- Group 2: 2.3, 2.4 & 2.5 -->
+                <div class="summative-container">
+                    <div class="summative-list">
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(2.3) Components of fitness</span>
+                                <span class="btn-subtitle">Health/skill-related components, fitness tests, and VO2 max</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(2.4) Principles of training and overload</span>
+                                <span class="btn-subtitle">SPORT, FITT principles, and the dangers of overtraining</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(2.5) Methods of training</span>
+                                <span class="btn-subtitle">Continuous, weight, fartlek, plyometric, circuit, HIIT, and altitude</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="IGExamPractice/2324/" class="vertical-pill">
+                        <span class="vertical-pill-text">Summative</span>
+                        <span class="btn-icon">→</span>
+                    </a>
+                </div>
+
             </div>
         </div>
 
@@ -255,10 +446,44 @@
         <div class="topic-section">
             <div class="topic-title">Topic 3: Skill Acquisition and Psychology</div>
             <div class="button-container">
-                <a href="#" class="btn btn-disabled">
-                    Module Resources (Coming Soon)
-                    <span class="btn-icon">○</span>
-                </a>
+                
+                <!-- Group 1: 3.1 & 3.2 -->
+                <div class="summative-container">
+                    <div class="summative-list">
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(3.1) Skill, Ability and Information Processing</span>
+                                <span class="btn-subtitle">Skill classification continua and the simple information processing model</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(3.2) Learning, Feedback and Guidance</span>
+                                <span class="btn-subtitle">Stages of learning and types of feedback/guidance</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="vertical-pill btn-disabled">
+                        <span class="vertical-pill-text">Summative</span>
+                        <span class="btn-icon">○</span>
+                    </a>
+                </div>
+
+                <!-- Group 2: 3.3 (Standalone with small arrow pill) -->
+                <div class="summative-container">
+                    <div class="summative-list">
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(3.3) Sports Psychology</span>
+                                <span class="btn-subtitle">SMARTER goal setting, motivation, arousal, anxiety, relaxation, and personality</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="vertical-pill btn-disabled">
+                        <span class="btn-icon">○</span>
+                    </a>
+                </div>
+
             </div>
         </div>
 
@@ -266,18 +491,51 @@
         <div class="topic-section">
             <div class="topic-title">Topic 4: Social, Cultural and Ethical Influences</div>
             <div class="button-container">
-                <a href="#" class="btn btn-disabled">
-                    Module Resources (Coming Soon)
-                    <span class="btn-icon">○</span>
-                </a>
+                
+                <!-- Group 1: All of Topic 4 -->
+                <div class="summative-container">
+                    <div class="summative-list">
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(4.1) Leisure, Recreation and Sports Development</span>
+                                <span class="btn-subtitle">Growth in leisure activities and the sports development pyramid</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(4.2) Commercialisation and Media</span>
+                                <span class="btn-subtitle">Sponsorship, types of media coverage, and hosting global events</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(4.3) Ethics in Sport</span>
+                                <span class="btn-subtitle">Performance-enhancing drugs, blood doping, sportsmanship, and gamesmanship</span>
+                            </div>
+                        </div>
+                        <div class="btn btn-subitem">
+                            <div class="btn-text-area">
+                                <span class="btn-title">(4.4) Safety and Access</span>
+                                <span class="btn-subtitle">Risk assessment, injuries, technology, and factors affecting participation</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="vertical-pill btn-disabled">
+                        <span class="vertical-pill-text">Summative</span>
+                        <span class="btn-icon">○</span>
+                    </a>
+                </div>
+
             </div>
         </div>
 
         <!-- Back to main portal -->
         <div style="text-align: center;">
             <a href="/" class="btn btn-secondary">
-                <span class="btn-icon btn-icon-back">←</span>
-                Back to Main Menu
+                <span class="btn-text-area" style="text-align: center; width: 100%; flex-direction: row; justify-content: center; align-items: center;">
+                    <span class="btn-icon btn-icon-back" style="margin-left: 0; margin-right: 15px;">←</span>
+                    <span class="btn-title" style="margin-bottom: 0;">Back to Main Menu</span>
+                </span>
             </a>
         </div>
     </div>
