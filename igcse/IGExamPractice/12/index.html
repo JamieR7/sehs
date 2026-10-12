@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE PE Revision - Collège du Léman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cdlBlue: '#004587',
+                        cdlRed: '#E73037',
+                        cdlGold: '#FBBA07',
+                        cdlBrightBlue: '#1EB9DC',
+                        cdlBrightRed: '#EF8162',
+                        cdlBrightYellow: '#FFE37E'
+                    },
+                    fontFamily: {
+                        gotham: ['Gotham', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Gotham', sans-serif; background-color: #f3f4f6; color: #004587; }
+        .btn-blue { background-color: #004587; color: white; transition: all 0.2s; }
+        .btn-blue:hover { background-color: #003366; }
+        .btn-gold { background-color: #FBBA07; color: #004587; transition: all 0.2s; }
+        .btn-gold:hover { background-color: #e5a806; }
+        .btn-red { background-color: #E73037; color: white; transition: all 0.2s; }
+        .btn-red:hover { background-color: #cc2a31; }
+        
+        .modal-overlay {
+            background-color: rgba(0, 69, 135, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        
+        .highlight-text {
+            font-weight: 700;
+            color: #1EB9DC;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            color: #111827 !important; 
+            background-color: #ffffff !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        select option {
+            color: #111827 !important;
+            background-color: #ffffff !important;
+        }
+        optgroup {
+            font-weight: bold;
+            color: #004587;
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white rounded-t-xl shadow-md p-6 border-b-4 border-cdlRed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="mb-2">
+                <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to IGCSE Hub
+                </a>
+            </div>
+            <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
+            <h2 class="text-lg font-bold text-gray-500">Topic 1.2: Respiratory and Circulatory Systems</h2>
+        </div>
+        <div class="hidden sm:block flex-shrink-0">
+            <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-4xl bg-white shadow-lg rounded-b-xl p-6 md:p-8 flex flex-col space-y-6">
+        
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="w-full sm:w-2/3">
+                <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
+                <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="all">All Sections (Random)</option>
+                    <optgroup label="Respiratory System">
+                        <option value="Pathway of air">&nbsp;&nbsp;&nbsp;&nbsp;Pathway of air</option>
+                        <option value="Gaseous exchange at the alveoli">&nbsp;&nbsp;&nbsp;&nbsp;Gaseous exchange at the alveoli</option>
+                        <option value="Mechanics of breathing">&nbsp;&nbsp;&nbsp;&nbsp;Mechanics of breathing</option>
+                        <option value="Breathing volumes and minute ventilation">&nbsp;&nbsp;&nbsp;&nbsp;Breathing volumes and minute ventilation</option>
+                    </optgroup>
+                    <optgroup label="Circulatory System">
+                        <option value="Components of blood">&nbsp;&nbsp;&nbsp;&nbsp;Components of blood</option>
+                        <option value="Haemoglobin">&nbsp;&nbsp;&nbsp;&nbsp;Haemoglobin</option>
+                        <option value="Blood vessels">&nbsp;&nbsp;&nbsp;&nbsp;Blood vessels</option>
+                        <option value="Heart structure and function">&nbsp;&nbsp;&nbsp;&nbsp;Heart structure and function</option>
+                        <option value="Cardiac output">&nbsp;&nbsp;&nbsp;&nbsp;Cardiac output</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-end">
+                <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
+                    Load Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-container" class="hidden flex flex-col space-y-4">
+            
+            <!-- Traffic Light Indicator -->
+            <div id="traffic-light-banner" class="flex items-start p-3 rounded-md border text-sm font-bold w-full transition-colors">
+                <div id="traffic-light-dot" class="w-4 h-4 rounded-full mr-3 mt-0.5 flex-shrink-0"></div>
+                <div id="traffic-light-text" class="text-gray-700 leading-tight"></div>
+            </div>
+
+            <div class="flex justify-between items-start pt-2">
+                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+            </div>
+            
+            <div class="flex flex-col space-y-2">
+                <label for="user-answer" class="text-sm font-bold text-gray-600">Your Answer:</label>
+                <textarea id="user-answer" rows="5" class="w-full p-4 border-2 border-gray-200 rounded-md focus:outline-none focus:border-cdlBrightBlue resize-none text-gray-800" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                <button id="btn-hint" class="text-cdlBlue font-bold underline hover:text-cdlBrightBlue text-sm flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Need a hint?
+                </button>
+                <button id="btn-reveal" class="w-full sm:w-auto btn-gold px-8 py-3 rounded-md font-bold shadow-md text-lg">
+                    Reveal Mark Scheme
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden bg-cdlBrightYellow bg-opacity-30 border-l-4 border-cdlGold p-4 rounded-r-md mt-4">
+                <p class="text-sm text-gray-600 mb-2 italic"><strong>Note:</strong> If you're asking for a hint, you should probably come back here later to see if you can manage without one!</p>
+                <p id="display-hint" class="font-bold text-cdlBlue"></p>
+            </div>
+        </div>
+
+        <!-- Mark Scheme Display -->
+        <div id="mark-scheme-container" class="hidden mt-6 border-t-2 border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-cdlRed mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Mark Scheme
+            </h3>
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+                <!-- Mark scheme content injected here -->
+            </div>
+
+            <!-- Metacognitive Prompt -->
+            <div class="mt-6 bg-cdlBlue text-white p-5 rounded-md shadow-inner">
+                <h4 class="font-bold text-cdlBrightBlue mb-2 text-sm uppercase tracking-wider">Reflection</h4>
+                <p id="display-reflection" class="text-lg font-light"></p>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next" class="btn-blue px-6 py-3 rounded-md font-bold shadow-md flex items-center">
+                    Next Question
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
+            <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
+            <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // ==========================================
+            // RESPIRATORY SYSTEM
+            // ==========================================
+
+            // Pathway of air
+            {
+                section: "Pathway of air",
+                marks: 2,
+                question: "Complete the following pathway of air into the body: <br>1. nose or mouth <br>2. trachea <br>3. _______ <br>4. _______ <br>5. alveoli",
+                markScheme: "1 mark for each: <br><ul><li>3: bronchi</li><li>4: bronchioles</li></ul>",
+                hint: "Think of a tree. The trachea is the trunk, which splits into two large branches, which then split into many smaller branches.",
+                isOfficial: true
+            },
+            {
+                section: "Pathway of air",
+                marks: 1,
+                question: "Which sequence correctly shows the pathway of air into the lungs?<br><br>A: trachea &rarr; mouth/nasal passage &rarr; bronchioles &rarr; bronchi<br>B: mouth/nasal passage &rarr; bronchi &rarr; trachea &rarr; bronchioles<br>C: mouth/nasal passage &rarr; trachea &rarr; bronchi &rarr; bronchioles",
+                markScheme: "1 mark for: <strong>C</strong>",
+                hint: "Air goes in the mouth, down the windpipe, splits into the two main tubes, then into the smaller tubes.",
+                isOfficial: true
+            },
+            {
+                section: "Pathway of air",
+                marks: 3,
+                question: "Identify the structures A, B and C to complete the pathway of air into the body:<br><br>mouth/nasal passage &rarr; A &rarr; bronchi &rarr; B &rarr; C",
+                markScheme: "1 mark for each:<br><ul><li><strong>A:</strong> trachea</li><li><strong>B:</strong> bronchioles</li><li><strong>C:</strong> alveoli</li></ul>",
+                hint: "A is the windpipe. B are the small branches. C are the tiny air sacs where gas exchange happens.",
+                isOfficial: true
+            },
+
+            // Gaseous exchange at the alveoli
+            {
+                section: "Gaseous exchange at the alveoli",
+                marks: 4,
+                question: "State and explain two characteristics of alveoli that assist gaseous exchange.",
+                markScheme: "1 mark for each characteristic stated, 1 mark for each explanation.<br><ul><li><strong>Characteristic:</strong> one-cell thick;<br><strong>Explanation:</strong> small distance for oxygen / carbon dioxide / gases to pass through faster.</li><li><strong>Characteristic:</strong> surrounded by capillaries / blood supply;<br><strong>Explanation:</strong> increases the amount of blood available for the transfer of gases / maintains concentration gradient.</li><li><strong>Characteristic:</strong> large surface area / large number of alveoli;<br><strong>Explanation:</strong> large area for gas exchange / diffusion to take place at / more gases can pass through.</li><li><strong>Characteristic:</strong> walls of alveoli are moist;<br><strong>Explanation:</strong> gases dissolve to pass through.</li></ul>",
+                hint: "Think about the structure of the walls, what surrounds them, and how many of them there are.",
+                isOfficial: true
+            },
+            {
+                section: "Gaseous exchange at the alveoli",
+                marks: 2,
+                question: "Describe what is meant by gaseous exchange at the alveoli.",
+                markScheme: "2 marks for:<br><ul><li>oxygen delivered to the blood;</li><li>carbon dioxide removed from the blood;</li></ul>",
+                hint: "What gas moves into the body, and what waste gas moves out?",
+                isOfficial: true
+            },
+            {
+                section: "Gaseous exchange at the alveoli",
+                marks: 2,
+                question: "Suggest the benefits for a performer of efficient gaseous exchange.",
+                markScheme: "2 marks for any of the following:<br><ul><li>speeds the removal of carbon dioxide;</li><li>speeds the transfer of oxygen to muscles;</li><li>delays the onset of lactic acid;</li><li>speeds the removal of lactic acid;</li><li>speeds the body's return to its natural state;</li><li>allows a performer to maintain effort for longer / able to participate in endurance activities;</li></ul>",
+                hint: "If your body is really good at getting oxygen in and CO2 out, how does that help you on the pitch or track?",
+                isOfficial: true
+            },
+
+            // Mechanics of breathing
+            {
+                section: "Mechanics of breathing",
+                marks: 2,
+                question: "Describe the function of the intercostal muscles in normal breathing.",
+                markScheme: "2 marks for:<br><ul><li>contract to expand the chest cavity / move the ribs up and out during inspiration;</li><li>relax to reduce the chest cavity / allow the ribs to move downwards and inwards during expiration;</li></ul>",
+                hint: "Think about what happens to your rib cage when you breathe in and breathe out.",
+                isOfficial: true
+            },
+            {
+                section: "Mechanics of breathing",
+                marks: 3,
+                question: "Identify the role of the diaphragm in the mechanics of breathing.",
+                markScheme: "1 mark for identifying structure, 2 marks max for describing its role.<br><ul><li><strong>Inhalation:</strong> the diaphragm contracts / becomes flatter AND increases the chest cavity volume OR reduces pressure in the lungs;</li><li><strong>Exhalation:</strong> the diaphragm relaxes / domes AND decreases the chest cavity volume OR increases pressure in the lungs;</li></ul>",
+                hint: "What does this muscle do at the bottom of the ribs to pull air in, and then to push it out?",
+                isOfficial: true
+            },
+            {
+                section: "Mechanics of breathing",
+                marks: 2,
+                question: "Complete the sentences to describe changes to the lungs during inhalation and exhalation.<br><br>The volume of air in the lungs _______ during inhalation.<br>The pressure of air in the lungs _______ causing exhalation.",
+                markScheme: "1 mark for each correctly completed sentence:<br><ul><li>The volume of air in the lungs <strong>increases</strong>; during inhalation.</li><li>The pressure of air in the lungs <strong>increases</strong>; causing exhalation.</li></ul>",
+                hint: "When you breathe in, what happens to the amount of air? To force air out, what has to happen to the pressure?",
+                isOfficial: true
+            },
+
+            // Breathing volumes and minute ventilation
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 2,
+                question: "Describe what is meant by the term tidal volume and state how this changes during exercise.",
+                markScheme: "1 mark for description, 1 mark for change.<br><ul><li><strong>Description:</strong> the volume / amount of air entering or leaving with each breath;</li><li><strong>Change during exercise:</strong> increases;</li></ul>",
+                hint: "Think of the word 'tide' going in and out normally. Does it get bigger or smaller when you run?",
+                isOfficial: true
+            },
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 3,
+                question: "Minute ventilation increases during exercise. Define the term minute ventilation and describe two benefits of an increased minute ventilation during exercise.",
+                markScheme: "1 mark for definition, 2 marks max for benefits.<br><ul><li><strong>Definition:</strong> the volume of air that you breathe per minute;</li><li><strong>Benefits (Any 2 of):</strong> increase in the volume of oxygen into the body; increases the volume of carbon dioxide removed from the body; increases oxygen supply to muscles / keep going for longer; increases the efficiency of diffusion of oxygen; reduces the onset of lactic acid / speeds up removal of lactic acid;</li></ul>",
+                hint: "What does minute ventilation measure, and why is doing more of it helpful during a workout?",
+                isOfficial: true
+            },
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 2,
+                question: "Identify two breathing volumes that do not increase during exercise.",
+                markScheme: "2 marks for:<br><ul><li>residual volume;</li><li>vital capacity;</li></ul>",
+                hint: "Which volume measures the absolute maximum you can force out, and which is the air you can never breathe out?",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // CIRCULATORY SYSTEM
+            // ==========================================
+
+            // Components of blood
+            {
+                section: "Components of blood",
+                marks: 4,
+                question: "Name two components of blood and describe a different function of each component.",
+                markScheme: "Max 2 marks for each component of blood and its function.<br><ul><li><strong>Red blood cells:</strong> carries oxygen to muscles</li><li><strong>White blood cells:</strong> part of the immune system, which fights infections and helps prevent illness / to recover</li><li><strong>Plasma:</strong> helps blood flow easier / removes waste products including carbon dioxide from muscles / transports vital hormones, cells and enzymes</li><li><strong>Platelets:</strong> helps clot blood when a graze or cut occurs</li></ul>",
+                hint: "Think about the red ones, the white ones, the liquid, and the ones that make scabs.",
+                isOfficial: true
+            },
+            {
+                section: "Components of blood",
+                marks: 2,
+                question: "Identify a different component of blood that has each of the following main functions:<br><br>1. Combines with oxygen<br>2. Clots blood",
+                markScheme: "1 mark for each component.<br><ul><li><strong>Combines with oxygen:</strong> red (blood) cells / haemoglobin</li><li><strong>Clots blood:</strong> platelets</li></ul>",
+                hint: "Which cells turn red when oxygenated? Which fragments stop you from bleeding?",
+                isOfficial: true
+            },
+            {
+                section: "Components of blood",
+                marks: 2,
+                question: "Identify which two different components of blood are described below:<br><br>Component 1: consists mainly of water to allow substances to dissolve and be transported easily<br>Component 2: contains an enzyme that causes blood to clot when there is a cut to the skin or damage to blood vessels",
+                markScheme: "1 mark for each:<br><ul><li><strong>Component 1:</strong> plasma</li><li><strong>Component 2:</strong> platelets</li></ul>",
+                hint: "One is the liquid part of blood, the other creates a scab.",
+                isOfficial: true
+            },
+            {
+                section: "Components of blood",
+                marks: 4,
+                question: "Complete the list to show different components of blood and their functions:<br><br>1. Plasma: [Function?]<br>2. [Component?]: carry oxygen<br>3. White blood cells: [Function?]<br>4. [Component?]: clot the blood",
+                markScheme: "4 marks for:<br><ul><li><strong>Plasma:</strong> transport cells / nutrients / hormones</li><li><strong>Carry oxygen:</strong> red blood cells</li><li><strong>White blood cells:</strong> defend against infection / pathogens</li><li><strong>Clot the blood:</strong> platelets</li></ul>",
+                hint: "What does the liquid part do? What cells carry oxygen? What do white cells do? What stops bleeding?",
+                isOfficial: true
+            },
+            {
+                section: "Components of blood",
+                marks: 4,
+                question: "Red blood cells are a component of blood. They contain haemoglobin to transport oxygen.<br><br>Identify two other components of blood. Describe a different function of each component.",
+                markScheme: "1 mark for each component, 1 mark for an appropriate function (Max 4).<br><ul><li><strong>white blood cells:</strong> defends / fights against pathogens / infections</li><li><strong>plasma:</strong> allows substances to be transported (easily) / plays a role in maintaining blood pressure / helps maintain body temperature / affects the viscosity of blood</li><li><strong>platelets:</strong> clots the blood (when blood vessels are damaged/cut) / creates a scab</li></ul>",
+                hint: "You have three left to choose from: the liquid, the fighters, and the cloppers. Pick two and say what they do.",
+                isOfficial: true
+            },
+
+            // Haemoglobin
+            {
+                section: "Haemoglobin",
+                marks: 2,
+                question: "Describe the role of haemoglobin in the blood.",
+                markScheme: "Any 2 of:<br><ul><li>carries oxygen / permits aerobic respiration</li><li>reacts with oxygen to form oxyhaemoglobin</li><li>releases oxygen (at tissues / muscles)</li><li>carries carbon dioxide</li><li>reacts with carbon dioxide to form carbaminohaemoglobin</li></ul>",
+                hint: "What does it carry from the lungs to the muscles, and what does it carry back?",
+                isOfficial: true
+            },
+            {
+                section: "Haemoglobin",
+                marks: 1,
+                question: "Red blood cells are one component of blood. Identify the substance found in red blood cells that carries oxygen and carbon dioxide.",
+                markScheme: "1 mark for: <strong>haemoglobin</strong>",
+                hint: "It is the iron-rich protein that gives blood its red color.",
+                isOfficial: true
+            },
+
+            // Blood vessels
+            {
+                section: "Blood vessels",
+                marks: 2,
+                question: "State two types of blood vessel.",
+                markScheme: "Any 2 of:<br><ul><li>arteries</li><li>capillaries</li><li>veins</li></ul>",
+                hint: "Think about the ones that go away from the heart, back to the heart, or connect them.",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 4,
+                question: "Describe two functions of each of the following types of blood vessel:<br><br>Artery (2 marks)<br>Vein (2 marks)",
+                markScheme: "Max 2 marks per type of blood vessel:<br><br><strong>Artery:</strong><br><ul><li>carry blood away from the heart</li><li>carry blood at high pressure</li><li>generally carry oxygenated blood</li></ul><br><strong>Vein:</strong><br><ul><li>carry blood towards the heart</li><li>stop blood flowing backwards (have valves)</li><li>carry blood at low pressure</li><li>generally carry deoxygenated blood</li></ul>",
+                hint: "Which direction does the blood go? Is the pressure high or low? Does it carry oxygen or carbon dioxide?",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 2,
+                question: "Describe two structural differences between arteries and veins.",
+                markScheme: "1 mark for each structural difference described:<br><ul><li>arteries have thick(er) muscular walls AND veins have thin(ner) walls</li><li>arteries have a narrow lumen AND veins have a wide lumen</li><li>arteries are elastic AND veins are not / have less elasticity</li><li>arteries do not have valves AND veins have valves</li></ul>",
+                hint: "Think about the thickness of the walls, the size of the hole (lumen) inside, and the presence of valves.",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 2,
+                question: "Describe the structure and function of capillaries.",
+                markScheme: "<ul><li><strong>Structure (1 mark):</strong> the walls of capillaries are only one cell thick / capillaries are very small in width / selectively permeable.</li><li><strong>Function (1 mark):</strong> allow gaseous exchange to take place / allows oxygen/nutrients to diffuse to cells / allows waste to be removed from cells / connect arteries to veins.</li></ul>",
+                hint: "How thick are they, and what do they allow to happen at the muscle cells?",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 2,
+                question: "Identify each type of blood vessel described:<br><br>Blood vessel 1: thick elastic walls; transports oxygenated blood away from the heart.<br>Blood vessel 2: walls are one cell thick; allows certain substances to pass into and out of cells.",
+                markScheme: "1 mark for each:<br><ul><li><strong>Blood vessel 1:</strong> artery</li><li><strong>Blood vessel 2:</strong> capillary</li></ul>",
+                hint: "Which one handles high pressure? Which one is thin enough for diffusion?",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 3,
+                question: "Explain how the function of each of the following types of blood vessel is supported by their structure: Arteries, Veins, Capillaries.",
+                markScheme: "3 marks for:<br><ul><li><strong>Arteries:</strong> thick / muscular wall to pump blood away from the heart under high pressure</li><li><strong>Veins:</strong> thin walls to carry blood back to the heart under low pressure / contain valves to prevent backflow of blood</li><li><strong>Capillaries:</strong> one-cell thick walls to allow diffusion of gases</li></ul>",
+                hint: "Match the structure (thick walls, valves, thin walls) to what they need to do.",
+                isOfficial: true
+            },
+
+            // Heart structure and function
+            {
+                section: "Heart structure and function",
+                marks: 4,
+                question: "Describe the role of each of the following structures in the pathway of blood through the heart:<br>Vena cava, Pulmonary vein, Aorta, Pulmonary artery.",
+                markScheme: "1 mark for each description:<br><ul><li><strong>Vena cava:</strong> carries (deoxygenated) blood from the body to the right atrium</li><li><strong>Pulmonary vein:</strong> carries (oxygenated) blood from the lungs to the left atrium</li><li><strong>Aorta:</strong> carries (oxygenated) blood from the left ventricle to the body</li><li><strong>Pulmonary artery:</strong> carries (deoxygenated) blood from the right ventricle to the lungs</li></ul>",
+                hint: "Think: Where is it coming from, and where is it going to? Pulmonary means lungs.",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 1,
+                question: "Describe one function of valves in the heart.",
+                markScheme: "1 mark for any of:<br><ul><li>prevents blood flowing backwards</li><li>ensures blood flows in one direction / determines the pathway of blood through the heart</li><li>allows blood to enter/leave heart chambers</li><li>regulates the flow of blood / ensures blood flows at an appropriate rate</li></ul>",
+                hint: "What do they stop the blood from doing?",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 2,
+                question: "Describe two long-term effects of regular exercise on the heart.",
+                markScheme: "1 mark for each description:<br><ul><li>heart size increases / thicker walls / hypertrophy</li><li>resting pulse rate reduces / resting heart rate reduces / bradycardia</li><li>stroke volume increases / (maximal) cardiac output increases / the volume of blood pumped in one minute increases</li><li>returns to resting heart rate more quickly / returns to normal more quickly</li><li>increase strength of the heart / stronger contractions</li><li>reduction in heart disease</li></ul>",
+                hint: "Think about what happens to the size of the heart muscle and its resting speed.",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 1,
+                question: "Describe the function of the right ventricle in the heart.",
+                markScheme: "1 mark for:<br>contracts to push (deoxygenated) blood out of heart / into pulmonary artery / to lungs / receives blood from right atrium;",
+                hint: "Where does the right side of the heart send the blood?",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 3,
+                question: "State the name of each heart chamber from its description:<br><br>1. Contracts to pump oxygenated blood to all parts of the body<br>2. Receives deoxygenated blood from the body<br>3. Contracts to pump deoxygenated blood to the lungs",
+                markScheme: "1 mark for each chamber:<br><ul><li>1. left ventricle</li><li>2. right atrium</li><li>3. right ventricle</li></ul>",
+                hint: "The ventricles pump it out. The atria receive it. Left goes to the body, right goes to the lungs.",
+                isOfficial: true
+            },
+
+            // Cardiac output
+            {
+                section: "Cardiac output",
+                marks: 1,
+                question: "Explain the term cardiac output.",
+                markScheme: "1 mark for:<br>The volume/amount of blood pumped from the left ventricle / from the heart each minute.<br><em>Accept: stroke volume &times; heart rate.</em>",
+                hint: "It measures how much blood leaves the heart in 60 seconds.",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 2,
+                question: "Define the following terms: Heart rate, Stroke volume.",
+                markScheme: "2 marks for:<br><ul><li><strong>Heart rate:</strong> the number of heart contractions / beats per minute;</li><li><strong>Stroke volume:</strong> the volume / amount of blood pumped out of the heart in one beat / each beat;</li></ul>",
+                hint: "One is how fast it beats, the other is how much blood leaves in a single pump.",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 2,
+                question: "Calculate the cardiac output for a performer who has a heart rate of 150 beats per minute and a stroke volume of 90 ml.<br><br>Give the answer and the appropriate unit.",
+                markScheme: "1 mark for the calculation, 1 mark for the unit:<br><ul><li><strong>Calculation:</strong> 13.5 (or 13500)</li><li><strong>Unit:</strong> litres per minute (or ml per minute)</li></ul>",
+                hint: "Multiply the two numbers. 150 &times; 90 = ?",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 2,
+                question: "A performer has a resting heart rate of 60 beats per minute and a cardiac output of 4.2 litres per minute.<br><br>Calculate the stroke volume of the performer. Include appropriate units.",
+                markScheme: "1 mark for value, 1 mark for appropriate unit:<br><ul><li><strong>Value:</strong> 0.07 / 70</li><li><strong>Unit:</strong> litres / millilitres</li></ul><br><em>(4.2 &divide; 60 = 0.07L)</em>",
+                hint: "Work backwards from the equation: Cardiac Output = Heart Rate &times; Stroke Volume.",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 2,
+                question: "The table shows resting values of pulse rate and stroke volume for two performers.<br>Performer A: 75 bpm, 70 ml<br>Performer B: 50 bpm, 105 ml<br><br>Suggest possible reasons for the differences in pulse rate and stroke volume between Performer A and Performer B.",
+                markScheme: "2 marks from (for Performer B):<br><ul><li>more trained / fitter / more physically active</li><li>activity is more endurance-based</li><li>has a bigger heart / hypertrophy</li><li>has a stronger heart / heart is more efficient</li><li>is not suffering from illness</li></ul><br><em>Accept reverse for performer A.</em>",
+                hint: "Why would someone have a much lower resting heart rate but a much higher stroke volume?",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 3,
+                question: "Explain why the cardiac output of a marathon runner may differ from the cardiac output of a sedentary person during exercise of the same intensity.",
+                markScheme: "3 marks from:<br><ul><li>cardiac output is dependent on heart rate and stroke volume</li><li>(marathon runner) cardiac output is larger so more blood / oxygen can be sent to the working muscles</li><li>larger heart / hypertrophy as a result of aerobic / endurance training</li><li>larger stroke volume so more blood pumped out per beat</li><li>lower resting heart rate / bradycardia so can pump more blood with less beats / more efficient</li></ul>",
+                hint: "Think about the size of their heart muscle, how much blood leaves per beat, and how much oxygen their muscles need.",
+                isOfficial: true
+            }
+        ];
+
+        // Conversational reflection prompts
+        const reflectionPrompts = [
+            "How did you do? Be honest with yourself—how many marks out of the total would you give your answer?",
+            "Did anything in the mark scheme surprise you?",
+            "If you dropped any marks here, what's your plan to make sure you nail it next time?",
+            "Did you use the exact terminology? Often, close isn't quite enough in the exam.",
+            "How could you have improved your answer to guarantee full marks?",
+            "What was the trickiest part of this question for you?",
+            "Which part of the mark scheme did you completely forget to include?",
+            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+        ];
+
+        let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
+        let bypassActive = false;
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const btnRandom = document.getElementById('btn-random');
+        const questionContainer = document.getElementById('question-container');
+        const displayQuestion = document.getElementById('display-question');
+        const displayMarks = document.getElementById('display-marks');
+        const userAnswer = document.getElementById('user-answer');
+        const btnReveal = document.getElementById('btn-reveal');
+        const btnHint = document.getElementById('btn-hint');
+        const hintBox = document.getElementById('hint-box');
+        const displayHint = document.getElementById('display-hint');
+        const markSchemeContainer = document.getElementById('mark-scheme-container');
+        const displayMarkScheme = document.getElementById('display-mark-scheme');
+        const displayReflection = document.getElementById('display-reflection');
+        const btnNext = document.getElementById('btn-next');
+        
+        // Traffic Light Elements
+        const trafficBanner = document.getElementById('traffic-light-banner');
+        const trafficDot = document.getElementById('traffic-light-dot');
+        const trafficText = document.getElementById('traffic-light-text');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalBtnPrimary = document.getElementById('modal-btn-primary');
+        const modalBtnSecondary = document.getElementById('modal-btn-secondary');
+
+        // Functions
+        function showModal(title, message, primaryText, secondaryText, onPrimaryClick, onSecondaryClick) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            
+            modalBtnPrimary.textContent = primaryText;
+            modalBtnPrimary.onclick = () => {
+                hideModal();
+                if (onPrimaryClick) onPrimaryClick();
+            };
+            
+            if (secondaryText) {
+                modalBtnSecondary.textContent = secondaryText;
+                modalBtnSecondary.classList.remove('hidden');
+                modalBtnSecondary.onclick = () => {
+                    hideModal();
+                    if (onSecondaryClick) onSecondaryClick();
+                };
+            } else {
+                modalBtnSecondary.classList.add('hidden');
+            }
+            
+            customModal.classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            customModal.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const selectedSection = sectionSelect.value;
+            let filteredQuestions = questions;
+            
+            if (selectedSection !== 'all') {
+                filteredQuestions = questions.filter(q => q.section === selectedSection);
+            }
+            
+            if (filteredQuestions.length === 0) {
+                showModal("Oops!", "No questions found for this section.", "OK");
+                return;
+            }
+
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
+
+            // Setup Traffic Light UI
+            trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
+            trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
+            
+            if (currentQuestion.isOfficial) {
+                trafficBanner.classList.add('bg-green-100', 'border-green-300');
+                trafficDot.classList.add('bg-green-500');
+                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+            } else {
+                trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
+                trafficDot.classList.add('bg-amber-500');
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+            }
+
+            // Reset UI
+            displayQuestion.innerHTML = currentQuestion.question;
+            displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
+            userAnswer.value = '';
+            userAnswer.disabled = false;
+            questionContainer.classList.remove('hidden');
+            markSchemeContainer.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            bypassActive = false;
+        }
+
+        function revealMarkScheme() {
+            const answer = userAnswer.value.trim();
+            
+            // Check for empty box
+            if (answer === '') {
+                showModal(
+                    "Hold up!", 
+                    "Oh no you don't! You have to write <em>something</em> before I show you the answer.<br><br>If that something is 'I don't know', that's fine, but take note: this is obviously an area you need to revisit again later.", 
+                    "Try again"
+                );
+                return;
+            }
+
+            // Check for "I don't know" variants
+            const idkVariants = ["i don't know", "idk", "i dunno", "no idea", "pass"];
+            const isIdk = idkVariants.some(variant => answer.toLowerCase().includes(variant));
+            
+            if (isIdk) {
+                processReveal();
+                return;
+            }
+
+            // Word count validation (approx > 50% of mark scheme words)
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = currentQuestion.markScheme;
+            const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
+            const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+
+            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+                showModal(
+                    "Are you sure?", 
+                    "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
+                    () => {
+                        bypassActive = true;
+                        processReveal();
+                    },
+                    () => {
+                        userAnswer.focus();
+                    }
+                );
+                return;
+            }
+
+            processReveal();
+        }
+
+        function processReveal() {
+            displayMarkScheme.innerHTML = currentQuestion.markScheme;
+            
+            // Generate Random Reflection Prompt
+            const randomPrompt = reflectionPrompts[Math.floor(Math.random() * reflectionPrompts.length)];
+            displayReflection.textContent = randomPrompt;
+
+            userAnswer.disabled = true;
+            markSchemeContainer.classList.remove('hidden');
+            
+            // Scroll to mark scheme smoothly
+            markSchemeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Event Listeners
+        btnRandom.addEventListener('click', loadQuestion);
+        
+        btnHint.addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.hint) {
+                displayHint.textContent = currentQuestion.hint;
+                hintBox.classList.remove('hidden');
+            }
+        });
+
+        btnReveal.addEventListener('click', revealMarkScheme);
+        btnNext.addEventListener('click', loadQuestion);
+
+        // Close modal if clicking outside the box
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
