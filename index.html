@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEHS Resources</title>
+    
+    <!-- Added Favicon Link -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+
     <style>
         /* CDL Primary & Secondary Brand Colors */
         :root {
@@ -25,12 +29,41 @@
             min-height: 100vh;
         }
 
+        /* Updated Header Container for Flexbox Layout */
         .header-container {
             width: 100%;
+            box-sizing: border-box; /* Ensures padding stays inside the 100% width */
             background-color: #ffffff;
-            padding: 70px 20px 50px;
-            text-align: center;
+            padding: 40px 40px 30px; /* Adjusted padding for the new layout */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05); /* Sleek depth */
+        }
+
+        /* Side containers to keep the middle text perfectly centered */
+        .header-side {
+            flex: 1;
+            display: flex;
+        }
+
+        .header-side.left {
+            justify-content: flex-start;
+        }
+
+        .header-side.right {
+            justify-content: flex-end;
+        }
+
+        .header-center {
+            flex: 2;
+            text-align: center;
+        }
+
+        /* Class to control the size of both header images */
+        .header-img {
+            max-height: 80px; /* Adjust this value to make the images larger or smaller */
+            width: auto;
         }
 
         h1 {
@@ -125,8 +158,21 @@
 <body>
 
     <div class="header-container">
-        <h1>Physical Education & <span class="highlight">Sports Science</span></h1>
-        <div class="benefit-text">Theory applied, skills acquired</div>
+        <!-- Left Side: Favicon -->
+        <div class="header-side left">
+            <img src="/images/favicon.png" alt="Pop-Art Juggling Spheres" class="header-img">
+        </div>
+        
+        <!-- Center: Text -->
+        <div class="header-center">
+            <h1>Physical Education & <span class="highlight">Sports Science</span></h1>
+            <div class="benefit-text">Theory applied, skills acquired</div>
+        </div>
+
+        <!-- Right Side: Athletics Logo -->
+        <div class="header-side right">
+            <img src="/images/athletics-logo.png" alt="Athletics Logo" class="header-img">
+        </div>
     </div>
 
     <div class="container">
