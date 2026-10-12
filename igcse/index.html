@@ -10,6 +10,7 @@
             --cdl-blue: #004587;
             --cdl-bright-blue: #1EB9DC;
             --cdl-bright-red: #EF8162;
+            --cdl-gold: #FBBA07;
         }
 
         body {
@@ -265,6 +266,17 @@
             transform: translateY(-3px);
             box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
         }
+        
+        /* Up Next Gold Pill */
+        .vertical-pill-gold {
+            background-color: var(--cdl-gold); 
+            color: var(--cdl-blue); /* Dark blue text for better contrast on gold */
+        }
+
+        .vertical-pill-gold:hover {
+            background-color: #e5a806; /* Slightly darker gold on hover */
+            box-shadow: 0 12px 20px rgba(251, 186, 7, 0.2);
+        }
 
         .vertical-pill-text {
             writing-mode: vertical-rl;
@@ -353,12 +365,12 @@
         <div class="topic-section">
             <div class="topic-title">Topic 1: Anatomy and Physiology</div>
             <div class="button-container">
-                <a href="#" class="btn btn-disabled">
+                <a href="IGExamPractice/11/" class="btn">
                     <div class="btn-text-area">
                         <span class="btn-title">(1.1) Skeletal and Muscular System</span>
                         <span class="btn-subtitle">Functions of the skeleton, joint types, movement, and muscle fibre types</span>
                     </div>
-                    <span class="btn-icon">○</span>
+                    <span class="btn-icon">→</span>
                 </a>
                 <a href="#" class="btn btn-disabled">
                     <div class="btn-text-area">
@@ -405,7 +417,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="IGExamPractice/HealthWellbeing/" class="vertical-pill">
+                    <a href="IGExamPractice/HealthWellbeing/" class="vertical-pill vertical-pill-gold">
                         <span class="vertical-pill-text">Summative</span>
                         <span class="btn-icon">→</span>
                     </a>
