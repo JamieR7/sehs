@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE PE Revision - Collège du Léman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cdlBlue: '#004587',
+                        cdlRed: '#E73037',
+                        cdlGold: '#FBBA07',
+                        cdlBrightBlue: '#1EB9DC',
+                        cdlBrightRed: '#EF8162',
+                        cdlBrightYellow: '#FFE37E'
+                    },
+                    fontFamily: {
+                        gotham: ['Gotham', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Gotham', sans-serif; background-color: #f3f4f6; color: #004587; }
+        .btn-blue { background-color: #004587; color: white; transition: all 0.2s; }
+        .btn-blue:hover { background-color: #003366; }
+        .btn-gold { background-color: #FBBA07; color: #004587; transition: all 0.2s; }
+        .btn-gold:hover { background-color: #e5a806; }
+        .btn-red { background-color: #E73037; color: white; transition: all 0.2s; }
+        .btn-red:hover { background-color: #cc2a31; }
+        
+        .modal-overlay {
+            background-color: rgba(0, 69, 135, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        
+        .highlight-text {
+            font-weight: 700;
+            color: #1EB9DC;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            color: #111827 !important; 
+            background-color: #ffffff !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        select option {
+            color: #111827 !important;
+            background-color: #ffffff !important;
+        }
+        optgroup {
+            font-weight: bold;
+            color: #004587;
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white rounded-t-xl shadow-md p-6 border-b-4 border-cdlRed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="mb-2">
+                <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to IGCSE Hub
+                </a>
+            </div>
+            <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
+            <h2 class="text-lg font-bold text-gray-500">Topic 1: Anatomy and Physiology</h2>
+        </div>
+        <div class="hidden sm:block flex-shrink-0">
+            <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-4xl bg-white shadow-lg rounded-b-xl p-6 md:p-8 flex flex-col space-y-6">
+        
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="w-full sm:w-2/3">
+                <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
+                <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="all">All Sections (Random)</option>
+                    <optgroup label="Skeletal and muscular system">
+                        <option value="Functions of the skeleton">&nbsp;&nbsp;&nbsp;&nbsp;Functions of the skeleton</option>
+                        <option value="Skeleton">&nbsp;&nbsp;&nbsp;&nbsp;Skeleton</option>
+                        <option value="Joint types">&nbsp;&nbsp;&nbsp;&nbsp;Joint types</option>
+                        <option value="Joint structure and function">&nbsp;&nbsp;&nbsp;&nbsp;Joint structure and function</option>
+                        <option value="Movement at joints">&nbsp;&nbsp;&nbsp;&nbsp;Movement at joints</option>
+                        <option value="Muscles">&nbsp;&nbsp;&nbsp;&nbsp;Muscles</option>
+                        <option value="Antagonistic muscle action">&nbsp;&nbsp;&nbsp;&nbsp;Antagonistic muscle action</option>
+                        <option value="Muscle fibre types">&nbsp;&nbsp;&nbsp;&nbsp;Muscle fibre types</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-end">
+                <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
+                    Load Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-container" class="hidden flex flex-col space-y-4">
+            
+            <!-- Traffic Light Indicator -->
+            <div id="traffic-light-banner" class="flex items-start p-3 rounded-md border text-sm font-bold w-full transition-colors">
+                <div id="traffic-light-dot" class="w-4 h-4 rounded-full mr-3 mt-0.5 flex-shrink-0"></div>
+                <div id="traffic-light-text" class="text-gray-700 leading-tight"></div>
+            </div>
+
+            <div class="flex justify-between items-start pt-2">
+                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+            </div>
+            
+            <div class="flex flex-col space-y-2">
+                <label for="user-answer" class="text-sm font-bold text-gray-600">Your Answer:</label>
+                <textarea id="user-answer" rows="5" class="w-full p-4 border-2 border-gray-200 rounded-md focus:outline-none focus:border-cdlBrightBlue resize-none text-gray-800" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                <button id="btn-hint" class="text-cdlBlue font-bold underline hover:text-cdlBrightBlue text-sm flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Need a hint?
+                </button>
+                <button id="btn-reveal" class="w-full sm:w-auto btn-gold px-8 py-3 rounded-md font-bold shadow-md text-lg">
+                    Reveal Mark Scheme
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden bg-cdlBrightYellow bg-opacity-30 border-l-4 border-cdlGold p-4 rounded-r-md mt-4">
+                <p class="text-sm text-gray-600 mb-2 italic"><strong>Note:</strong> If you're asking for a hint, you should probably come back here later to see if you can manage without one!</p>
+                <p id="display-hint" class="font-bold text-cdlBlue"></p>
+            </div>
+        </div>
+
+        <!-- Mark Scheme Display -->
+        <div id="mark-scheme-container" class="hidden mt-6 border-t-2 border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-cdlRed mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Mark Scheme
+            </h3>
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+                <!-- Mark scheme content injected here -->
+            </div>
+
+            <!-- Metacognitive Prompt -->
+            <div class="mt-6 bg-cdlBlue text-white p-5 rounded-md shadow-inner">
+                <h4 class="font-bold text-cdlBrightBlue mb-2 text-sm uppercase tracking-wider">Reflection</h4>
+                <p id="display-reflection" class="text-lg font-light"></p>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next" class="btn-blue px-6 py-3 rounded-md font-bold shadow-md flex items-center">
+                    Next Question
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
+            <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
+            <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // ==========================================
+            // Functions of the skeleton
+            // ==========================================
+            {
+                section: "Functions of the skeleton",
+                marks: 4,
+                question: "Identify the four main functions of the skeleton.",
+                markScheme: "1 mark for each of the following:<br><ul><li>Shape and support</li><li>Muscle attachment for movement</li><li>Protection</li><li>Red blood cell production</li></ul>",
+                hint: "Think about what bones do for your organs, your posture, your muscles, and your blood.",
+                isOfficial: false
+            },
+            {
+                section: "Functions of the skeleton",
+                marks: 2,
+                question: "Explain how the skeleton provides protection, giving an example from a sporting activity.",
+                markScheme: "<ul><li><strong>Explanation (1 mark):</strong> The skeleton acts as a hard shield to prevent damage to vital organs during impact.</li><li><strong>Example (1 mark):</strong> The cranium protecting the brain when heading a football / the ribs protecting the heart and lungs during a rugby tackle.</li></ul>",
+                hint: "What do the ribs or skull do when you take a hit in a contact sport?",
+                isOfficial: false
+            },
+            {
+                section: "Functions of the skeleton",
+                marks: 2,
+                question: "Describe the role of the skeleton in red blood cell production.",
+                markScheme: "<ul><li>Red blood cells are produced in the bone marrow (found inside larger bones). (1 mark)</li><li>These cells are crucial for carrying oxygen to working muscles during physical activity. (1 mark)</li></ul>",
+                hint: "Where are blood cells made, and why do athletes need them?",
+                isOfficial: false
+            },
+            {
+                section: "Functions of the skeleton",
+                marks: 2,
+                question: "Suggest why red blood cell production is an important function of the skeleton for a marathon runner.",
+                markScheme: "<ul><li>Red blood cells carry oxygen. (1 mark)</li><li>A marathon runner needs a continuous supply of oxygen to their working muscles for aerobic energy production over a long duration. (1 mark)</li></ul>",
+                hint: "What do red blood cells carry, and why does an endurance athlete need a lot of it?",
+                isOfficial: false
+            },
+            {
+                section: "Functions of the skeleton",
+                marks: 2,
+                question: "Describe how the skeleton provides shape and support for a performer.",
+                markScheme: "<ul><li>It acts as a framework that holds the body upright. (1 mark)</li><li>It gives the body its general size and shape, allowing athletes to maintain posture during activity. (1 mark)</li></ul>",
+                hint: "Imagine a body without a skeleton—what would happen to our posture?",
+                isOfficial: false
+            },
+            {
+                section: "Functions of the skeleton",
+                marks: 2,
+                question: "Identify the function of the skeleton that allows a gymnast to perform a cartwheel. Explain how it achieves this.",
+                markScheme: "<ul><li><strong>Function:</strong> Muscle attachment for movement. (1 mark)</li><li><strong>Explanation:</strong> The bones provide a surface for muscles to attach to via tendons. When the muscles contract, they pull on the bones acting as levers to create movement. (1 mark)</li></ul>",
+                hint: "Without this function, your muscles would just squeeze themselves without moving your limbs.",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Skeleton
+            // ==========================================
+            {
+                section: "Skeleton",
+                marks: 3,
+                question: "Classify the following three bones as long, short, or flat:<br>1. Femur<br>2. Carpals<br>3. Scapula",
+                markScheme: "1 mark for each correct classification:<br><ul><li><strong>Femur:</strong> Long bone</li><li><strong>Carpals:</strong> Short bone</li><li><strong>Scapula:</strong> Flat bone</li></ul>",
+                hint: "The femur is in the leg, carpals are in the wrist, and the scapula is the shoulder blade.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 2,
+                question: "Identify the bone located in the upper arm and classify its type.",
+                markScheme: "<ul><li><strong>Bone:</strong> Humerus (1 mark)</li><li><strong>Type:</strong> Long bone (1 mark)</li></ul>",
+                hint: "It's the bone that connects the shoulder to the elbow. It acts as a lever.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 4,
+                question: "Name the four bones that make up the leg (from the hip down to the ankle).",
+                markScheme: "1 mark for each:<br><ul><li>Femur</li><li>Tibia</li><li>Fibula</li><li>Patella</li></ul>",
+                hint: "Think thigh bone, shin bone, the smaller bone next to the shin, and the kneecap.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 3,
+                question: "Identify the bones that make up the arm, from the shoulder to the wrist.",
+                markScheme: "1 mark for each:<br><ul><li>Humerus</li><li>Radius</li><li>Ulna</li></ul>",
+                hint: "One in the upper arm, two in the forearm.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 3,
+                question: "State the location of the carpals, metacarpals, and phalanges.",
+                markScheme: "1 mark for identifying they make up the hand / wrist area.<br><em>(Allow specific breakdown: Carpals = wrist, Metacarpals = hand, Phalanges = fingers).</em>",
+                hint: "Look at the end of your arms.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 2,
+                question: "Compare a flat bone and a long bone by giving one example of each from the human skeleton.",
+                markScheme: "<ul><li><strong>Flat bone example (1 mark):</strong> Scapula / ribs / cranium / pelvis.</li><li><strong>Long bone example (1 mark):</strong> Femur / humerus / tibia / fibula / radius / ulna.</li></ul>",
+                hint: "Think of a bone that protects organs vs a bone that acts as a lever for large movements.",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Joint types
+            // ==========================================
+            {
+                section: "Joint types",
+                marks: 3,
+                question: "Identify the three different types of joints found in the human body.",
+                markScheme: "1 mark for each:<br><ul><li>Fixed or immovable joints (fibrous joints)</li><li>Slightly movable joints (cartilaginous joints)</li><li>Freely movable joints (synovial joints)</li></ul>",
+                hint: "Classify them by how much they move: none, a little bit, and a lot.",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 2,
+                question: "Give two examples of a freely movable (synovial) joint type.",
+                markScheme: "1 mark for each:<br><ul><li>Ball and socket joint</li><li>Hinge joint</li></ul>",
+                hint: "One swings like a door, the other rotates in a cup.",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 2,
+                question: "Describe the amount of movement allowed at a fibrous joint and give an example in the body.",
+                markScheme: "<ul><li><strong>Movement (1 mark):</strong> None / fixed / immovable.</li><li><strong>Example (1 mark):</strong> The cranium (skull) / pelvis.</li></ul>",
+                hint: "Think about the plates protecting your brain.",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 2,
+                question: "Identify the type of synovial joint found in the knee and the type found in the shoulder.",
+                markScheme: "<ul><li><strong>Knee:</strong> Hinge joint. (1 mark)</li><li><strong>Shoulder:</strong> Ball and socket joint. (1 mark)</li></ul>",
+                hint: "The knee moves in one plane, the shoulder can rotate freely in a circle.",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 2,
+                question: "Explain why cartilaginous (slightly movable) joints are important in the human body.",
+                markScheme: "<ul><li>They provide a small amount of flexibility/movement. (1 mark)</li><li>While simultaneously maintaining high stability and support (e.g., between the vertebrae in the spine to absorb shock while standing upright). (1 mark)</li></ul>",
+                hint: "Think about your spine. Why do you want a *little* bit of movement but not *too much*?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Joint structure and function
+            // ==========================================
+            {
+                section: "Joint structure and function",
+                marks: 2,
+                question: "Describe the function of ligaments and cartilage in a synovial joint.",
+                markScheme: "<ul><li><strong>Ligaments:</strong> Attach bone to bone to provide joint stability and prevent dislocation. (1 mark)</li><li><strong>Cartilage:</strong> Covers the ends of bones to act as a shock absorber and reduce friction. (1 mark)</li></ul>",
+                hint: "One acts as strong elastic bands holding the bones together, the other is a smooth cushion on the ends of the bones.",
+                isOfficial: false
+            },
+            {
+                section: "Joint structure and function",
+                marks: 3,
+                question: "Explain the roles of the synovial membrane, synovial fluid, and the joint capsule.",
+                markScheme: "1 mark for each:<br><ul><li><strong>Synovial membrane:</strong> Produces and secretes synovial fluid.</li><li><strong>Synovial fluid:</strong> Lubricates the joint to reduce friction during movement.</li><li><strong>Joint (fibrous) capsule:</strong> Encloses and protects the joint complex.</li></ul>",
+                hint: "Think of the membrane as the factory, the fluid as the oil, and the capsule as the protective envelope.",
+                isOfficial: false
+            },
+            {
+                section: "Joint structure and function",
+                marks: 2,
+                question: "Explain the role of synovial fluid during physical activity.",
+                markScheme: "<ul><li>It acts as a lubricant within the joint. (1 mark)</li><li>This reduces friction between the articulating bones, allowing for smooth, pain-free movement during exercise. (1 mark)</li></ul>",
+                hint: "Think about what oil does for a rusty hinge.",
+                isOfficial: false
+            },
+            {
+                section: "Joint structure and function",
+                marks: 2,
+                question: "Identify the component of a synovial joint that attaches bone to bone, and state its function.",
+                markScheme: "<ul><li><strong>Component:</strong> Ligament. (1 mark)</li><li><strong>Function:</strong> Prevents dislocation / provides stability to the joint by restricting extreme movement. (1 mark)</li></ul>",
+                hint: "They are the tough bands that get sprained when you roll your ankle.",
+                isOfficial: false
+            },
+            {
+                section: "Joint structure and function",
+                marks: 2,
+                question: "Explain the relationship between the synovial membrane and synovial fluid during a physical activity.",
+                markScheme: "<ul><li>The synovial membrane secretes/produces the synovial fluid. (1 mark)</li><li>During physical activity, it produces more fluid to lubricate the joint and reduce friction. (1 mark)</li></ul>",
+                hint: "One produces the other. What happens to production when you warm up and start moving?",
+                isOfficial: false
+            },
+            {
+                section: "Joint structure and function",
+                marks: 1,
+                question: "State the function of cartilage in a freely movable joint.",
+                markScheme: "Acts as a shock absorber / prevents bones from rubbing together / reduces friction. (1 mark)",
+                hint: "What sits on the ends of bones to stop them grinding?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Movement at joints
+            // ==========================================
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Compare the range of movement and stability of a ball and socket joint with a hinge joint.",
+                markScheme: "<ul><li>A ball and socket joint allows for a wider range of movement (movement in all directions/rotation) but is generally less stable and more prone to dislocation. (1 mark)</li><li>A hinge joint only allows movement in one plane (flexion/extension) making it highly stable but restricting its range of motion. (1 mark)</li></ul>",
+                hint: "Which one can rotate freely? Which one acts like a door? How does that affect how easily it pops out of place?",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Define abduction and adduction.",
+                markScheme: "<ul><li><strong>Abduction:</strong> Movement of a limb away from the midline of the body. (1 mark)</li><li><strong>Adduction:</strong> Movement of a limb towards the midline of the body. (1 mark)</li></ul>",
+                hint: "Think of 'abducting' as taking away from the center, and 'adding' as bringing back to the center.",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Describe plantar flexion and identify the joint where it occurs.",
+                markScheme: "<ul><li><strong>Description:</strong> Pointing the toes downwards / increasing the angle at the ankle joint. (1 mark)</li><li><strong>Joint:</strong> Occurs at the ankle joint. (1 mark)</li></ul>",
+                hint: "Think about the movement a gymnast or dancer makes to stand on their toes.",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Define flexion and extension.",
+                markScheme: "<ul><li><strong>Flexion:</strong> Decreasing the angle at a joint (bending). (1 mark)</li><li><strong>Extension:</strong> Increasing the angle at a joint (straightening). (1 mark)</li></ul>",
+                hint: "What happens to the angle of your elbow when you do a bicep curl?",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Describe the movement of rotation and give an example of a sporting action where it occurs.",
+                markScheme: "<ul><li><strong>Description:</strong> Turning a limb or body part around its long axis. (1 mark)</li><li><strong>Example:</strong> Arm action in front crawl swimming / throwing a discus / turning the head to breathe in swimming. (1 mark)</li></ul>",
+                hint: "Think about turning in a circle.",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Compare abduction and adduction at the shoulder joint when performing a jumping jack (star jump).",
+                markScheme: "<ul><li><strong>Abduction:</strong> Occurs during the upward phase of the jump, where the arms move away from the midline of the body. (1 mark)</li><li><strong>Adduction:</strong> Occurs during the downward phase of the jump, where the arms return towards the midline of the body. (1 mark)</li></ul>",
+                hint: "Which part is 'adding' to the midline and which is 'taking away'?",
+                isOfficial: false
+            },
+            {
+                section: "Movement at joints",
+                marks: 1,
+                question: "Identify the movement occurring at the ankle joint when a gymnast pulls their toes up toward their shin.",
+                markScheme: "Dorsiflexion. (1 mark)",
+                hint: "It is the opposite of plantar flexion.",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Muscles
+            // ==========================================
+            {
+                section: "Muscles",
+                marks: 2,
+                question: "Identify the muscle located at the front of the upper arm and state its role.",
+                markScheme: "<ul><li><strong>Muscle:</strong> Biceps (1 mark)</li><li><strong>Role:</strong> Acts to flex (bend) the arm at the elbow joint. (1 mark)</li></ul>",
+                hint: "It's the muscle you show off when you 'make a muscle'.",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 2,
+                question: "Describe the role of tendons in the muscular system.",
+                markScheme: "<ul><li>Tendons attach muscle to bone. (1 mark)</li><li>They transmit the force created by a muscular contraction to the bone, causing movement to occur at the joint. (1 mark)</li></ul>",
+                hint: "Unlike ligaments (bone to bone), what do tendons connect, and what happens when the muscle pulls?",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 3,
+                question: "Name the muscle groups located at the front of the upper leg, back of the upper leg, and the calf.",
+                markScheme: "1 mark for each:<br><ul><li><strong>Front of upper leg:</strong> Quadriceps group</li><li><strong>Back of upper leg:</strong> Hamstring group</li><li><strong>Calf:</strong> Gastrocnemius</li></ul>",
+                hint: "Think quads, hammies, and the scientific name for the calf.",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 2,
+                question: "Identify the muscle located across the chest and state its role.",
+                markScheme: "<ul><li><strong>Muscle:</strong> Pectorals. (1 mark)</li><li><strong>Role:</strong> Adducts the arm at the shoulder (or draws the arm across the chest/pushing action). (1 mark)</li></ul>",
+                hint: "The muscle used heavily in a bench press or push-up.",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 2,
+                question: "State the location of the trapezius and latissimus dorsi muscles.",
+                markScheme: "<ul><li><strong>Trapezius:</strong> Upper back / neck area. (1 mark)</li><li><strong>Latissimus dorsi:</strong> Mid / lower back / wrapping around the side of the torso. (1 mark)</li></ul>",
+                hint: "Both are on the posterior (back) of the body. One shrugs the shoulders, the other pulls the arms down.",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 1,
+                question: "Describe the role of the deltoid muscle during a tennis serve.",
+                markScheme: "Abducts the arm at the shoulder / raises the arm to hit the ball. (1 mark)",
+                hint: "The deltoid is the shoulder muscle. What does it do to lift the racket?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Antagonistic muscle action
+            // ==========================================
+            {
+                section: "Antagonistic muscle action",
+                marks: 3,
+                question: "Explain antagonistic muscle action at the elbow during the upward phase of a bicep curl. Identify the agonist and antagonist.",
+                markScheme: "<ul><li>Muscles work in pairs; as one contracts, the other relaxes. (1 mark)</li><li><strong>Agonist (Prime Mover):</strong> The Biceps contract (shorten) to flex the elbow. (1 mark)</li><li><strong>Antagonist:</strong> The Triceps relax to allow the movement to happen. (1 mark)</li></ul>",
+                hint: "Which muscle is doing the work to lift the weight, and which one has to stretch out to let it happen?",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 2,
+                question: "Differentiate between a concentric and an eccentric isotonic contraction.",
+                markScheme: "<ul><li><strong>Concentric:</strong> The muscle shortens while generating force (e.g. lifting a weight). (1 mark)</li><li><strong>Eccentric:</strong> The muscle lengthens while under tension (e.g. lowering a weight slowly under control). (1 mark)</li></ul>",
+                hint: "Both involve movement (isotonic), but one shortens the muscle and the other lengthens it under tension.",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 2,
+                question: "Define an isometric contraction and provide a sporting example.",
+                markScheme: "<ul><li><strong>Definition:</strong> The muscle contracts and generates tension, but there is no change in muscle length and no movement at the joint. (1 mark)</li><li><strong>Example:</strong> Pushing in a rugby scrum / holding a handstand in gymnastics / holding a plank position. (1 mark)</li></ul>",
+                hint: "Think 'iso' = same, 'metric' = length. What sports require you to hold a pose and push hard without moving?",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 3,
+                question: "Explain the antagonistic muscle action at the knee joint when a basketball player jumps for a rebound.",
+                markScheme: "<ul><li><strong>Agonist:</strong> Quadriceps group contract to extend the knee. (1 mark)</li><li><strong>Antagonist:</strong> Hamstring group relaxes to allow the extension. (1 mark)</li><li>This coordinated action allows the player to straighten their legs forcefully to jump. (1 mark)</li></ul>",
+                hint: "To jump, you have to straighten your legs. Which muscle fires to straighten the knee?",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 2,
+                question: "Describe an isometric contraction, giving an example from gymnastics.",
+                markScheme: "<ul><li><strong>Description:</strong> The muscle contracts and creates tension but stays the same length (no movement at the joint). (1 mark)</li><li><strong>Example:</strong> Holding a crucifix position on the rings / holding a handstand. (1 mark)</li></ul>",
+                hint: "Think of poses where the gymnast is perfectly still but their muscles are working incredibly hard.",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 2,
+                question: "Identify the agonist and antagonist at the knee joint when a footballer prepares to kick a ball by pulling their leg backwards.",
+                markScheme: "<ul><li><strong>Agonist (Prime Mover):</strong> Hamstring group (contracts to flex the knee). (1 mark)</li><li><strong>Antagonist:</strong> Quadriceps group (relaxes). (1 mark)</li></ul>",
+                hint: "This is the 'wind up' phase where the knee bends backwards. Which muscle bends the knee?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // Muscle fibre types
+            // ==========================================
+            {
+                section: "Muscle fibre types",
+                marks: 3,
+                question: "Compare slow twitch and fast twitch muscle fibres in terms of force created, fatigue tolerance, and energy supply.",
+                markScheme: "Award 1 mark for each correct comparison, up to 3 marks:<br><ul><li><strong>Force created:</strong> Fast twitch fibres generate a high amount of force quickly, whereas slow twitch generate low force.</li><li><strong>Fatigue tolerance:</strong> Slow twitch fibres have high fatigue tolerance (can work for a long time), whereas fast twitch tire very quickly.</li><li><strong>Energy supply:</strong> Slow twitch rely on the aerobic energy supply (using oxygen), whereas fast twitch rely on the anaerobic energy supply.</li></ul>",
+                hint: "Compare a marathon runner's muscles to a shot putter's muscles.",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 2,
+                question: "Identify the main muscle fibre type used by a marathon runner and state its primary energy supply.",
+                markScheme: "<ul><li><strong>Fibre type:</strong> Slow twitch muscle fibres. (1 mark)</li><li><strong>Energy supply:</strong> Aerobic energy supply. (1 mark)</li></ul>",
+                hint: "They run for hours without stopping, so they need oxygen-fueled fibres that don't get tired.",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 2,
+                question: "Identify the main muscle fibre type used by a 100m sprinter and explain why it is suited to this event.",
+                markScheme: "<ul><li><strong>Fibre type:</strong> Fast twitch muscle fibres. (1 mark)</li><li><strong>Explanation:</strong> They generate maximum force quickly for explosive speed, utilizing the anaerobic energy system for the short duration of the race. (1 mark)</li></ul>",
+                hint: "Explosive speed requires high force very quickly, but it tires out fast.",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 2,
+                question: "Suggest why a 1500-metre swimmer requires a high percentage of slow-twitch muscle fibres.",
+                markScheme: "<ul><li>Slow twitch fibres have high fatigue tolerance (they can work for a long time without tiring). (1 mark)</li><li>This suits the long-duration, aerobic nature of the 1500m swim. (1 mark)</li></ul>",
+                hint: "It's a long race. What property of slow-twitch fibres makes them perfect for this?",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 2,
+                question: "Explain the difference in energy supply between fast-twitch and slow-twitch muscle fibres.",
+                markScheme: "<ul><li>Slow-twitch fibres rely primarily on the aerobic energy supply (using oxygen to release energy). (1 mark)</li><li>Fast-twitch fibres rely primarily on the anaerobic energy supply (releasing energy without oxygen for quick bursts). (1 mark)</li></ul>",
+                hint: "One uses oxygen, the other doesn't.",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 2,
+                question: "Identify the muscle fibre type most suited to a weightlifter performing a 1-rep max lift, and justify your choice.",
+                markScheme: "<ul><li><strong>Fibre type:</strong> Fast-twitch fibres. (1 mark)</li><li><strong>Justification:</strong> They produce maximum force quickly for explosive movements (even though they fatigue quickly). (1 mark)</li></ul>",
+                hint: "A 1-rep max requires immense power for just a few seconds.",
+                isOfficial: false
+            }
+        ];
+
+        // Conversational reflection prompts
+        const reflectionPrompts = [
+            "How did you do? Be honest with yourself—how many marks out of the total would you give your answer?",
+            "Did anything in the mark scheme surprise you?",
+            "If you dropped any marks here, what's your plan to make sure you nail it next time?",
+            "Did you use the exact terminology? Often, close isn't quite enough in the exam.",
+            "How could you have improved your answer to guarantee full marks?",
+            "What was the trickiest part of this question for you?",
+            "Which part of the mark scheme did you completely forget to include?",
+            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+        ];
+
+        let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
+        let bypassActive = false;
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const btnRandom = document.getElementById('btn-random');
+        const questionContainer = document.getElementById('question-container');
+        const displayQuestion = document.getElementById('display-question');
+        const displayMarks = document.getElementById('display-marks');
+        const userAnswer = document.getElementById('user-answer');
+        const btnReveal = document.getElementById('btn-reveal');
+        const btnHint = document.getElementById('btn-hint');
+        const hintBox = document.getElementById('hint-box');
+        const displayHint = document.getElementById('display-hint');
+        const markSchemeContainer = document.getElementById('mark-scheme-container');
+        const displayMarkScheme = document.getElementById('display-mark-scheme');
+        const displayReflection = document.getElementById('display-reflection');
+        const btnNext = document.getElementById('btn-next');
+        
+        // Traffic Light Elements
+        const trafficBanner = document.getElementById('traffic-light-banner');
+        const trafficDot = document.getElementById('traffic-light-dot');
+        const trafficText = document.getElementById('traffic-light-text');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalBtnPrimary = document.getElementById('modal-btn-primary');
+        const modalBtnSecondary = document.getElementById('modal-btn-secondary');
+
+        // Functions
+        function showModal(title, message, primaryText, secondaryText, onPrimaryClick, onSecondaryClick) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            
+            modalBtnPrimary.textContent = primaryText;
+            modalBtnPrimary.onclick = () => {
+                hideModal();
+                if (onPrimaryClick) onPrimaryClick();
+            };
+            
+            if (secondaryText) {
+                modalBtnSecondary.textContent = secondaryText;
+                modalBtnSecondary.classList.remove('hidden');
+                modalBtnSecondary.onclick = () => {
+                    hideModal();
+                    if (onSecondaryClick) onSecondaryClick();
+                };
+            } else {
+                modalBtnSecondary.classList.add('hidden');
+            }
+            
+            customModal.classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            customModal.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const selectedSection = sectionSelect.value;
+            let filteredQuestions = questions;
+            
+            if (selectedSection !== 'all') {
+                filteredQuestions = questions.filter(q => q.section === selectedSection);
+            }
+            
+            if (filteredQuestions.length === 0) {
+                showModal("Oops!", "No questions found for this section.", "OK");
+                return;
+            }
+
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
+
+            // Setup Traffic Light UI
+            trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
+            trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
+            
+            if (currentQuestion.isOfficial) {
+                trafficBanner.classList.add('bg-green-100', 'border-green-300');
+                trafficDot.classList.add('bg-green-500');
+                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+            } else {
+                trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
+                trafficDot.classList.add('bg-amber-500');
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+            }
+
+            // Reset UI
+            displayQuestion.innerHTML = currentQuestion.question;
+            displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
+            userAnswer.value = '';
+            userAnswer.disabled = false;
+            questionContainer.classList.remove('hidden');
+            markSchemeContainer.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            bypassActive = false;
+        }
+
+        function revealMarkScheme() {
+            const answer = userAnswer.value.trim();
+            
+            // Check for empty box
+            if (answer === '') {
+                showModal(
+                    "Hold up!", 
+                    "Oh no you don't! You have to write <em>something</em> before I show you the answer.<br><br>If that something is 'I don't know', that's fine, but take note: this is obviously an area you need to revisit again later.", 
+                    "Try again"
+                );
+                return;
+            }
+
+            // Check for "I don't know" variants
+            const idkVariants = ["i don't know", "idk", "i dunno", "no idea", "pass"];
+            const isIdk = idkVariants.some(variant => answer.toLowerCase().includes(variant));
+            
+            if (isIdk) {
+                processReveal();
+                return;
+            }
+
+            // Word count validation (approx > 50% of mark scheme words)
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = currentQuestion.markScheme;
+            const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
+            const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+
+            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+                showModal(
+                    "Are you sure?", 
+                    "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
+                    () => {
+                        bypassActive = true;
+                        processReveal();
+                    },
+                    () => {
+                        userAnswer.focus();
+                    }
+                );
+                return;
+            }
+
+            processReveal();
+        }
+
+        function processReveal() {
+            displayMarkScheme.innerHTML = currentQuestion.markScheme;
+            
+            // Generate Random Reflection Prompt
+            const randomPrompt = reflectionPrompts[Math.floor(Math.random() * reflectionPrompts.length)];
+            displayReflection.textContent = randomPrompt;
+
+            userAnswer.disabled = true;
+            markSchemeContainer.classList.remove('hidden');
+            
+            // Scroll to mark scheme smoothly
+            markSchemeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Event Listeners
+        btnRandom.addEventListener('click', loadQuestion);
+        
+        btnHint.addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.hint) {
+                displayHint.textContent = currentQuestion.hint;
+                hintBox.classList.remove('hidden');
+            }
+        });
+
+        btnReveal.addEventListener('click', revealMarkScheme);
+        btnNext.addEventListener('click', loadQuestion);
+
+        // Close modal if clicking outside the box
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
