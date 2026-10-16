@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE PE Revision - Collège du Léman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cdlBlue: '#004587',
+                        cdlRed: '#E73037',
+                        cdlGold: '#FBBA07',
+                        cdlBrightBlue: '#1EB9DC',
+                        cdlBrightRed: '#EF8162',
+                        cdlBrightYellow: '#FFE37E'
+                    },
+                    fontFamily: {
+                        gotham: ['Gotham', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Gotham', sans-serif; background-color: #f3f4f6; color: #004587; }
+        .btn-blue { background-color: #004587; color: white; transition: all 0.2s; }
+        .btn-blue:hover { background-color: #003366; }
+        .btn-gold { background-color: #FBBA07; color: #004587; transition: all 0.2s; }
+        .btn-gold:hover { background-color: #e5a806; }
+        .btn-red { background-color: #E73037; color: white; transition: all 0.2s; }
+        .btn-red:hover { background-color: #cc2a31; }
+        
+        .modal-overlay {
+            background-color: rgba(0, 69, 135, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        
+        .highlight-text {
+            font-weight: 700;
+            color: #1EB9DC;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            color: #111827 !important; 
+            background-color: #ffffff !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        select option {
+            color: #111827 !important;
+            background-color: #ffffff !important;
+        }
+        optgroup {
+            font-weight: bold;
+            color: #004587;
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white rounded-t-xl shadow-md p-6 border-b-4 border-cdlRed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="mb-2">
+                <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to IGCSE Hub
+                </a>
+            </div>
+            <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
+            <h2 class="text-lg font-bold text-gray-500">Topic 3: (3.1 & 3.2) Skill Acquisition, Learning & Coaching</h2>
+        </div>
+        <div class="hidden sm:block flex-shrink-0">
+            <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-4xl bg-white shadow-lg rounded-b-xl p-6 md:p-8 flex flex-col space-y-6">
+        
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="w-full sm:w-2/3">
+                <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
+                <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="all">All Sections (Random - 50 Questions)</option>
+                    <optgroup label="(3.1) Skill, Ability & Information Processing">
+                        <option value="Skill and ability">&nbsp;&nbsp;&nbsp;&nbsp;Skill and ability</option>
+                        <option value="Skilled performance">&nbsp;&nbsp;&nbsp;&nbsp;Skilled performance</option>
+                        <option value="Skill classification continua">&nbsp;&nbsp;&nbsp;&nbsp;Skill classification continua</option>
+                        <option value="Simple information processing model">&nbsp;&nbsp;&nbsp;&nbsp;Simple information processing model</option>
+                    </optgroup>
+                    <optgroup label="(3.2) Learning, Feedback & Guidance">
+                        <option value="The stages of learning">&nbsp;&nbsp;&nbsp;&nbsp;The stages of learning</option>
+                        <option value="Feedback">&nbsp;&nbsp;&nbsp;&nbsp;Feedback</option>
+                        <option value="Guidance">&nbsp;&nbsp;&nbsp;&nbsp;Guidance</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-end">
+                <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
+                    Load Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-container" class="hidden flex flex-col space-y-4">
+            
+            <!-- Traffic Light Indicator -->
+            <div id="traffic-light-banner" class="flex items-start p-3 rounded-md border text-sm font-bold w-full transition-colors">
+                <div id="traffic-light-dot" class="w-4 h-4 rounded-full mr-3 mt-0.5 flex-shrink-0"></div>
+                <div id="traffic-light-text" class="text-gray-700 leading-tight"></div>
+            </div>
+
+            <div class="flex justify-between items-start pt-2">
+                <h3 class="text-xl font-bold text-cdlBlue leading-snug" id="display-question">Question goes here</h3>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+            </div>
+            
+            <div class="flex flex-col space-y-2">
+                <label for="user-answer" class="text-sm font-bold text-gray-600">Your Answer:</label>
+                <textarea id="user-answer" rows="5" class="w-full p-4 border-2 border-gray-200 rounded-md focus:outline-none focus:border-cdlBrightBlue resize-none text-gray-800" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                <button id="btn-hint" class="text-cdlBlue font-bold underline hover:text-cdlBrightBlue text-sm flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Need a hint?
+                </button>
+                <button id="btn-reveal" class="w-full sm:w-auto btn-gold px-8 py-3 rounded-md font-bold shadow-md text-lg">
+                    Reveal Mark Scheme
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden bg-cdlBrightYellow bg-opacity-30 border-l-4 border-cdlGold p-4 rounded-r-md mt-4">
+                <p class="text-sm text-gray-600 mb-2 italic"><strong>Note:</strong> If you're asking for a hint, you should probably come back here later to see if you can manage without one!</p>
+                <p id="display-hint" class="font-bold text-cdlBlue"></p>
+            </div>
+        </div>
+
+        <!-- Mark Scheme Display -->
+        <div id="mark-scheme-container" class="hidden mt-6 border-t-2 border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-cdlRed mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Mark Scheme
+            </h3>
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+                <!-- Mark scheme content injected here -->
+            </div>
+
+            <!-- Metacognitive Prompt -->
+            <div class="mt-6 bg-cdlBlue text-white p-5 rounded-md shadow-inner">
+                <h4 class="font-bold text-cdlBrightBlue mb-2 text-sm uppercase tracking-wider">Reflection</h4>
+                <p id="display-reflection" class="text-lg font-light"></p>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next" class="btn-blue px-6 py-3 rounded-md font-bold shadow-md flex items-center">
+                    Next Question
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
+            <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
+            <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // ==========================================
+            // 1. Skill and ability (8 Questions)
+            // ==========================================
+            {
+                section: "Skill and ability",
+                marks: 2,
+                question: "Describe one feature of a skill and one feature of ability.",
+                markScheme: "1 mark for describing a feature of skill. 1 mark for describing a feature of ability.<br><ul><li><strong>Skill:</strong> learned / practiced / sport-specific / easily adapted;</li><li><strong>Ability:</strong> innate / you are born with them / general / enduring / difficult to change;</li></ul>",
+                hint: "Think about our computer analogy from class: which one is the 'hardware' you are born with, and which one is the 'software' you install through practice?",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 3,
+                question: "Explain, using an example of each, the difference between skill and ability.",
+                markScheme: "<ul><li><strong>Example of a skill (1 mark):</strong> e.g. shooting a ball in netball / serving in tennis;</li><li><strong>Example of an ability (1 mark):</strong> e.g. jumping / running / balance / coordination / reaction time;</li><li><strong>Explanation of difference (1 mark):</strong> skills are learnt / practised / sport-specific / more easily adapted, whereas abilities are innate / you are born with them / general / enduring / difficult to change;</li></ul>",
+                hint: "Make sure you do three things: give a sport-specific skill example, give a general physical ability example, and state how they differ.",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 2,
+                question: "Describe the terms 'Skill' and 'Ability'.",
+                markScheme: "1 mark for each description:<br><ul><li><strong>Skill:</strong> a learned and practiced ability that brings about the result that you want to achieve with maximum certainty and efficiency;</li><li><strong>Ability:</strong> the qualities and characteristics a person is born with (that allow a person to learn or acquire skills);</li></ul>",
+                hint: "Remember the exact definitions from Level 1 of our slides: maximum certainty and efficiency vs qualities you are born with.",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 3,
+                question: "State three factors that cause variation in skill levels.",
+                markScheme: "1 mark for each factor (Any 3 of):<br><ul><li>Age and maturity;</li><li>Culture;</li><li>Motivation;</li><li>Anxiety;</li><li>Arousal conditions;</li><li>Facilities;</li><li>Environment;</li><li>Teaching and coaching;</li></ul>",
+                hint: "Think of our mnemonics: 'A.C.H.I.E.V.E.' or 'Athletes Can Master Any Activity From Excellent Teaching'.",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 4,
+                question: "Explain, using examples, how two factors could cause variations in the skill level of performers.",
+                markScheme: "1 mark for naming each factor (2 marks max). 1 mark for explaining the effect of each named factor (2 marks max):<br><ul><li><strong>Age / maturity:</strong> young performers may not have the experience or physical attributes to perform well;</li><li><strong>Culture:</strong> some cultures may restrict opportunities (e.g. females in mixed swimming) or promote national sports heavily;</li><li><strong>Motivation:</strong> a performer lacking motivation may drop out when training becomes difficult, whereas a highly motivated performer trains hard;</li><li><strong>Anxiety:</strong> naturally anxious performers may worry about letting teammates down or failing when watched;</li><li><strong>Arousal conditions:</strong> high arousal in an important event can lower focus or disrupt fine skills;</li><li><strong>Facilities:</strong> the availability, accessibility, and cost of facilities influence how often a person can train;</li><li><strong>Environment:</strong> living in an area with high snowfall enables a performer to ski more often than someone who has to travel;</li><li><strong>Teaching / coaching:</strong> higher quality coaching and more practice increases the speed of skill development;</li></ul>",
+                hint: "Don't just list two factors! Name a factor for 1 mark, then explain how it actually raises or lowers a player's skill level for the 2nd mark.",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 4,
+                question: "Explain how each of the following factors can affect a performer's skill level:<br>1. Age and maturity<br>2. Culture<br>3. Arousal conditions<br>4. Motivation",
+                markScheme: "1 mark for each factor explained:<br><ul><li><strong>Age and maturity:</strong> some activities have age restrictions preventing young performers from participating / starting earlier gives more opportunity to learn / young children haven't developed coordination yet;</li><li><strong>Culture:</strong> certain sports have greater exposure or tradition in specific countries (e.g. cross-country skiing in Norway) or within families, leading to higher skill levels;</li><li><strong>Arousal conditions:</strong> underarousal or overarousal results in a lack of focus and lower skill levels, whereas optimal arousal leads to high focus and skill;</li><li><strong>Motivation:</strong> if a performer lacks motivation, they will not work hard in training or will give up easily when a skill is difficult to learn;</li></ul>",
+                hint: "Link each of the four factors directly to why someone's skill level would become higher or lower.",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 4,
+                question: "Use examples from four different physical activities to explain how each of the following factors can affect the skill level of a performer: Age and maturity, Culture, Arousal conditions, Facilities.",
+                markScheme: "1 mark for explaining the effect of each factor. Physical activities must be appropriate and different:<br><ul><li><strong>Age and maturity (e.g. Rugby):</strong> rugby has age restrictions on contact/tackling for young players, or older players have more tactical experience;</li><li><strong>Culture (e.g. Cricket):</strong> cricket has high exposure and family tradition in certain countries, creating more opportunities to develop high skill levels;</li><li><strong>Arousal conditions (e.g. Netball):</strong> overarousal causes a lack of focus for a Goal Shooter performing fine shooting skills, lowering skill level;</li><li><strong>Facilities (e.g. Swimming):</strong> regular access to an affordable swimming pool increases training time and raises swimming skill levels;</li></ul>",
+                hint: "Read carefully: you must name FOUR DIFFERENT sports (one for each factor) to get full marks!",
+                isOfficial: true
+            },
+            {
+                section: "Skill and ability",
+                marks: 2,
+                question: "Using the concept of ability and practice, explain why a performer with high natural ability may still not become a skilled performer.",
+                markScheme: "<ul><li>Ability is only the innate genetic potential a person is born with (the 'hardware'). (1 mark)</li><li>Remembering that <strong>Ability + Practice = Skill</strong>, without quality teaching/coaching, motivation, or dedicated practice, innate abilities cannot be converted into refined, sport-specific skills. (1 mark)</li></ul>",
+                hint: "Think about the equation on our Michael Jordan slide: Ability + ________ = Skill.",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // 2. Skilled performance (6 Questions)
+            // ==========================================
+            {
+                section: "Skilled performance",
+                marks: 3,
+                question: "State three characteristics of a skilled performance.",
+                markScheme: "1 mark for each correct response (Any 3 of):<br><ul><li>Fluent;</li><li>Aesthetically pleasing;</li><li>Consistent;</li><li>Accurate;</li><li>Goal-directed;</li><li>Coordinated;</li></ul>",
+                hint: "Think of the 6 traits we looked at with the Scott McTominay overhead kick slide.",
+                isOfficial: true
+            },
+            {
+                section: "Skilled performance",
+                marks: 3,
+                question: "Describe, using examples from a named physical activity, three characteristics of a skilled performance.",
+                markScheme: "1 mark for each example used to show a characteristic in a named activity:<br><ul><li><strong>Fluent:</strong> performing a skill without hesitation / moving smoothly from one skill to another (e.g. a netball player catching a ball and pivoting immediately);</li><li><strong>Aesthetically pleasing:</strong> a movement looks good to the eye of a spectator or judge (e.g. a gymnast completing a twisting vault that looks effortless);</li><li><strong>Consistent:</strong> completing a skill repeatedly to a high standard (e.g. a tennis player landing a high proportion of first serves);</li><li><strong>Accurate:</strong> completing the task precisely without error (e.g. a basketball player scoring a free throw cleanly);</li><li><strong>Goal-directed:</strong> focusing on a specific target and showing determination to achieve it (e.g. a sprinter driving for a personal best);</li><li><strong>Coordinated:</strong> moving different parts of the body together efficiently with control (e.g. dribbling a basketball while running);</li></ul>",
+                hint: "Pick ONE sport and give three concrete examples of what fluent, accurate, consistent, coordinated, goal-directed, or aesthetically pleasing looks like in that sport.",
+                isOfficial: true
+            },
+            {
+                section: "Skilled performance",
+                marks: 4,
+                question: "Describe, from a named physical activity, examples of each of the following characteristics of a skilled performance: Fluent, Consistent, Accurate, Goal-directed.",
+                markScheme: "No mark for naming the activity. 1 mark for an example of each characteristic described (e.g. in Tennis):<br><ul><li><strong>Fluent:</strong> hitting the ball using a full swing of the racket in a smooth, flowing movement;</li><li><strong>Consistent:</strong> hitting most first serves with control into the opponent's service box repeatedly;</li><li><strong>Accurate:</strong> movements are precise so the player keeps the majority of shots close to the lines/in court;</li><li><strong>Goal-directed:</strong> showing determination to achieve a target, such as repeatedly hitting shots to an opponent's weaker backhand;</li></ul>",
+                hint: "Stick to one sport (like tennis or basketball) and describe what each of those four specific words looks like on the court.",
+                isOfficial: true
+            },
+            {
+                section: "Skilled performance",
+                marks: 4,
+                question: "(i) Describe an example of one named characteristic of a skilled performance from rugby. (2)<br>(ii) Describe an example of a different named characteristic of a skilled performance from artistic gymnastics. (2)",
+                markScheme: "<strong>(i) Rugby (1 mark for characteristic, 1 mark for example):</strong><br><ul><li>e.g. <strong>Accurate:</strong> kicking the ball successfully between the posts at a penalty; (Or <strong>Fluent:</strong> catching and passing without hesitation).</li></ul><strong>(ii) Artistic Gymnastics (1 mark for a DIFFERENT characteristic, 1 mark for example):</strong><br><ul><li>e.g. <strong>Aesthetically pleasing:</strong> holding a handstand with pointed toes that looks good and scores high marks with judges; (Or <strong>Coordinated:</strong> timing rotation and leg extension during a vault).</li></ul>",
+                hint: "Make sure you use two DIFFERENT characteristics—one applied to rugby, and a different one applied to gymnastics.",
+                isOfficial: true
+            },
+            {
+                section: "Skilled performance",
+                marks: 6,
+                question: "An elite association football player is dribbling the ball past defenders. Explain how the elite player may show three named characteristics of a skilled performance.",
+                markScheme: "1 mark for each named characteristic (max 3). 1 mark for each appropriate explanation (max 3):<br><ul><li><strong>Fluent:</strong> the player dribbles the ball smoothly at speed without hesitation or stumbling;</li><li><strong>Aesthetically pleasing:</strong> the close ball control and footwork look effortless and pleasing to spectators/coaches;</li><li><strong>Consistent:</strong> the player is able to control the ball well at all times throughout the match;</li><li><strong>Accurate:</strong> the player dribbles precisely into space away from opponents or passes directly to a teammate;</li><li><strong>Goal-directed:</strong> if the player loses the ball, they are determined to win it back / driving purposefully towards goal;</li><li><strong>Coordinated:</strong> the player is able to control the ball rapidly using both feet while maintaining balance;</li></ul>",
+                hint: "You need 3 named characteristics (3 marks) + 3 explanations linked specifically to football dribbling (3 marks).",
+                isOfficial: true
+            },
+            {
+                section: "Skilled performance",
+                marks: 2,
+                question: "Explain the difference between 'accurate' and 'consistent' as characteristics of a skilled performance, using a basketball free throw as an example.",
+                markScheme: "<ul><li><strong>Accurate:</strong> Performing the movement precisely without error on a single attempt—for example, the basketball going cleanly through the hoop without hitting the rim. (1 mark)</li><li><strong>Consistent:</strong> Being able to repeat that high standard of performance every time—for example, scoring 9 out of 10 free throws across a game. (1 mark)</li></ul>",
+                hint: "One is about hitting the target precisely; the other is about doing it over and over again.",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // 3. Skill classification continua (9 Questions)
+            // ==========================================
+            {
+                section: "Skill classification continua",
+                marks: 4,
+                question: "Identify, from a named physical activity, one open skill and one closed skill. Justify your answers.",
+                markScheme: "No mark for naming the activity. 1 mark for each skill identified (max 2). 1 mark for each justification (max 2).<br>For example, in <strong>Basketball</strong>:<br><ul><li><strong>Open skill:</strong> Dribbling the ball in a game (1 mark). <strong>Justification:</strong> Direction and speed depend on the constantly changing positions of defenders and teammates (1 mark).</li><li><strong>Closed skill:</strong> Free throw (1 mark). <strong>Justification:</strong> Taken from the same position every time, ring height is constant, and defenders cannot interfere (1 mark).</li></ul>",
+                hint: "Open = affected by a changing environment (opponents, weather). Closed = stable environment, repeated the same way each time.",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 4,
+                question: "Classify the skill of a tennis serve on each of the following continua. Justify your answers:<br>1. Open and closed<br>2. Basic and complex",
+                markScheme: "Up to 2 marks for each classification and justification:<br><ul><li><strong>Open and closed:</strong> The serve is <strong>closed</strong> because it has similar actions each time / takes place from the same baseline position / net height and court size are constant / performer is in control of pace and timing.</li><li><strong>Basic and complex:</strong> The serve is <strong>complex</strong> because it requires high levels of coordination, accuracy, and concentration / combines multiple sub-routines (ball toss and swing) / requires decision-making on placement.</li></ul>",
+                hint: "Who controls the timing of a tennis serve? And how many body parts/sub-routines have to work together to hit it?",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 4,
+                question: "Explain, using an example of each, the difference between basic and complex skills.",
+                markScheme: "Up to 2 marks for describing the difference. 1 mark for a basic example, 1 mark for a complex example:<br><ul><li><strong>Difference (up to 2 marks):</strong> Complex skills require higher levels of coordination, more accuracy/precision, more concentration, decision-making, and a combination of multiple sub-routines (whereas basic skills are simple with few sub-routines and minimal decision-making).</li><li><strong>Basic skill example (1 mark):</strong> Running / throwing / catching / jumping.</li><li><strong>Complex skill example (1 mark):</strong> Overhead kick in football / volleyball serve / gymnastics somersault.</li></ul>",
+                hint: "Think about our Shaq vs Simone Biles slide: what makes a gymnastics vault complex compared to simple running?",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 4,
+                question: "(a) Place the following three skills in order from Fine to Gross on the continuum: [A] Chest-pass in basketball, [B] Shot-put throw in athletics, [C] Short putt in golf. (2)<br>(b) Explain why some skills are classified as fine skills. (2)",
+                markScheme: "<strong>(a) Continuum order (2 marks):</strong><br><ul><li><strong>C</strong> (Short putt) &rarr; <strong>A</strong> (Chest-pass) &rarr; <strong>B</strong> (Shot-put throw)</li></ul><strong>(b) Why skills are classified as fine (Any 2 for 2 marks):</strong><br><ul><li>Involve precise movements requiring a high level of accuracy;</li><li>Involve small muscle movements / small muscle groups (e.g. fingers, wrists);</li><li>Generally involve high levels of hand-eye coordination and efficiency rather than power;</li></ul>",
+                hint: "Order them from smallest muscle group/highest precision (Fine) to largest muscle group/most power (Gross).",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 6,
+                question: "A swimmer is performing the front crawl stroke. Identify three skill classification continua. Justify a classification of the front crawl stroke on each continuum.",
+                markScheme: "1 mark for identifying each continuum (max 3). 1 mark for justifying an appropriate classification on each (max 3):<br><ul><li><strong>Fine and gross continuum:</strong> Classified as <strong>Gross</strong> because major muscle groups in the arms, shoulders, and legs are used to generate powerful propulsion;</li><li><strong>Basic and complex continuum:</strong> Classified as <strong>Complex</strong> because the swimmer has to coordinate arm strokes, leg kicks, and turning the head to breathe;</li><li><strong>Open and closed continuum:</strong> Classified as <strong>Closed</strong> because the swimmer repeats the same stroke in a lane with a stable environment and limited interference from opponents;</li></ul>",
+                hint: "Name all three continua (Open/Closed, Fine/Gross, Basic/Complex), state where front crawl sits on each, and explain why.",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 3,
+                question: "Justify, using three examples from a named physical activity, why passing a ball in a team game can be classified as an open skill.",
+                markScheme: "1 mark for each description applied to a team game (e.g. Basketball / Football):<br><ul><li>You must take into account the constantly changing positions of opponents who may block or intercept the pass;</li><li>You need to react to where your teammates are moving to select the right target and timing;</li><li>Passes cannot always be completed the same way—you must adapt the technique, speed, or direction (e.g. faking a chest pass to make a bounce pass, or adjusting to wind outdoors);</li></ul>",
+                hint: "Why is passing in a live game never the exact same twice? Think about opponents, teammates, and adapting your technique.",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 2,
+                question: "Consider two skills in rugby: [A] Throwing the ball into the lineout, and [B] Running with the ball. Place A and B on the basic and complex continuum, and justify your placement.",
+                markScheme: "<ul><li><strong>Placement (1 mark):</strong> <strong>B</strong> (Running) is towards <strong>Basic</strong>; <strong>A</strong> (Lineout throw) is towards <strong>Complex</strong>.</li><li><strong>Justification (1 mark):</strong> Throwing into a lineout (A) requires high concentration, coordination, and tactical decision-making to hit a jumping target, whereas running (B) is a general foundational movement requiring little technical decision-making.</li></ul>",
+                hint: "Which of the two skills is a general movement used in many sports, and which is a highly specific, coordinated rugby skill?",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 6,
+                question: "Justify the placement of each of the following skills on a different named skill classification continuum:<br>1. Serving in tennis<br>2. Dribbling in hockey<br>3. Tackling in rugby",
+                markScheme: "1 mark for each different continuum named (max 3). 1 mark for each justification (max 3):<br><ul><li><strong>Serving in tennis (Open and closed):</strong> <strong>Closed</strong> – the service movement is self-paced and repeated the same way from a static position;</li><li><strong>Dribbling in hockey (Fine and gross):</strong> <strong>Fine</strong> – uses small muscle groups in the hands and wrists to manipulate the stick and control the ball closely;</li><li><strong>Tackling in rugby (Basic and complex):</strong> <strong>Complex</strong> – player must coordinate arms, legs, and timing while making rapid decisions based on the opponent's movement;</li></ul><em>(Note: Accept alternative valid combinations provided all three continua are used across the three skills).</em>",
+                hint: "Watch the trap! You must use a DIFFERENT continuum for each of the three skills.",
+                isOfficial: true
+            },
+            {
+                section: "Skill classification continua",
+                marks: 4,
+                question: "Shooting in wheelchair basketball can be placed on the open and closed continuum. Other than the open and closed continuum, justify where shooting in wheelchair basketball would be placed on two named skill classification continua.",
+                markScheme: "1 mark for each continuum (max 2). 1 mark for each valid justification (max 2):<br><ul><li><strong>Fine and gross continuum:</strong> <strong>Fine</strong> because the final release of the shot requires small muscles in the wrist and fingers to flick the ball accurately (OR <strong>Gross</strong> because large muscle groups in the arms and shoulders generate force);</li><li><strong>Basic and complex continuum:</strong> <strong>Complex</strong> because the shooting action requires high levels of coordination of both arms and high concentration to focus on the basket under defensive pressure;</li></ul>",
+                hint: "You cannot use Open/Closed! Use Fine/Gross and Basic/Complex, and remember that on a continuum, either end can be credited if you justify it well.",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // 4. Simple information processing model (10 Questions)
+            // ==========================================
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "(a) In a basic information processing model, Decision-making is stage 2 and Output is stage 3. Name the first stage (A) and fourth stage (B). (2)<br>(b) Explain, using an example of a skill in a physical activity, the role of decision-making and output in the model. (2)",
+                markScheme: "<strong>(a) Stages (2 marks):</strong><br><ul><li><strong>A:</strong> Input (1 mark)</li><li><strong>B:</strong> Feedback (1 mark)</li></ul><strong>(b) Application to skill (e.g. Serving in tennis - 2 marks):</strong><br><ul><li><strong>Decision-making:</strong> player analyses the data and decides where to place the serve / what type of serve to hit (1 mark);</li><li><strong>Output:</strong> brain sends nervous impulses to the muscles and the player physically performs the serve (1 mark);</li></ul>",
+                hint: "Think of the 4-panel tennis comic strip in our slides: Input -> Decision-making -> Output -> Feedback.",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "Explain, using an example of a skill in a physical activity, the role of each of the four stages in the basic information processing model.",
+                markScheme: "1 mark for each correct explanation applied to a named skill (e.g. Batting in cricket):<br><ul><li><strong>Input:</strong> batsman takes in data via the senses—seeing the ball coming towards them, judging speed, spin, and direction;</li><li><strong>Decision-making:</strong> batsman analyses the data using memory to decide which shot to play and in what direction;</li><li><strong>Output:</strong> nervous impulses are sent to the muscles and the batsman physically plays the chosen shot;</li><li><strong>Feedback:</strong> batsman receives information about the outcome—feeling the contact and seeing where the ball went to adjust future technique;</li></ul>",
+                hint: "Walk through all four stages (Input, Decision-making, Output, Feedback) for one specific sporting action.",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "Describe how each of the four stages of the basic information-processing model are used by a performer shooting in either netball or basketball.",
+                markScheme: "1 mark for each stage applied to shooting in netball or basketball:<br><ul><li><strong>Input:</strong> performer uses sight to see the position of defenders, distance from the basket/ring, and positions of teammates;</li><li><strong>Decision-making:</strong> player processes the information and selects the appropriate shooting technique stored in long-term memory;</li><li><strong>Output:</strong> performer physically executes the jump shot or set shot at the basket/ring;</li><li><strong>Feedback:</strong> player sees if the shot goes in or misses (and hears coach comments), repeating the action if successful or adjusting power/technique next time if missed;</li></ul>",
+                hint: "Apply senses (Input), brain choice/memory (Decision), muscular action (Output), and result analysis (Feedback) to shooting a hoop.",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "Explain how each of the four stages of the information processing model are used by a player when taking a penalty kick in association football.",
+                markScheme: "1 mark for each appropriate explanation:<br><ul><li><strong>Input:</strong> penalty taker sees the position/movement of the goalkeeper and assesses pitch/weather conditions;</li><li><strong>Decision-making:</strong> decides on the best technique (power vs placement) and which corner of the goal to aim for;</li><li><strong>Output:</strong> runs up and kicks the ball to complete the penalty kick;</li><li><strong>Feedback:</strong> sees if the penalty scores or is saved, repeating the technique next time if successful or adjusting placement if missed;</li></ul>",
+                hint: "What does the penalty taker see first? What do they choose? What do they do? What do they learn from the result?",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "With reference to a tennis player receiving a serve, describe each of the four stages of a basic information processing model.",
+                markScheme: "1 mark for describing each stage applied to returning a serve:<br><ul><li><strong>Input:</strong> uses eyes to see the speed, spin, and direction of the ball coming towards them and the server's position;</li><li><strong>Decision-making:</strong> sees the ball coming to their forehand side and decides to play a forehand return;</li><li><strong>Output:</strong> brain sends messages to the muscles and the player swings the racket to play the forehand shot;</li><li><strong>Feedback:</strong> sees the ball land beyond the baseline, so knows to hit the ball with less power or more topspin next time;</li></ul>",
+                hint: "Think directly about the tennis comic strip in Level 3 of our presentation!",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 4,
+                question: "Explain the differences between short-term memory and long-term memory.",
+                markScheme: "1 mark for each comparative difference (Any 4 of):<br><ul><li>Short-term memory (STM) stores information for a short period of time (approx. 18–30 seconds) <strong>BUT</strong> long-term memory (LTM) stores information for a long period / lifetime;</li><li>STM has a limited capacity (approx. 7&plusmn;2 items) <strong>BUT</strong> LTM has a virtually limitless capacity;</li><li>Information in STM can be forgotten if not practiced/rehearsed <strong>BUT</strong> information is retained in LTM without constant practice;</li><li>STM receives all new incoming sensory information <strong>BUT</strong> information cannot go directly into LTM;</li><li>STM runs active motor programmes for immediate decisions <strong>BUT</strong> LTM stores learned motor programmes and past experiences;</li></ul>",
+                hint: "Remember our number recall test and comparison table! Use the word 'BUT' or 'WHEREAS' to compare Storage Time, Capacity, Forgetting Risk, and Role.",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 2,
+                question: "Describe two characteristics of short-term memory.",
+                markScheme: "1 mark for each description (Any 2 of):<br><ul><li>Information is held for only a short period of time (around 18–30 seconds);</li><li>There is a strict limit to the amount of information it can hold (limited capacity of 7&plusmn;2 items);</li><li>All new sensory information enters the short-term memory first;</li><li>If a new skill or information is not practiced/rehearsed, it is lost from short-term memory;</li></ul>",
+                hint: "How long does it last, and how much can it hold before it gets overloaded?",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 2,
+                question: "Explain the concept of limited channel capacity (single-channel hypothesis) and how it might affect a table tennis player.",
+                markScheme: "<ul><li><strong>The concept (1 mark):</strong> When receiving many stimuli from the environment, the brain can only deal with one stimulus at a time (the first stimulus must be processed before a second can be dealt with).</li><li><strong>Effect on table tennis player (1 mark):</strong> When there is too much information (e.g. opponent disguising spin and speed), it causes confusion, slower reactions, or playing the wrong shot.</li></ul>",
+                hint: "Think of the glowing Y-tube slide ('Stuck in traffic!'). What happens when two balls try to go down a single-lane tube at once?",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 2,
+                question: "Describe, using an example of a named skill, how the concept of limited channel capacity can affect a performance.",
+                markScheme: "<ul><li><strong>Concept (1 mark):</strong> One piece of information/cue is processed at a time; when a second cue arrives (like a fake), the performer is still processing the first cue.</li><li><strong>Effect on named skill (1 mark):</strong> e.g. When defending in basketball/football, an attacker performs a fake pass/shot (Stimulus 1) then drives past (Stimulus 2)—the defender commits to the fake and cannot readjust in time ('stitched up like a kipper!').</li></ul>",
+                hint: "Use the 'fake shot / dummy pass' example from our Single Channel Hypothesis slide!",
+                isOfficial: true
+            },
+            {
+                section: "Simple information processing model",
+                marks: 3,
+                question: "(i) Describe the concept of limited channel capacity. (1)<br>(ii) Suggest how a coach's understanding of the concept of limited channel capacity can influence how they coach a performer. (2)",
+                markScheme: "<strong>(i) Concept (1 mark):</strong><br><ul><li>The performer can only focus on a limited number of stimuli at one time / the limited amount of information that can be processed by a sensory system at any given time.</li></ul><strong>(ii) Coaching influence (Any 2 for 2 marks):</strong><br><ul><li>Use only small amounts of information or feedback at a time;</li><li>Break complex skills down into sub-routines / parts;</li><li>Use basic, simple language rather than complex technical terms;</li><li>Check if the performer understands the information before starting to practice;</li></ul>",
+                hint: "If a beginner's brain gets overloaded easily, how should a coach adapt their instructions?",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // 5. The stages of learning (6 Questions)
+            // ==========================================
+            {
+                section: "The stages of learning",
+                marks: 2,
+                question: "Describe two characteristics of a performer who is in the associative stage of learning.",
+                markScheme: "1 mark for a description of each characteristic (Any 2 of):<br><ul><li>Lots of practice / repeats to refine how to do the skill;</li><li>Improving in technique / fewer mistakes / more accurate and consistent;</li><li>Combining the sub-routines of the skill into a smoother, more fluid movement;</li><li>Starting to develop intrinsic feedback (though still needs some extrinsic feedback from a coach);</li><li>Able to concentrate for longer and recognise more subtle cues;</li></ul>",
+                hint: "Associative is the middle 'practice' stage. How do their errors, fluency, and feedback compare to a complete beginner?",
+                isOfficial: true
+            },
+            {
+                section: "The stages of learning",
+                marks: 6,
+                question: "Name the three stages of learning in order and describe a different characteristic of a performer at each stage.",
+                markScheme: "1 mark for correctly naming each stage (max 3). 1 mark for describing a characteristic of each stage (max 3):<br><ul><li><strong>1. Cognitive stage:</strong> beginner / makes a large number of mistakes / movements are slow and uncoordinated / requires high conscious thought / relies heavily on coach guidance;</li><li><strong>2. Associative stage:</strong> engages in lots of practice / combines sub-routines / fewer mistakes and more consistent / starting to develop intrinsic feedback;</li><li><strong>3. Autonomous stage:</strong> performs the skill automatically without conscious thought / rare mistakes and high consistency / can focus on tactics and analyse own performance using intrinsic feedback;</li></ul>",
+                hint: "Fitts and Posner's 3 stages: C________ -> A__________ -> A_________. Give one clear trait for each.",
+                isOfficial: true
+            },
+            {
+                section: "The stages of learning",
+                marks: 3,
+                question: "Performers progress through the cognitive, associative, and autonomous stages of learning. Explain, using a skill from tennis, a different characteristic of the performance of the skill at each stage.",
+                markScheme: "No mark for naming the skill (e.g. Forehand stroke). 1 mark for each stage characteristic applied to tennis:<br><ul><li><strong>Cognitive stage:</strong> hits the ball into the net or out of court frequently / struggles to maintain a rally / pauses to think consciously about footwork and grip;</li><li><strong>Associative stage:</strong> starts to maintain a rally using the forehand / links footwork with the swing / begins adding spin or direction control;</li><li><strong>Autonomous stage:</strong> adapts the forehand smoothly even when out of position / hits winning shots close to the lines automatically while focusing on opponent tactics;</li></ul>",
+                hint: "Take one tennis skill (like the forehand or serve) and describe how a beginner, an intermediate club player, and Roger Federer perform it differently.",
+                isOfficial: true
+            },
+            {
+                section: "The stages of learning",
+                marks: 3,
+                question: "Describe three characteristics of a performer that a swimming coach could use to decide if the performer has moved from the cognitive stage of learning to the associative stage of learning.",
+                markScheme: "1 mark for each description (Any 3 of):<br><ul><li>Improving technique with fewer mistakes and greater consistency;</li><li>Combining the sub-routines of the stroke smoothly (e.g. linking arm pull, leg kick, and breathing);</li><li>Less need for manual/mechanical guidance (such as floats) and able to swim in deeper water;</li><li>Starting to develop intrinsic feedback (feeling the water) and able to respond to technical verbal feedback;</li></ul>",
+                hint: "What changes in the pool when a child stops being a complete beginner and starts refining their stroke?",
+                isOfficial: true
+            },
+            {
+                section: "The stages of learning",
+                marks: 4,
+                question: "Photograph A shows a group of beginners learning tennis skills and Photograph B shows professional tennis players during a match. Suggest the stage of learning for the performers in each photograph and describe a different characteristic of a performer at each stage.",
+                markScheme: "1 mark for identifying each stage (max 2). 1 mark for describing an appropriate characteristic of each (max 2):<br><ul><li><strong>Photograph A Stage:</strong> Cognitive (1 mark). <strong>Characteristic:</strong> Large number of mistakes / movements lack fluidity / trial and error approach / high conscious thought and coach feedback required (1 mark).</li><li><strong>Photograph B Stage:</strong> Autonomous (1 mark). <strong>Characteristic:</strong> Completes skills automatically without conscious thought / very few mistakes / quick decision-making / uses intrinsic feedback to self-correct and focuses on match tactics (1 mark).</li></ul>",
+                hint: "This is the exact 'Stages Showdown' question from our slides! Beginners = C_______; Professionals = A_________.",
+                isOfficial: true
+            },
+            {
+                section: "The stages of learning",
+                marks: 4,
+                question: "A young child is using a kickboard float while learning to swim front crawl with a coach in the pool. Identify the stage of learning of the performer and describe three different characteristics of a performer at this stage.",
+                markScheme: "<ul><li><strong>Stage of learning (1 mark):</strong> Cognitive stage.</li><li><strong>Characteristics (Any 3 for 3 marks):</strong><ul><li>Inconsistent performance with a large number of errors/mistakes;</li><li>Consciously thinking about every part of what they are doing;</li><li>Needs skills broken down into sub-routines (e.g. isolating leg kick with a float);</li><li>Movements are slow, uncoordinated, and lack fluency;</li><li>Needs a lot of guidance and support from the coach;</li></ul></li></ul>",
+                hint: "1 mark for naming the beginner stage, and 3 marks for three distinct traits of a cognitive learner.",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // 6. Feedback (6 Questions)
+            // ==========================================
+            {
+                section: "Feedback",
+                marks: 2,
+                question: "Describe two different types of feedback.",
+                markScheme: "1 mark for each description (Any 2 of):<br><ul><li><strong>Intrinsic feedback:</strong> sensory information that comes from within the performer through thoughts, emotions, and muscles (how a movement feels);</li><li><strong>Extrinsic feedback:</strong> information that comes from an external source such as a teacher, coach, video, or crowd;</li><li><strong>Knowledge of performance (KP):</strong> information about the nature and quality of the movement/technique itself;</li><li><strong>Knowledge of results (KR):</strong> information about the external outcome of an action (e.g. score, time, distance, or whether the shot went in);</li></ul>",
+                hint: "Remember the 4 boxes on our Coaching Feedback slide: Intrinsic, Extrinsic, Knowledge of Performance, and Knowledge of Results.",
+                isOfficial: true
+            },
+            {
+                section: "Feedback",
+                marks: 3,
+                question: "Explain three reasons why feedback is important for a performer.",
+                markScheme: "1 mark for each explanation (Any 3 of):<br><ul><li><strong>Safety:</strong> corrects poor technique to reduce the risk of injury;</li><li><strong>Techniques:</strong> stops errors or bad habits from being repeated and becoming routine;</li><li><strong>Areas of strength & weakness:</strong> identifies what the performer needs to focus on in training;</li><li><strong>Motivation:</strong> praise and seeing progress builds confidence and encourages effort;</li><li><strong>Intrinsic feedback developed:</strong> helps the performer learn how the correct movement feels;</li><li><strong>No wasted time:</strong> makes training more efficient than trial and error;</li><li><strong>Aims & goals set:</strong> allows the performer to measure progress and set SMARTER targets;</li><li><strong>Support:</strong> builds trust with the coach so the performer does not feel isolated;</li></ul>",
+                hint: "Use our class acronym: S.T.A.M.I.N.A.S. (Safety, Technique, Areas of strength/weakness, Motivation, Intrinsic developed, No wasted time, Aims/goals, Support).",
+                isOfficial: true
+            },
+            {
+                section: "Feedback",
+                marks: 2,
+                question: "Describe how the feedback used by a performer at the cognitive stage of learning differs from the feedback used by a performer at the autonomous stage of learning.",
+                markScheme: "1 mark for each comparative difference (Any 2 of):<br><ul><li>The cognitive performer uses mainly <strong>extrinsic feedback</strong> <strong>AND</strong> the autonomous performer uses mainly <strong>intrinsic feedback</strong>;</li><li>The cognitive performer uses mainly <strong>knowledge of results (KR)</strong> <strong>AND</strong> the autonomous performer uses mainly <strong>knowledge of performance (KP)</strong>;</li><li>The cognitive performer needs brief, simple, positive feedback <strong>AND</strong> the autonomous performer can handle detailed, technical, or negative/critical feedback;</li></ul>",
+                hint: "Compare Extrinsic vs Intrinsic, and Knowledge of Results vs Knowledge of Performance across the two stages.",
+                isOfficial: true
+            },
+            {
+                section: "Feedback",
+                marks: 2,
+                question: "Knowledge of results is a type of feedback. Explain one advantage and one disadvantage of this type of feedback for a performer at the cognitive stage of learning.",
+                markScheme: "<ul><li><strong>Advantage (1 mark):</strong> The beginner can see the outcome of the skill straight away without needing a coach present / easy to set targets / highly motivating if successful.</li><li><strong>Disadvantage (1 mark):</strong> Does not explain <em>how</em> to improve technique / can reinforce incorrect technique if a bad shot accidentally goes in / can be highly demotivating if results are poor despite technique improving.</li></ul>",
+                hint: "Why is seeing the ball go in the net great for a beginner, and why can just looking at the score be unhelpful for their technique?",
+                isOfficial: true
+            },
+            {
+                section: "Feedback",
+                marks: 4,
+                question: "(a) Suggest two possible negative effects for a performer who receives limited extrinsic feedback. (2)<br>(b) Explain two benefits of intrinsic feedback. (2)",
+                markScheme: "<strong>(a) Limited extrinsic feedback (Any 2 for 2 marks):</strong><br><ul><li>Learning will be slower and poor technique/bad habits may become established (increasing injury risk);</li><li>Performer may become confused, lose motivation, or feel isolated;</li><li>Difficult to develop intrinsic feedback or set appropriate goals;</li></ul><strong>(b) Benefits of intrinsic feedback (Any 2 for 2 marks):</strong><br><ul><li>Does not need to rely on a coach being present, allowing independent practice;</li><li>Adjustments can be made immediately during the performance because the performer feels the error;</li><li>Increases confidence and problem-solving independence;</li></ul>",
+                hint: "(a) What goes wrong if a coach never tells a learner how they are doing? (b) Why is it great when an elite player can 'feel' their own technique?",
+                isOfficial: true
+            },
+            {
+                section: "Feedback",
+                marks: 4,
+                question: "Identify two types of feedback that a basketball coach can provide during a practice session. Describe a different example of how each type of feedback can be provided by the basketball coach.",
+                markScheme: "1 mark for each type of feedback (max 2). 1 mark for each description of an example (max 2):<br><ul><li><strong>Extrinsic feedback:</strong> coach using words of praise for a good interception or shouting coaching points after a missed shot;</li><li><strong>Knowledge of performance:</strong> coach telling a player about their shooting technique (e.g. extending their follow-through arm);</li><li><strong>Knowledge of results:</strong> coach telling the performer the number of successful free throws made at the end of 10 attempts;</li></ul>",
+                hint: "Note that the question asks what the COACH can provide (so don't pick Intrinsic!). Pick two from Extrinsic, KP, or KR and give basketball examples.",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // 7. Guidance (5 Questions)
+            // ==========================================
+            {
+                section: "Guidance",
+                marks: 3,
+                question: "Describe, using examples, how visual guidance benefits a performer at the cognitive stage of learning.",
+                markScheme: "1 mark for each benefit described with an example (Max 3):<br><ul><li><strong>Simple demonstrations:</strong> are clear and easy to see, allowing the beginner to form a mental picture and copy the movement;</li><li><strong>Demonstrations from different angles:</strong> avoid confusion and help the performer relate if they are left- or right-handed;</li><li><strong>Video of elite performer:</strong> helps the beginner understand how the skill fits into the full context of a game;</li><li><strong>Posters / charts:</strong> break a skill down into simple parts as a constant reminder in changing/training areas;</li><li><strong>Visual cues (e.g. cones/targets):</strong> highlight key foot placements or target areas clearly;</li></ul>",
+                hint: "Remember: each point needs BOTH an example of visual guidance (e.g. demonstration, poster, cones) AND how it helps a beginner!",
+                isOfficial: true
+            },
+            {
+                section: "Guidance",
+                marks: 2,
+                question: "Suggest why a coach should mainly use verbal guidance for a performer at the autonomous stage of learning.",
+                markScheme: "1 mark for each point (Any 2 of):<br><ul><li>The performer has the experience and understanding to analyse detailed technical language;</li><li>The performer can process spoken information during performance without suffering from information overload;</li><li>Adjustments at the autonomous stage are often tactical or subtle, which are best discussed rather than demonstrated;</li><li>The coach may not have the physical ability to demonstrate the skill to an elite standard;</li></ul>",
+                hint: "Why doesn't an Olympic athlete need the coach to hold their arm or show them a basic demonstration?",
+                isOfficial: true
+            },
+            {
+                section: "Guidance",
+                marks: 4,
+                question: "Identify a different type of guidance that would be most appropriate for a performer at the Cognitive stage of learning and the Autonomous stage of learning. Justify each choice.",
+                markScheme: "<strong>Cognitive Stage (1 mark for type, 1 mark for justification):</strong><br><ul><li><strong>Visual:</strong> Performer can see an accurate performance and form a mental picture to replicate;</li><li><em>OR</em> <strong>Manual / Mechanical:</strong> Reduces fear/anxiety, ensures safety, and allows the coach to adjust limbs so the beginner feels the movement.</li></ul><strong>Autonomous Stage (1 mark for a DIFFERENT type, 1 mark for justification):</strong><br><ul><li><strong>Verbal:</strong> Performer understands technical terms, can process tactical adjustments during play, and doesn't need visual/manual support;</li><li><em>OR</em> <strong>Visual (Video analysis):</strong> Using slow-motion recordings of their own performance to make critical biomechanical analysis.</li></ul>",
+                hint: "For each stage, do two things: name a suitable type of guidance AND explain why it suits a learner at that specific stage.",
+                isOfficial: true
+            },
+            {
+                section: "Guidance",
+                marks: 6,
+                question: "(a) A coach may demonstrate a skill as a form of visual guidance. Suggest two advantages and two disadvantages for a performer when visual guidance is used. (4)<br>(b) Identify an example of manual/mechanical guidance in a named physical activity and describe one advantage it provides. (2)",
+                markScheme: "<strong>(a) Visual guidance (2 marks max for advantages, 2 marks max for disadvantages):</strong><br><ul><li><strong>Advantages:</strong> performer can see how it is done and build a mental image / demonstrations can be repeated or slowed down on video / skill can be broken into sub-routines;</li><li><strong>Disadvantages:</strong> people at the back of a large group may not see / a poor demonstration leads to copying bad technique / complex skills are hard to follow without verbal explanation / can demotivate if it looks too difficult;</li></ul><strong>(b) Manual/Mechanical (1 mark for example, 1 mark for advantage):</strong><br><ul><li><strong>Example:</strong> Using a harness in gymnastics/trampolining OR flotation aids in swimming OR coach guiding a golf swing;</li><li><strong>Advantage:</strong> Provides safety when practicing dangerous skills / builds confidence / helps develop a kinaesthetic feel for the movement;</li></ul>",
+                hint: "(a) Give 2 pros and 2 cons of watching demonstrations. (b) Give 1 concrete example of manual/mechanical aid and 1 benefit.",
+                isOfficial: true
+            },
+            {
+                section: "Guidance",
+                marks: 6,
+                question: "Use examples from a named physical activity to describe how a coach may provide three named types of guidance to a performer.",
+                markScheme: "1 mark for each named type of guidance (max 3). 1 mark for each relevant description in a named sport (max 3).<br>For example, in <strong>Gymnastics</strong> (or <strong>Swimming</strong>):<br><ul><li><strong>Visual:</strong> coach demonstrates a handstand / displays posters of a somersault / shows a video of a cartwheel / places floor targets for vault landing;</li><li><strong>Verbal:</strong> coach gives spoken instructions on how to perform a forward roll / uses questioning to check understanding;</li><li><strong>Manual:</strong> coach physically supports the gymnast's legs in a handstand or supports their hips during a cartwheel;</li><li><strong>Mechanical:</strong> coach uses a safety harness to reduce danger when learning a somersault (or floats in swimming);</li></ul>",
+                hint: "Pick ONE sport (Gymnastics or Swimming are easiest!) and give a specific example for three of the four guidance types (Visual, Verbal, Manual, Mechanical).",
+                isOfficial: true
+            }
+        ];
+
+        // Conversational reflection prompts
+        const reflectionPrompts = [
+            "How did you do? Be honest with yourself—how many marks out of the total would you give your answer?",
+            "Did anything in the mark scheme surprise you?",
+            "If you dropped any marks here, what's your plan to make sure you nail it next time?",
+            "Did you use the exact terminology? Often, close isn't quite enough in the exam.",
+            "How could you have improved your answer to guarantee full marks?",
+            "What was the trickiest part of this question for you?",
+            "Which part of the mark scheme did you completely forget to include?",
+            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+        ];
+
+        let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
+        let bypassActive = false;
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const btnRandom = document.getElementById('btn-random');
+        const questionContainer = document.getElementById('question-container');
+        const displayQuestion = document.getElementById('display-question');
+        const displayMarks = document.getElementById('display-marks');
+        const userAnswer = document.getElementById('user-answer');
+        const btnReveal = document.getElementById('btn-reveal');
+        const btnHint = document.getElementById('btn-hint');
+        const hintBox = document.getElementById('hint-box');
+        const displayHint = document.getElementById('display-hint');
+        const markSchemeContainer = document.getElementById('mark-scheme-container');
+        const displayMarkScheme = document.getElementById('display-mark-scheme');
+        const displayReflection = document.getElementById('display-reflection');
+        const btnNext = document.getElementById('btn-next');
+        
+        // Traffic Light Elements
+        const trafficBanner = document.getElementById('traffic-light-banner');
+        const trafficDot = document.getElementById('traffic-light-dot');
+        const trafficText = document.getElementById('traffic-light-text');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalBtnPrimary = document.getElementById('modal-btn-primary');
+        const modalBtnSecondary = document.getElementById('modal-btn-secondary');
+
+        // Functions
+        function showModal(title, message, primaryText, secondaryText, onPrimaryClick, onSecondaryClick) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            
+            modalBtnPrimary.textContent = primaryText;
+            modalBtnPrimary.onclick = () => {
+                hideModal();
+                if (onPrimaryClick) onPrimaryClick();
+            };
+            
+            if (secondaryText) {
+                modalBtnSecondary.textContent = secondaryText;
+                modalBtnSecondary.classList.remove('hidden');
+                modalBtnSecondary.onclick = () => {
+                    hideModal();
+                    if (onSecondaryClick) onSecondaryClick();
+                };
+            } else {
+                modalBtnSecondary.classList.add('hidden');
+            }
+            
+            customModal.classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            customModal.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const selectedSection = sectionSelect.value;
+            let filteredQuestions = questions;
+            
+            if (selectedSection !== 'all') {
+                filteredQuestions = questions.filter(q => q.section === selectedSection);
+            }
+            
+            if (filteredQuestions.length === 0) {
+                showModal("Oops!", "No questions found for this section.", "OK");
+                return;
+            }
+
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
+
+            // Setup Traffic Light UI
+            trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
+            trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
+            
+            if (currentQuestion.isOfficial) {
+                trafficBanner.classList.add('bg-green-100', 'border-green-300');
+                trafficDot.classList.add('bg-green-500');
+                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+            } else {
+                trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
+                trafficDot.classList.add('bg-amber-500');
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+            }
+
+            // Reset UI
+            displayQuestion.innerHTML = currentQuestion.question;
+            displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
+            userAnswer.value = '';
+            userAnswer.disabled = false;
+            questionContainer.classList.remove('hidden');
+            markSchemeContainer.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            bypassActive = false;
+        }
+
+        function revealMarkScheme() {
+            const answer = userAnswer.value.trim();
+            
+            // Check for empty box
+            if (answer === '') {
+                showModal(
+                    "Hold up!", 
+                    "Oh no you don't! You have to write <em>something</em> before I show you the answer.<br><br>If that something is 'I don't know', that's fine, but take note: this is obviously an area you need to revisit again later.", 
+                    "Try again"
+                );
+                return;
+            }
+
+            // Check for "I don't know" variants
+            const idkVariants = ["i don't know", "idk", "i dunno", "no idea", "pass"];
+            const isIdk = idkVariants.some(variant => answer.toLowerCase().includes(variant));
+            
+            if (isIdk) {
+                processReveal();
+                return;
+            }
+
+            // Word count validation (approx > 50% of mark scheme words)
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = currentQuestion.markScheme;
+            const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
+            const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+
+            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+                showModal(
+                    "Are you sure?", 
+                    "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
+                    () => {
+                        bypassActive = true;
+                        processReveal();
+                    },
+                    () => {
+                        userAnswer.focus();
+                    }
+                );
+                return;
+            }
+
+            processReveal();
+        }
+
+        function processReveal() {
+            displayMarkScheme.innerHTML = currentQuestion.markScheme;
+            
+            // Generate Random Reflection Prompt
+            const randomPrompt = reflectionPrompts[Math.floor(Math.random() * reflectionPrompts.length)];
+            displayReflection.textContent = randomPrompt;
+
+            userAnswer.disabled = true;
+            markSchemeContainer.classList.remove('hidden');
+            
+            // Scroll to mark scheme smoothly
+            markSchemeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Event Listeners
+        btnRandom.addEventListener('click', loadQuestion);
+        
+        btnHint.addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.hint) {
+                displayHint.textContent = currentQuestion.hint;
+                hintBox.classList.remove('hidden');
+            }
+        });
+
+        btnReveal.addEventListener('click', revealMarkScheme);
+        btnNext.addEventListener('click', loadQuestion);
+
+        // Close modal if clicking outside the box
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
