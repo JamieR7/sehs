@@ -14,11 +14,10 @@
         }
 
         body {
-            /* Gotham is the primary font, falling back to standard sans-serif */
             font-family: 'Gotham', 'Helvetica', 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa; /* Subtle off-white for a modern canvas */
+            background-color: #f8f9fa;
             color: var(--cdl-blue);
             display: flex;
             flex-direction: column;
@@ -31,7 +30,7 @@
             background-color: #ffffff;
             padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05); /* Sleek depth */
+            box-shadow: 0 4px 30px rgba(0, 69, 135, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -58,21 +57,19 @@
 
         h1 {
             margin: 0;
-            font-weight: 300; /* Gotham Light equivalent */
+            font-weight: 300;
             font-size: 38px;
             color: var(--cdl-blue);
             letter-spacing: -0.5px;
         }
 
-        /* Using CDL Bright Blue for a modern text highlight */
         .highlight {
             color: var(--cdl-bright-blue);
             font-weight: bold;
         }
 
-        /* Emulating the MQ Carmen font rule for a short benefit phrase */
         .benefit-text {
-            font-family: 'Georgia', serif; /* Fallback for MQ Carmen */
+            font-family: 'Georgia', serif;
             font-style: italic;
             color: var(--cdl-bright-red);
             font-size: 18px;
@@ -97,7 +94,6 @@
             margin-right: auto;
         }
         
-        /* Updated Badge Styling */
         .welcome-text {
             font-size: 26px; 
             font-weight: bold;
@@ -169,14 +165,12 @@
             color: rgba(255, 255, 255, 0.85);
         }
 
-        /* Sleek hover state */
         .btn:hover {
             background-color: var(--cdl-bright-blue);
             transform: translateY(-3px);
             box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
         }
 
-        /* Disabled / Coming Soon button styling */
         .btn-disabled {
             background-color: #e5e7eb;
             color: #9ca3af;
@@ -211,7 +205,7 @@
             display: flex;
             width: 100%;
             max-width: 750px;
-            gap: 10px; /* Tighter gap to make the whole block feel more cohesive */
+            gap: 10px;
             align-items: stretch; 
         }
 
@@ -222,7 +216,6 @@
             flex-grow: 1;
         }
 
-        /* Subitems inside a summative container */
         .btn.btn-subitem {
             max-width: none; 
             background-color: #f4f7f9; 
@@ -230,8 +223,8 @@
             box-shadow: none;
             border: 1px solid rgba(0, 69, 135, 0.1);
             cursor: default; 
-            padding: 12px 20px; /* Reduced padding to streamline vertical height */
-            pointer-events: none; /* Prevents unwanted hover interactions */
+            padding: 12px 20px;
+            pointer-events: none;
         }
 
         .btn.btn-subitem:hover {
@@ -244,7 +237,6 @@
             color: #666666; 
         }
 
-        /* Vertical Clickable Pill */
         .vertical-pill {
             display: flex;
             flex-direction: column;
@@ -254,8 +246,8 @@
             color: #ffffff;
             text-decoration: none;
             border-radius: 40px; 
-            padding: 15px 10px; /* Slimmer padding */
-            width: 45px; /* Slimmer width */
+            padding: 15px 10px;
+            width: 45px;
             min-width: 45px;
             transition: all 0.3s ease;
             box-shadow: 0 8px 15px rgba(0, 69, 135, 0.1);
@@ -267,9 +259,8 @@
             box-shadow: 0 12px 20px rgba(30, 185, 220, 0.2);
         }
         
-        /* Up Next Orange Pill */
         .vertical-pill-orange {
-            background-color: #F97316; /* Vibrant orange to indicate 'Up Next' */
+            background-color: #F97316;
             color: #ffffff;
         }
 
@@ -283,8 +274,8 @@
             text-orientation: mixed;
             transform: rotate(180deg);
             font-weight: bold;
-            font-size: 13px; /* Slightly smaller text */
-            letter-spacing: 1.5px; /* Tighter tracking to fit smaller height */
+            font-size: 13px;
+            letter-spacing: 1.5px;
             margin-bottom: 12px;
             text-transform: uppercase;
         }
@@ -297,7 +288,6 @@
             transform: translateX(4px); 
         }
 
-        /* Vertical Disabled Pill */
         .vertical-pill.btn-disabled {
             background-color: #e5e7eb;
             color: #9ca3af;
@@ -314,9 +304,7 @@
         .vertical-pill.btn-disabled:hover .btn-icon {
             transform: none;
         }
-        /* ----------------------------------- */
 
-        /* Secondary Button Style for Navigation */
         .btn-secondary {
             background-color: transparent;
             color: var(--cdl-blue);
@@ -336,7 +324,6 @@
         .btn-secondary:hover .btn-icon-back {
             transform: translateX(-6px);
         }
-
     </style>
 </head>
 <body>
@@ -386,12 +373,13 @@
                     </div>
                     <span class="btn-icon">→</span>
                 </a>
-                <a href="#" class="btn btn-disabled">
+                <!-- UPDATED LINK FOR TOPIC 1.4 -->
+                <a href="IGExamPractice/14/" class="btn">
                     <div class="btn-text-area">
                         <span class="btn-title">(1.4) Simple Biomechanics</span>
-                        <span class="btn-subtitle">Principles and applications of force, and levers</span>
+                        <span class="btn-subtitle">Principles of force, mass, acceleration, applications, and levers</span>
                     </div>
-                    <span class="btn-icon">○</span>
+                    <span class="btn-icon">→</span>
                 </a>
             </div>
         </div>
