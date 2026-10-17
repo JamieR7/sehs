@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE PE Revision - Collège du Léman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.cdnfonts.com/css/gotham" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cdlBlue: '#004587',
+                        cdlRed: '#E73037',
+                        cdlGold: '#FBBA07',
+                        cdlBrightBlue: '#1EB9DC',
+                        cdlBrightRed: '#EF8162',
+                        cdlBrightYellow: '#FFE37E'
+                    },
+                    fontFamily: {
+                        gotham: ['Gotham', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Gotham', sans-serif; background-color: #f3f4f6; color: #004587; }
+        .btn-blue { background-color: #004587; color: white; transition: all 0.2s; }
+        .btn-blue:hover { background-color: #003366; }
+        .btn-gold { background-color: #FBBA07; color: #004587; transition: all 0.2s; }
+        .btn-gold:hover { background-color: #e5a806; }
+        .btn-red { background-color: #E73037; color: white; transition: all 0.2s; }
+        .btn-red:hover { background-color: #cc2a31; }
+        
+        .modal-overlay {
+            background-color: rgba(0, 69, 135, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        
+        .highlight-text {
+            font-weight: 700;
+            color: #1EB9DC;
+            letter-spacing: 0.05em;
+        }
+
+        select {
+            color: #111827 !important; 
+            background-color: #ffffff !important;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+        select option {
+            color: #111827 !important;
+            background-color: #ffffff !important;
+        }
+        optgroup {
+            font-weight: bold;
+            color: #004587;
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <!-- Header -->
+    <header class="w-full max-w-4xl bg-white rounded-t-xl shadow-md p-6 border-b-4 border-cdlRed flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+            <div class="mb-2">
+                <a href="../../" class="inline-flex items-center text-xs font-bold text-cdlBlue bg-gray-100 hover:bg-cdlBrightBlue hover:text-white px-3 py-1.5 rounded-full transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Back to IGCSE Hub
+                </a>
+            </div>
+            <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
+            <h2 class="text-lg font-bold text-gray-500">Topic 1.4: Simple Biomechanics</h2>
+        </div>
+        <div class="hidden sm:block flex-shrink-0">
+            <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="w-full max-w-4xl bg-white shadow-lg rounded-b-xl p-6 md:p-8 flex flex-col space-y-6">
+        
+        <!-- Controls -->
+        <div class="flex flex-col sm:flex-row gap-4 items-center justify-between bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div class="w-full sm:w-2/3">
+                <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
+                <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
+                    <option value="all">All Sections (Random - 44 Questions)</option>
+                    <optgroup label="Simple Biomechanics">
+                        <option value="Principles of force">&nbsp;&nbsp;&nbsp;&nbsp;Principles of force</option>
+                        <option value="Applications of force">&nbsp;&nbsp;&nbsp;&nbsp;Applications of force</option>
+                        <option value="Levers">&nbsp;&nbsp;&nbsp;&nbsp;Levers</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="w-full sm:w-1/3 flex justify-end">
+                <button id="btn-random" class="w-full h-12 sm:w-auto btn-blue px-6 py-2 mt-auto rounded-md font-bold shadow-md">
+                    Load Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Question Display -->
+        <div id="question-container" class="hidden flex flex-col space-y-4">
+            
+            <!-- Traffic Light Indicator -->
+            <div id="traffic-light-banner" class="flex items-start p-3 rounded-md border text-sm font-bold w-full transition-colors">
+                <div id="traffic-light-dot" class="w-4 h-4 rounded-full mr-3 mt-0.5 flex-shrink-0"></div>
+                <div id="traffic-light-text" class="text-gray-700 leading-tight"></div>
+            </div>
+
+            <div class="flex justify-between items-start pt-2">
+                <h3 class="text-xl font-bold text-cdlBlue leading-snug" id="display-question">Question goes here</h3>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+            </div>
+            
+            <div class="flex flex-col space-y-2">
+                <label for="user-answer" class="text-sm font-bold text-gray-600">Your Answer:</label>
+                <textarea id="user-answer" rows="5" class="w-full p-4 border-2 border-gray-200 rounded-md focus:outline-none focus:border-cdlBrightBlue resize-none text-gray-800" placeholder="Type your answer here..."></textarea>
+            </div>
+
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
+                <button id="btn-hint" class="text-cdlBlue font-bold underline hover:text-cdlBrightBlue text-sm flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                    Need a hint?
+                </button>
+                <button id="btn-reveal" class="w-full sm:w-auto btn-gold px-8 py-3 rounded-md font-bold shadow-md text-lg">
+                    Reveal Mark Scheme
+                </button>
+            </div>
+
+            <!-- Hint Box -->
+            <div id="hint-box" class="hidden bg-cdlBrightYellow bg-opacity-30 border-l-4 border-cdlGold p-4 rounded-r-md mt-4">
+                <p class="text-sm text-gray-600 mb-2 italic"><strong>Note:</strong> If you're asking for a hint, you should probably come back here later to see if you can manage without one!</p>
+                <p id="display-hint" class="font-bold text-cdlBlue"></p>
+            </div>
+        </div>
+
+        <!-- Mark Scheme Display -->
+        <div id="mark-scheme-container" class="hidden mt-6 border-t-2 border-gray-100 pt-6">
+            <h3 class="text-lg font-bold text-cdlRed mb-3 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Mark Scheme
+            </h3>
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+                <!-- Mark scheme content injected here -->
+            </div>
+
+            <!-- Metacognitive Prompt -->
+            <div class="mt-6 bg-cdlBlue text-white p-5 rounded-md shadow-inner">
+                <h4 class="font-bold text-cdlBrightBlue mb-2 text-sm uppercase tracking-wider">Reflection</h4>
+                <p id="display-reflection" class="text-lg font-light"></p>
+            </div>
+            
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next" class="btn-blue px-6 py-3 rounded-md font-bold shadow-md flex items-center">
+                    Next Question
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="fixed inset-0 modal-overlay z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6 border-t-8 border-cdlRed transform transition-all">
+            <h3 id="modal-title" class="text-2xl font-bold text-cdlBlue mb-2">Notice</h3>
+            <p id="modal-message" class="text-gray-600 mb-6 leading-relaxed"></p>
+            <div class="flex flex-col space-y-3 mt-4">
+                <button id="modal-btn-secondary" class="px-4 py-2 rounded-md font-bold text-gray-600 border border-gray-300 hover:bg-gray-100 hidden text-sm"></button>
+                <button id="modal-btn-primary" class="btn-blue px-6 py-2 rounded-md font-bold shadow-sm text-sm"></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // ==========================================
+            // 1. Principles of force (12 Questions: 6 Official + 6 Generated)
+            // ==========================================
+            {
+                section: "Principles of force",
+                marks: 3,
+                question: "State what is meant by each of the following terms:<br>• Force<br>• Mass<br>• Acceleration",
+                markScheme: "<em>1 mark per term:</em><br><br><strong>force:</strong><ul><li>a pull or a push action (applied upon an object);<br><em>(Accept force = mass &times; acceleration.)</em></li></ul><strong>mass:</strong><ul><li>the quantity / amount of matter in a body / idea of how much matter;</li></ul><strong>acceleration:</strong><ul><li>the rate at which an object changes speed / time taken to change speed / velocity;</li></ul><em>Accept F = m &times; a or a correct re-arrangement of this equation for 1 mark.</em>",
+                hint: "Think of pushing/pulling an object (Force), how much 'stuff'/matter is in it in kg (Mass), and how quickly its speed changes (Acceleration).",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 1,
+                question: "State what is meant by the term force.",
+                markScheme: "<em>Any 1 of:</em><ul><li>a push / a pull / pushing / pulling action (applied upon an object);</li><li>= mass &times; acceleration / m &times; a;</li></ul>",
+                hint: "Keep it simple: it is either a p____ or a p____ applied to an object (or state the 3-letter formula!).",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "State how force can be calculated.",
+                markScheme: "<em>1 mark for stating two parts of: mass <strong>OR</strong> acceleration <strong>OR</strong> multiplying / times by / product of;<br>2 marks for all parts, i.e.</em><ul><li>(force =) <strong>mass &times; acceleration</strong> <strong>OR</strong> mass multiplied / times by acceleration;</li></ul>",
+                hint: "Remember Newton's famous second law formula: F = m × a.",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 4,
+                question: "When a performer hits the ball during a squash match, a force is applied. Define the two named concepts used to calculate force.",
+                markScheme: "<em>1 mark for each concept identified.<br>1 mark for an appropriate definition.</em><br><ul><li><strong>concept:</strong> mass;<br><strong>definition:</strong> the quantity of matter in a body regardless of its volume or of any forces acting on it (measured in kilogram or kg) / the amount of material of which it is made;</li><li><strong>concept:</strong> acceleration;<br><strong>definition:</strong> the rate at which an object changes speed (measured in metres per second per second (m/s&sup2;)) / the rate of change of velocity;</li></ul>",
+                hint: "First name the two variables from the Force equation (m___ and a___________), then define what each one means!",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "Force can be applied through a push or pull. Use a named physical activity to describe an example of each of the following:<br>• Example of a push force being used<br>• Example of a pull force being used",
+                markScheme: "<em>1 mark for each example.</em><br><br>for example in rugby:<ul><li><strong>(push)</strong> pushing opponent in the scrum;</li><li><strong>(pull)</strong> grabbing the opponent's shirt when making a tackle to pull them back;</li></ul>",
+                hint: "Pick a sport like Rugby, Rowing, or Weight Training where you clearly push something away and pull something towards you.",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "Describe the relationship between acceleration, force and mass during physical activity.",
+                markScheme: "<em>2 marks from:</em><ul><li>force is equal to mass multiplied by acceleration;</li><li>greater the force, the greater the acceleration;</li><li>bigger the mass, the more force needed to accelerate it;</li><li>mass generally stays the same;</li></ul>",
+                hint: "If mass stays the same and you apply MORE force, what happens to acceleration? If an object has a LARGER mass (like a heavy shot put), what is needed to accelerate it?",
+                isOfficial: true
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "Explain how increases and decreases in force can cause acceleration and deceleration in a 100-metre sprint.",
+                markScheme: "<ul><li><strong>Acceleration (1 mark):</strong> An increase in muscular force applied against the blocks/track (greater than air resistance) causes the sprinter to accelerate (increase speed) in the direction of the force.</li><li><strong>Deceleration (1 mark):</strong> After crossing the finish line, decreasing forward muscular drive while applying a braking force against the ground (alongside air resistance) causes the sprinter to decelerate (slow down).</li></ul>",
+                hint: "Link an increase in forward force to speeding up (acceleration) and a decrease in forward force / braking force to slowing down (deceleration).",
+                isOfficial: false
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "A sprinter with a mass of 70 kg accelerates out of the starting blocks at 5 m/s². Calculate the force produced by the sprinter. Include the unit in your answer.",
+                markScheme: "<ul><li><strong>Calculation (1 mark):</strong> Force = 70 &times; 5 = <strong>350</strong>;</li><li><strong>Unit (1 mark):</strong> <strong>Newtons (N)</strong> (accept 350 N).</li></ul>",
+                hint: "Use Force = mass × acceleration. Don't forget the unit of force named after Sir Isaac Newton!",
+                isOfficial: false
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "An athlete throws a men's shot put (mass = 7.26 kg) and a women's shot put (mass = 4 kg) using the exact same amount of muscular force. Explain which shot put will accelerate faster and why.",
+                markScheme: "<ul><li>The <strong>4 kg (women's) shot put</strong> will accelerate faster. (1 mark)</li><li>Because Force = mass &times; acceleration, when the same force is applied to a smaller mass, it produces a greater acceleration (a bigger mass requires more force to accelerate it). (1 mark)</li></ul>",
+                hint: "If Force is identical, does a lighter mass or a heavier mass accelerate more easily?",
+                isOfficial: false
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "A hockey player wants to pass the ball to a teammate on the far side of the pitch rather than a teammate standing nearby. Using the principles of force, explain what the player must do differently.",
+                markScheme: "<ul><li>The mass of the hockey ball stays the same. (1 mark)</li><li>Since Force = mass &times; acceleration, the player must apply a <strong>greater muscular force</strong> with their stick to produce greater acceleration so the ball travels further and faster. (1 mark)</li></ul>",
+                hint: "The ball's mass doesn't change! So how does the player use F = m × a to make the ball accelerate faster?",
+                isOfficial: false
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "Explain how a football goalkeeper uses force to decelerate a fast-moving ball when making a catch.",
+                markScheme: "<ul><li>The goalkeeper applies a pushing/resisting muscular force with their hands and arms in the <strong>opposite direction</strong> to the ball's flight. (1 mark)</li><li>This opposing force rapidly reduces the ball's speed, causing it to decelerate to a stop. (1 mark)</li></ul>",
+                hint: "In which direction must the goalkeeper apply force with their hands to slow the oncoming ball down to zero?",
+                isOfficial: false
+            },
+            {
+                section: "Principles of force",
+                marks: 2,
+                question: "Two rugby players are sprinting at the same rate of acceleration, but Player A has a mass of 105 kg and Player B has a mass of 80 kg. Explain which player generates greater force on impact in a tackle.",
+                markScheme: "<ul><li><strong>Player A (105 kg)</strong> generates greater force. (1 mark)</li><li>Because Force = mass &times; acceleration, having a bigger mass at the same acceleration results in a larger total force. (1 mark)</li></ul>",
+                hint: "Plug the numbers into Force = mass × acceleration: if acceleration is equal, who hits harder?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // 2. Applications of force (16 Questions: 8 Official + 8 Generated)
+            // ==========================================
+            {
+                section: "Applications of force",
+                marks: 4,
+                question: "Explain how two named forces act on an athlete during a long jump event.",
+                markScheme: "<em>1 mark for naming each force.<br>1 mark for explaining how each force acts.</em><br><br>for example:<ul><li><strong>gravity / weight;</strong><br>when the athlete is in the air the pull of gravity pulls them downwards towards the ground;</li><li><strong>air resistance;</strong><br>opposes movement of athlete slowing them down / increases as speed increases / opposing movement;</li><li><strong>muscular force;</strong><br>the muscular force of the athlete will determine the speed of the run up and the drive from the board;</li><li><strong>ground reaction force;</strong><br>the harder the force from the athlete into the ground the greater the reaction force on the athlete;</li></ul>",
+                hint: "Pick any two from the syllabus list for a moving/jumping performer: Gravity, Air resistance, Muscular force, or Ground reaction force.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 4,
+                question: "A performer kicks a ball. Name two forces and explain how each force acts on the ball when it is in the air.",
+                markScheme: "<em>1 mark for each force named. (Max. 2 marks).<br>1 mark for each explanation. (Max. 2 marks).</em><br><ul><li><strong>gravity / weight;</strong><br><strong>explanation:</strong> pulls the ball downwards / towards the ground;</li><li><strong>air resistance / drag;</strong><br><strong>explanation:</strong> the air will slow the ball down / acts in direct opposition to the ball's movement / increases as speed increases / increases if surface of ball is not smooth;</li><li><strong>force applied at release / muscular force;</strong><br>the power generated when kicking the ball / is greater than gravitational pull / the harder the ball is kicked the greater the force;</li></ul><em>Accept alternative wording.</em>",
+                hint: "Look at the syllabus bullet for 'an object flying through the air': 1. Force applied at release, 2. Air resistance, 3. Gravity.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "A badminton player hits a shuttlecock. Explain how two forces act on the shuttlecock when it is moving through the air.",
+                markScheme: "<em>2 from:</em><br><br><strong>air resistance / drag:</strong><ul><li><strong>explanation:</strong> the air in the way of the shuttle is pushed out of the way / the air will slow the movement of the shuttle down;</li><li>acts in direct opposition to the shuttle;</li><li>as the surface of the shuttle is not totally smooth there is greater resistance or drag as the shuttle travels through the air;</li></ul><strong>gravity / weight:</strong><ul><li><strong>explanation:</strong> pulls the shuttle towards the ground;</li><li>the effect of the force applied on the shuttle reduces so gravity overcomes the force and increases the downward pull;</li></ul><strong>force applied at release / muscular force:</strong><ul><li><strong>explanation:</strong> the power generated when hitting the shuttle is greater than gravitational pull and air resistance which allows the shuttle to go into the air;</li><li>applied at the point of hitting principally by the deltoid, pectorals and latissimus dorsi;</li></ul>",
+                hint: "Why does a feathered shuttlecock slow down so quickly in flight (Air resistance) and then drop to the court (Gravity)?",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 4,
+                question: "Explain how two named forces act on a diver during their dive from a diving board.",
+                markScheme: "<em>max 2 marks for naming an appropriate force<br>max 2 marks for each explanation linked to an appropriate force</em><br><ul><li><strong>gravity / weight;</strong><br>when the performer reaches the top of their jump from the board gravity will pull the body towards the ground / pool;</li><li><strong>air resistance / drag / friction;</strong><br>as the diver moves through the air there is an amount of resistance against the diver's body / the straighter the body position the easier air will flow over the body;</li><li><strong>muscular force;</strong><br>physical effort of the diver to push upward from the board;</li></ul>",
+                hint: "Name two forces (e.g. Muscular force at take-off, Gravity pulling them down to the water, or Air resistance during flight) and explain their role in the dive.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 6,
+                question: "Explain the effect of three named forces acting on a cyclist travelling at speed in a road race.",
+                markScheme: "<em>1 mark for each named force. (3 marks max.) 1 mark for each explanation of the effect of each force. (3 marks max.)</em><br><ul><li><strong>air resistance;</strong><br>acts to reduce the speed of the cyclist as the faster they go the greater the resistance / works against the direction of the cyclist / slows the cyclist down;</li><li><strong>gravity;</strong><br>pulls the bike towards the ground / if the cyclist leans too far over when cornering the centre of gravity changes and can result in falling;</li><li><strong>friction;</strong><br>makes the bike stick to the road / cyclist uses smooth tyres to reduce the effect of friction / brakes rub against the wheel when applied to slow the bike / opposes the forward motion;</li><li><strong>muscular force;</strong><br>the power exerted on the pedals by the cyclist allows the cyclist to increase / maintain speed;</li></ul><em>Accept forces with appropriate explanations.</em>",
+                hint: "You need 3 named forces (3 marks) + 3 explanations applied specifically to cycling (3 marks).",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 6,
+                question: "Identify three forces acting on a golf ball as it is hit and moves through the air. Explain how each force affects the flight of the ball.",
+                markScheme: "<em>1 mark for identification of each force. 1 mark for each appropriate explanation, for example:</em><br><ul><li><strong>gravity;</strong><br>pulls the ball back down towards the ground;</li><li><strong>air resistance;</strong><br>slows the ball down / reduces distance the ball travels;</li><li><strong>force applied at release / muscular force;</strong><br>the greater the force applied the further the ball will travel / speeds the ball up;</li></ul><em>Accept other relevant forces.</em>",
+                hint: "Use the exact three forces from the syllabus for an object flying through the air: Force applied at release, Air resistance, and Gravity.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 6,
+                question: "Identify three different forces acting on a 100-metre sprinter at the start of a race. Explain how each force affects the sprinter.",
+                markScheme: "<em>1 mark for each force (3 marks max).<br>1 mark for explaining an appropriate effect of the force (3 marks max).</em><br><ul><li><strong>gravity;</strong><br><strong>effect:</strong> pulls the sprinter towards the ground as they drive out of the blocks / forces the sprinter's feet to return to the ground;</li><li><strong>muscular force;</strong><br><strong>effect:</strong> the power the sprinter exerts to push himself out of the blocks quicker / continues to be applied through to the ground;</li><li><strong>air resistance;</strong><br><strong>effect:</strong> the faster the sprinter accelerates there is greater air resistance which will slow the sprinter down / acts in opposite direction to motion to slow them down / acts against the runner to slow them down;</li><li><strong>ground reaction force;</strong><br><strong>effect:</strong> the force from the ground to the sprinter that is equal and opposite to the action force / the harder the sprinter pushes the force downwards and backwards helps to move the sprinter upwards and forwards;</li></ul>",
+                hint: "This 6-mark question appeared in both 2023 and 2025! Pick 3 from Gravity, Air resistance, Muscular force, and Ground reaction force.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "Suggest how a cyclist can reduce the effects of air resistance when cycling.",
+                markScheme: "<em>1 mark for each suggestion.</em><ul><li>make the body position aerodynamic on the bike;</li><li>aerodynamic shaped helmet;</li><li>skin tight clothing;</li><li>shoe covers;</li><li>aerodynamic bike design;</li></ul><em>Accept other appropriate examples.</em>",
+                hint: "Think about what a track or time-trial cyclist does with their body posture, clothing, helmet, and bike frame to slice through the air.",
+                isOfficial: true
+            },
+            {
+                section: "Applications of force",
+                marks: 3,
+                question: "Identify three forces that act on a javelin during the throw and flight.",
+                markScheme: "<em>1 mark for each force identified.</em><ul><li>muscular force / force applied at release;</li><li>air resistance;</li><li>gravity;</li></ul><em>Accept other appropriate forces.</em>",
+                hint: "Name the 3 syllabus forces that act on any thrown object flying through the air!",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "Explain how Ground Reaction Force (GRF) helps a volleyball player jump high to perform a block at the net.",
+                markScheme: "<ul><li>The volleyball player uses muscular force to push downwards forcefully through their feet into the court floor prior to the jump. (1 mark)</li><li>As the feet push downwards, the floor pushes the performer upwards with an equal and opposite <strong>ground reaction force</strong> so they leave the ground. (1 mark)</li></ul>",
+                hint: "For every action force pushed DOWN into the court floor, what does the floor do back?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "Compare the effect of air resistance on a shuttlecock in badminton with a shot put in athletics during flight.",
+                markScheme: "<ul><li><strong>Shuttlecock (1 mark):</strong> Has a very light mass and a non-smooth, feathered cone shape, so air resistance (drag) has a large effect and slows it down very quickly.</li><li><strong>Shot put (1 mark):</strong> Has a very heavy mass and a smooth, compact spherical shape, so air resistance has a minimal effect on its flight compared to gravity.</li></ul>",
+                hint: "How do mass, surface smoothness, and shape affect how much air resistance slows an object down?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "Explain why a 100m sprinter wears spiked running shoes when driving out of the starting blocks.",
+                markScheme: "<ul><li>Spiked running shoes create greater <strong>friction</strong> between the foot and the track surface, so the sprinter does not slip. (1 mark)</li><li>This allows the sprinter to apply maximum muscular force backwards into the track, generating a larger forward ground reaction force. (1 mark)</li></ul>",
+                hint: "What force stops your feet from slipping on the track so you can push off with maximum power?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 3,
+                question: "Explain how the balance between 'force applied at release' and 'gravity' changes from the moment a shot put leaves the athlete's hand until it hits the ground.",
+                markScheme: "<ul><li><strong>At release (1 mark):</strong> The upward and forward muscular force applied at release is greater than gravity, causing the shot put to accelerate upwards and forwards.</li><li><strong>At peak height (1 mark):</strong> Air resistance and gravity gradually overcome the initial release force until upward motion stops at the top of the flight arc.</li><li><strong>Descent to landing (1 mark):</strong> Gravity overcomes the release force and pulls the shot put downwards to the ground.</li></ul>",
+                hint: "Trace the arc of the throw: why does it go up first, reach a peak, and then curve down to the ground?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "A marathon runner is running into a strong headwind. Explain how this affects the forces acting on the runner and how they might adapt their tactics.",
+                markScheme: "<ul><li><strong>Effect of force (1 mark):</strong> The headwind increases <strong>air resistance</strong> acting against the runner, forcing them to exert more muscular force to maintain the same speed.</li><li><strong>Tactical adaptation (1 mark):</strong> The runner can run closely behind another runner ('drafting' in a pack) to shelter from the wind and reduce air resistance.</li></ul>",
+                hint: "What force increases when running into the wind, and why do distance runners and cyclists tuck in behind other competitors?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "In swimming, water resistance (drag) acts in the same way as air resistance on land. Suggest two ways a competitive swimmer reduces drag in the water.",
+                markScheme: "<em>Any 2 of (2 marks):</em><ul><li>Maintaining a long, horizontal, <strong>streamlined</strong> body position in the water (especially when diving and pushing off the wall);</li><li>Wearing a tight-fitting, smooth racing swimsuit and a silicone swim cap;</li><li>Shaving body hair to make the skin surface smoother;</li></ul>",
+                hint: "Just like a cyclist reducing air resistance, how does a swimmer make their body and equipment as smooth and streamlined as possible?",
+                isOfficial: false
+            },
+            {
+                section: "Applications of force",
+                marks: 2,
+                question: "While waiting motionless in the 'set' position in the starting blocks, a sprinter is completely still. Explain the relationship between gravity and ground reaction force at this exact moment.",
+                markScheme: "<ul><li><strong>Gravity (weight)</strong> pulls the sprinter downwards towards the track. (1 mark)</li><li>The blocks and track exert an <strong>equal and opposite upward ground reaction force</strong>, meaning the forces are balanced and the sprinter remains stationary until the gun fires. (1 mark)</li></ul>",
+                hint: "If the sprinter isn't moving up or down while holding the 'set' position, how must the downward pull of gravity compare to the upward push of the ground?",
+                isOfficial: false
+            },
+
+            // ==========================================
+            // 3. Levers (16 Questions: 8 Official + 8 Generated)
+            // ==========================================
+            {
+                section: "Levers",
+                marks: 2,
+                question: "State two components of a lever.",
+                markScheme: "<em>2 from:</em><ul><li>fulcrum;</li><li>effort;</li><li>resistance;</li></ul><em>also accept pivot for fulcrum / muscular force for effort / load for resistance.</em>",
+                hint: "Think of the 3 letters in the lever mnemonic: F - R - E (or F - L - E)!",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "(a) Draw/write out the component order of a first class lever. (2)<br>(b) Describe, using a named physical activity, an example of when a first class lever is used. (1)",
+                markScheme: "<strong>8(c)(i) (2 marks):</strong><ul><li><em>1 mark for correct naming of all 3 components.</em></li><li><em>1 mark for fulcrum in the middle.</em><br>(<code>resistance &ndash; fulcrum &ndash; effort</code>)</li></ul><strong>8(c)(ii) (1 mark):</strong><ul><li><em>No mark for physical activity.<br>1 mark for example.</em><br>e.g. raising head to head a football / releasing a javelin into the air;</li></ul>",
+                hint: "Remember '1-2-3 = F-R-E (or F-L-E)': in a 1st class lever, F (Fulcrum) is in the middle! Think of nodding your head to head a football.",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "(a) Draw/write out the component order of a second class lever and label the fulcrum, resistance and effort. (2)<br>(b) Describe an example of when a second class lever is used in a named physical activity. (1)",
+                markScheme: "<strong>14(a) (2 marks):</strong><ul><li><em>1 mark for the position of resistance in the middle.</em></li><li><em>1 mark if other 2 components are correctly positioned and labelled.</em><br>(<code>fulcrum &ndash; resistance &ndash; effort</code> / <code>effort &ndash; resistance &ndash; fulcrum</code>)</li></ul><strong>14(b) (1 mark):</strong><ul><li><em>1 mark for an example from a named physical activity, for example:</em><br>taking off from the board in long jump / rising onto toes in gymnastics;<br><em>Accept other appropriate examples.</em></li></ul>",
+                hint: "Remember '1-2-3 = F-R-E (or F-L-E)': in a 2nd class lever, R (Resistance / Load) is in the middle! Think of standing on your tiptoes (plantar flexion at the ankle).",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "(a) Draw/write out a simple diagram of a third class lever. Identify the position of the fulcrum, resistance and effort. (2)<br>(b) Describe one example of a third class lever in the body. (1)",
+                markScheme: "<strong>7(a)(i) (2 marks):</strong><ul><li><em>1 mark for the position of effort in the middle.</em></li><li><em>1 mark if other 2 components are correctly positioned and labelled.</em><br>(<code>fulcrum &ndash; effort &ndash; resistance</code> OR <code>resistance &ndash; effort &ndash; fulcrum</code>)</li></ul><strong>7(a)(ii) (1 mark):</strong><ul><li><em>1 mark for a correct example.<br>for example:</em><br>bending the elbow to lift a weight / bicep curl;<br>straightening the leg at the knee / to kick ball;</li></ul>",
+                hint: "Remember '1-2-3 = F-R-E (or F-L-E)': in a 3rd class lever, E (Effort) is in the middle! Think of a bicep curl at the elbow.",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 4,
+                question: "Consider the upward phase of a bicep curl when lifting a dumbbell:<br>(a) Identify the class of lever used in the upward phase of a bicep curl. (1)<br>(b) Identify the three components of this class of lever:<br>• P (at the elbow joint)<br>• Q (where the biceps muscle attaches to the radius)<br>• R (at the dumbbell in the hand) (3)",
+                markScheme: "<strong>11(a) (1 mark):</strong><ul><li>third class lever;</li></ul><strong>11(b) (3 marks):</strong> <em>1 mark for identifying each.</em><ul><li><strong>P:</strong> fulcrum;</li><li><strong>Q:</strong> effort;</li><li><strong>R:</strong> resistance;</li></ul>",
+                hint: "In a bicep curl, the elbow joint is the pivot (P), the biceps muscle provides the pull in the middle (Q), and the dumbbell in the hand is the load (R)!",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 2,
+                question: "Describe an example of each of the following class of levers being used in a named physical activity:<br>• First class lever example<br>• Third class lever example",
+                markScheme: "<em>1 mark for each description.</em><br><br>Example could include:<br><strong>football:</strong><ul><li><strong>first class lever:</strong> heading the ball;</li><li><strong>third class levers:</strong> striking / kicking the ball;</li></ul><strong>rowing:</strong><ul><li><strong>first class lever:</strong> pulling on the oar;</li><li><strong>third class levers:</strong> straightening the legs during the stroke;</li></ul><em>Accept other examples.</em>",
+                hint: "Pick Football (1st class = heading the ball at the neck; 3rd class = kicking the ball at the knee) or Rowing!",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "A sprinter pushes off the blocks at the start of a race:<br>(a) Identify the class of lever being used at the ankle at the start of the race. (1)<br>(b) Draw/write out the component order of the lever identified in (a). (2)",
+                markScheme: "<strong>9(b)(i) (1 mark):</strong><ul><li><em>1 mark for:</em><br>second class lever;</li></ul><strong>9(b)(ii) (2 marks):</strong><ul><li><em>1 mark for the correct position of resistance in the middle;</em></li><li><em>1 mark for the fulcrum and effort at each end;</em><br>(<code>fulcrum &ndash; resistance &ndash; effort</code> / <code>effort &ndash; resistance &ndash; fulcrum</code>)</li></ul>",
+                hint: "Any time an exam question mentions the ANKLE (plantar flexion / tiptoes / sprint blocks / long jump board / diving board), it is ALWAYS a 2nd class lever (R in the middle)!",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "A performer competes in a sprint hurdles race:<br>(a) Identify the class of lever at the performer's left knee during the sprint hurdles. (1)<br>(b) Draw/write out a labelled diagram of the class of lever you identified in (a). (2)",
+                markScheme: "<strong>7(d)(i) (1 mark):</strong><ul><li><em>1 mark for:</em><br>third (class lever);</li></ul><strong>7(d)(ii) (2 marks):</strong><ul><li><em>1 mark for labelling the correct position of the middle component of the lever.</em></li><li><em>2 marks if all three components are in the correct position and labelled.<br>Must match candidate's (d)(i) response for credit.</em><br>For example, for a third-class lever:<br><code>fulcrum &ndash; effort &ndash; resistance</code> <strong>OR</strong> <code>resistance &ndash; effort &ndash; fulcrum</code>;</li></ul>",
+                hint: "Movement at the knee (and flexion at the elbow) is a 3rd class lever—which component sits in the middle of a 3rd class lever?",
+                isOfficial: true
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "Identify which component (Fulcrum, Resistance, or Effort) is positioned in the middle for each of the three classes of levers:<br>1. First class lever<br>2. Second class lever<br>3. Third class lever",
+                markScheme: "<ul><li><strong>1. First class lever:</strong> Fulcrum (pivot) in the middle; (1 mark)</li><li><strong>2. Second class lever:</strong> Resistance (load) in the middle; (1 mark)</li><li><strong>3. Third class lever:</strong> Effort (force) in the middle; (1 mark)</li></ul>",
+                hint: "Use the ultimate biomechanics mnemonic: 1 - 2 - 3 = F - R - E (or F - L - E)!",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "In the human musculoskeletal system, which anatomical structures act as the:<br>1. Fulcrum<br>2. Effort<br>3. Resistance",
+                markScheme: "<ul><li><strong>1. Fulcrum (1 mark):</strong> The <strong>joint</strong> (where the bones meet and pivot, e.g. elbow, knee, ankle).</li><li><strong>2. Effort (1 mark):</strong> The <strong>muscular force</strong> applied by the contracting agonist muscle (where the tendon attaches to the bone).</li><li><strong>3. Resistance (1 mark):</strong> The <strong>weight / load</strong> of the body part being moved (plus any external object like a dumbbell, racket, or ball).</li></ul>",
+                hint: "Match Joint, Muscle contraction, and Weight/Load to Fulcrum, Effort, and Resistance.",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "When a gymnast rises onto their tiptoes (plantar flexion at the ankle), it acts as a second class lever. Identify which specific part of the foot/leg acts as the Fulcrum, the Resistance, and the Effort.",
+                markScheme: "<ul><li><strong>Fulcrum (1 mark):</strong> The ball of the foot / toes in contact with the floor.</li><li><strong>Resistance (1 mark):</strong> The weight of the gymnast's body passing down through the ankle/tarsals in the middle of the foot.</li><li><strong>Effort (1 mark):</strong> The upward pull of the <strong>gastrocnemius</strong> (calf muscle) via the Achilles tendon at the heel.</li></ul>",
+                hint: "Picture standing on your tiptoes: the toes on the floor are the pivot (F), your body weight drops through the middle of the foot (R), and your calf muscle pulls up on the heel at the back (E).",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "When a footballer nods their head at the neck joint to head a ball, it acts as a first class lever. Identify which specific part of the head/neck acts as the Fulcrum, the Resistance, and the Effort.",
+                markScheme: "<ul><li><strong>Fulcrum (1 mark):</strong> The joint at the top of the spine/neck (atlas and axis vertebrae) in the middle.</li><li><strong>Resistance (1 mark):</strong> The weight of the cranium/head (and the ball) at the front.</li><li><strong>Effort (1 mark):</strong> The contraction of the neck muscles (trapezius) pulling at the back of the cranium.</li></ul>",
+                hint: "Like a seesaw! The neck joint is in the middle (F), the face/ball is at the front (R), and the neck muscles pull at the back (E).",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "While flexion at the elbow (a bicep curl) is a third class lever, extension at the elbow (such as throwing a javelin or doing a tricep dip) acts as a first class lever. Identify the Fulcrum, Effort, and Resistance during elbow extension.",
+                markScheme: "<ul><li><strong>Fulcrum (1 mark):</strong> The <strong>elbow joint</strong> in the middle (between the olecranon process and the hand).</li><li><strong>Effort (1 mark):</strong> The contraction of the <strong>triceps</strong> muscle attached to the tip of the ulna behind the elbow joint.</li><li><strong>Resistance (1 mark):</strong> The weight of the forearm, hand, and javelin in front of the elbow joint.</li></ul>",
+                hint: "In tricep extension at the elbow, the triceps attaches slightly BEHIND the elbow pivot, putting the elbow joint (Fulcrum) in the middle!",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 2,
+                question: "Explain why third class levers are the most common type of lever in the human body for sporting movements, even though the effort is applied closer to the fulcrum than the resistance.",
+                markScheme: "<ul><li>Having the effort (muscle insertion) close to the fulcrum (joint) means a small muscular contraction moves the end of the limb through a <strong>wide range of movement</strong>. (1 mark)</li><li>It also allows the hand or foot to move at <strong>high speed</strong>, which is ideal for throwing, kicking, and racket strokes. (1 mark)</li></ul>",
+                hint: "Think about kicking a football or swinging a tennis racket: what advantage does a 3rd class lever give in terms of speed and range of motion?",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 2,
+                question: "Explain why a second class lever at the ankle is mechanically advantageous for a weightlifter or high jumper.",
+                markScheme: "<ul><li>In a second class lever, the resistance (body weight) sits in the middle, closer to the fulcrum (ball of the foot) than the effort (gastrocnemius). (1 mark)</li><li>This provides a <strong>force / strength advantage</strong> (mechanical advantage), allowing the calf muscle to lift a heavy body mass easily with relatively less muscular effort. (1 mark)</li></ul>",
+                hint: "Think of a wheelbarrow (2nd class lever): why is it so easy to lift a heavy load when the load sits in the middle between the wheel (F) and your hands (E)?",
+                isOfficial: false
+            },
+            {
+                section: "Levers",
+                marks: 3,
+                question: "Match each everyday household object to the correct class of lever (First, Second, or Third class) and state which anatomical joint movement works the same way:<br>1. A wheelbarrow<br>2. A playground seesaw (or pair of scissors)<br>3. A pair of tweezers (or a fishing rod)",
+                markScheme: "<ul><li><strong>1. Wheelbarrow:</strong> <strong>Second class lever</strong> (Resistance in the middle) &mdash; matches plantar flexion at the ankle (tiptoes). (1 mark)</li><li><strong>2. Seesaw / Scissors:</strong> <strong>First class lever</strong> (Fulcrum in the middle) &mdash; matches nodding the head at the neck (heading a ball). (1 mark)</li><li><strong>3. Tweezers / Fishing rod:</strong> <strong>Third class lever</strong> (Effort in the middle) &mdash; matches a bicep curl at the elbow (or kicking at the knee). (1 mark)</li></ul>",
+                hint: "Find what is in the middle of each object: Seesaw = Pivot (F); Wheelbarrow = Load in the bucket (R); Tweezers = Fingers squeezing the middle (E)!",
+                isOfficial: false
+            }
+        ];
+
+        // Conversational reflection prompts
+        const reflectionPrompts = [
+            "How did you do? Be honest with yourself—how many marks out of the total would you give your answer?",
+            "Did anything in the mark scheme surprise you?",
+            "If you dropped any marks here, what's your plan to make sure you nail it next time?",
+            "Did you use the exact terminology? Often, close isn't quite enough in the exam.",
+            "How could you have improved your answer to guarantee full marks?",
+            "What was the trickiest part of this question for you?",
+            "Which part of the mark scheme did you completely forget to include?",
+            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+        ];
+
+        let currentQuestion = null;
+        let recentQuestions = []; // Anti-repeat session tracker
+        let bypassActive = false;
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const btnRandom = document.getElementById('btn-random');
+        const questionContainer = document.getElementById('question-container');
+        const displayQuestion = document.getElementById('display-question');
+        const displayMarks = document.getElementById('display-marks');
+        const userAnswer = document.getElementById('user-answer');
+        const btnReveal = document.getElementById('btn-reveal');
+        const btnHint = document.getElementById('btn-hint');
+        const hintBox = document.getElementById('hint-box');
+        const displayHint = document.getElementById('display-hint');
+        const markSchemeContainer = document.getElementById('mark-scheme-container');
+        const displayMarkScheme = document.getElementById('display-mark-scheme');
+        const displayReflection = document.getElementById('display-reflection');
+        const btnNext = document.getElementById('btn-next');
+        
+        // Traffic Light Elements
+        const trafficBanner = document.getElementById('traffic-light-banner');
+        const trafficDot = document.getElementById('traffic-light-dot');
+        const trafficText = document.getElementById('traffic-light-text');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalBtnPrimary = document.getElementById('modal-btn-primary');
+        const modalBtnSecondary = document.getElementById('modal-btn-secondary');
+
+        // Functions
+        function showModal(title, message, primaryText, secondaryText, onPrimaryClick, onSecondaryClick) {
+            modalTitle.textContent = title;
+            modalMessage.innerHTML = message;
+            
+            modalBtnPrimary.textContent = primaryText;
+            modalBtnPrimary.onclick = () => {
+                hideModal();
+                if (onPrimaryClick) onPrimaryClick();
+            };
+            
+            if (secondaryText) {
+                modalBtnSecondary.textContent = secondaryText;
+                modalBtnSecondary.classList.remove('hidden');
+                modalBtnSecondary.onclick = () => {
+                    hideModal();
+                    if (onSecondaryClick) onSecondaryClick();
+                };
+            } else {
+                modalBtnSecondary.classList.add('hidden');
+            }
+            
+            customModal.classList.remove('hidden');
+        }
+        
+        function hideModal() {
+            customModal.classList.add('hidden');
+        }
+
+        function loadQuestion() {
+            const selectedSection = sectionSelect.value;
+            let filteredQuestions = questions;
+            
+            if (selectedSection !== 'all') {
+                filteredQuestions = questions.filter(q => q.section === selectedSection);
+            }
+            
+            if (filteredQuestions.length === 0) {
+                showModal("Oops!", "No questions found for this section.", "OK");
+                return;
+            }
+
+            // Filter out recently asked questions to avoid immediate repeats
+            let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
+            
+            // If all questions in this category have been shown recently, reset history
+            if (availableQuestions.length === 0) {
+                recentQuestions = [];
+                availableQuestions = filteredQuestions;
+            }
+
+            const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+            currentQuestion = availableQuestions[randomIndex];
+
+            // Track recent questions (store up to 4 recent picks)
+            recentQuestions.push(currentQuestion);
+            if (recentQuestions.length > 4) {
+                recentQuestions.shift();
+            }
+
+            // Setup Traffic Light UI
+            trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
+            trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
+            
+            if (currentQuestion.isOfficial) {
+                trafficBanner.classList.add('bg-green-100', 'border-green-300');
+                trafficDot.classList.add('bg-green-500');
+                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+            } else {
+                trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
+                trafficDot.classList.add('bg-amber-500');
+                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+            }
+
+            // Reset UI
+            displayQuestion.innerHTML = currentQuestion.question;
+            displayMarks.textContent = `[${currentQuestion.marks} mark${currentQuestion.marks > 1 ? 's' : ''}]`;
+            userAnswer.value = '';
+            userAnswer.disabled = false;
+            questionContainer.classList.remove('hidden');
+            markSchemeContainer.classList.add('hidden');
+            hintBox.classList.add('hidden');
+            bypassActive = false;
+        }
+
+        function revealMarkScheme() {
+            const answer = userAnswer.value.trim();
+            
+            // Check for empty box
+            if (answer === '') {
+                showModal(
+                    "Hold up!", 
+                    "Oh no you don't! You have to write <em>something</em> before I show you the answer.<br><br>If that something is 'I don't know', that's fine, but take note: this is obviously an area you need to revisit again later.", 
+                    "Try again"
+                );
+                return;
+            }
+
+            // Check for "I don't know" variants
+            const idkVariants = ["i don't know", "idk", "i dunno", "no idea", "pass"];
+            const isIdk = idkVariants.some(variant => answer.toLowerCase().includes(variant));
+            
+            if (isIdk) {
+                processReveal();
+                return;
+            }
+
+            // Word count validation (scales reasonably with question marks)
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = currentQuestion.markScheme;
+            const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
+            
+            const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
+            const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+            const expectedMinWords = Math.min(currentQuestion.marks * 6, msWordCount * 0.4);
+
+            if (!bypassActive && (answerWordCount < expectedMinWords)) {
+                showModal(
+                    "Are you sure?", 
+                    "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
+                    "Sorry Coach, that's all I've got. Show me the mark scheme; I'll be honest with myself and come back better!", 
+                    "Let me back in Coach, I've got more to say",
+                    () => {
+                        bypassActive = true;
+                        processReveal();
+                    },
+                    () => {
+                        userAnswer.focus();
+                    }
+                );
+                return;
+            }
+
+            processReveal();
+        }
+
+        function processReveal() {
+            displayMarkScheme.innerHTML = currentQuestion.markScheme;
+            
+            // Generate Random Reflection Prompt
+            const randomPrompt = reflectionPrompts[Math.floor(Math.random() * reflectionPrompts.length)];
+            displayReflection.textContent = randomPrompt;
+
+            userAnswer.disabled = true;
+            markSchemeContainer.classList.remove('hidden');
+            
+            // Scroll to mark scheme smoothly
+            markSchemeContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Event Listeners
+        btnRandom.addEventListener('click', loadQuestion);
+        
+        btnHint.addEventListener('click', () => {
+            if (currentQuestion && currentQuestion.hint) {
+                displayHint.textContent = currentQuestion.hint;
+                hintBox.classList.remove('hidden');
+            }
+        });
+
+        btnReveal.addEventListener('click', revealMarkScheme);
+        btnNext.addEventListener('click', loadQuestion);
+
+        // Close modal if clicking outside the box
+        customModal.addEventListener('click', (e) => {
+            if (e.target === customModal) {
+                hideModal();
+            }
+        });
+
+    </script>
+</body>
+</html>
