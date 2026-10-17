@@ -81,7 +81,7 @@
                 </a>
             </div>
             <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
-            <h2 class="text-lg font-bold text-gray-500">Topic 2: Health, Fitness and Training</h2>
+            <h2 class="text-lg font-bold text-gray-500">Topic 2: (2.1 & 2.2) Health, Well-being, Diet and Energy Sources</h2>
         </div>
         <div class="hidden sm:block flex-shrink-0">
             <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
@@ -96,12 +96,15 @@
             <div class="w-full sm:w-2/3">
                 <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
                 <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
-                    <option value="all">All Sections (Random)</option>
-                    <optgroup label="Topic 2 Categories">
-                        <option value="Health and well-being">&nbsp;&nbsp;&nbsp;&nbsp;Health and well-being</option>
-                        <option value="Fitness">&nbsp;&nbsp;&nbsp;&nbsp;Fitness</option>
-                        <option value="The relationship between health and fitness">&nbsp;&nbsp;&nbsp;&nbsp;The relationship between health and fitness</option>
-                        <option value="Diet and energy sources">&nbsp;&nbsp;&nbsp;&nbsp;Diet and energy sources</option>
+                    <option value="all">All Sections (Random - 50 Questions)</option>
+                    <optgroup label="(2.1) Health, Well-being & Fitness">
+                        <option value="Health and well-being">&nbsp;&nbsp;&nbsp;&nbsp;Health and well-being (The 3-Legged Stool)</option>
+                        <option value="Fitness">&nbsp;&nbsp;&nbsp;&nbsp;Fitness & The Relationship with Health</option>
+                    </optgroup>
+                    <optgroup label="(2.2) Diet & Energy Sources">
+                        <option value="Nutrients and food sources">&nbsp;&nbsp;&nbsp;&nbsp;Nutrients, Water & Food Sources</option>
+                        <option value="Energy balance and needs">&nbsp;&nbsp;&nbsp;&nbsp;Energy Balance & Different Energy Needs</option>
+                        <option value="Energy storage and respiration">&nbsp;&nbsp;&nbsp;&nbsp;The Bank of Energy (Storage & Respiration)</option>
                     </optgroup>
                 </select>
             </div>
@@ -122,7 +125,7 @@
             </div>
 
             <div class="flex justify-between items-start pt-2">
-                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
+                <h3 class="text-xl font-bold text-cdlBlue leading-snug" id="display-question">Question goes here</h3>
                 <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
             </div>
             
@@ -195,355 +198,423 @@
     <script>
         const questions = [
             // ==========================================
-            // Health and well-being
+            // 1. Health and well-being (10 Questions)
             // ==========================================
-
-            // Official
+            {
+                section: "Health and well-being",
+                marks: 2,
+                question: "Identify the missing words in the following World Health Organization (WHO) definition of health:<br>'a state of complete physical, .......................................... and social well-being and not merely the absence of .......................................... or infirmity'.",
+                markScheme: "<em>1 mark for each correct word:</em><ul><li><strong>mental</strong> (1 mark)</li><li><strong>disease</strong> (1 mark)</li></ul>",
+                hint: "Think of the 3-legged stool from your workbook (💪 Physical, 🧠 ________, 🤝 Social) and what health is NOT merely the absence of!",
+                isOfficial: true
+            },
+            {
+                section: "Health and well-being",
+                marks: 2,
+                question: "State the World Health Organization (WHO) definition of health.",
+                markScheme: "<ul><li>A state of complete physical, mental and social well-being (1 mark)</li><li>and not merely the absence of disease or infirmity. (1 mark)</li></ul>",
+                hint: "Include all three legs of the 3-legged stool (💪 🧠 🤝) for the first mark, and the 'not merely the absence of...' phrase for the second mark.",
+                isOfficial: true
+            },
             {
                 section: "Health and well-being",
                 marks: 2,
                 question: "Describe two requirements for good social health and well-being.",
-                markScheme: "Any 2 of:<br><ul><li>essential human needs are met;</li><li>friendship and support;</li><li>having value within society;</li><li>ability to mix with others;</li></ul>",
-                hint: "How do you interact with other people and your community?",
+                markScheme: "<em>1 mark for each description.<br>Any 2 of:</em><ul><li>essential human needs are met;</li><li>friendship and support;</li><li>having value within society;</li><li>ability to mix with other people;</li></ul>",
+                hint: "This was the 'Retrieval' question in our slides! Think of the 🤝 Social leg of the stool: friends, mixing with others, feeling valued, and basic needs.",
                 isOfficial: true
             },
             {
                 section: "Health and well-being",
                 marks: 3,
-                question: "Describe three mental health benefits a performer might gain from playing in a sports team.",
-                markScheme: "Any 3 from:<br><ul><li>increases the ability to cope with stress (as playing in a team provides opportunity to share experiences with others);</li><li>increases the ability to control emotions (as the player has to deal with the setbacks that occur in sport whilst being supported by team members);</li><li>improves self-esteem / self-confidence (when the team play well);</li><li>mixing with others / making friends prevents a sense of isolation;</li><li>increases motivation (as team members can encourage / support a person);</li></ul>",
-                hint: "Think about emotions, stress, and confidence when playing with others.",
+                question: "Describe three characteristics of a person with good physical health and well-being.",
+                markScheme: "<em>1 mark for each characteristic:</em><ul><li>all body systems working well / properly;</li><li>free from illness / injury / disease;</li><li>able to carry out everyday tasks;</li></ul>",
+                hint: "Look at the 💪 Physical leg of the 3-legged stool in your workbook: body systems, illness/injury, and daily tasks.",
                 isOfficial: true
             },
             {
                 section: "Health and well-being",
                 marks: 3,
-                question: "Identify the three aspects of health, according to the World Health Organization (WHO).",
-                markScheme: "1 mark for each:<br><ul><li>physical (health and well-being)</li><li>mental (health and well-being)</li><li>social (health and well-being)</li></ul>",
-                hint: "Think of the 'three pillars' of health as taught in the syllabus.",
+                question: "Describe three characteristics of a person with good mental health and well-being.",
+                markScheme: "<em>1 mark for each characteristic:</em><ul><li>able to cope with stress;</li><li>can control emotions;</li><li>feeling good / positive self-esteem;</li></ul>",
+                hint: "Look at the 🧠 Mental leg of the 3-legged stool in your workbook: stress, emotions, and self-esteem.",
                 isOfficial: true
             },
             {
                 section: "Health and well-being",
-                marks: 4,
-                question: "Describe two features of mental health and well-being and describe how each feature helps when participating in physical activity.",
-                markScheme: "2 marks max for features, 2 marks max for descriptions.<br><strong>Features (any 2 from):</strong><br><ul><li>able to cope with stress</li><li>can control emotions</li><li>feeling good / (good) self-esteem / confidence / motivation</li></ul><br><strong>Descriptions:</strong><br><ul><li><em>able to cope with stress:</em> able to play in a big game and perform well / able to cope with responsibility (e.g. taking a penalty).</li><li><em>can control emotions:</em> if a performer makes a mistake, they do not allow their performance to suffer / can accept winning and losing without an extreme response.</li><li><em>feel good:</em> a player's self-esteem increases when they play well / wants to do well.</li></ul>",
-                hint: "First name the components of mental health (like dealing with pressure or feelings). Then explain how those specific things help you on the pitch or court.",
+                marks: 3,
+                question: "Explain one physical, one mental and one social benefit of regular exercise.",
+                markScheme: "<em>Award 1 mark for each correctly explained benefit:</em><ul><li><strong>Physical:</strong> improved cardiovascular fitness / stronger body systems / maintaining a healthy body mass / reduced risk of illness or disease; (1 mark)</li><li><strong>Mental:</strong> reduced stress or anxiety / increased self-esteem and confidence / improved emotional control / release of endorphins (feeling good); (1 mark)</li><li><strong>Social:</strong> making friendships / building support networks / mixing with others in a team or club / feeling valued within a group; (1 mark)</li></ul>",
+                hint: "This was the 'Still here? True champion!' question at the end of our slides. Give one clear benefit for each leg of the 3-legged stool!",
                 isOfficial: true
             },
-
-            // AI Generated
             {
                 section: "Health and well-being",
-                marks: 4,
-                question: "Fill in the blanks for the World Health Organization (WHO) definition of health: 'A state of complete _______, _______ and _______ well-being and not merely the absence of _______ or infirmity.'",
-                markScheme: "<ul><li>Physical</li><li>Mental</li><li>Social</li><li>Disease</li></ul>",
-                hint: "Think about the three-legged stool and what health is *not* just the absence of.",
+                marks: 3,
+                question: "A student joins an after-school basketball club. Suggest how taking part in this club could improve their physical, mental, and social health and well-being.",
+                markScheme: "<ul><li><strong>Physical (1 mark):</strong> improves cardiovascular endurance/stamina, muscular strength, or helps maintain a healthy weight so everyday tasks are easier;</li><li><strong>Mental (1 mark):</strong> relieves school exam stress, boosts self-esteem when learning new skills, or helps them control emotions when winning/losing;</li><li><strong>Social (1 mark):</strong> allows them to mix with other students, make new friends, and feel valued as part of a team;</li></ul>",
+                hint: "Apply the three legs of the health stool (💪 Physical, 🧠 Mental, 🤝 Social) directly to playing in a school basketball team.",
                 isOfficial: false
             },
             {
                 section: "Health and well-being",
                 marks: 3,
-                question: "Describe three characteristics of physical health and well-being.",
-                markScheme: "<ul><li>All body systems working well</li><li>Free from illness / injury / disease</li><li>Able to carry out everyday tasks</li></ul>",
-                hint: "Think about the mechanics of the body, the absence of sickness, and your daily routine.",
+                question: "Categorise the following three statements into Physical, Mental, or Social health and well-being:<br>1. Able to control emotions during a close match.<br>2. All body systems working well.<br>3. Having a strong support network and friendships.",
+                markScheme: "<ul><li><strong>1:</strong> Mental health and well-being (1 mark)</li><li><strong>2:</strong> Physical health and well-being (1 mark)</li><li><strong>3:</strong> Social health and well-being (1 mark)</li></ul>",
+                hint: "Match each statement to the correct leg of the 3-legged stool from page 1 of your workbook!",
                 isOfficial: false
             },
             {
                 section: "Health and well-being",
                 marks: 2,
-                question: "Identify two features of social health and well-being.",
-                markScheme: "Any 2 from:<br><ul><li>Essential human needs are met</li><li>Friendship and support</li><li>Having value within society</li><li>Ability to mix with other people</li></ul>",
-                hint: "How does a person interact with their community and close circle?",
+                question: "Explain how suffering from a serious long-term injury could negatively affect both a performer's mental health and their social health.",
+                markScheme: "<ul><li><strong>Mental health (1 mark):</strong> The performer may suffer from high stress, anxiety, or low self-esteem because they cannot compete or play the sport they enjoy.</li><li><strong>Social health (1 mark):</strong> Being side-lined prevents them from training and mixing with teammates, leading to isolation and feeling less valued within the team.</li></ul>",
+                hint: "Remember: if you remove the Physical leg of the 3-legged stool (injury), how does it make the Mental and Social legs wobble?",
                 isOfficial: false
             },
             {
                 section: "Health and well-being",
                 marks: 3,
-                question: "Describe what is meant by 'physical health and well-being' and give one example of how it can be maintained.",
-                markScheme: "<ul><li>All body systems working well / free from illness or injury / able to carry out everyday tasks. (Max 2)</li><li>Example: regular exercise / eating a balanced diet. (Max 1)</li></ul>",
-                hint: "How do you know your body is functioning correctly on a day-to-day basis, and what is one habit to keep it that way?",
-                isOfficial: false
-            },
-            {
-                section: "Health and well-being",
-                marks: 2,
-                question: "Explain how taking part in regular physical activity can improve a person’s social health and well-being.",
-                markScheme: "<ul><li>Helps them to meet essential human needs by having fun/interacting.</li><li>Allows them to make new friends and build support networks.</li><li>Gives them value within society (e.g. taking a role in a team / club secretary).</li></ul>",
-                hint: "Think about the social interactions and roles you take on when joining a sports team.",
+                question: "State three lifestyle choices a person should make to help maintain good health and well-being.",
+                markScheme: "<em>1 mark for each syllabus point:</em><ul><li>live a healthy, active lifestyle (avoiding a sedentary lifestyle / smoking / alcohol);</li><li>eat a balanced diet;</li><li>maintain a level of fitness to help maintain health (and get sufficient sleep/hydration);</li></ul>",
+                hint: "Think of the 'Exit Ticket' from our slides: what are the 3 core things the syllabus says we need to do to maintain health?",
                 isOfficial: false
             },
 
             // ==========================================
-            // Fitness
+            // 2. Fitness (10 Questions)
             // ==========================================
-
-            // Official
             {
                 section: "Fitness",
                 marks: 1,
-                question: "Define the term fitness.",
-                markScheme: "The ability to cope with / meet the demands of the environment.",
-                hint: "Think about how your body handles its daily surroundings and tasks.",
+                question: "Define the term 'fitness'.",
+                markScheme: "<ul><li>The ability to cope with (or meet) the demands of the environment; (1 mark)</li></ul>",
+                hint: "Remember the slide 'Which is the best car to take my bike to the race?' 🚴‍♂️🚗🏎️ It's all about meeting the demands of your...",
                 isOfficial: true
             },
             {
                 section: "Fitness",
-                marks: 1,
-                question: "Complete the following definition of fitness:<br><br>The ability to cope with (or meet) the demands of the _______.",
-                markScheme: "1 mark for: <strong>environment</strong>",
-                hint: "It's the space around you and the tasks you do in it.",
-                isOfficial: true
-            },
-
-            // AI Generated
-            {
-                section: "Fitness",
-                marks: 2,
-                question: "Provide the definition of fitness and state one reason why an office worker might want to improve their fitness.",
-                markScheme: "<ul><li><strong>Definition (1):</strong> The ability to meet/cope with the demands of the environment.</li><li><strong>Reason (1):</strong> So they have energy left after work to do hobbies / less tired climbing stairs / prevent sedentary health issues.</li></ul>",
-                hint: "First, give the exact definition. Then, apply it to someone who sits all day.",
-                isOfficial: false
-            },
-            {
-                section: "Fitness",
-                marks: 2,
-                question: "A performer has a high level of fitness. Describe what this means in terms of their everyday life.",
-                markScheme: "<ul><li>They are able to cope with the demands of their environment.</li><li>They can carry out everyday tasks without getting overly tired / have energy left over for emergencies or leisure.</li></ul>",
-                hint: "Think beyond the sport. How does fitness help them when they aren't on the pitch?",
-                isOfficial: false
-            },
-            {
-                section: "Fitness",
-                marks: 1,
-                question: "State the specific term used to describe 'the ability to cope with or meet the demands of the environment'.",
-                markScheme: "Fitness",
-                hint: "It's a one-word answer. It goes hand-in-hand with 'health'.",
-                isOfficial: false
-            },
-
-            // ==========================================
-            // The relationship between health and fitness
-            // ==========================================
-
-            // Official
-            {
-                section: "The relationship between health and fitness",
-                marks: 2,
-                question: "Suggest two lifestyle choices that can benefit health and fitness.",
-                markScheme: "Any 2 from:<br><ul><li>eat a balanced / healthy diet</li><li>maintain good levels of hydration</li><li>lead an active lifestyle / exercise regularly</li><li>choose not to smoke / do not take drugs</li><li>limit / do not consume alcohol</li><li>ensure good sleeping patterns / adequate amount of sleep</li></ul>",
-                hint: "Think about the daily habits and decisions you make outside of just going to the gym.",
-                isOfficial: true
-            },
-            {
-                section: "The relationship between health and fitness",
-                marks: 2,
-                question: "Explain the relationship between health and fitness.",
-                markScheme: "Any 2 of:<br><ul><li>a decrease in fitness because of ill-health / unable to train (lowers fitness);</li><li>an increase in fitness because of good health / able to train (increases fitness);</li><li>increase in fitness despite ill-health / unhealthy but still able to train and keep fit;</li><li>exercise and fitness can have positive effects on physical / mental / social health;</li></ul>",
-                hint: "Think about how being sick affects your ability to exercise, or how exercising affects your overall well-being.",
-                isOfficial: true
-            },
-            {
-                section: "The relationship between health and fitness",
                 marks: 2,
                 question: "Explain how health can affect fitness levels.",
-                markScheme: "1 mark for each explanation (max 2):<br><ul><li>good health means can train so fitness increases;</li><li>ill health means unable to train so fitness decreases;</li><li>some illnesses still allow training to happen so fitness may still increase;</li><li>smoking damages the lungs so cardiovascular fitness decreases;</li><li>obesity makes it harder to train so fitness decreases;</li><li>poor diet may not provide enough energy for training so fitness decreases;</li><li>good mental health may increase motivation to train so fitness increases;</li></ul>",
-                hint: "Think about what happens to your training routine when you are feeling healthy versus when you are feeling ill.",
+                markScheme: "<em>1 mark for each explanation (Any 2 of):</em><ul><li>good health means a performer can train regularly and harder, so fitness increases;</li><li>ill health / injury means a performer is unable to train (or trains at a lower intensity), so fitness decreases;</li><li>some illnesses / disabilities still allow training to happen, so fitness may still increase despite ill health;</li><li>smoking damages the lungs so cardiovascular fitness decreases;</li><li>obesity makes it harder to train so fitness decreases;</li><li>poor diet may not provide enough energy for training so fitness decreases;</li><li>good mental health may increase motivation to train so fitness increases;</li></ul>",
+                hint: "This was the 'Final Boss!' question in our slides! Use the workbook clue: think about illness, training, and motivation.",
                 isOfficial: true
             },
             {
-                section: "The relationship between health and fitness",
+                section: "Fitness",
                 marks: 2,
-                question: "Explain how exercise and fitness can have two positive effects on physical health and well-being.",
-                markScheme: "Any 2 from:<br><ul><li>exercise improves respiration and circulation, which supports body systems to reduce heart diseases and breathing problems;</li><li>exercise boosts immune system so less likely to suffer from minor illness / disease;</li><li>exercise maintains components of fitness that allow a person to carry out everyday tasks without being too tired;</li></ul>",
-                hint: "Think specifically about the 'physical' pillar. How does working out help your immune system, heart, or daily energy?",
+                question: "Explain the relationship between health and fitness.",
+                markScheme: "<em>1 mark for each point (Max 2):</em><ul><li>Decreased fitness because of ill health: e.g. ill health or injury can lead to an inability to train, which lowers fitness;</li><li>Increased fitness despite ill health: e.g. a person can be unhealthy (such as having a physical impairment, asthma, or mental/social ill health) but still be able to train and increase their fitness;</li><li>Maintaining a good level of fitness through regular exercise helps maintain physical, mental, and social health;</li></ul>",
+                hint: "Think of Benji on the racing trike from our slides ('Is Benji fit? Is Benji healthy?'). Can you be fit without having complete health? What happens to fitness when you get ill?",
                 isOfficial: true
             },
-
-            // AI Generated
             {
-                section: "The relationship between health and fitness",
+                section: "Fitness",
                 marks: 2,
-                question: "Explain, using an example, how a person can have increased fitness despite ill health.",
-                markScheme: "<ul><li>A person can be unhealthy (e.g., suffering from a minor illness/disease) but still be able to train.</li><li><em>Example:</em> Continuing to participate in a training programme while carrying a minor cold, thereby increasing fitness.</li></ul>",
-                hint: "Is it possible to keep training even if you aren't 100% healthy? What happens to your fitness if you do?",
+                question: "Using an example, explain how a performer can have a high level of fitness despite experiencing ill health.",
+                markScheme: "<ul><li>A performer may have a chronic condition, physical disability, or mental/social health issue (meaning they do not have 'complete' WHO health). (1 mark)</li><li>However, if they are still able to train intensely (e.g. a Paralympic trike cyclist or an elite athlete with asthma), they can still meet the physical demands of their sport and have high fitness. (1 mark)</li></ul>",
+                hint: "Think of Benji on the racing trike! Why is he considered extremely fit even if one leg of the health stool is affected?",
                 isOfficial: false
             },
             {
-                section: "The relationship between health and fitness",
-                marks: 3,
-                question: "State three lifestyle choices needed to maintain a good relationship between health and fitness.",
-                markScheme: "<ul><li>Live a healthy, active lifestyle</li><li>Eat a balanced diet</li><li>Maintain a level of fitness to help maintain health</li></ul>",
-                hint: "Think about daily activity, what goes on your plate, and keeping your body conditioned.",
+                section: "Fitness",
+                marks: 2,
+                question: "Using an example, explain how ill health can lead to decreased fitness.",
+                markScheme: "<ul><li>If a performer suffers from an illness (such as flu/infection) or a severe injury, or poor mental health (lack of motivation), they may be unable to train. (1 mark)</li><li>Stopping training leads to reversibility, causing their cardiovascular endurance and muscular strength (fitness) to decrease. (1 mark)</li></ul>",
+                hint: "Remember the slide 'Less of this (Health) -> Means less of this (Training) -> Means less of this (Fitness)'.",
+                isOfficial: false
+            },
+            {
+                section: "Fitness",
+                marks: 2,
+                question: "Explain why the 'demands of the environment' mean that a marathon runner and a 100m sprinter both have high fitness, even though their physical abilities are very different.",
+                markScheme: "<ul><li>Fitness is the ability to cope with the specific demands of your environment. (1 mark)</li><li>The marathon runner's body is adapted to meet the demand of 42km of continuous aerobic running, while the sprinter's body is adapted to meet the demand of 10 seconds of explosive anaerobic power. (1 mark)</li></ul>",
+                hint: "Remember the Ferrari vs the family estate car slide: which car is 'best' depends entirely on whether your environment is a race track or carrying a bike!",
+                isOfficial: false
+            },
+            {
+                section: "Fitness",
+                marks: 2,
+                question: "Explain how poor mental health (such as high anxiety or low self-esteem) can negatively affect a performer's physical fitness.",
+                markScheme: "<ul><li>Poor mental health can reduce a performer's motivation and drive to attend training sessions or exert themselves fully. (1 mark)</li><li>Because they train less frequently or at a lower intensity, their physical fitness levels will decrease. (1 mark)</li></ul>",
+                hint: "Link the 🧠 Mental leg of the stool to motivation to train, and then to fitness levels.",
+                isOfficial: false
+            },
+            {
+                section: "Fitness",
+                marks: 2,
+                question: "Explain why an elite endurance athlete who overtrains and catches a respiratory infection may still be fitter than an average healthy person.",
+                markScheme: "<ul><li>The respiratory infection means the athlete currently has ill health, whereas the average person is healthy (free from disease). (1 mark)</li><li>However, due to years of training adaptations (like cardiac hypertrophy), the athlete's cardiovascular capacity is still much higher, so they can cope with higher physical demands than the average person. (1 mark)</li></ul>",
+                hint: "Health and fitness are linked, but they are NOT the same thing! Compare an elite athlete with a cold to a healthy couch potato.",
+                isOfficial: false
+            },
+            {
+                section: "Fitness",
+                marks: 2,
+                question: "State two ways that maintaining a high level of physical fitness helps to maintain good physical health.",
+                markScheme: "<em>Any 2 of (2 marks):</em><ul><li>Strengthens body systems (such as the cardiovascular and respiratory systems) so they work well;</li><li>Helps maintain a healthy body mass / prevents obesity and related diseases (such as heart disease or diabetes);</li><li>Makes carrying out everyday physical tasks easier without fatigue or injury;</li></ul>",
+                hint: "How does staying fit protect the 💪 Physical leg of your health stool?",
+                isOfficial: false
+            },
+            {
+                section: "Fitness",
+                marks: 2,
+                question: "Explain how a sedentary lifestyle affects both a person's fitness and their long-term health.",
+                markScheme: "<ul><li><strong>Effect on fitness (1 mark):</strong> Lack of physical activity reduces cardiovascular endurance and muscular strength, making it harder to cope with everyday physical demands.</li><li><strong>Effect on health (1 mark):</strong> Unused energy is stored as fat, increasing the risk of obesity, coronary heart disease, and poor mental well-being.</li></ul>",
+                hint: "What happens to your ability to cope with physical demands (fitness) and your body systems/weight (health) if you never exercise?",
                 isOfficial: false
             },
 
             // ==========================================
-            // Diet and energy sources
+            // 3. Nutrients and food sources (10 Questions)
             // ==========================================
+            {
+                section: "Nutrients and food sources",
+                marks: 3,
+                question: "Describe a different function of each of the following macronutrients:<br>1. Carbohydrates<br>2. Fats<br>3. Proteins",
+                markScheme: "<em>1 mark for each different function, for example:</em><ul><li><strong>Carbohydrates:</strong> provides the main / fast-release source of energy (for high-intensity and moderate exercise); (1 mark)</li><li><strong>Fats:</strong> provides insulation / slow-release source of energy (for low-intensity exercise) / energy storage / protects vital organs / provides fat-soluble vitamins; (1 mark)</li><li><strong>Proteins:</strong> for growth and repair of muscle tissues (and can provide a source of energy if carbohydrates and fats are depleted); (1 mark)</li></ul>",
+                hint: "Remember 'Fueling the Machine' from your workbook: 🍞🍝 Carbs = ⚡ Main energy source; 🥑🧈 Fats = 🔋 Energy storage & insulation; 🍗🥚 Proteins = 💪 Growth & repair!",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 4,
+                question: "State one food source for each of the following nutrients:<br>1. Carbohydrates<br>2. Fats<br>3. Proteins",
+                markScheme: "<em>1 mark for each correct food source (3 marks) + 1 mark for naming a specific valid food for all three:</em><ul><li><strong>Carbohydrates:</strong> pasta / rice / bread / potatoes / cereals / bananas;</li><li><strong>Fats:</strong> butter / cheese / oils / nuts / avocado / fatty meats;</li><li><strong>Proteins:</strong> chicken / fish / eggs / red meat / beans / lentils / tofu / nuts;</li></ul>",
+                hint: "Picture the emoji food icons on our Nutrients slide: 🍞🍚🍝🥔 (Carbs), 🥑🥜🧈🫒 (Fats), and 🍗🥚🐟🫘 (Proteins).",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 3,
+                question: "Explain three reasons why water is an essential nutrient for a performer during physical activity.",
+                markScheme: "<em>1 mark for each reason (Max 3):</em><ul><li>Regulates / controls body temperature (by allowing sweating and evaporation to cool the body);</li><li>Replaces fluids lost through sweat during exercise to prevent dehydration;</li><li>Maintains normal body function / maintains blood volume and viscosity so oxygen and nutrients can be transported efficiently to working muscles;</li><li>Prevents muscle cramps, fatigue, nausea, and light-headedness;</li></ul>",
+                hint: "🚰 'Don't forget to hydrate!' Think of the 3 bullet points on our tap slide: 1. Regulates body temperature, 2. Replaces fluids lost through sweat, 3. Maintains normal body function.",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Explain why a weightlifter or sprinter requires a diet rich in protein.",
+                markScheme: "<ul><li>Protein is required for the growth and repair of muscle tissue. (1 mark)</li><li>Heavy weightlifting and sprinting cause micro-tears in muscle fibres; protein repairs this damage and causes muscular hypertrophy, increasing strength and power. (1 mark)</li></ul>",
+                hint: "What does 🍗🥚 Protein do for muscles after heavy training, and how does that help a power athlete?",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Explain why a marathon runner will eat meals high in complex carbohydrates (carbohydrate loading) in the days leading up to a race.",
+                markScheme: "<ul><li>Carbohydrates are digested into glucose and stored as glycogen in the muscles and liver. (1 mark)</li><li>Topping up glycogen stores provides a large supply of slow-release energy for aerobic respiration, delaying fatigue ('hitting the wall') during the long race. (1 mark)</li></ul>",
+                hint: "Think of the 'Bank of Energy' slide: why does an endurance runner want to top up their 'Banked Savings' (glycogen) before a 42km race?",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 3,
+                question: "Vitamins are important micronutrients in a balanced diet. State the main function and one food source for:<br>1. Vitamin A<br>2. Vitamin C<br>3. Vitamin D",
+                markScheme: "<ul><li><strong>Vitamin A:</strong> Healthy skin and eyesight (night vision) — found in carrots / dairy / oily fish. (1 mark)</li><li><strong>Vitamin C:</strong> Healthy gums, skin, and immune system (healing) — found in oranges / citrus fruits / broccoli. (1 mark)</li><li><strong>Vitamin D:</strong> Calcium absorption for healthy, strong bones — found in milk/dairy, oily fish, and sunlight. (1 mark)</li></ul>",
+                hint: "Decode the emoji trios from your workbook: 👀✨🥕 (Vitamin A), 😁🛡️🍊 (Vitamin C), and 🦴☀️🥛 (Vitamin D)!",
+                isOfficial: false
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Explain how fats are used as an energy source differently from carbohydrates during exercise.",
+                markScheme: "<ul><li>Carbohydrates are the main energy source used for both moderate and high-intensity exercise because they release energy quickly. (1 mark)</li><li>Fats provide a slow-release, concentrated source of energy used mainly at rest and during low-intensity, long-duration aerobic exercise. (1 mark)</li></ul>",
+                hint: "Compare how fast energy is released from 🍞 Carbohydrates vs 🥑 Fats, and which exercise intensity uses each.",
+                isOfficial: false
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Suggest two negative effects on performance if an athlete becomes dehydrated during a long match in hot weather.",
+                markScheme: "<em>Any 2 of (2 marks):</em><ul><li>Blood thickens (viscosity increases), slowing blood flow and oxygen delivery to working muscles;</li><li>Body temperature rises (overheating) because the performer cannot sweat effectively;</li><li>The performer experiences early fatigue, muscle cramps, nausea, or light-headedness / loss of concentration;</li></ul>",
+                hint: "What goes wrong in the body when you don't replace fluids lost through sweat?",
+                isOfficial: true
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Other than providing energy, state two functions of fats in the body of a swimmer.",
+                markScheme: "<ul><li>Provides thermal insulation to help keep the body warm in cold water (and aids buoyancy). (1 mark)</li><li>Protects vital internal organs and provides fat-soluble vitamins (A, D, E, K). (1 mark)</li></ul>",
+                hint: "Think of a channel swimmer in cold water: besides energy storage, what else does a layer of fat do?",
+                isOfficial: false
+            },
+            {
+                section: "Nutrients and food sources",
+                marks: 2,
+                question: "Explain why a balanced diet is essential for an athlete in training.",
+                markScheme: "<ul><li>It provides the right proportions of carbohydrates and fats to meet the high energy demands of training. (1 mark)</li><li>It provides proteins for muscle repair/growth, vitamins/minerals to keep body systems healthy, and water for hydration. (1 mark)</li></ul>",
+                hint: "Combine the roles of fuel (carbs/fats), repair (protein), and hydration/health (water/vitamins).",
+                isOfficial: false
+            },
 
-            // Official
+            // ==========================================
+            // 4. Energy balance and needs (10 Questions)
+            // ==========================================
             {
-                section: "Diet and energy sources",
+                section: "Energy balance and needs",
                 marks: 3,
-                question: "State a different food source that is rich in each of the following nutrients: Carbohydrates, Proteins, Fats.",
-                markScheme: "1 mark for naming an appropriate food source for each nutrient:<br><ul><li><strong>Carbohydrates:</strong> bread / potatoes / pasta / rice</li><li><strong>Protein:</strong> eggs / fish / pulses / chicken / meat</li><li><strong>Fats:</strong> butter / oils / avocado / nuts / cheese</li></ul>",
-                hint: "Think about everyday meals: what makes up the starchy base, the meat/alternative, and the cooking oil or dairy?",
+                question: "Explain what is meant by the term 'energy balance' and state the effect of:<br>1. Positive energy balance<br>2. Negative energy balance",
+                markScheme: "<ul><li><strong>Energy balance (1 mark):</strong> The relationship between the energy consumed in food ('Energy In') and the energy expended through basal metabolic rate and physical activity ('Energy Out').</li><li><strong>Positive energy balance (1 mark):</strong> Energy In is greater than Energy Out (&gt;), resulting in unused energy being stored as fat and weight gain (which can lead to obesity).</li><li><strong>Negative energy balance (1 mark):</strong> Energy In is less than Energy Out (&lt;), resulting in the body using stored fat/glycogen and weight loss.</li></ul>",
+                hint: "Think of the seesaw scales in our slides: 📈 Positive (🍔 Energy In > 🏃 Energy Out), 📉 Negative (🍔 Energy In < 🏃 Energy Out), and ⚖️ Neutral (In = Out).",
                 isOfficial: true
             },
             {
-                section: "Diet and energy sources",
+                section: "Energy balance and needs",
+                marks: 3,
+                question: "Explain why the daily energy requirements of a performer differ depending on:<br>1. Gender (males compared with females)<br>2. Age (teenagers compared with children)<br>3. Lifestyle (active compared with sedentary)",
+                markScheme: "<ul><li><strong>Males vs Females (1 mark):</strong> Males generally require more energy than females because they typically have a larger body mass and a higher proportion of muscle mass (higher basal metabolic rate).</li><li><strong>Teenagers vs Children (1 mark):</strong> Teenagers require more energy than young children because they are larger and undergoing rapid growth spurts and hormonal development.</li><li><strong>Active vs Sedentary (1 mark):</strong> Active lifestyles require more energy than sedentary lifestyles because skeletal muscles contract more frequently and intensely, burning more glucose.</li></ul>",
+                hint: "Use the 🎂 🚻 🏃 emoji hint from our slide ranking Ethan, Sofia, Lucas, and Mia!",
+                isOfficial: true
+            },
+            {
+                section: "Energy balance and needs",
                 marks: 4,
-                question: "Compare the nutrient requirements of an elite shot putter with the nutrient requirements of an elite long-distance runner.",
-                markScheme: "1 mark for each correct comparison (Max 4).<br><ul><li>The runner may have a higher intake of carbohydrates as they need a greater energy store for a longer duration.</li><li>The runner may carbo-load on carbohydrates in the week before an event to increase glycogen stores.</li><li>The shot putter may consume higher levels of protein to build muscle and increase power.</li><li>The explosive nature of the shot putter's training causes high muscle damage, needing more protein to aid repair.</li><li>The runner may need fats as an energy source to use when carbohydrates are used up.</li></ul>",
-                hint: "Think about what a marathon runner needs to keep going for 2 hours versus what a thrower needs to build explosive muscle.",
-                isOfficial: true
+                question: "Four individuals have different daily energy requirements:<br>• Lucas (Age 10, Male, Moderately active)<br>• Mia (Age 10, Female, Sedentary)<br>• Sofia (Age 15, Female, Very active)<br>• Ethan (Age 15, Male, Very active)<br>Rank them from MOST energy required to LEAST energy required, and justify your top and bottom choices.",
+                markScheme: "<ul><li><strong>Correct Ranking (2 marks):</strong> 1. Ethan &rarr; 2. Sofia &rarr; 3. Lucas &rarr; 4. Mia.</li><li><strong>Justification for Ethan (1 mark):</strong> Ethan needs the most energy because he is a teenager (growing), male (larger muscle mass), and has a very active lifestyle.</li><li><strong>Justification for Mia (1 mark):</strong> Mia needs the least energy because she is a young child (smaller), female, and has a sedentary (inactive) lifestyle.</li></ul>",
+                hint: "This is the exact ranking challenge from your workbook! Use 🎂 Age (15 vs 10), 🚻 Sex (Male vs Female), and 🏃 Activity level (Very active vs Sedentary).",
+                isOfficial: false
             },
             {
-                section: "Diet and energy sources",
-                marks: 3,
-                question: "If a performer does not drink enough fluids, dehydration can occur. Describe three effects of dehydration on a performer.",
-                markScheme: "Any 3 from:<br><ul><li>muscle weakness / fatigue / cramps</li><li>dizziness / fainting / headache / nausea</li><li>loss of concentration / slower reaction time / poor decision making</li><li>body less able to regulate temperature / dangers of heat exhaustion or heat stroke</li><li>increase in blood viscosity (thickness) / increase in heart rate as the heart works harder</li></ul>",
-                hint: "Think about how your head, muscles, and heart feel when you are really thirsty and sweating on a hot day.",
-                isOfficial: true
-            },
-            {
-                section: "Diet and energy sources",
+                section: "Energy balance and needs",
                 marks: 2,
-                question: "Describe, using a named physical activity, two possible negative physical effects for a performer if they do not achieve a balanced diet.",
-                markScheme: "2 marks for explaining effects applied to an activity (e.g., Rugby, Football, Gymnastics):<br><ul><li>increase in weight / obesity so the performer tires more easily and cannot last the whole game.</li><li>loss of muscle mass / strength so the performer cannot hold onto the ball or resist a tackle.</li><li>lack of energy / glycogen stores so the performer cannot sustain the activity or repeat sprints.</li></ul>",
-                hint: "Pick a sport. What happens to the player physically if they eat way too much junk food, or way too little protein/carbs?",
+                question: "Describe two factors, other than the type of physical activity, that affect the daily energy needs of a performer.",
+                markScheme: "<em>1 mark for each correct description (Any 2 of):</em><ul><li><strong>gender / sex:</strong> males generally need more energy than females (due to greater muscle mass / body size);</li><li><strong>age:</strong> teenagers need more energy than young children (for growth) / elderly people generally need less energy than young adults;</li><li><strong>lifestyle / occupation:</strong> an active lifestyle or physically demanding job requires more energy than a sedentary lifestyle or desk job;</li><li><strong>body size / basal metabolic rate (BMR):</strong> a taller, heavier, or more muscular person needs more energy at rest;</li></ul>",
+                hint: "Think of 🎂 Age, 🚻 Sex, and 🏃 Lifestyle/Occupation.",
                 isOfficial: true
             },
             {
-                section: "Diet and energy sources",
-                marks: 4,
-                question: "Carbohydrates are an important nutrient in a balanced diet. State two other nutrients and describe a different function of each nutrient.",
-                markScheme: "1 mark for stating each nutrient (2 marks max). 1 mark for describing each function (2 marks max).<br><ul><li><strong>Fats:</strong> provide protection for major organs / helps maintain the body temperature / acts as an energy source / store of vitamins;</li><li><strong>Protein:</strong> aids the development of muscle tissue / helps build muscle size / helps repair muscle tissue / can be used as an energy source;</li><li><strong>Water:</strong> prevents dehydration / replaces lost water / reduces the viscosity of the blood / allows the body to control body temperature;</li></ul>",
-                hint: "Think about what builds muscle, what insulates the body, or what keeps you hydrated.",
-                isOfficial: true
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 3,
-                question: "Explain why water is a vital part of a marathon runner's diet.",
-                markScheme: "Any 3 from:<br><ul><li>prevents dehydration;</li><li>regulates body temperature / reduces the possibility of heat exhaustion;</li><li>assists in removing waste products;</li><li>carries nutrients to muscles;</li><li>delays fatigue;</li><li>maintains mental alertness / improves decision making;</li><li>essential to aid recovery;</li><li>aids digestion;</li></ul>",
-                hint: "Think about what happens when you sweat and how fluid affects your temperature and brain.",
-                isOfficial: true
-            },
-            {
-                section: "Diet and energy sources",
+                section: "Energy balance and needs",
                 marks: 2,
-                question: "Explain why different people may have different energy needs.",
-                markScheme: "Any 2 from:<br><ul><li>males generally require more energy than females due to having bigger bodies;</li><li>teenagers generally require more energy than younger children as they are more active / are growing at a faster rate;</li><li>active people require more energy than those with a sedentary lifestyle as more energy is required when involved in physical activity;</li><li>performers with larger bodies require more energy than those with smaller bodies as more energy is required to keep warm;</li></ul>",
-                hint: "Compare a teenager vs a child, a male vs female, or an athlete vs a couch potato.",
+                question: "Explain what happens to unused energy when a person consistently maintains a positive energy balance, and state the condition this can cause.",
+                markScheme: "<ul><li>Unused energy (excess glucose) is converted and stored by the body as fat (adipose tissue). (1 mark)</li><li>Over time, this causes excessive weight gain and can lead to <strong>obesity</strong>. (1 mark)</li></ul>",
+                hint: "In our 'Bank of Energy' diagram, what happens when the glycogen bank in the liver and muscles is already full?",
                 isOfficial: true
             },
             {
-                section: "Diet and energy sources",
-                marks: 1,
-                question: "State what happens to a performer when energy input exceeds energy output.",
-                markScheme: "Gain weight / become overweight / obese / fat;",
-                hint: "Think about the bank account: what happens if you put in more than you take out?",
+                section: "Energy balance and needs",
+                marks: 2,
+                question: "What is Basal Metabolic Rate (BMR), and approximately what percentage of a person's total daily 'Energy Out' does it account for?",
+                markScheme: "<ul><li><strong>Definition (1 mark):</strong> Basal Metabolic Rate (BMR) is the minimum energy your body uses at complete rest just to stay alive (for breathing, blood circulation, and basic cell work).</li><li><strong>Percentage (1 mark):</strong> Approximately <strong>70%</strong> of total daily energy expenditure (with ~20% from physical activity/exercise and ~10% from the thermic effect of digesting food).</li></ul>",
+                hint: "Think of the stacked bar chart on our 'Energy Out' slide: BMR is the biggest block at the bottom just keeping you alive!",
+                isOfficial: false
+            },
+            {
+                section: "Energy balance and needs",
+                marks: 2,
+                question: "Explain why a Tour de France cyclist needs to consume up to 6,000–8,000 calories per day during a race to maintain a neutral energy balance.",
+                markScheme: "<ul><li>To maintain a neutral energy balance (and stable body weight), 'Energy In' from food must equal 'Energy Out'. (1 mark)</li><li>Because cycling for 5 hours a day expends a massive amount of energy ('Energy Out'), they must consume an equally massive amount of food ('Energy In') so they do not enter a negative energy balance and lose muscle/fat stores. (1 mark)</li></ul>",
+                hint: "Use the Neutral Energy Balance equation: 🍔 Energy In = 🏃 Energy Out.",
+                isOfficial: false
+            },
+            {
+                section: "Energy balance and needs",
+                marks: 2,
+                question: "Suggest why a heavyweight boxer trying to 'make weight' for a lower weight category might intentionally use a negative energy balance during training.",
+                markScheme: "<ul><li>In a negative energy balance, 'Energy In' (calories eaten) is less than 'Energy Out' (calories burned in training). (1 mark)</li><li>This forces the body to break down stored fat for energy, resulting in weight loss so the boxer can qualify for the lighter weight division. (1 mark)</li></ul>",
+                hint: "What is the outcome of a 📉 Negative Energy Balance (🍔 Energy In < 🏃 Energy Out)?",
+                isOfficial: false
+            },
+            {
+                section: "Energy balance and needs",
+                marks: 3,
+                question: "Suggest three negative effects that obesity can have on a person's health and their ability to participate in physical activity.",
+                markScheme: "<em>1 mark for each effect (Max 3):</em><ul><li><strong>Physical health:</strong> Increases the risk of coronary heart disease, high blood pressure, diabetes, and places extra stress on joints (increasing injury risk);</li><li><strong>Physical fitness / performance:</strong> Extra body fat acts as dead weight, reducing cardiovascular endurance, speed, agility, and flexibility (making it harder to train);</li><li><strong>Mental / Social health:</strong> Can lower self-esteem/confidence and make a person feel self-conscious about mixing with others in sport;</li></ul>",
+                hint: "Think about how carrying excess body fat affects your heart/joints (Physical), your speed/stamina (Fitness), and your confidence (Mental/Social).",
                 isOfficial: true
             },
             {
-                section: "Diet and energy sources",
+                section: "Energy balance and needs",
+                marks: 2,
+                question: "An elite athlete retires from competitive sport but continues to eat the exact same diet they ate while training. Explain what will happen to their body mass.",
+                markScheme: "<ul><li>Because they have stopped training, their 'Energy Out' decreases significantly while their 'Energy In' remains high, creating a positive energy balance. (1 mark)</li><li>The unused energy will be stored as fat, causing their body mass to increase (and potentially leading to obesity). (1 mark)</li></ul>",
+                hint: "What happens to the energy balance seesaw when 🏃 Energy Out drops but 🍔 Energy In stays high?",
+                isOfficial: true
+            },
+
+            // ==========================================
+            // 5. Energy storage and respiration (10 Questions)
+            // ==========================================
+            {
+                section: "Energy storage and respiration",
                 marks: 2,
                 question: "Describe how and where glucose is stored in the body.",
-                markScheme: "1 mark for how glucose is stored, 1 mark for where.<br><ul><li><strong>How (1 of):</strong> as glycogen; (excess glucose is stored) as fat;</li><li><strong>Where (1 of):</strong> muscles; liver;</li></ul>",
-                hint: "Think about the 'savings account' for energy and the organs/tissues that hold it.",
+                markScheme: "<em>1 mark for how glucose is stored. 1 mark for where glucose is stored.</em><ul><li><strong>How:</strong> as glycogen (or excess glucose is stored as fat); (1 mark)</li><li><strong>Where:</strong> in the muscles and the liver; (1 mark)</li></ul>",
+                hint: "Think of 'The Bank of Energy: Cash vs. Savings' in your workbook! Glucose is converted into 'Banked Savings' called G_______, kept in two places: M______ and L____.",
                 isOfficial: true
             },
             {
-                section: "Diet and energy sources",
+                section: "Energy storage and respiration",
                 marks: 2,
-                question: "Explain why energy balance must be suitable for a performer.",
-                markScheme: "1 mark for each explanation.<br><ul><li>intake matches expenditure: maintain body weight / for good health / meet the physical demands of the activity;</li><li>intake exceeds expenditure: leads to weight gain / obesity / loss of flexibility / reduction in performance;</li><li>expenditure exceeds intake: leads to weight loss / tiredness / loss of muscle mass / prone to illness / injury;</li></ul>",
-                hint: "What happens if they eat too much? Too little? Just right?",
-                isOfficial: true
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 2,
-                question: "Suggest why a protein-rich diet is important when weight training.",
-                markScheme: "1 mark for each suggestion (max 2):<br><ul><li>muscle repair;</li><li>builds muscle and lean tissue (growth);</li><li>strengthens bones;</li><li>a single session can last a long time / could get hungry;</li></ul>",
-                hint: "Think about what happens to muscle fibers when you lift heavy weights.",
-                isOfficial: true
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 1,
-                question: "Fats are another component of a performer’s diet. Describe one function of fats.",
-                markScheme: "1 from:<br><ul><li>provides a source of energy / an energy store;</li><li>for insulation / to maintain body temperature;</li><li>protects internal organs;</li><li>contains/stores vitamins;</li><li>can provide buoyancy;</li></ul>",
-                hint: "Think about insulation, long-term fuel, and organ protection.",
-                isOfficial: true
-            },
-
-            // AI Generated
-            {
-                section: "Diet and energy sources",
-                marks: 2,
-                question: "Explain the difference between aerobic and anaerobic respiration.",
-                markScheme: "<ul><li><strong>Aerobic respiration</strong> requires oxygen to release energy from glucose (used in low-moderate intensity, long duration exercise).</li><li><strong>Anaerobic respiration</strong> does not require oxygen and produces lactic acid (used in high intensity, short duration exercise).</li></ul>",
-                hint: "Think about which one uses oxygen and which one creates a burning sensation in the muscles.",
+                question: "Define 'respiration' and explain why it is essential for physical activity.",
+                markScheme: "<ul><li><strong>Definition (1 mark):</strong> Respiration is the chemical process in muscle cells that releases usable energy from glucose.</li><li><strong>Importance (1 mark):</strong> Muscles require this energy to contract, enabling movement and exercise.</li></ul>",
+                hint: "Remember our slide title: '⚡ Respiration (not breathing!)'—what does it release from glucose, and why do muscles need it?",
                 isOfficial: false
             },
             {
-                section: "Diet and energy sources",
-                marks: 3,
-                question: "Identify three comparisons where performers would have different energy needs.",
-                markScheme: "<ul><li>Males compared with females</li><li>Teenagers compared with children</li><li>Active lifestyles compared with sedentary lifestyles</li></ul>",
-                hint: "Think about gender, age groups, and how much people move.",
-                isOfficial: false
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 2,
-                question: "Explain what happens to unused energy in the body and the potential long-term effect.",
-                markScheme: "<ul><li>Unused energy is stored as fat.</li><li>This could eventually cause obesity.</li></ul>",
-                hint: "If the 'energy in' is higher than the 'energy out', where does it go and what condition can it lead to?",
-                isOfficial: false
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 3,
-                question: "State what glucose can be converted into and identify the two places it is stored in the body.",
-                markScheme: "<ul><li>Converted to glycogen</li><li>Stored in the muscles</li><li>Stored in the liver</li></ul>",
-                hint: "Think about the 'savings account' for energy. What is the new name for the glucose, and which two organs/tissues hold it?",
-                isOfficial: false
-            },
-            {
-                section: "Diet and energy sources",
-                marks: 1,
-                question: "State the fuel source used by muscle cells to release energy during respiration.",
-                markScheme: "1 mark for identifying glucose.",
-                hint: "What sweet substance do we break down for energy?",
-                isOfficial: false
-            },
-            {
-                section: "Diet and energy sources",
+                section: "Energy storage and respiration",
                 marks: 4,
-                question: "Describe the process of aerobic respiration.",
-                markScheme: "Award 1 mark for each of the following points, up to a maximum of 4 marks:<br><ul><li>Uses oxygen from the bloodstream.</li><li>Breaks down glucose (or glycogen/carbohydrates).</li><li>Produces/releases energy for muscle contraction.</li><li>Creates carbon dioxide as a waste product.</li><li>Creates water as a waste product.</li></ul><br><em>Note: Accept the full word equation (Glucose + Oxygen &rarr; Energy + Carbon Dioxide + Water) for up to 3 marks.</em>",
-                hint: "What goes in, and what comes out? Think of the word equation.",
+                question: "Using the 'Bank of Energy' pathway, fill in the cuatro missing stages of how the body processes carbohydrates:<br>1. Carbohydrates are digested and converted into .................... (for immediate use).<br>2. Excess is converted and stored as .................... .<br>3. This is stored in the .................... and .................... .<br>4. If the bank is full, excess energy is stored as fat, which can lead to .................... .",
+                markScheme: "<ul><li><strong>1:</strong> Glucose (1 mark)</li><li><strong>2:</strong> Glycogen (1 mark)</li><li><strong>3:</strong> Muscles and Liver (1 mark for both)</li><li><strong>4:</strong> Obesity (1 mark)</li></ul>",
+                hint: "This is the exact fill-in-the-blanks flowchart from your workbook and slides ('Is our body literally full of hamburgers and chips?')!",
                 isOfficial: false
             },
             {
-                section: "Diet and energy sources",
+                section: "Energy storage and respiration",
                 marks: 3,
-                question: "Describe the process of aerobic respiration and give an example of a sporting event where it is the primary energy system.",
-                markScheme: "Award 1 mark for each of the following points, up to a maximum of 3 marks:<br><ul><li>Glucose and oxygen react to release energy.</li><li>Produces carbon dioxide and water as waste products.</li><li>1 mark for an appropriate long-duration, lower-intensity sporting example (e.g., a marathon, long-distance cycling, triathlon).</li></ul>",
-                hint: "What are the inputs and outputs, and what kind of events last a long time?",
+                question: "Identify the main type of respiration that releases energy throughout an endurance activity, and state the summary equation for this process.",
+                markScheme: "<ul><li><strong>Type of respiration:</strong> Aerobic respiration; (1 mark)</li><li><strong>Equation:</strong> glucose + oxygen &rarr; carbon dioxide + water (2 marks: 1 mark for left side, 1 mark for right side).</li></ul>",
+                hint: "🫁 Endurance activities use oxygen! Write out the full equation from your workbook table.",
+                isOfficial: true
+            },
+            {
+                section: "Energy storage and respiration",
+                marks: 2,
+                question: "Outline how energy is released during a 100-metre sprint, including the summary equation.",
+                markScheme: "<ul><li>Released via <strong>anaerobic respiration</strong> (without oxygen) for high-intensity, short-duration effort; (1 mark)</li><li><strong>Equation:</strong> glucose &rarr; lactic acid (+ energy); (1 mark)</li></ul>",
+                hint: "🔥 High intensity, short duration, no oxygen! What is the 2-part equation?",
+                isOfficial: true
+            },
+            {
+                section: "Energy storage and respiration",
+                marks: 2,
+                question: "Explain what happens to stored glycogen when a performer begins a long-distance run.",
+                markScheme: "<ul><li>As blood glucose is used up by working muscles, glycogen stored in the muscles and liver is broken back down into glucose. (1 mark)</li><li>This glucose is then used in aerobic respiration (with oxygen) to release energy for continued muscular contractions. (1 mark)</li></ul>",
+                hint: "When you spend all your 'Ready Cash' (glucose), how do you withdraw your 'Banked Savings' (glycogen)?",
                 isOfficial: false
             },
             {
-                section: "Diet and energy sources",
+                section: "Energy storage and respiration",
+                marks: 4,
+                question: "Compare aerobic respiration and anaerobic respiration by stating whether each requires oxygen, the intensity and duration of exercise each supports, and one sporting example of each.",
+                markScheme: "<ul><li><strong>Requires Oxygen (1 mark):</strong> Aerobic requires oxygen <strong>WHEREAS</strong> anaerobic does not require oxygen.</li><li><strong>Intensity (1 mark):</strong> Aerobic supports low-to-moderate intensity <strong>WHEREAS</strong> anaerobic supports high-intensity exercise.</li><li><strong>Duration (1 mark):</strong> Aerobic can continue for a long duration <strong>WHEREAS</strong> anaerobic can only last for a short duration (due to lactic acid build-up).</li><li><strong>Sporting Examples (1 mark):</strong> Aerobic = marathon running / long-distance cycling; Anaerobic = 100m sprint / shot put.</li></ul>",
+                hint: "Picture the 2-column comparison table at the bottom of your workbook (🫁 Aerobic vs 🔥 Anaerobic)!",
+                isOfficial: true
+            },
+            {
+                section: "Energy storage and respiration",
                 marks: 2,
-                question: "A marathon runner is jogging at a steady pace. Complete the word equation below to show how their muscle cells are producing energy:<br><br>_______ + Oxygen &rarr; _______ + Carbon Dioxide + Water",
-                markScheme: "<ul><li>1 mark for <strong>Glucose</strong></li><li>1 mark for <strong>Energy</strong></li></ul>",
-                hint: "What fuel goes in, and what is the main thing the muscles need to keep moving?",
+                question: "Explain the difference between 'respiration' and 'breathing' (ventilation).",
+                markScheme: "<ul><li><strong>Breathing (ventilation):</strong> The physical/mechanical process of inhaling air (oxygen) into the lungs and exhaling carbon dioxide. (1 mark)</li><li><strong>Respiration:</strong> The chemical reaction inside muscle cells that releases energy from glucose (either aerobically with oxygen or anaerobically without oxygen). (1 mark)</li></ul>",
+                hint: "Why did our slide say '⚡ Respiration (not breathing!)'? One happens mechanically in the lungs; the other happens chemically in the muscle cells!",
                 isOfficial: false
+            },
+            {
+                section: "Energy storage and respiration",
+                marks: 2,
+                question: "During a netball or football match, a player uses both aerobic and anaerobic respiration. Give one example from the match of when they use each.",
+                markScheme: "<ul><li><strong>Aerobic (1 mark):</strong> Jogging steadily around the court/pitch to maintain positional space and recover between plays over the full match.</li><li><strong>Anaerobic (1 mark):</strong> Sprinting explosively into space to receive a pass or jumping high to intercept/rebound the ball.</li></ul>",
+                hint: "When in a team game is the intensity low/steady (🫁), and when is it an explosive all-out burst (🔥)?",
+                isOfficial: true
+            },
+            {
+                section: "Energy storage and respiration",
+                marks: 3,
+                question: "Complete the following sentences about food, fuel, and respiration:<br>1. Muscle cells release energy from glucose in a process called ............................. .<br>2. Some glucose is converted to ............................. and stored in the muscles and liver.<br>3. Unused energy is stored as ............................. , which could cause obesity.",
+                markScheme: "<ul><li><strong>1:</strong> respiration (1 mark)</li><li><strong>2:</strong> glycogen (1 mark)</li><li><strong>3:</strong> fat (1 mark)</li></ul>",
+                hint: "These are the exact three bullet points from the Cambridge 2.2 syllabus box on Diet and Energy Sources!",
+                isOfficial: true
             }
         ];
 
@@ -556,7 +627,7 @@
             "How could you have improved your answer to guarantee full marks?",
             "What was the trickiest part of this question for you?",
             "Which part of the mark scheme did you completely forget to include?",
-            "How did you do? Are you confident to move on, or do you need to revisit this topic?"
+            "How did you do? Give yourself an honest rating: 🤩 (Could teach it), 👍 (Mostly got it), or 📚 (Need to revise)!"
         ];
 
         let currentQuestion = null;
@@ -662,7 +733,7 @@
             } else {
                 trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
                 trafficDot.classList.add('bg-amber-500');
-                trafficText.innerHTML = "Syllabus-aligned but AI-generated. Be extra sceptical at times—always check against course material and ask each other and Coach Jamie if you have doubts.";
+                trafficText.innerHTML = "Syllabus-aligned & Workbook-matched. Always check against course material and ask each other and Coach Jamie if you have doubts.";
             }
 
             // Reset UI
@@ -698,15 +769,16 @@
                 return;
             }
 
-            // Word count validation (approx > 50% of mark scheme words)
+            // Word count validation (scales reasonably with question marks)
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = currentQuestion.markScheme;
             const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
             
             const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
             const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+            const expectedMinWords = Math.min(currentQuestion.marks * 6, msWordCount * 0.4);
 
-            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+            if (!bypassActive && (answerWordCount < expectedMinWords)) {
                 showModal(
                     "Are you sure?", 
                     "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
