@@ -96,7 +96,7 @@
             <div class="w-full sm:w-2/3">
                 <label for="section-select" class="block text-sm font-bold text-cdlBlue mb-2">Select Syllabus Section:</label>
                 <select id="section-select" class="w-full h-12 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cdlBrightBlue text-base cursor-pointer">
-                    <option value="all">All Sections (Random)</option>
+                    <option value="all">All Sections (Random - 54 Questions)</option>
                     <optgroup label="Respiratory System">
                         <option value="Pathway of air">&nbsp;&nbsp;&nbsp;&nbsp;Pathway of air</option>
                         <option value="Gaseous exchange at the alveoli">&nbsp;&nbsp;&nbsp;&nbsp;Gaseous exchange at the alveoli</option>
@@ -129,7 +129,7 @@
             </div>
 
             <div class="flex justify-between items-start pt-2">
-                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
+                <h3 class="text-xl font-bold text-cdlBlue leading-snug" id="display-question">Question goes here</h3>
                 <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
             </div>
             
@@ -205,28 +205,28 @@
             // RESPIRATORY SYSTEM
             // ==========================================
 
-            // Pathway of air
+            // 1. Pathway of air (5 Questions)
             {
                 section: "Pathway of air",
                 marks: 2,
-                question: "Complete the following pathway of air into the body: <br>1. nose or mouth <br>2. trachea <br>3. _______ <br>4. _______ <br>5. alveoli",
-                markScheme: "1 mark for each: <br><ul><li>3: bronchi</li><li>4: bronchioles</li></ul>",
-                hint: "Think of a tree. The trachea is the trunk, which splits into two large branches, which then split into many smaller branches.",
+                question: "Complete the following pathway of air into the body:<br>1. nose or mouth<br>2. trachea<br>3. _______<br>4. _______<br>5. alveoli",
+                markScheme: "<em>1 mark for each:</em><ul><li><strong>3:</strong> bronchi;</li><li><strong>4:</strong> bronchioles;</li></ul>",
+                hint: "Think of an upside-down tree: the trachea is the trunk, which splits into two large branches (3), which then split into many smaller twigs (4).",
                 isOfficial: true
             },
             {
                 section: "Pathway of air",
                 marks: 1,
-                question: "Which sequence correctly shows the pathway of air into the lungs?<br><br>A: trachea &rarr; mouth/nasal passage &rarr; bronchioles &rarr; bronchi<br>B: mouth/nasal passage &rarr; bronchi &rarr; trachea &rarr; bronchioles<br>C: mouth/nasal passage &rarr; trachea &rarr; bronchi &rarr; bronchioles",
-                markScheme: "1 mark for: <strong>C</strong>",
-                hint: "Air goes in the mouth, down the windpipe, splits into the two main tubes, then into the smaller tubes.",
+                question: "Which letter, A, B or C, correctly shows the pathway of air into the lungs?<br><br>A: trachea &rarr; mouth/nasal passage &rarr; bronchioles &rarr; bronchi<br>B: mouth/nasal passage &rarr; bronchi &rarr; trachea &rarr; bronchioles<br>C: mouth/nasal passage &rarr; trachea &rarr; bronchi &rarr; bronchioles",
+                markScheme: "<em>1 mark for:</em><br><strong>C;</strong>",
+                hint: "Air goes in the mouth/nose, down the windpipe (trachea), splits into the two main tubes (bronchi), then into the smaller tubes (bronchioles).",
                 isOfficial: true
             },
             {
                 section: "Pathway of air",
                 marks: 3,
-                question: "Identify the structures A, B and C to complete the pathway of air into the body:<br><br>mouth/nasal passage &rarr; A &rarr; bronchi &rarr; B &rarr; C",
-                markScheme: "1 mark for each:<br><ul><li><strong>A:</strong> trachea</li><li><strong>B:</strong> bronchioles</li><li><strong>C:</strong> alveoli</li></ul>",
+                question: "Identify the structures A, B and C to complete the pathway of air into the body:<br><br>mouth/nasal passage &rarr; <strong>A</strong> &rarr; bronchi &rarr; <strong>B</strong> &rarr; <strong>C</strong>",
+                markScheme: "<em>1 mark for each:</em><ul><li><strong>A:</strong> trachea;</li><li><strong>B:</strong> bronchioles;</li><li><strong>C:</strong> alveoli;</li></ul>",
                 hint: "A is the windpipe. B are the small branches. C are the tiny air sacs where gas exchange happens.",
                 isOfficial: true
             },
@@ -234,142 +234,182 @@
                 section: "Pathway of air",
                 marks: 1,
                 question: "Identify the structure that connects the trachea to the bronchioles.",
-                markScheme: "Bronchus / Bronchi (1 mark).",
-                hint: "The windpipe splits into two of these before becoming smaller branches.",
+                markScheme: "Bronchus / bronchi; (1 mark)",
+                hint: "The windpipe splits into two of these main tubes (one entering each lung) before branching into smaller bronchioles.",
                 isOfficial: false
             },
             {
                 section: "Pathway of air",
                 marks: 1,
                 question: "Describe the pathway of air from the bronchioles to the site of gaseous exchange.",
-                markScheme: "Air travels from the bronchioles into the alveoli. (1 mark)",
-                hint: "What are the tiny air sacs at the very end of the pathway called?",
+                markScheme: "Air travels from the bronchioles directly into the alveoli; (1 mark)",
+                hint: "What are the tiny air sacs at the very end of the respiratory pathway called?",
                 isOfficial: false
             },
 
-            // Gaseous exchange at the alveoli
+            // 2. Gaseous exchange at the alveoli (5 Questions)
             {
                 section: "Gaseous exchange at the alveoli",
                 marks: 4,
                 question: "State and explain two characteristics of alveoli that assist gaseous exchange.",
-                markScheme: "1 mark for each characteristic stated, 1 mark for each explanation.<br><ul><li><strong>Characteristic:</strong> one-cell thick;<br><strong>Explanation:</strong> small distance for oxygen / carbon dioxide / gases to pass through faster.</li><li><strong>Characteristic:</strong> surrounded by capillaries / blood supply;<br><strong>Explanation:</strong> increases the amount of blood available for the transfer of gases / maintains concentration gradient.</li><li><strong>Characteristic:</strong> large surface area / large number of alveoli;<br><strong>Explanation:</strong> large area for gas exchange / diffusion to take place at / more gases can pass through.</li><li><strong>Characteristic:</strong> walls of alveoli are moist;<br><strong>Explanation:</strong> gases dissolve to pass through.</li></ul>",
-                hint: "Think about the structure of the walls, what surrounds them, and how many of them there are.",
+                markScheme: "<em>1 mark for each characteristic stated.<br>1 mark for each explanation.</em><ul><li><strong>characteristic:</strong> one-cell thick;<br><strong>explanation:</strong> small distance for oxygen / carbon dioxide / gases to pass through faster;</li><li><strong>characteristic:</strong> surrounded by capillaries / blood supply;<br><strong>explanation:</strong> this increases the amount of blood available for the transfer of gases / maintains concentration gradient;</li><li><strong>characteristic:</strong> large surface area / large number of alveoli;<br><strong>explanation:</strong> large area for gas exchange / diffusion to take place at / more gases can pass through;</li><li><strong>characteristic:</strong> walls of alveoli are moist;<br><strong>explanation:</strong> gases dissolve to pass through;</li><li><strong>characteristic:</strong> the walls of alveoli contain elastic fibres;<br><strong>explanation:</strong> which allows the walls to increase surface area slightly during inspiration;</li></ul>",
+                hint: "Pick any two of the 5 classic features: 1. One-cell thick walls, 2. Surrounded by capillaries, 3. Large surface area (millions of alveoli), 4. Moist walls, 5. Elastic fibres.",
                 isOfficial: true
             },
             {
                 section: "Gaseous exchange at the alveoli",
                 marks: 2,
-                question: "Describe what is meant by gaseous exchange at the alveoli.",
-                markScheme: "2 marks for:<br><ul><li>oxygen delivered to the blood;</li><li>carbon dioxide removed from the blood;</li></ul>",
-                hint: "What gas moves into the body, and what waste gas moves out?",
+                question: "Gaseous exchange takes place at the alveoli. Describe what is meant by gaseous exchange at the alveoli.",
+                markScheme: "<em>2 marks for:</em><ul><li>oxygen delivered to the blood;</li><li>carbon dioxide removed from the blood;</li></ul>",
+                hint: "What gas diffuses from the alveoli into the blood, and what waste gas diffuses from the blood into the alveoli?",
                 isOfficial: true
             },
             {
                 section: "Gaseous exchange at the alveoli",
                 marks: 2,
                 question: "Suggest the benefits for a performer of efficient gaseous exchange.",
-                markScheme: "2 marks for any of the following:<br><ul><li>speeds the removal of carbon dioxide;</li><li>speeds the transfer of oxygen to muscles;</li><li>delays the onset of lactic acid;</li><li>speeds the removal of lactic acid;</li><li>speeds the body's return to its natural state;</li><li>allows a performer to maintain effort for longer / able to participate in endurance activities;</li></ul>",
-                hint: "If your body is really good at getting oxygen in and CO2 out, how does that help you on the pitch or track?",
+                markScheme: "<em>Any 2 for 2 marks:</em><ul><li>speeds the removal of carbon dioxide;</li><li>speeds the transfer of oxygen to muscles;</li><li>delays the onset of lactic acid;</li><li>speeds the removal of lactic acid;</li><li>speeds the body's return to its natural state;</li><li>allows a performer to maintain effort for longer;</li><li>able to participate in endurance activities;</li></ul>",
+                hint: "If your lungs are great at getting oxygen into the blood and CO2 out, how does that help your muscles during an endurance race?",
                 isOfficial: true
             },
             {
                 section: "Gaseous exchange at the alveoli",
                 marks: 2,
-                question: "Explain how the thickness of the alveoli walls assists in gaseous exchange.",
-                markScheme: "The walls are only one cell thick (1 mark). This creates a short/small distance for oxygen and carbon dioxide to diffuse, making the process faster (1 mark).",
-                hint: "If a wall is very thin, how does that help things pass through it?",
-                isOfficial: false
+                question: "Muscles need a good supply of oxygen. Explain how the following characteristics of the alveoli assist gaseous exchange:<br>1. Large surface area<br>2. Walls with a thickness of one cell",
+                markScheme: "<em>1 mark for each explanation.</em><ul><li><strong>(large surface area)</strong> lots of oxygen / carbon dioxide can diffuse at the same time;</li><li><strong>(walls with a thickness of one cell)</strong> less distance so diffusion of oxygen and carbon dioxide through alveoli wall is faster;</li></ul><em>Accept alternative wording.</em>",
+                hint: "Why does having millions of alveoli (large area) and ultra-thin walls speed up diffusion?",
+                isOfficial: true
             },
             {
                 section: "Gaseous exchange at the alveoli",
                 marks: 2,
-                question: "Identify two characteristics of the alveoli, other than wall thickness and blood supply, that assist with gaseous exchange.",
-                markScheme: "1 mark for each of the following (max 2):<br><ul><li>Large surface area / large number of alveoli</li><li>Moist walls</li><li>Elastic fibres</li></ul>",
-                hint: "Think about how much space there is, the state of the surface, and how they can stretch.",
+                question: "Explain how moist walls and elastic fibres in the alveoli assist gaseous exchange.",
+                markScheme: "<ul><li><strong>Moist walls (1 mark):</strong> Gases (oxygen and carbon dioxide) dissolve in the moisture so they can diffuse across the walls more easily.</li><li><strong>Elastic fibres (1 mark):</strong> Allow the alveoli walls to stretch and expand to increase surface area slightly during inspiration (and recoil during expiration).</li></ul>",
+                hint: "What does the thin film of water on the alveoli walls do to gases, and why do the air sacs need to be stretchy?",
                 isOfficial: false
             },
 
-            // Mechanics of breathing
+            // 3. Mechanics of breathing (7 Questions)
             {
                 section: "Mechanics of breathing",
                 marks: 2,
                 question: "Describe the function of the intercostal muscles in normal breathing.",
-                markScheme: "2 marks for:<br><ul><li>contract to expand the chest cavity / move the ribs up and out during inspiration;</li><li>relax to reduce the chest cavity / allow the ribs to move downwards and inwards during expiration;</li></ul>",
-                hint: "Think about what happens to your rib cage when you breathe in and breathe out.",
+                markScheme: "<em>2 marks for:</em><ul><li>contract to expand the chest cavity / move the ribs up and out during inspiration;</li><li>relax to reduce the chest cavity / allow the ribs to move downwards and inwards during expiration;</li></ul><em>Accept correct ref. to specific types of intercostal muscles.</em>",
+                hint: "Think about what happens to your rib cage when you breathe in (inspiration) and breathe out (expiration).",
                 isOfficial: true
             },
             {
                 section: "Mechanics of breathing",
-                marks: 3,
-                question: "Identify the role of the diaphragm in the mechanics of breathing.",
-                markScheme: "1 mark for identifying structure, 2 marks max for describing its role.<br><ul><li><strong>Inhalation:</strong> the diaphragm contracts / becomes flatter AND increases the chest cavity volume OR reduces pressure in the lungs;</li><li><strong>Exhalation:</strong> the diaphragm relaxes / domes AND decreases the chest cavity volume OR increases pressure in the lungs;</li></ul>",
-                hint: "What does this muscle do at the bottom of the ribs to pull air in, and then to push it out?",
+                marks: 4,
+                question: "Describe the role of the diaphragm during normal breathing.",
+                markScheme: "<em>1 mark for each description.<br>Any 4 of:</em><ul><li>it contracts / becomes flatter / moves downwards during inspiration / breathing in;</li><li>causes the chest volume to increase;</li><li>causes the air pressure in the chest to decrease;</li><li>it relaxes / returns to dome shape during expiration / breathing out;</li><li>causes the chest volume to reduce;</li><li>causes the air pressure in the chest to increase;</li></ul>",
+                hint: "Cover both inspiration (contracts/flattens -> volume up -> pressure down) and expiration (relaxes/domes -> volume down -> pressure up).",
                 isOfficial: true
             },
             {
                 section: "Mechanics of breathing",
                 marks: 2,
-                question: "Complete the sentences to describe changes to the lungs during inhalation and exhalation.<br><br>The volume of air in the lungs _______ during inhalation.<br>The pressure of air in the lungs _______ causing exhalation.",
-                markScheme: "1 mark for each correctly completed sentence:<br><ul><li>The volume of air in the lungs <strong>increases</strong>; during inhalation.</li><li>The pressure of air in the lungs <strong>increases</strong>; causing exhalation.</li></ul>",
-                hint: "When you breathe in, what happens to the amount of air? To force air out, what has to happen to the pressure?",
+                question: "Complete the sentences to describe changes to the lungs during inhalation and exhalation:<br><br>The volume of air in the lungs ________________ during inhalation.<br>The pressure of air in the lungs ________________ causing exhalation.",
+                markScheme: "<em>1 mark for each correctly completed sentence.</em><ul><li>The volume of air in the lungs <strong>increases;</strong> during inhalation.</li><li>The pressure of air in the lungs <strong>increases;</strong> causing exhalation.</li></ul>",
+                hint: "When you breathe in, what happens to the amount (volume) of air? To push air out, what has to happen to the pressure inside?",
+                isOfficial: true
+            },
+            {
+                section: "Mechanics of breathing",
+                marks: 5,
+                question: "Describe the mechanics of breathing during inspiration and expiration at rest.",
+                markScheme: "<em>1 mark for each description (3 marks max from either inspiration or expiration, 5 marks max in total):</em><br><br><strong>inspiration:</strong><ul><li>diaphragm contracts / becomes flatter;</li><li>intercostal muscles contract;</li><li>rib cage moves outward / upward;</li><li>causes the chest volume to increase;</li><li>causes the air pressure in the chest to decrease (below atmospheric air);</li></ul><strong>expiration:</strong><ul><li>diaphragm relaxes / domes upwards;</li><li>rib cage moves inwards / downwards;</li><li>intercostal muscles relax;</li><li>chest volume reduces;</li><li>causes air pressure in the chest to increase;</li></ul>",
+                hint: "Note the mark scheme rule: you can get a maximum of 3 marks for inspiration and 3 marks for expiration (up to 5 total), so make sure you write almeno 3 points for each!",
+                isOfficial: true
+            },
+            {
+                section: "Mechanics of breathing",
+                marks: 4,
+                question: "Complete the descriptions to state how the ribs and diaphragm move during inhalation and exhalation during normal breathing:<br>1. Ribs during inhalation<br>2. Ribs during exhalation<br>3. Diaphragm during inhalation<br>4. Diaphragm during exhalation",
+                markScheme: "<em>1 mark for each correct response:</em><ul><li><strong>1. Ribs (inhalation):</strong> moves outwards <strong>AND</strong> upwards;</li><li><strong>2. Ribs (exhalation):</strong> moves inwards <strong>AND</strong> downwards;</li><li><strong>3. Diaphragm (inhalation):</strong> contracts <strong>AND</strong> becomes flatter (moves down);</li><li><strong>4. Diaphragm (exhalation):</strong> relaxes <strong>AND</strong> domes / moves upwards;</li></ul>",
+                hint: "Notice the 'AND' in the mark scheme! For ribs, give both directions (upwards AND outwards / downwards AND inwards). For diaphragm, state contracts/relaxes AND shape change (flattens/domes).",
                 isOfficial: true
             },
             {
                 section: "Mechanics of breathing",
                 marks: 3,
                 question: "Explain the action of the intercostal muscles and the diaphragm during expiration (breathing out) at rest.",
-                markScheme: "<ul><li>Intercostal muscles relax to allow the rib cage to move downwards and inwards (1 mark).</li><li>The diaphragm relaxes and domes upwards (1 mark).</li><li>This decreases the chest cavity volume, increasing pressure to force air out (1 mark).</li></ul>",
-                hint: "What do the ribs and diaphragm do to make the chest cavity smaller?",
+                markScheme: "<ul><li>Intercostal muscles relax to allow the rib cage to move downwards and inwards. (1 mark)</li><li>The diaphragm relaxes and domes upwards. (1 mark)</li><li>This decreases the chest cavity volume, increasing air pressure in the lungs to force air out. (1 mark)</li></ul>",
+                hint: "What do the ribs and diaphragm do to make the chest cavity smaller and push air out?",
                 isOfficial: false
             },
             {
                 section: "Mechanics of breathing",
                 marks: 1,
                 question: "State the effect of the diaphragm contracting on the air pressure in the lungs.",
-                markScheme: "It reduces/decreases the air pressure in the lungs (causing air to rush in). (1 mark).",
-                hint: "When the chest gets bigger, what happens to the pressure inside?",
+                markScheme: "It reduces / decreases the air pressure in the lungs (below atmospheric pressure, causing air to rush in). (1 mark)",
+                hint: "When the chest cavity volume gets bigger, what happens to the air pressure inside?",
                 isOfficial: false
             },
 
-            // Breathing volumes and minute ventilation
+            // 4. Breathing volumes and minute ventilation (8 Questions)
             {
                 section: "Breathing volumes and minute ventilation",
                 marks: 2,
                 question: "Describe what is meant by the term tidal volume and state how this changes during exercise.",
-                markScheme: "1 mark for description, 1 mark for change.<br><ul><li><strong>Description:</strong> the volume / amount of air entering or leaving with each breath;</li><li><strong>Change during exercise:</strong> increases;</li></ul>",
-                hint: "Think of the word 'tide' going in and out normally. Does it get bigger or smaller when you run?",
+                markScheme: "<em>1 mark for the description.<br>1 mark for the change during exercise.</em><ul><li><strong>description of tidal volume:</strong> the volume / amount of air entering or leaving with each breath;</li><li><strong>change during exercise:</strong> increases;</li></ul>",
+                hint: "Think of the ocean 'tide' going in and out with each breath. Does the depth of each breath get bigger or smaller when you exercise?",
                 isOfficial: true
             },
             {
                 section: "Breathing volumes and minute ventilation",
                 marks: 3,
                 question: "Minute ventilation increases during exercise. Define the term minute ventilation and describe two benefits of an increased minute ventilation during exercise.",
-                markScheme: "1 mark for definition, 2 marks max for benefits.<br><ul><li><strong>Definition:</strong> the volume of air that you breathe per minute;</li><li><strong>Benefits (Any 2 of):</strong> increase in the volume of oxygen into the body; increases the volume of carbon dioxide removed from the body; increases oxygen supply to muscles / keep going for longer; increases the efficiency of diffusion of oxygen; reduces the onset of lactic acid / speeds up removal of lactic acid;</li></ul>",
-                hint: "What does minute ventilation measure, and why is doing more of it helpful during a workout?",
+                markScheme: "<em>1 mark for the definition.<br>1 mark for each benefit (2 marks max.).</em><br><br><strong>definition:</strong><ul><li>the volume of air that you breathe per minute;</li></ul><strong>benefit (Any 2 of):</strong><ul><li>increase in the volume of oxygen into the body;</li><li>increases the volume of carbon dioxide removed from the body;</li><li>increases oxygen supply to muscles / keep going for longer;</li><li>increases the efficiency of diffusion of oxygen through the alveoli / capillaries;</li><li>reduces the onset of lactic acid / speeds up removal of lactic acid;</li></ul>",
+                hint: "What does minute ventilation measure in 60 seconds, and why does breathing more air per minute help working muscles?",
                 isOfficial: true
             },
             {
                 section: "Breathing volumes and minute ventilation",
                 marks: 2,
                 question: "Identify two breathing volumes that do not increase during exercise.",
-                markScheme: "2 marks for:<br><ul><li>residual volume;</li><li>vital capacity;</li></ul>",
-                hint: "Which volume measures the absolute maximum you can force out, and which is the air you can never breathe out?",
+                markScheme: "<em>2 marks for:</em><ul><li>residual volume;</li><li>vital capacity;</li></ul>",
+                hint: "Which volume measures the maximum you can forcibly breathe out after a deep breath, and which is the air left in the lungs that you can never breathe out?",
+                isOfficial: true
+            },
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 6,
+                question: "Describe each of the following breathing volumes and state the effect of exercise on each of them:<br>1. Tidal volume<br>2. Vital capacity<br>3. Residual volume",
+                markScheme: "<em>1 mark for each breathing volume description.<br>1 mark for each effect of exercise.</em><ul><li><strong>(tidal volume)</strong> the volume / amount of air entering or leaving the lungs with each breath;<br><strong>(effect of exercise)</strong> increase;</li><li><strong>(vital capacity)</strong> the maximum volume / amount of air that can be breathed out after breathing in as deeply as you can;<br><strong>(effect of exercise)</strong> no change;</li><li><strong>(residual volume)</strong> the amount of air left in the lungs after breathing out as hard as possible;<br><strong>(effect of exercise)</strong> no change;</li></ul>",
+                hint: "Only ONE of these three volumes increases during exercise—the other two stay the same (no change)!",
                 isOfficial: true
             },
             {
                 section: "Breathing volumes and minute ventilation",
                 marks: 2,
-                question: "Compare the effect of exercise on tidal volume and residual volume.",
-                markScheme: "<ul><li>Tidal volume increases during exercise (1 mark).</li><li>Residual volume stays the same / no change (1 mark).</li></ul>",
-                hint: "Does the size of a normal breath change when you run? Does the amount of air stuck in the bottom of your lungs change?",
-                isOfficial: false
+                question: "Minute ventilation is a measure of the efficiency of the respiratory system. Identify the two components used to calculate minute ventilation and state their units of measurement.",
+                markScheme: "<em>1 mark for each factor with an appropriate unit of measurement.</em><ul><li><strong>tidal volume</strong> measured in millilitres / litres;</li><li><strong>number of breaths (breathing rate)</strong> measured per minute (breaths per minute);</li></ul>",
+                hint: "Minute Ventilation = T____ V_____ (in litres or ml) × B________ R___ (in breaths per minute).",
+                isOfficial: true
             },
             {
                 section: "Breathing volumes and minute ventilation",
                 marks: 2,
-                question: "Explain the relationship between tidal volume, breathing rate, and minute ventilation.",
-                markScheme: "<ul><li>Minute ventilation is calculated by multiplying tidal volume by breathing rate. (1 mark)</li><li>It is the total volume of air breathed in or out in one minute. (1 mark).</li></ul>",
-                hint: "How do you calculate the total air per minute using the size of one breath and the number of breaths?",
+                question: "At rest, a performer has a breathing rate of 12 breaths per minute and a minute ventilation of 6 litres per minute. During exercise, their breathing rate increases to 30 breaths per minute and their tidal volume is 3 litres.<br><br>Calculate:<br>(i) their tidal volume at rest (1)<br>(ii) their minute ventilation during exercise (1)",
+                markScheme: "<ul><li><strong>(i) Tidal volume at rest:</strong> <strong>0.5 litres</strong> (or 500 ml); (1 mark) <em>[6 &divide; 12 = 0.5]</em></li><li><strong>(ii) Minute ventilation during exercise:</strong> <strong>90 litres per minute</strong>; (1 mark) <em>[30 &times; 3 = 90]</em></li></ul>",
+                hint: "Use the formula: Minute Ventilation = Breathing Rate × Tidal Volume. Include units!",
+                isOfficial: true
+            },
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 2,
+                question: "Explain how minute ventilation is affected when exercise begins.",
+                markScheme: "<em>1 mark for change to minute ventilation. 1 mark for explanation.</em><ul><li><strong>Change (1 mark):</strong> minute ventilation increases;</li><li><strong>Explanation (1 mark for 1 of):</strong> breathing rate increases / breathe faster; OR tidal volume / depth of breathing increases;</li></ul>",
+                hint: "State what happens to minute ventilation, and name the two things (rate and depth) that cause it to change.",
+                isOfficial: true
+            },
+            {
+                section: "Breathing volumes and minute ventilation",
+                marks: 2,
+                question: "Explain why residual volume is important for the lungs and why it does not change during exercise.",
+                markScheme: "<ul><li>Residual volume is the air that remains in the lungs even after breathing out as hard as possible, which prevents the lungs and alveoli from collapsing. (1 mark)</li><li>Because this air cannot be exhaled, the volume remains constant (no change) during exercise. (1 mark)</li></ul>",
+                hint: "What would happen to the lungs if you could squeeze every last drop of air out of them?",
                 isOfficial: false
             },
 
@@ -377,286 +417,318 @@
             // CIRCULATORY SYSTEM
             // ==========================================
 
-            // Components of blood
+            // 5. Components of blood (7 Questions)
             {
                 section: "Components of blood",
                 marks: 4,
                 question: "Name two components of blood and describe a different function of each component.",
-                markScheme: "Max 2 marks for each component of blood and its function.<br><ul><li><strong>Red blood cells:</strong> carries oxygen to muscles</li><li><strong>White blood cells:</strong> part of the immune system, which fights infections and helps prevent illness / to recover</li><li><strong>Plasma:</strong> helps blood flow easier / removes waste products including carbon dioxide from muscles / transports vital hormones, cells and enzymes</li><li><strong>Platelets:</strong> helps clot blood when a graze or cut occurs</li></ul>",
-                hint: "Think about the red ones, the white ones, the liquid, and the ones that make scabs.",
+                markScheme: "<em>1 mark for each component (2 marks max).<br>1 mark for each appropriate function (2 marks max).</em><ul><li><strong>red blood cells:</strong> carries oxygen to muscles;</li><li><strong>white blood cells:</strong> part of the immune system, which fights infections / pathogens / disease and helps prevent illness / to recover;</li><li><strong>plasma:</strong> transport medium / allows substances to dissolve and be transported easily / helps blood flow easier / removes waste products including carbon dioxide from muscles;</li><li><strong>platelets:</strong> helps clot blood when a graze or cut occurs / forms a scab;</li></ul>",
+                hint: "Pick any two of the 4 blood components: Red blood cells, White blood cells, Plasma, or Platelets.",
                 isOfficial: true
             },
             {
                 section: "Components of blood",
                 marks: 2,
-                question: "Identify a different component of blood that has each of the following main functions:<br><br>1. Combines with oxygen<br>2. Clots blood",
-                markScheme: "1 mark for each component.<br><ul><li><strong>Combines with oxygen:</strong> red (blood) cells / haemoglobin</li><li><strong>Clots blood:</strong> platelets</li></ul>",
-                hint: "Which cells turn red when oxygenated? Which fragments stop you from bleeding?",
+                question: "Identify a different component of blood that has each of the following main functions:<br>1. Combines with oxygen<br>2. Clots blood",
+                markScheme: "<em>1 mark for each component.</em><ul><li><strong>combines with oxygen:</strong> red (blood) cells / haemoglobin;</li><li><strong>clots blood:</strong> platelets;</li></ul>",
+                hint: "Which cells carry oxygen? Which cell fragments stop bleeding?",
                 isOfficial: true
             },
             {
                 section: "Components of blood",
                 marks: 2,
-                question: "Identify which two different components of blood are described below:<br><br>Component 1: consists mainly of water to allow substances to dissolve and be transported easily<br>Component 2: contains an enzyme that causes blood to clot when there is a cut to the skin or damage to blood vessels",
-                markScheme: "1 mark for each:<br><ul><li><strong>Component 1:</strong> plasma</li><li><strong>Component 2:</strong> platelets</li></ul>",
-                hint: "One is the liquid part of blood, the other creates a scab.",
+                question: "Identify which two different components of blood are described:<br>• Component 1: consists mainly of water to allow substances to dissolve and be transported easily<br>• Component 2: contains an enzyme that causes blood to clot when there is a cut to the skin or damage to blood vessels",
+                markScheme: "<em>1 mark for each.</em><ul><li><strong>component 1:</strong> plasma;</li><li><strong>component 2:</strong> platelets;</li></ul>",
+                hint: "Component 1 is the straw-coloured liquid part of blood; Component 2 forms a scab.",
                 isOfficial: true
             },
             {
                 section: "Components of blood",
                 marks: 4,
-                question: "Complete the list to show different components of blood and their functions:<br><br>1. Plasma: [Function?]<br>2. [Component?]: carry oxygen<br>3. White blood cells: [Function?]<br>4. [Component?]: clot the blood",
-                markScheme: "4 marks for:<br><ul><li><strong>Plasma:</strong> transport cells / nutrients / hormones</li><li><strong>Carry oxygen:</strong> red blood cells</li><li><strong>White blood cells:</strong> defend against infection / pathogens</li><li><strong>Clot the blood:</strong> platelets</li></ul>",
-                hint: "What does the liquid part do? What cells carry oxygen? What do white cells do? What stops bleeding?",
+                question: "Complete the list to show different components of blood and their functions:<br>1. Plasma: [Function?]<br>2. [Component?]: carry oxygen<br>3. White blood cells: [Function?]<br>4. [Component?]: clot the blood",
+                markScheme: "<em>4 marks for:</em><ul><li><strong>(plasma)</strong> transport cells / nutrients / hormones;</li><li><strong>(carry oxygen)</strong> red blood cells;</li><li><strong>(white blood cells)</strong> defend against infection;</li><li><strong>(clot the blood)</strong> platelets;</li></ul>",
+                hint: "What does the liquid plasma do? What cells carry oxygen? What do white blood cells defend against? What clots blood?",
                 isOfficial: true
             },
             {
                 section: "Components of blood",
                 marks: 4,
-                question: "Red blood cells are a component of blood. They contain haemoglobin to transport oxygen.<br><br>Identify two other components of blood. Describe a different function of each component.",
-                markScheme: "1 mark for each component, 1 mark for an appropriate function (Max 4).<br><ul><li><strong>white blood cells:</strong> defends / fights against pathogens / infections</li><li><strong>plasma:</strong> allows substances to be transported (easily) / plays a role in maintaining blood pressure / helps maintain body temperature / affects the viscosity of blood</li><li><strong>platelets:</strong> clots the blood (when blood vessels are damaged/cut) / creates a scab</li></ul>",
-                hint: "You have three left to choose from: the liquid, the fighters, and the cloppers. Pick two and say what they do.",
+                question: "Red blood cells are a component of blood. They contain haemoglobin to transport oxygen. Identify two other components of blood. Describe a different function of each component.",
+                markScheme: "<em>1 mark for each component of blood (2 marks max.).<br>1 mark for an appropriate function (2 marks max.).</em><ul><li><strong>white blood cells;</strong><br><em>(function)</em> defends / fights against pathogens / infections;</li><li><strong>plasma;</strong><br><em>(function)</em> allows substances to be transported (easily) / plays a role in maintaining blood pressure / helps maintain body temperature / affects the viscosity of blood;</li><li><strong>platelets;</strong><br><em>(function)</em> clots the blood (when blood vessels are damaged / cut) / creates a scab;</li></ul>",
+                hint: "Do NOT name red blood cells! Pick two from: white blood cells, plasma, and platelets.",
+                isOfficial: true
+            },
+            {
+                section: "Components of blood",
+                marks: 4,
+                question: "Complete the information to show the function and benefit for a performer of:<br>1. Platelets (function: help with blood clotting) &rarr; [Benefit for a performer?]<br>2. [Component?] (function: kill bacteria) &rarr; [Benefit for a performer?]<br>3. Red blood cells (benefit: allows performer to work for longer) &rarr; [Function?]",
+                markScheme: "<em>1 mark for each correct response. Benefit must be applied to the performer:</em><ul><li><strong>1. Platelets benefit:</strong> minor cuts do not prevent a performer from continuing to play / speeds up recovery time; (1 mark)</li><li><strong>2. Component:</strong> white blood cells; (1 mark)<br><strong>White blood cells benefit:</strong> a performer will be healthy / recover faster so can continue / resume participating / training; (1 mark)</li><li><strong>3. Red blood cells function:</strong> carry oxygen; (1 mark)</li></ul>",
+                hint: "This is from May/June 2019 Q10: link each blood component's function to how it helps an athlete keep playing or training!",
                 isOfficial: true
             },
             {
                 section: "Components of blood",
                 marks: 2,
-                question: "Describe the role of white blood cells during physical activity.",
-                markScheme: "<ul><li>They form part of the immune system / defend the body against pathogens. (1 mark)</li><li>This helps prevent illness so the performer can recover and continue training. (1 mark)</li></ul>",
-                hint: "How does fighting sickness help an athlete stay on track?",
-                isOfficial: false
-            },
-            {
-                section: "Components of blood",
-                marks: 1,
-                question: "Identify the component of blood that transports hormones and nutrients to cells.",
-                markScheme: "Plasma. (1 mark)",
-                hint: "It's the watery/liquid part of the blood.",
+                question: "Explain how plasma helps a performer during prolonged exercise in warm conditions.",
+                markScheme: "<ul><li>Plasma is the liquid transport medium that carries red blood cells, glucose, hormones, and waste products (such as carbon dioxide and lactic acid). (1 mark)</li><li>It also helps maintain blood pressure, regulates body temperature, and controls the viscosity (thickness) of the blood so it flows easily. (1 mark)</li></ul>",
+                hint: "What does the watery liquid part of blood transport, and how does it help with blood flow and temperature?",
                 isOfficial: false
             },
 
-            // Haemoglobin
+            // 6. Haemoglobin (4 Questions)
             {
                 section: "Haemoglobin",
                 marks: 2,
                 question: "Describe the role of haemoglobin in the blood.",
-                markScheme: "Any 2 of:<br><ul><li>carries oxygen / permits aerobic respiration</li><li>reacts with oxygen to form oxyhaemoglobin</li><li>releases oxygen (at tissues / muscles)</li><li>carries carbon dioxide</li><li>reacts with carbon dioxide to form carbaminohaemoglobin</li></ul>",
-                hint: "What does it carry from the lungs to the muscles, and what does it carry back?",
+                markScheme: "<em>Any 2 of:</em><ul><li>carries oxygen / permits aerobic respiration;</li><li>reacts with oxygen to form oxyhaemoglobin;</li><li>releases oxygen (at tissues / muscles);</li><li>carries carbon dioxide;</li><li>reacts with carbon dioxide to form carbaminohaemoglobin;</li></ul>",
+                hint: "What two gases does haemoglobin carry, and what does it form when it combines with oxygen?",
                 isOfficial: true
             },
             {
                 section: "Haemoglobin",
                 marks: 1,
                 question: "Red blood cells are one component of blood. Identify the substance found in red blood cells that carries oxygen and carbon dioxide.",
-                markScheme: "1 mark for: <strong>haemoglobin</strong>",
-                hint: "It is the iron-rich protein that gives blood its red color.",
+                markScheme: "<em>1 mark for:</em><br><strong>haemoglobin;</strong>",
+                hint: "It is the iron-containing protein inside red blood cells.",
                 isOfficial: true
             },
             {
                 section: "Haemoglobin",
                 marks: 2,
-                question: "Explain why a lack of haemoglobin would negatively affect a long-distance runner.",
-                markScheme: "<ul><li>Haemoglobin carries oxygen to the working muscles. (1 mark)</li><li>Less haemoglobin means less oxygen for aerobic respiration, leading to early fatigue / reliance on anaerobic systems. (1 mark)</li></ul>",
-                hint: "If you don't have enough transporters for oxygen, what happens to an endurance athlete?",
+                question: "Explain why a lack of haemoglobin (anaemia) would negatively affect a long-distance runner.",
+                markScheme: "<ul><li>Haemoglobin combines with and carries oxygen to the working muscles. (1 mark)</li><li>Less haemoglobin means less oxygen is delivered for aerobic respiration, causing the runner to fatigue much earlier. (1 mark)</li></ul>",
+                hint: "If you don't have enough haemoglobin to carry oxygen, what happens to aerobic energy production in a marathon?",
                 isOfficial: false
             },
             {
                 section: "Haemoglobin",
                 marks: 2,
-                question: "State the two main gases that haemoglobin carries in the blood.",
-                markScheme: "<ul><li>Oxygen (1 mark)</li><li>Carbon dioxide (1 mark)</li></ul>",
-                hint: "One is breathed in, the other is breathed out.",
+                question: "State the two main gases that haemoglobin carries in the blood and where each gas is delivered.",
+                markScheme: "<ul><li><strong>Oxygen:</strong> carried from the lungs (alveoli) and delivered to the working muscles/tissues. (1 mark)</li><li><strong>Carbon dioxide:</strong> carried away from the working muscles and delivered to the lungs to be exhaled. (1 mark)</li></ul>",
+                hint: "One gas goes from lungs -> muscles; the waste gas goes from muscles -> lungs.",
                 isOfficial: false
             },
 
-            // Blood vessels
+            // 7. Blood vessels (9 Questions)
             {
                 section: "Blood vessels",
                 marks: 2,
                 question: "State two types of blood vessel.",
-                markScheme: "Any 2 of:<br><ul><li>arteries</li><li>capillaries</li><li>veins</li></ul>",
-                hint: "Think about the ones that go away from the heart, back to the heart, or connect them.",
+                markScheme: "<em>Any 2 of:</em><ul><li>arteries;</li><li>capillaries;</li><li>veins;</li></ul><em>Accept other named types of blood vessel.</em>",
+                hint: "Name any two of the three main types of blood vessels in the circulatory system.",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 4,
-                question: "Describe two functions of each of the following types of blood vessel:<br><br>Artery (2 marks)<br>Vein (2 marks)",
-                markScheme: "Max 2 marks per type of blood vessel:<br><br><strong>Artery:</strong><br><ul><li>carry blood away from the heart</li><li>carry blood at high pressure</li><li>generally carry oxygenated blood</li></ul><br><strong>Vein:</strong><br><ul><li>carry blood towards the heart</li><li>stop blood flowing backwards (have valves)</li><li>carry blood at low pressure</li><li>generally carry deoxygenated blood</li></ul>",
-                hint: "Which direction does the blood go? Is the pressure high or low? Does it carry oxygen or carbon dioxide?",
+                question: "Describe two functions of each of the following types of blood vessel:<br>• Artery (2 marks)<br>• Vein (2 marks)",
+                markScheme: "<em>1 mark for each function named.<br>Max. 2 marks per type of blood vessel.</em><br><br><strong>artery:</strong><ul><li>carry blood away from the heart;</li><li>carry blood at high pressure;</li><li>generally carry oxygenated blood;</li></ul><strong>vein:</strong><ul><li>carry blood towards the heart;</li><li>stop blood flowing backwards;</li><li>carry blood at low pressure;</li><li>generally carry deoxygenated blood;</li></ul><em>Credit reference to exception of pulmonary vein and pulmonary artery.</em>",
+                hint: "Remember: Arteries = Away from heart (high pressure, oxygenated); Veins = Towards heart (low pressure, deoxygenated, prevent backflow).",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 2,
                 question: "Describe two structural differences between arteries and veins.",
-                markScheme: "1 mark for each structural difference described:<br><ul><li>arteries have thick(er) muscular walls AND veins have thin(ner) walls</li><li>arteries have a narrow lumen AND veins have a wide lumen</li><li>arteries are elastic AND veins are not / have less elasticity</li><li>arteries do not have valves AND veins have valves</li></ul>",
-                hint: "Think about the thickness of the walls, the size of the hole (lumen) inside, and the presence of valves.",
+                markScheme: "<em>1 mark for each structural difference described.</em><ul><li>arteries have thick / muscular walls <strong>AND</strong> veins have thin walls;</li><li>arteries have a narrow lumen <strong>AND</strong> veins have a wide lumen;</li><li>arteries are elastic / have elastic tissue <strong>AND</strong> veins are not elastic / have less elasticity;</li><li>arteries do not have valves <strong>AND</strong> veins have valves;</li></ul>",
+                hint: "Look at the 3 structural features in the syllabus box: 1. Wall thickness, 2. Lumen size, 3. Presence of valves.",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 2,
                 question: "Describe the structure and function of capillaries.",
-                markScheme: "<ul><li><strong>Structure (1 mark):</strong> the walls of capillaries are only one cell thick / capillaries are very small in width / selectively permeable.</li><li><strong>Function (1 mark):</strong> allow gaseous exchange to take place / allows oxygen/nutrients to diffuse to cells / allows waste to be removed from cells / connect arteries to veins.</li></ul>",
-                hint: "How thick are they, and what do they allow to happen at the muscle cells?",
+                markScheme: "<em>1 mark for describing the structure.<br>1 mark for describing the function.</em><ul><li><strong>structure:</strong> the walls of capillaries are only one cell thick / capillaries are very small in width / capillaries are selectively permeable so they allow some substances but not others to pass through;</li><li><strong>function:</strong> capillaries allow gaseous exchange to take place / allows oxygen / nutrients to diffuse to cells / allows waste to be removed from cells / capillaries connect arteries to veins;</li></ul>",
+                hint: "How thick are capillary walls (Structure), and what do they allow to diffuse into and out of muscles (Function)?",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 2,
-                question: "Identify each type of blood vessel described:<br><br>Blood vessel 1: thick elastic walls; transports oxygenated blood away from the heart.<br>Blood vessel 2: walls are one cell thick; allows certain substances to pass into and out of cells.",
-                markScheme: "1 mark for each:<br><ul><li><strong>Blood vessel 1:</strong> artery</li><li><strong>Blood vessel 2:</strong> capillary</li></ul>",
-                hint: "Which one handles high pressure? Which one is thin enough for diffusion?",
+                question: "Identify each type of blood vessel described:<br>• Type of blood vessel 1: thick elastic walls; transports oxygenated blood away from the heart<br>• Type of blood vessel 2: walls are one cell thick; allows certain substances to pass into and out of cells",
+                markScheme: "<em>1 mark for each:</em><ul><li><strong>blood vessel 1:</strong> artery;</li><li><strong>blood vessel 2:</strong> capillary;</li></ul>",
+                hint: "Which vessel leaves the heart under high pressure? Which microscopic vessel is one cell thick for diffusion?",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 3,
-                question: "Explain how the function of each of the following types of blood vessel is supported by their structure: Arteries, Veins, Capillaries.",
-                markScheme: "3 marks for:<br><ul><li><strong>Arteries:</strong> thick / muscular wall to pump blood away from the heart under high pressure</li><li><strong>Veins:</strong> thin walls to carry blood back to the heart under low pressure / contain valves to prevent backflow of blood</li><li><strong>Capillaries:</strong> one-cell thick walls to allow diffusion of gases</li></ul>",
-                hint: "Match the structure (thick walls, valves, thin walls) to what they need to do.",
+                question: "Explain how the function of each of the following types of blood vessel is supported by their structure:<br>• Arteries<br>• Veins<br>• Capillaries",
+                markScheme: "<em>3 marks for:</em><ul><li><strong>(arteries)</strong> thick / muscular wall to pump blood away from the heart under high pressure;</li><li><strong>(veins)</strong> thin walls to carry blood back to the heart under low pressure / contain valves to prevent backflow of blood;</li><li><strong>(capillaries)</strong> one-cell thick walls to allow diffusion of gases;</li></ul>",
+                hint: "For each vessel, link its structure (thick muscular walls / valves / one-cell thick walls) directly to its job!",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 1,
+                question: "Describe the function of valves in veins.",
+                markScheme: "<em>1 mark for description:</em><ul><li>prevent backflow of blood / stops blood from flowing backwards;</li></ul>",
+                hint: "Because blood in veins is under low pressure, what do valves stop the blood from doing?",
+                isOfficial: true
+            },
+            {
+                section: "Blood vessels",
+                marks: 4,
+                question: "Compare the lumen size and wall thickness of arteries and capillaries.",
+                markScheme: "<ul><li><strong>Arteries lumen size:</strong> larger lumen size (than capillaries, though narrower than veins); (1 mark)</li><li><strong>Arteries wall thickness:</strong> thicker muscular / elastic walls; (1 mark)</li><li><strong>Capillaries lumen size:</strong> very narrow / one blood cell width / microscopic; (1 mark)</li><li><strong>Capillaries wall thickness:</strong> thin single-cell thickness walls; (1 mark)</li></ul>",
+                hint: "This is the table from May/June 2021 Q6(a): compare how wide the inside hole (lumen) is and how thick the walls are between an artery and a microscopic capillary.",
                 isOfficial: true
             },
             {
                 section: "Blood vessels",
                 marks: 2,
-                question: "Explain how the structure of a vein is adapted to its function.",
-                markScheme: "<ul><li>Veins have valves to prevent the backflow of blood (1 mark)</li><li>because they carry blood at low pressure back to the heart (1 mark).</li><li><em>Also accept:</em> They have a wide lumen to maximise blood flow (1 mark). (Max 2 marks)</li></ul>",
-                hint: "Why do veins need valves and a wide opening when blood is moving slowly back to the heart?",
-                isOfficial: false
-            },
-            {
-                section: "Blood vessels",
-                marks: 2,
-                question: "Identify the type of blood vessel that carries blood at high pressure and state one structural feature that allows it to do this.",
-                markScheme: "<ul><li><strong>Vessel:</strong> Artery (1 mark).</li><li><strong>Feature:</strong> Has thick / muscular / elastic walls (1 mark).</li></ul>",
-                hint: "Which vessel leaves the heart, and how does its wall cope with the force of the pump?",
+                question: "While arteries generally carry oxygenated blood and veins generally carry deoxygenated blood, there is one exception for each. Name the artery that carries deoxygenated blood and the vein that carries oxygenated blood.",
+                markScheme: "<ul><li><strong>Artery carrying deoxygenated blood:</strong> Pulmonary artery (carries deoxygenated blood from the right ventricle to the lungs). (1 mark)</li><li><strong>Vein carrying oxygenated blood:</strong> Pulmonary vein (carries oxygenated blood from the lungs to the left atrium). (1 mark)</li></ul>",
+                hint: "Both exceptions have the word 'Pulmonary' (lungs) in their name!",
                 isOfficial: false
             },
 
-            // Heart structure and function
+            // 8. Heart structure and function (9 Questions)
             {
                 section: "Heart structure and function",
                 marks: 4,
-                question: "Describe the role of each of the following structures in the pathway of blood through the heart:<br>Vena cava, Pulmonary vein, Aorta, Pulmonary artery.",
-                markScheme: "1 mark for each description:<br><ul><li><strong>Vena cava:</strong> carries (deoxygenated) blood from the body to the right atrium</li><li><strong>Pulmonary vein:</strong> carries (oxygenated) blood from the lungs to the left atrium</li><li><strong>Aorta:</strong> carries (oxygenated) blood from the left ventricle to the body</li><li><strong>Pulmonary artery:</strong> carries (deoxygenated) blood from the right ventricle to the lungs</li></ul>",
-                hint: "Think: Where is it coming from, and where is it going to? Pulmonary means lungs.",
+                question: "Describe the role of each of the following structures in the pathway of blood through the heart:<br>• Vena cava<br>• Pulmonary vein<br>• Aorta<br>• Pulmonary artery",
+                markScheme: "<em>1 mark for each description.</em><ul><li><strong>vena cava:</strong> carries (deoxygenated) blood from the body to the right atrium;</li><li><strong>pulmonary vein:</strong> carries (oxygenated) blood from the lungs to the left atrium;</li><li><strong>aorta:</strong> carries (oxygenated) blood from the left ventricle to the body;</li><li><strong>pulmonary artery:</strong> carries (deoxygenated) blood from the right ventricle to the lungs;</li></ul>",
+                hint: "For each vessel, state where the blood comes FROM and which chamber/organ it goes TO.",
                 isOfficial: true
             },
             {
                 section: "Heart structure and function",
-                marks: 1,
-                question: "Describe one function of valves in the heart.",
-                markScheme: "1 mark for any of:<br><ul><li>prevents blood flowing backwards</li><li>ensures blood flows in one direction / determines the pathway of blood through the heart</li><li>allows blood to enter/leave heart chambers</li><li>regulates the flow of blood / ensures blood flows at an appropriate rate</li></ul>",
-                hint: "What do they stop the blood from doing?",
+                marks: 2,
+                question: "Describe two functions of the valves in the heart.",
+                markScheme: "<em>1 mark for each description (Any 2 of):</em><ul><li>prevents blood flowing backwards;</li><li>ensures blood flows in one direction / determines the pathway of blood through the heart;</li><li>allows blood to enter / leave heart chambers;</li><li>regulates the flow of blood / ensures blood flows at the correct speed;</li></ul>",
+                hint: "Note: Valve names (like tricuspid/bicuspid) are NOT required by the syllabus—just state what they do to control blood flow and prevent backflow!",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 3,
+                question: "State the name of each heart chamber from its description:<br>1. Contracts to pump oxygenated blood to all parts of the body<br>2. Receives deoxygenated blood from the body<br>3. Contracts to pump deoxygenated blood to the lungs",
+                markScheme: "<em>1 mark for each chamber:</em><ul><li><strong>1:</strong> left ventricle;</li><li><strong>2:</strong> right atrium;</li><li><strong>3:</strong> right ventricle;</li></ul>",
+                hint: "Atria (top chambers) RECEIVE blood returning to the heart; Ventricles (bottom chambers) PUMP blood out of the heart. Left = Oxygenated to body; Right = Deoxygenated to lungs.",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 4,
+                question: "Name the two main blood vessels that are attached to the right side of the heart, and describe two structural differences between these types of blood vessel.",
+                markScheme: "<em>1 mark for each named blood vessel (max. 2 marks). 1 mark for description of a structural difference (max. 2 marks).</em><br><br><strong>2 marks for vessels:</strong><ul><li>pulmonary artery;</li><li>vena cava;</li></ul><strong>structural differences, 2 marks from:</strong><ul><li><strong>(wall thickness)</strong> arteries (pulmonary artery) have thick walls <strong>AND</strong> veins (vena cava) have thin walls;</li><li><strong>(lumen size)</strong> arteries have a narrow lumen <strong>AND</strong> veins have a wide lumen;</li><li><strong>(presence of valves)</strong> arteries have no valves (along their length) <strong>AND</strong> veins have valves;</li></ul>",
+                hint: "Which big vein brings deoxygenated blood into the right atrium, and which artery takes it out of the right ventricle to the lungs? Then compare their walls, lumen, or valves!",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 5,
+                question: "Complete the missing structures and functions of the circulatory system:<br>1. [Structure?]: pumps blood away from the heart to the lungs<br>2. Valve: [Function?]<br>3. [Structure?]: vein which brings blood to the heart from the lungs<br>4. Vena cava: [Function?]<br>5. [Structure?]: artery which takes blood away from the heart to the body",
+                markScheme: "<em>5 marks for:</em><ul><li><strong>1:</strong> right ventricle;</li><li><strong>2 (valve):</strong> prevents backflow (of blood);</li><li><strong>3:</strong> pulmonary vein;</li><li><strong>4 (vena cava):</strong> (vein which) brings blood to the heart from the body / brings blood to the right atrium from the body;</li><li><strong>5:</strong> aorta;</li></ul>",
+                hint: "This is the 5-mark table from November 2023 (0413/13) Q7! Check whether each prompt asks for a chamber, a valve, or one of the 4 main blood vessels.",
                 isOfficial: true
             },
             {
                 section: "Heart structure and function",
                 marks: 2,
                 question: "Describe two long-term effects of regular exercise on the heart.",
-                markScheme: "1 mark for each description:<br><ul><li>heart size increases / thicker walls / hypertrophy</li><li>resting pulse rate reduces / resting heart rate reduces / bradycardia</li><li>stroke volume increases / (maximal) cardiac output increases / the volume of blood pumped in one minute increases</li><li>returns to resting heart rate more quickly / returns to normal more quickly</li><li>increase strength of the heart / stronger contractions</li><li>reduction in heart disease</li></ul>",
-                hint: "Think about what happens to the size of the heart muscle and its resting speed.",
+                markScheme: "<em>1 mark for each description (Any 2 of):</em><ul><li>heart size increases / thicker walls / hypertrophy;</li><li>resting pulse rate reduces / resting heart rate reduces / bradycardia;</li><li>stroke volume increases / (maximal) cardiac output increases / the volume of blood pumped in one minute increases / volume of blood pumped in a single beat increases;</li><li>returns to resting heart rate more quickly / returns to normal more quickly;</li><li>increase strength of the heart / stronger contractions;</li><li>reduction in heart disease / diseases;</li></ul>",
+                hint: "Think about how endurance training changes the size/thickness of the heart muscle, its resting beat rate, and how much blood it pumps per beat.",
                 isOfficial: true
-            },
-            {
-                section: "Heart structure and function",
-                marks: 1,
-                question: "Describe the function of the right ventricle in the heart.",
-                markScheme: "1 mark for:<br>contracts to push (deoxygenated) blood out of heart / into pulmonary artery / to lungs / receives blood from right atrium;",
-                hint: "Where does the right side of the heart send the blood?",
-                isOfficial: true
-            },
-            {
-                section: "Heart structure and function",
-                marks: 3,
-                question: "State the name of each heart chamber from its description:<br><br>1. Contracts to pump oxygenated blood to all parts of the body<br>2. Receives deoxygenated blood from the body<br>3. Contracts to pump deoxygenated blood to the lungs",
-                markScheme: "1 mark for each chamber:<br><ul><li>1. left ventricle</li><li>2. right atrium</li><li>3. right ventricle</li></ul>",
-                hint: "The ventricles pump it out. The atria receive it. Left goes to the body, right goes to the lungs.",
-                isOfficial: true
-            },
-            {
-                section: "Heart structure and function",
-                marks: 3,
-                question: "Describe the pathway of deoxygenated blood from the body, through the right side of the heart, to the lungs.",
-                markScheme: "<ul><li>Enters the right atrium via the vena cava. (1 mark)</li><li>Passes through a valve into the right ventricle. (1 mark)</li><li>Pumped out of the right ventricle via the pulmonary artery to the lungs. (1 mark)</li></ul>",
-                hint: "What vein does it enter through? Which two chambers does it pass through? Which artery does it leave from?",
-                isOfficial: false
             },
             {
                 section: "Heart structure and function",
                 marks: 2,
-                question: "State the location and general function of the atria.",
-                markScheme: "<ul><li>Located at the top of the heart (above the ventricles). (1 mark)</li><li>They receive blood returning to the heart (from the lungs or body) and pump it down into the ventricles. (1 mark)</li></ul>",
-                hint: "Are they at the top or bottom? Do they receive blood or pump it out to the body?",
+                question: "Describe the pathway of blood from the left atrium and from the right ventricle when the heart contracts.",
+                markScheme: "<ul><li><strong>From the left atrium (1 mark):</strong> pumps oxygenated blood through the valve into the left ventricle.</li><li><strong>From the right ventricle (1 mark):</strong> pumps deoxygenated blood through the pulmonary artery to the lungs.</li></ul>",
+                hint: "Where does blood go immediately after leaving the top-left chamber (left atrium), and where does it go after leaving the bottom-right chamber (right ventricle)?",
+                isOfficial: true
+            },
+            {
+                section: "Heart structure and function",
+                marks: 2,
+                question: "State the location of the atria and the ventricles in the heart, and explain why the left ventricle has a much thicker muscular wall than the right ventricle.",
+                markScheme: "<ul><li><strong>Location (1 mark):</strong> The atria are the upper chambers at the top of the heart, and the ventricles are the lower chambers at the bottom of the heart.</li><li><strong>Left vs Right ventricle wall (1 mark):</strong> The left ventricle must pump oxygenated blood at high pressure all the way around the entire body (via the aorta), whereas the right ventricle only pumps blood a short distance to the lungs.</li></ul>",
+                hint: "Compare the distance blood has to travel from the left ventricle (whole body) versus the right ventricle (just to the lungs next door).",
+                isOfficial: false
+            },
+            {
+                section: "Heart structure and function",
+                marks: 4,
+                question: "Trace the complete pathway of deoxygenated blood from the moment it enters the heart from the body until it returns to the heart as oxygenated blood from the lungs.",
+                markScheme: "<ul><li><strong>1 (1 mark):</strong> Deoxygenated blood from the body enters the <strong>right atrium</strong> via the <strong>vena cava</strong>.</li><li><strong>2 (1 mark):</strong> Blood passes through a valve into the <strong>right ventricle</strong>.</li><li><strong>3 (1 mark):</strong> The right ventricle contracts to pump blood through the <strong>pulmonary artery</strong> to the lungs (where gaseous exchange occurs at the alveoli).</li><li><strong>4 (1 mark):</strong> Oxygenated blood returns from the lungs to the <strong>left atrium</strong> via the <strong>pulmonary vein</strong>.</li></ul>",
+                hint: "Walk step-by-step through the right side of the heart: Vena cava -> Right atrium -> Valve -> Right ventricle -> Pulmonary artery -> Lungs -> Pulmonary vein -> Left atrium.",
                 isOfficial: false
             },
 
-            // Cardiac output
+            // 9. Cardiac output (9 Questions)
             {
                 section: "Cardiac output",
-                marks: 1,
-                question: "Explain the term cardiac output.",
-                markScheme: "1 mark for:<br>The volume/amount of blood pumped from the left ventricle / from the heart each minute.<br><em>Accept: stroke volume &times; heart rate.</em>",
-                hint: "It measures how much blood leaves the heart in 60 seconds.",
+                marks: 3,
+                question: "Describe each of the following terms:<br>• Cardiac output<br>• Stroke volume<br>• Heart rate",
+                markScheme: "<em>1 mark for each description.</em><ul><li><strong>(cardiac output)</strong> the volume of blood pumped out of the heart in one minute;</li><li><strong>(stroke volume)</strong> the volume of blood pumped out of the heart in one beat;</li><li><strong>(heart rate)</strong> the number of heart beats / contractions per minute;</li></ul><em>Accept alternative wording.</em>",
+                hint: "Be super careful not to mix up 'per beat' (Stroke volume) and 'per minute' (Cardiac output)!",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "Define the following terms: Heart rate, Stroke volume.",
-                markScheme: "2 marks for:<br><ul><li><strong>Heart rate:</strong> the number of heart contractions / beats per minute;</li><li><strong>Stroke volume:</strong> the volume / amount of blood pumped out of the heart in one beat / each beat;</li></ul>",
-                hint: "One is how fast it beats, the other is how much blood leaves in a single pump.",
+                question: "Complete the equation that can be used to calculate cardiac output:<br><br>________________ &times; ________________ = cardiac output",
+                markScheme: "<em>1 mark for each part of equation.</em><ul><li><strong>heart rate;</strong> &times; <strong>stroke volume;</strong> (accept in either order)</li></ul>",
+                hint: "Q = HR × SV!",
+                isOfficial: true
+            },
+            {
+                section: "Cardiac output",
+                marks: 3,
+                question: "Calculate the cardiac output of a performer who has a heart rate of 75 beats per minute and a stroke volume of 85 ml. Show your working and give the unit.",
+                markScheme: "<em>1 mark for showing working / the correct formula.<br>1 mark for the correct answer.<br>1 mark for the unit.</em><ul><li><strong>Working:</strong> heart rate &times; stroke volume OR 75 &times; 85; (1 mark)</li><li><strong>Answer:</strong> 6375 (or 6.375); (1 mark)</li><li><strong>Unit:</strong> ml per min (or litres per min); (1 mark)</li></ul><em>Allow correct answer for other units.</em>",
+                hint: "Don't lose an easy mark—show your working (75 × 85), write the number, and include the unit (ml per min)!",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "Calculate the cardiac output for a performer who has a heart rate of 150 beats per minute and a stroke volume of 90 ml.<br><br>Give the answer and the appropriate unit.",
-                markScheme: "1 mark for the calculation, 1 mark for the unit:<br><ul><li><strong>Calculation:</strong> 13.5 (or 13500)</li><li><strong>Unit:</strong> litres per minute (or ml per minute)</li></ul>",
-                hint: "Multiply the two numbers. 150 &times; 90 = ?",
+                question: "Calculate the cardiac output for a performer who has a heart rate of 150 beats per minute and a stroke volume of 90 ml. Give the answer and the appropriate unit.",
+                markScheme: "<em>1 mark for the calculation, 1 mark for the unit:</em><ul><li><strong>calculation:</strong> 13.5 (or 13500);</li><li><strong>unit:</strong> litres per minute (or ml per minute);</li></ul>",
+                hint: "150 × 90 = 13,500 ml/min (or divide by 1,000 for 13.5 litres/min).",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "A performer has a resting heart rate of 60 beats per minute and a cardiac output of 4.2 litres per minute.<br><br>Calculate the stroke volume of the performer. Include appropriate units.",
-                markScheme: "1 mark for value, 1 mark for appropriate unit:<br><ul><li><strong>Value:</strong> 0.07 / 70</li><li><strong>Unit:</strong> litres / millilitres</li></ul><br><em>(4.2 &divide; 60 = 0.07L)</em>",
-                hint: "Work backwards from the equation: Cardiac Output = Heart Rate &times; Stroke Volume.",
+                question: "A performer has a resting heart rate of 60 beats per minute and a cardiac output of 4.2 litres per minute. Calculate the stroke volume of the performer. Include appropriate units.",
+                markScheme: "<em>1 mark for value:</em><ul><li><strong>0.07 / 70;</strong></li></ul><em>1 mark for appropriate unit for correct value:</em><ul><li><strong>litres / millilitres;</strong> (i.e. 0.07 litres OR 70 millilitres / ml)</li></ul><em>Accept other units if appropriate.</em>",
+                hint: "Rearrange the formula: Stroke Volume = Cardiac Output ÷ Heart Rate (4.2 litres ÷ 60 bpm = 0.07 litres, or 4200 ml ÷ 60 = 70 ml).",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "The table shows resting values of pulse rate and stroke volume for two performers.<br>Performer A: 75 bpm, 70 ml<br>Performer B: 50 bpm, 105 ml<br><br>Suggest possible reasons for the differences in pulse rate and stroke volume between Performer A and Performer B.",
-                markScheme: "2 marks from (for Performer B):<br><ul><li>more trained / fitter / more physically active</li><li>activity is more endurance-based</li><li>has a bigger heart / hypertrophy</li><li>has a stronger heart / heart is more efficient</li><li>is not suffering from illness</li></ul><br><em>Accept reverse for performer A.</em>",
-                hint: "Why would someone have a much lower resting heart rate but a much higher stroke volume?",
+                question: "The table shows resting values of pulse rate and stroke volume for two performers:<br>• Performer A: Resting pulse rate = 75 beats per minute | Resting stroke volume = 70 millilitres<br>• Performer B: Resting pulse rate = 50 beats per minute | Resting stroke volume = 105 millilitres<br><br>Suggest possible reasons for the differences in pulse rate and stroke volume between Performer A and Performer B.",
+                markScheme: "<em>2 from (for Performer B):</em><ul><li>more trained / fitter / more physically active;</li><li>activity is more endurance-based;</li><li>has a bigger heart (cardiac hypertrophy);</li><li>has a stronger heart;</li><li>is not suffering from illness;</li><li>heart is more efficient;</li></ul><em>Accept reverse for Performer A. Accept equivalent wording.</em>",
+                hint: "Notice that both performers have the exact same resting cardiac output (5,250 ml/min), but Performer B's heart only needs 50 beats instead of 75! Why?",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 3,
                 question: "Explain why the cardiac output of a marathon runner may differ from the cardiac output of a sedentary person during exercise of the same intensity.",
-                markScheme: "3 marks from:<br><ul><li>cardiac output is dependent on heart rate and stroke volume</li><li>(marathon runner) cardiac output is larger so more blood / oxygen can be sent to the working muscles</li><li>larger heart / hypertrophy as a result of aerobic / endurance training</li><li>larger stroke volume so more blood pumped out per beat</li><li>lower resting heart rate / bradycardia so can pump more blood with less beats / more efficient</li></ul>",
-                hint: "Think about the size of their heart muscle, how much blood leaves per beat, and how much oxygen their muscles need.",
+                markScheme: "<em>3 marks from:</em><ul><li>cardiac output is dependent on heart rate and stroke volume;</li><li>(marathon runner) cardiac output is larger so more blood / oxygen can be sent to the working muscles;</li><li>larger heart / hypertrophy as a result of aerobic / endurance training;</li><li>larger stroke volume so more blood pumped out per beat;</li><li>lower resting heart rate / bradycardia so can pump more blood with less beats / more efficient;</li></ul>",
+                hint: "Mention the equation (HR × SV), cardiac hypertrophy (bigger/stronger heart), and larger stroke volume delivering more oxygen.",
                 isOfficial: true
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "Define stroke volume and state what happens to it during exercise.",
-                markScheme: "<ul><li>The volume / amount of blood pumped out of the heart in one beat. (1 mark)</li><li>It increases during exercise. (1 mark)</li></ul>",
-                hint: "What does 'stroke' mean for the heart, and does the heart squeeze out more or less blood when you are running?",
+                question: "Describe the short-term effect of starting exercise on heart rate, stroke volume, and cardiac output.",
+                markScheme: "<ul><li>Both <strong>heart rate</strong> (beats per minute) and <strong>stroke volume</strong> (blood pumped per beat) increase when exercise begins. (1 mark)</li><li>Because cardiac output = heart rate &times; stroke volume, <strong>cardiac output increases</strong> significantly to deliver more oxygenated blood to the working muscles. (1 mark)</li></ul>",
+                hint: "When you start running, what happens to HR, SV, and Q, and why do your working muscles need that change?",
                 isOfficial: false
             },
             {
                 section: "Cardiac output",
                 marks: 2,
-                question: "Explain how regular, long-term endurance training affects a performer's resting heart rate and cardiac output.",
-                markScheme: "<ul><li>Resting heart rate decreases / bradycardia occurs. (1 mark)</li><li>Maximal cardiac output increases (due to an increased stroke volume from cardiac hypertrophy). (1 mark)</li></ul>",
-                hint: "What happens to the heart muscle when you train it like any other muscle? How does that affect how hard it has to work at rest?",
-                isOfficial: false
+                question: "Describe the long-term effects of regular exercise on resting pulse rate and stroke volume.",
+                markScheme: "<em>2 from:</em><ul><li><strong>resting pulse rate:</strong> reduces / decreases (bradycardia) / returns to resting heart rate more quickly; (1 mark)</li><li><strong>stroke volume:</strong> increases / the amount of blood pumped from the ventricle per beat increases; (1 mark)</li></ul>",
+                hint: "Over months of endurance training, does resting pulse rate go up or down? Does stroke volume go up or down?",
+                isOfficial: true
             }
         ];
 
@@ -811,15 +883,16 @@
                 return;
             }
 
-            // Word count validation (approx > 50% of mark scheme words)
+            // Word count validation (scales reasonably with question marks)
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = currentQuestion.markScheme;
             const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
             
             const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
             const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+            const expectedMinWords = Math.min(currentQuestion.marks * 6, msWordCount * 0.4);
 
-            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+            if (!bypassActive && (answerWordCount < expectedMinWords)) {
                 showModal(
                     "Are you sure?", 
                     "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
