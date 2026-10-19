@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Image Occlusion Player</title>
+  <title>IGCSE PE Image Occlusion Player</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
@@ -50,7 +50,7 @@
   <!-- Header -->
   <header class="bg-brandNavy text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-md z-30">
     <div class="flex items-center gap-3">
-      <div class="bg-brandGold text-brandNavy font-black px-3 py-1 rounded text-xs tracking-wider uppercase">STUDY</div>
+      <div class="bg-brandGold text-brandNavy font-black px-3 py-1 rounded text-xs tracking-wider uppercase">IGCSE PE</div>
       <h1 id="session-title" class="text-lg font-bold tracking-tight">Image Occlusion Player</h1>
     </div>
 
@@ -67,18 +67,20 @@
     </div>
   </header>
 
-  <!-- Expanding Category & Topic Dropdown Panel -->
-  <div id="topic-dropdown-panel" class="hidden fixed sm:absolute top-20 right-4 sm:right-6 w-[92vw] sm:w-96 bg-white border border-slate-200 rounded-xl shadow-2xl p-5 z-40">
+  <!-- Expanding Category & Topic Dropdown Panel (Only shows topics with question files) -->
+  <div id="topic-dropdown-panel" class="hidden fixed sm:absolute top-20 right-4 sm:right-6 w-[92vw] sm:w-[420px] bg-white border border-slate-200 rounded-xl shadow-2xl p-5 z-40">
     <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
       <div>
-        <h3 class="font-bold text-slate-800 text-sm">Choose Flashcard Topics</h3>
-        <p class="text-[11px] text-slate-400">Select one or combine multiple diagrams</p>
+        <h3 class="font-bold text-slate-800 text-sm">IGCSE Syllabus Flashcards</h3>
+        <p class="text-[11px] text-slate-400">Only units with created question files are shown</p>
       </div>
       <button onclick="toggleTopicMenu(false)" class="text-slate-400 hover:text-slate-700 text-lg leading-none px-1">✕</button>
     </div>
 
-    <!-- Expanding Category Accordion List -->
-    <div id="topic-list-container" class="space-y-2.5 max-h-80 overflow-y-auto pr-1"></div>
+    <!-- Accordion List -->
+    <div id="topic-list-container" class="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+      <p class="text-xs text-slate-400 py-4 text-center">Scanning available json files...</p>
+    </div>
 
     <!-- Interleave Option & Actions -->
     <div class="mt-4 pt-3 border-t border-slate-100 space-y-3">
@@ -118,7 +120,7 @@
       <div id="masks-layer" class="absolute inset-0"></div>
     </div>
 
-    <!-- Empty / Error Message -->
+    <!-- Empty State -->
     <div id="empty-state" class="hidden text-center max-w-md bg-white border border-slate-200 rounded-xl p-6 shadow-sm mt-4">
       <p id="empty-state-text" class="text-sm text-slate-600 mb-3"></p>
       <button onclick="toggleTopicMenu(true)" class="bg-brandNavy text-white text-xs font-bold px-4 py-2 rounded-lg">Open Topic Menu</button>
@@ -134,24 +136,24 @@
       <div id="srs-buttons" class="hidden grid grid-cols-4 gap-2.5 w-full">
         <button onclick="gradeCard('again')" class="bg-slate-200 hover:bg-red-100 hover:text-brandRed text-slate-800 py-3 rounded-xl font-bold border-b-4 border-slate-300 active:border-b-0 active:translate-y-1 transition flex flex-col items-center">
           <span>Again</span>
-          <span class="text-[10px] opacity-65 font-normal">Key: 1 · +2 cards</span>
+          <span class="text-[10px] opacity-65 font-normal">Key: 1</span>
         </button>
         <button onclick="gradeCard('hard')" class="bg-slate-200 hover:bg-amber-100 hover:text-amber-800 text-slate-800 py-3 rounded-xl font-bold border-b-4 border-slate-300 active:border-b-0 active:translate-y-1 transition flex flex-col items-center">
           <span>Hard</span>
-          <span class="text-[10px] opacity-65 font-normal">Key: 2 · Halfway</span>
+          <span class="text-[10px] opacity-65 font-normal">Key: 2</span>
         </button>
         <button onclick="gradeCard('ok')" class="bg-brandNavy hover:bg-blue-900 text-white py-3 rounded-xl font-bold border-b-4 border-blue-950 active:border-b-0 active:translate-y-1 transition flex flex-col items-center">
           <span>OK</span>
-          <span class="text-[10px] opacity-75 font-normal">Key: 3 · End of queue</span>
+          <span class="text-[10px] opacity-75 font-normal">Key: 3</span>
         </button>
         <button onclick="gradeCard('easy')" class="bg-brandGold hover:bg-yellow-400 text-brandNavy py-3 rounded-xl font-bold border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 transition flex flex-col items-center">
           <span>Easy</span>
-          <span class="text-[10px] opacity-80 font-normal">Key: 4 · Mastered ✓</span>
+          <span class="text-[10px] opacity-80 font-normal">Key: 4 ✓</span>
         </button>
       </div>
     </div>
 
-    <!-- Celebration Finale Modal -->
+    <!-- Celebration Modal -->
     <div id="celebration-overlay" class="hidden absolute inset-0 bg-slate-900/60 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-6">
       <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
         <div class="text-6xl mb-3">🏆</div>
@@ -177,6 +179,7 @@
   <script>
     let manifestData = { categories: [] };
     let topicCache = {};
+    let activeCategories = []; // Only categories that contain at least 1 valid json file
     let sessionQueue = [];
     let initialQueueSize = 0;
     let totalReviewsCount = 0;
@@ -198,9 +201,38 @@
         const res = await fetch('manifest.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         manifestData = await res.json();
+
+        // CONDITIONAL FILTERING: Test-fetch each topic file to verify questions exist
+        activeCategories = [];
+        for (const cat of manifestData.categories) {
+          const validTopics = [];
+          for (const top of cat.topics) {
+            try {
+              const tRes = await fetch(top.file);
+              if (tRes.ok) {
+                const tData = await tRes.json();
+                if (tData.masks && tData.masks.length > 0) {
+                  topicCache[top.id] = tData; // Cache successfully loaded data
+                  validTopics.push(top);
+                }
+              }
+            } catch (e) {
+              // File doesn't exist yet — skip it silently from the menu
+            }
+          }
+          if (validTopics.length > 0) {
+            activeCategories.push({ name: cat.name, topics: validTopics });
+          }
+        }
+
         renderTopicMenu();
 
-        // Check URL parameter ?topics=bones,muscles or auto-select the first topic
+        if (activeCategories.length === 0) {
+          showEmptyState("No question files found in your /json/ folder yet! Use ankibuilder.html to create your first flashcard set.");
+          return;
+        }
+
+        // Auto-select first available topic or URL param
         const params = new URLSearchParams(window.location.search);
         const topicParam = params.get('topics') || params.get('topic');
         if (topicParam) {
@@ -215,25 +247,26 @@
         updateBadgeCount();
         await applyTopicSelection(false);
       } catch (err) {
-        showEmptyState("Could not load manifest.json. Make sure manifest.json is in the same folder as index.html.");
+        showEmptyState("Could not load manifest.json. Make sure manifest.json is in the root folder.");
       }
     });
 
-    // Render Expanding Category Lists with Parent Checkboxes
+    // Render only categories/topics that have valid json files with questions
     function renderTopicMenu() {
       const container = document.getElementById('topic-list-container');
       container.innerHTML = '';
 
-      manifestData.categories.forEach((cat, catIdx) => {
+      activeCategories.forEach((cat, catIdx) => {
         const section = document.createElement('div');
-        section.className = 'border border-slate-200 rounded-lg overflow-hidden bg-slate-50/60';
+        section.className = 'border border-slate-200 rounded-lg overflow-hidden bg-slate-50/60 mb-2';
 
         const topicsHtml = cat.topics.map(top => `
           <label class="flex items-center gap-2.5 py-1.5 px-2 rounded hover:bg-white text-sm text-slate-700 cursor-pointer transition">
-            <input type="checkbox" value="${top.id}" data-file="${top.file}" data-cat="${catIdx}"
+            <input type="checkbox" value="${top.id}" data-cat="${catIdx}"
                    class="topic-checkbox accent-brandNavy w-4 h-4 rounded cursor-pointer"
                    onchange="onTopicCheckboxChange(${catIdx})">
             <span class="flex-1 font-medium">${top.title}</span>
+            <span class="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-mono">${topicCache[top.id].masks.length} Qs</span>
           </label>
         `).join('');
 
@@ -286,7 +319,7 @@
 
     function selectAllTopics(status) {
       document.querySelectorAll('.topic-checkbox').forEach(cb => cb.checked = status);
-      manifestData.categories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
+      activeCategories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
       updateBadgeCount();
     }
 
@@ -294,7 +327,7 @@
       const count = document.querySelectorAll('.topic-checkbox:checked').length;
       document.getElementById('selected-count-badge').innerText = count;
       document.getElementById('start-session-btn').classList.toggle('hidden', count === 0);
-      manifestData.categories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
+      activeCategories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
     }
 
     function toggleTopicMenu(forceState) {
@@ -306,7 +339,6 @@
       }
     }
 
-    // Close dropdown when clicking outside
     window.addEventListener('click', (e) => {
       const panel = document.getElementById('topic-dropdown-panel');
       const btn = document.getElementById('topic-menu-btn');
@@ -327,46 +359,36 @@
       sessionQueue = [];
       totalReviewsCount = 0;
       againCount = 0;
-      const missingFiles = [];
 
       for (const cb of checked) {
         const topicId = cb.value;
-        const file = cb.dataset.file;
-        try {
-          if (!topicCache[topicId]) {
-            const res = await fetch(file);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            topicCache[topicId] = await res.json();
-          }
-          const data = topicCache[topicId];
-          const topicCards = (data.masks || []).map(m => ({ topicId, maskId: m.id }));
-          // Shuffle within each topic first
+        const data = topicCache[topicId];
+        if (data && data.masks) {
+          const topicCards = data.masks.map(m => ({ topicId, maskId: m.id }));
           topicCards.sort(() => Math.random() - 0.5);
           sessionQueue.push(...topicCards);
-        } catch (e) {
-          missingFiles.push(file);
         }
       }
 
       if (sessionQueue.length === 0) {
-        showEmptyState(
-          missingFiles.length > 0
-            ? `Could not load JSON file(s): ${missingFiles.join(', ')}. Use ankibuilder.html to create and save them into your /json folder.`
-            : "The selected topic has 0 occlusion masks."
-        );
+        showEmptyState("Selected topics have 0 masks.");
         return;
       }
 
-      // Shuffle across topics if Interleave is checked
       if (document.getElementById('interleave-toggle').checked && checked.length > 1) {
         sessionQueue.sort(() => Math.random() - 0.5);
       }
 
       initialQueueSize = sessionQueue.length;
 
-      // Update Header Title
       if (checked.length === 1 && topicCache[checked[0].value]) {
-        document.getElementById('session-title').innerText = topicCache[checked[0].value].title;
+        // Find title across active categories
+        let tTitle = checked[0].value;
+        activeCategories.forEach(cat => {
+          const match = cat.topics.find(t => t.id === checked[0].value);
+          if (match) tTitle = match.title;
+        });
+        document.getElementById('session-title').innerText = tTitle;
       } else {
         document.getElementById('session-title').innerText = `${checked.length} Topics Combined (${initialQueueSize} Labels)`;
       }
@@ -381,7 +403,7 @@
       document.getElementById('canvas-container').classList.add('hidden');
       document.getElementById('empty-state-text').innerText = msg;
       document.getElementById('empty-state').classList.remove('hidden');
-      document.getElementById('progress-text').innerText = "Waiting for topic data...";
+      document.getElementById('progress-text').innerText = "Waiting for setup...";
       document.getElementById('queue-stats').innerText = "";
     }
 
@@ -453,7 +475,7 @@
       } else if (rating === 'ok') {
         sessionQueue.push(card);
       }
-      // 'easy' graduates the card (not re-inserted)
+      // 'easy' graduates the card
 
       nextCard();
     }
@@ -468,12 +490,10 @@
 
     function triggerCelebration() {
       updateProgress();
-      // Clear all masks so the full completed diagram is visible
       document.getElementById('masks-layer').innerHTML = '';
       document.getElementById('action-bar').classList.add('hidden');
       document.getElementById('celebration-overlay').classList.remove('hidden');
 
-      // Multi-burst fireworks
       const end = Date.now() + 2200;
       (function frame() {
         confetti({ particleCount: 4, angle: 60, spread: 55, origin: { x: 0, y: 0.65 } });
@@ -481,15 +501,13 @@
         if (Date.now() < end) requestAnimationFrame(frame);
       })();
 
-      // Select random win message + dynamic badge
       const win = WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)];
       document.getElementById('win-headline').innerText = win.h;
       document.getElementById('win-sub').innerText = win.sub;
 
       let badge = "⚡ Session Complete";
       if (totalReviewsCount === initialQueueSize) badge = "🎯 Flawless First-Try Sweep!";
-      else if (againCount >= 3) badge = "🛡️ Relentless Grit — All Mastered!";
-      else if (document.querySelectorAll('.topic-checkbox:checked').length > 1) badge = "🔥 Interleaving Champion!";
+      else if (againCount >= 3) badge = "🛡️ Relentless Grit — Mastered!";
       document.getElementById('win-badge').innerText = badge;
 
       document.getElementById('session-summary-stats').innerHTML = `
