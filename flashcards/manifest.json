@@ -3,8 +3,8 @@
     {
       "name": "Skeletal & Muscular Systems",
       "topics": [
-        { "id": "bones", "title": "Structure of the Skeletal System", "file": "flashcards/bones.json" },
-        { "id": "muscles", "title": "Voluntary Muscles", "file": "flashcards/voluntary-muscles.json" }
+        { "id": "bones", "title": "Structure of the Skeletal System", "file": "json/bones.json" },
+        { "id": "muscles", "title": "Voluntary Muscles", "file": "json/voluntary-muscles.json" }
       ]
     }
   ]
