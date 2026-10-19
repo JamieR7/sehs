@@ -36,7 +36,7 @@
       position: absolute;
       background-color: #004587; /* cdlNavy */
       border: 2px solid #FBBA07; /* cdlGold */
-      transition: all 0.15s ease;
+      transition: all 0.2s ease;
       user-select: none;
       border-radius: 2px;
     }
@@ -49,10 +49,8 @@
       cursor: pointer;
     }
     .mask.revealed {
-      background-color: rgba(251, 186, 7, 0.12); /* cdlGold tint */
-      border: 2px dashed #004587; /* cdlNavy */
+      opacity: 0;
       pointer-events: none;
-      z-index: 5;
     }
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
@@ -130,7 +128,7 @@
         </div>
       </div>
 
-      <!-- NEW: Hide 1 vs Hide All Toggle -->
+      <!-- Hide 1 vs Hide All Toggle -->
       <div class="flex justify-between items-center px-1 pb-1">
         <label class="flex items-center gap-2.5 text-sm text-cdlNavy cursor-pointer font-medium" title="Uncheck this to use 'Hide One, Guess One'">
           <input type="checkbox" id="hide-all-toggle" checked class="accent-cdlBrightBlue w-4 h-4 rounded">
@@ -462,7 +460,6 @@
       isRevealed = false;
       const topic = topicCache[currentCard.topicId];
       
-      // Determine if we should hide all other masks or reveal them immediately
       const hideAll = document.getElementById('hide-all-toggle').checked;
 
       const img = document.getElementById('topic-image');
@@ -478,7 +475,6 @@
         const div = document.createElement('div');
         const isTarget = m.id === currentCard.maskId;
         
-        // Apply classes based on the new Hide Mode toggle
         div.className = `mask ${isTarget ? 'active' : (hideAll ? '' : 'revealed')}`;
         
         div.style.left = `${m.x}%`;
@@ -519,7 +515,6 @@
       } else if (rating === 'ok') {
         sessionQueue.push(card);
       }
-      // 'easy' graduates the card
 
       nextCard();
     }
