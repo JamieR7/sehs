@@ -81,58 +81,51 @@
     <!-- CONTROLS BAR -->
     <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-end z-30 flex-shrink-0">
       
-      <!-- 1. Searchable Image Path Dropdown + File Picker -->
-      <div class="flex-1 min-w-[260px] relative" id="image-picker-wrapper">
+      <!-- 1. Select Diagram Image -->
+      <div class="flex-1 min-w-[240px] relative" id="image-picker-wrapper">
         <div class="flex justify-between items-center mb-1.5">
-          <label class="text-[11px] font-bold text-cdlNavy uppercase tracking-wider">1. Select Diagram Image</label>
+          <label class="text-[11px] font-bold text-cdlNavy uppercase tracking-wider">1. Image File Path</label>
           <label class="text-[11px] font-bold text-cdlBrightBlue hover:underline cursor-pointer flex items-center gap-1">
-            <span>📂 Browse `/images`</span>
+            <span>📂 Browse</span>
             <input type="file" id="local-file-picker" accept="image/*" class="hidden" onchange="handleFilePick(event)">
           </label>
         </div>
         <div class="relative">
           <input type="text" id="image-path" value="images/Bones.png" 
-                 placeholder="images/YourDiagram.png"
+                 placeholder="images/file.png"
                  autocomplete="off"
                  onfocus="openImageDropdown()"
                  oninput="filterImageDropdown()"
                  onchange="loadImage(false)"
-                 class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow">
-          <button type="button" onclick="toggleImageDropdown()" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cdlNavy px-2">
-            ▼
-          </button>
+                 class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-cdlBrightBlue font-medium">
+          <button type="button" onclick="toggleImageDropdown()" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 px-2">▼</button>
         </div>
         <div id="image-dropdown" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl max-h-60 overflow-y-auto z-50 divide-y divide-slate-100"></div>
       </div>
 
-      <!-- 2. Nested Checkbox Dropdown for Syllabus Topic -->
-      <div class="flex-1 min-w-[280px] relative" id="syllabus-picker-wrapper">
-        <div class="flex justify-between items-center mb-1.5">
-          <label class="text-[11px] font-bold text-cdlNavy uppercase tracking-wider">2. Map to Syllabus Topic</label>
-          <span id="selected-id-badge" class="text-[10px] font-mono bg-slate-100 text-cdlNavy px-2 py-0.5 rounded font-bold">skeletal-system.json</span>
-        </div>
-        <div class="relative">
-          <button type="button" id="topic-selector-btn" onclick="toggleSyllabusDropdown()" 
-                  class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm text-left focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow truncate flex items-center justify-between">
-            <span id="topic-selector-text" class="truncate text-cdlNavy font-semibold">Skeletal and Muscular System</span>
-            <span class="text-slate-400 text-xs">▼</span>
-          </button>
-        </div>
-
-        <!-- Expandable Accordion Checkbox Menu (matches index.html) -->
-        <div id="syllabus-dropdown" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl p-3 max-h-80 overflow-y-auto z-50 space-y-2"></div>
-        
-        <!-- Hidden inputs for JSON export -->
-        <input type="hidden" id="topic-title" value="Skeletal and Muscular System">
-        <input type="hidden" id="topic-id" value="skeletal-system">
+      <!-- 2. Topic Title Input -->
+      <div class="flex-1 min-w-[220px]">
+        <label class="block text-[11px] font-bold text-cdlNavy uppercase tracking-wider mb-1.5">2. Topic Title</label>
+        <input type="text" id="topic-title" value="FITT Principle" oninput="updateIdentifiers()"
+               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cdlBrightBlue font-medium">
       </div>
 
-      <!-- Action Buttons -->
+      <!-- 3. Unique ID Input -->
+      <div class="w-40">
+        <label class="block text-[11px] font-bold text-cdlNavy uppercase tracking-wider mb-1.5">3. Unique ID</label>
+        <input type="text" id="topic-id" value="fitt" oninput="updateIdentifiers()"
+               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-cdlBrightBlue font-medium">
+      </div>
+
+      <!-- Action Buttons & Manifest Generator -->
       <div class="flex items-center gap-2">
-        <button type="button" onclick="clearAllBoxes()" title="Clear all masks" class="bg-white hover:bg-red-50 text-slate-600 hover:text-cdlRed border border-slate-300 font-bold px-3.5 py-2 rounded-lg text-sm transition-colors flex items-center gap-1.5">
+        <button type="button" onclick="clearAllBoxes()" class="bg-white hover:bg-red-50 text-slate-600 hover:text-cdlRed border border-slate-300 font-bold px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-1.5">
           Clear <span id="mask-count" class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded-full">0</span>
         </button>
-        <button type="button" onclick="exportJSON('copy')" id="copy-btn" class="bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold px-4 py-1.5 rounded-lg text-sm transition-all">
+        <button type="button" onclick="exportManifestLine()" id="manifest-btn" title="Copy manifest JSON line" class="bg-slate-100 hover:bg-slate-200 text-cdlNavy font-bold px-3.5 py-2 rounded-lg text-sm transition-all border border-slate-300">
+          📋 Copy Manifest Line
+        </button>
+        <button type="button" onclick="exportJSON('copy')" id="copy-btn" class="bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold px-4 py-2 rounded-lg text-sm transition-all">
           📋 Copy JSON
         </button>
         <button type="button" onclick="exportJSON('download')" class="bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold px-4 py-2 rounded-lg text-sm shadow transition-all">
@@ -146,12 +139,11 @@
       <div id="img-error" class="hidden text-center max-w-md p-8 bg-white rounded-2xl shadow-lg border border-slate-200">
         <div class="text-cdlRed font-bold text-base mb-2">Could not load image at path:</div>
         <code id="error-path" class="text-sm bg-slate-100 px-3 py-1.5 rounded-md text-slate-700 block mb-4 border border-slate-200"></code>
-        <p class="text-xs text-slate-500 leading-relaxed">Click <strong>📂 Browse `/images`</strong> above to select the file directly from your folder, or check that the filename case (`.png` vs `.PNG`) matches exactly.</p>
+        <p class="text-xs text-slate-500 leading-relaxed">Click <strong>📂 Browse</strong> above to select the image file directly from your computer.</p>
       </div>
 
       <div id="draw-area" class="relative inline-block shadow-2xl bg-white rounded-sm overflow-hidden">
         <img id="source-img" src="" class="block max-h-[calc(100vh-250px)] max-w-full w-auto h-auto pointer-events-none select-none" alt="Diagram">
-        <!-- FIXED: Unified ID so JavaScript can draw & select boxes properly -->
         <div id="boxes-layer" class="absolute inset-0"></div>
       </div>
     </div>
@@ -161,10 +153,9 @@
       <div class="flex items-center gap-3">
         <span><strong class="text-cdlNavy">Draw:</strong> Click &amp; drag on image</span> <span class="opacity-30">|</span>
         <span><strong class="text-cdlNavy">Duplicate:</strong> <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Ctrl/Cmd + D</kbd></span> <span class="opacity-30">|</span>
-        <span><strong class="text-cdlNavy">Peek:</strong> Hold <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Alt</kbd></span> <span class="opacity-30">|</span>
         <span><strong class="text-cdlNavy">Delete:</strong> <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Backspace</kbd></span>
       </div>
-      <div>Save into folder: <code class="bg-white border border-slate-200 px-2 py-0.5 rounded text-cdlNavy font-bold shadow-sm">json/<span id="footer-filename">skeletal-system</span>.json</code></div>
+      <div>Save into folder: <code class="bg-white border border-slate-200 px-2 py-0.5 rounded text-cdlNavy font-bold shadow-sm">json/<span id="footer-filename">fitt</span>.json</code></div>
     </div>
 
   </div>
@@ -174,7 +165,6 @@
     const boxesLayer = document.getElementById('boxes-layer');
     const sourceImg = document.getElementById('source-img');
     const imageDropdown = document.getElementById('image-dropdown');
-    const syllabusDropdown = document.getElementById('syllabus-dropdown');
 
     let boxes = [];
     let selectedBoxId = null;
@@ -183,158 +173,59 @@
     let moveOffsetX = 0, moveOffsetY = 0;
     let activeBox = null;
 
-    // Embedded IGCSE Syllabus Map (Works offline & online)
-    const fallbackSyllabusMap = {
-      "categories": [
-        {
-          "name": "1. Anatomy and Physiology",
-          "topics": [
-            { "id": "skeletal-system", "title": "Skeletal and Muscular System" },
-            { "id": "voluntary-muscles", "title": "Voluntary Muscles" },
-            { "id": "respiratory-system", "title": "Respiratory System" },
-            { "id": "circulatory-system", "title": "Circulatory System" },
-            { "id": "energy-supply", "title": "Energy Supply & Effects of Exercise" },
-            { "id": "biomechanics", "title": "Simple Biomechanics" }
-          ]
-        },
-        {
-          "name": "2. Health, Fitness and Training",
-          "topics": [
-            { "id": "health-wellbeing", "title": "Health and Well-being" },
-            { "id": "components-fitness", "title": "Components of Fitness & Testing" },
-            { "id": "training-principles", "title": "Principles of Training & SPORT/FITT" },
-            { "id": "training-methods", "title": "Training Methods & Altitude Training" },
-            { "id": "warm-up-cool-down", "title": "Warming Up & Cooling Down" }
-          ]
-        },
-        {
-          "name": "3. Skill Acquisition and Psychology",
-          "topics": [
-            { "id": "skill-ability", "title": "Skill and Ability" },
-            { "id": "information-processing", "title": "Information Processing & Memory" },
-            { "id": "stages-learning", "title": "Stages of Learning, Feedback & Guidance" },
-            { "id": "psychology-factors", "title": "Goal Setting, Motivation, Arousal & Anxiety" },
-            { "id": "personality-types", "title": "Personality Types & Relaxation" }
-          ]
-        },
-        {
-          "name": "4. Social, Cultural and Ethical Influences",
-          "topics": [
-            { "id": "leisure-recreation", "title": "Leisure, Recreation & Growth" },
-            { "id": "sport-industry", "title": "Sponsorship, Media & Global Events" },
-            { "id": "access-technology", "title": "Technology & Factors Affecting Access" },
-            { "id": "ethics-drugs", "title": "PEDs, Blood Doping & Sportsmanship" },
-            { "id": "risk-injury", "title": "Risk, Risk Assessment & Injuries" }
-          ]
-        }
-      ]
-    };
-
-    let manifestData = fallbackSyllabusMap;
-
     let availableImages = [
-      { path: 'images/Bones.png', topicId: 'skeletal-system', topicTitle: 'Skeletal and Muscular System' },
-      { path: 'images/VoluntaryMuscles.png', topicId: 'voluntary-muscles', topicTitle: 'Voluntary Muscles' },
-      { path: 'images/TrainingMethods.png', topicId: 'training-methods', topicTitle: 'Training Methods & Altitude Training' }
+      { path: 'images/Bones.png' },
+      { path: 'images/VoluntaryMuscles.png' },
+      { path: 'images/TrainingMethods.png' },
+      { path: 'images/FITT.png' }
     ];
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      renderSyllabusDropdown();
+    window.addEventListener('DOMContentLoaded', () => {
       renderImageDropdown();
       loadImage(true);
-
-      // Load live manifest.json if available and merge any new topics
-      try {
-        const res = await fetch('manifest.json');
-        if (res.ok) {
-          manifestData = await res.json();
-          renderSyllabusDropdown();
-        }
-      } catch (err) {
-        // Uses embedded fallbackSyllabusMap seamlessly
-      }
+      updateIdentifiers();
     });
 
-    /* --- 2. Nested Accordion Checkbox Dropdown for Syllabus Topics --- */
-    function renderSyllabusDropdown() {
-      const currentId = document.getElementById('topic-id').value;
-      syllabusDropdown.innerHTML = '';
+    function updateIdentifiers() {
+      const id = document.getElementById('topic-id').value.trim() || 'topic';
+      document.getElementById('footer-filename').innerText = id;
+    }
 
-      manifestData.categories.forEach((cat, catIdx) => {
-        const section = document.createElement('div');
-        section.className = 'border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm';
+    function exportManifestLine() {
+      const id = document.getElementById('topic-id').value.trim();
+      const title = document.getElementById('topic-title').value.trim();
+      
+      if (!id) {
+        alert("Please enter a Unique ID first!");
+        return;
+      }
 
-        const topicsHtml = cat.topics.map(top => {
-          const isChecked = top.id === currentId;
-          return `
-            <label class="flex items-center gap-2.5 py-2 px-3 rounded hover:bg-slate-50 text-xs sm:text-sm text-slate-700 cursor-pointer transition">
-              <input type="checkbox" name="builder-topic" value="${top.id}" 
-                     ${isChecked ? 'checked' : ''}
-                     onchange="selectSyllabusTopic('${top.id}', '${top.title.replace(/'/g, "\\'")}')"
-                     class="builder-topic-cb accent-cdlNavy w-4 h-4 rounded cursor-pointer">
-              <span class="flex-1 font-medium ${isChecked ? 'text-cdlNavy font-bold' : ''}">${top.title}</span>
-              <span class="text-[10px] font-mono text-slate-400">${top.id}.json</span>
-            </label>
-          `;
-        }).join('');
-
-        section.innerHTML = `
-          <div class="flex items-center justify-between px-3 py-2 bg-slate-100/90 border-b border-slate-200 cursor-pointer" onclick="toggleBuilderCat(${catIdx})">
-            <span class="text-xs font-bold text-cdlNavy uppercase tracking-wider">${cat.name}</span>
-            <span id="builder-cat-arrow-${catIdx}" class="text-slate-400 text-xs">▼</span>
-          </div>
-          <div id="builder-cat-body-${catIdx}" class="p-1.5 space-y-0.5">
-            ${topicsHtml}
-          </div>
-        `;
-        syllabusDropdown.appendChild(section);
+      const snippet = `{ "id": "${id}", "title": "${title}", "file": "json/${id}.json" },`;
+      navigator.clipboard.writeText(snippet).then(() => {
+        const btn = document.getElementById('manifest-btn');
+        const orig = btn.innerText;
+        btn.innerText = '✓ Copied Line!';
+        setTimeout(() => btn.innerText = orig, 1800);
       });
     }
 
-    function toggleBuilderCat(catIdx) {
-      const body = document.getElementById(`builder-cat-body-${catIdx}`);
-      const arrow = document.getElementById(`builder-cat-arrow-${catIdx}`);
-      const isHidden = body.classList.toggle('hidden');
-      arrow.innerText = isHidden ? '▶' : '▼';
-    }
-
-    function toggleSyllabusDropdown() {
-      syllabusDropdown.classList.toggle('hidden');
-      imageDropdown.classList.add('hidden');
-    }
-
-    function selectSyllabusTopic(id, title) {
-      document.getElementById('topic-id').value = id;
-      document.getElementById('topic-title').value = title;
-      document.getElementById('topic-selector-text').innerText = title;
-      document.getElementById('selected-id-badge').innerText = `${id}.json`;
-      document.getElementById('footer-filename').innerText = id;
-
-      // Update checkboxes so only the active topic is checked
-      renderSyllabusDropdown();
-      syllabusDropdown.classList.add('hidden');
-    }
-
-    /* --- 1. Image Selector & File Browser --- */
     function renderImageDropdown(filterText = '') {
       const query = filterText.toLowerCase().trim();
       const filtered = availableImages.filter(img => img.path.toLowerCase().includes(query));
 
       let html = filtered.map(img => `
-        <button type="button" onclick="selectImageFromDropdown('${img.path}', '${img.topicId || ''}', '${(img.topicTitle || '').replace(/'/g, "\\'")}')"
+        <button type="button" onclick="selectImageFromDropdown('${img.path}')"
                 class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center justify-between text-sm transition-colors border-l-2 border-transparent hover:border-cdlBrightBlue group">
           <span class="font-medium text-slate-700 group-hover:text-cdlNavy">${img.path}</span>
-          <span class="text-[11px] text-slate-400">${img.topicTitle || ''}</span>
         </button>
       `).join('');
 
       html += `
         <button type="button" onclick="document.getElementById('local-file-picker').click()"
                 class="w-full text-left px-4 py-2.5 bg-slate-50 hover:bg-blue-50 text-cdlBrightBlue font-bold text-xs flex items-center gap-2">
-          <span>📂 Browse your computer / images folder...</span>
+          <span>📂 Browse computer for image...</span>
         </button>
       `;
-
       imageDropdown.innerHTML = html;
     }
 
@@ -342,15 +233,9 @@
       const file = event.target.files[0];
       if (!file) return;
       const relativePath = `images/${file.name}`;
-
-      if (!availableImages.some(i => i.path === relativePath)) {
-        availableImages.unshift({ path: relativePath, topicId: '', topicTitle: 'Selected file' });
-      }
-
       document.getElementById('image-path').value = relativePath;
       imageDropdown.classList.add('hidden');
 
-      // Preview immediately using local object URL so it works even before pushing to GitHub
       const previewUrl = URL.createObjectURL(file);
       sourceImg.src = previewUrl;
       boxes = [];
@@ -361,12 +246,10 @@
     function openImageDropdown() {
       renderImageDropdown('');
       imageDropdown.classList.remove('hidden');
-      syllabusDropdown.classList.add('hidden');
     }
 
     function toggleImageDropdown() {
       imageDropdown.classList.toggle('hidden');
-      syllabusDropdown.classList.add('hidden');
       if (!imageDropdown.classList.contains('hidden')) renderImageDropdown('');
     }
 
@@ -375,32 +258,18 @@
       imageDropdown.classList.remove('hidden');
     }
 
-    function selectImageFromDropdown(path, topicId, topicTitle) {
-      if (boxes.length > 0 && document.getElementById('image-path').value !== path) {
-        if (!confirm('Switching images will clear your current masks. Continue?')) {
-          imageDropdown.classList.add('hidden');
-          return;
-        }
-      }
+    function selectImageFromDropdown(path) {
       document.getElementById('image-path').value = path;
-      if (topicId && topicTitle) {
-        selectSyllabusTopic(topicId, topicTitle);
-      }
       imageDropdown.classList.add('hidden');
       loadImage(true);
     }
 
-    // Close dropdowns when clicking outside
     window.addEventListener('click', (e) => {
       if (!e.target.closest('#image-picker-wrapper')) {
         imageDropdown.classList.add('hidden');
       }
-      if (!e.target.closest('#syllabus-picker-wrapper')) {
-        syllabusDropdown.classList.add('hidden');
-      }
     });
 
-    /* --- Canvas & Box Drawing Logic --- */
     function loadImage(resetMasks = false) {
       sourceImg.src = document.getElementById('image-path').value.trim();
       if (resetMasks) {
@@ -518,7 +387,7 @@
     });
 
     window.addEventListener('keyup', (e) => {
-      if (e.key === 'Alt') drawArea.classList.remove('peek-mode');
+      if (e.key === 'Alt') drawArea.classList.remove('peek-node');
     });
 
     function clearAllBoxes() {
@@ -550,7 +419,7 @@
     function exportJSON(action = 'copy') {
       const topicId = document.getElementById('topic-id').value.trim();
       if (!topicId) {
-        alert("Please select a Syllabus Topic in Step 2 first!");
+        alert("Please enter a Unique ID first!");
         return;
       }
 
@@ -581,7 +450,7 @@
         navigator.clipboard.writeText(jsonString).then(() => {
           const btn = document.getElementById('copy-btn');
           const orig = btn.innerText;
-          btn.innerText = '✓ Copied!';
+          btn.innerText = '✓ Copied JSON!';
           setTimeout(() => btn.innerText = orig, 1800);
         });
       }
