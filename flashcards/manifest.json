@@ -4,6 +4,7 @@
       "name": "1. Anatomy and Physiology",
       "topics": [
         { "id": "skeletal-system", "title": "Skeletal and Muscular System", "file": "json/skeletal-system.json" },
+        { "id": "voluntary-muscles", "title": "Voluntary Muscles", "file": "json/voluntary-muscles.json" },
         { "id": "respiratory-system", "title": "Respiratory System", "file": "json/respiratory-system.json" },
         { "id": "circulatory-system", "title": "Circulatory System", "file": "json/circulatory-system.json" },
         { "id": "energy-supply", "title": "Energy Supply & Effects of Exercise", "file": "json/energy-supply.json" },
