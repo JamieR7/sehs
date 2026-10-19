@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anki Flashcard Builder</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Gotham', 'Helvetica Neue', 'sans-serif'] },
+          colors: { brandNavy: '#004587', brandGold: '#fbba07', brandRed: '#e73037' }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Gotham', 'Helvetica Neue', sans-serif; }
+    #draw-area { cursor: crosshair; }
+    .box { position: absolute; background: rgba(0, 69, 135, 0.6); border: 2px solid #004587; }
+    .box.selected { background: rgba(231, 48, 55, 0.4); border-color: #e73037; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-8 h-screen flex flex-col">
+
+  <div class="max-w-6xl w-full mx-auto flex flex-col h-full gap-4">
+    <!-- Builder Controls -->
+    <div class="bg-white p-4 rounded-xl shadow border border-slate-200 flex flex-wrap gap-4 items-end">
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-bold text-slate-500 mb-1">Image Path (in repo)</label>
+        <input type="text" id="image-path" value="images/Bones.jpg" class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 text-sm focus:outline-brandNavy" onchange="loadImage()">
+      </div>
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-bold text-slate-500 mb-1">Topic Title</label>
+        <input type="text" id="topic-title" value="Structure of the Skeletal System" class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 text-sm focus:outline-brandNavy">
+      </div>
+      <div class="flex-1 min-w-[200px]">
+        <label class="block text-xs font-bold text-slate-500 mb-1">Topic ID (no spaces)</label>
+        <input type="text" id="topic-id" value="bones" class="w-full bg-slate-50 border border-slate-300 rounded px-3 py-2 text-sm focus:outline-brandNavy">
+      </div>
+      <button onclick="exportJSON()" class="bg-brandNavy hover:bg-blue-800 text-white font-bold px-6 py-2 rounded transition">
+        Copy JSON
+      </button>
+    </div>
+
+    <!-- Workspace -->
+    <div class="flex-1 relative bg-slate-200 rounded-xl overflow-hidden shadow-inner border border-slate-300 flex items-center justify-center">
+      <div id="draw-area" class="relative inline-block shadow-xl bg-white">
+        <img id="source-img" src="" class="block max-h-[70vh] pointer-events-none select-none" alt="Load an image to begin">
+        <div id="boxes-layer" class="absolute inset-0"></div>
+      </div>
+    </div>
+    <div class="text-center text-xs text-slate-500 font-medium">Click and drag over the image to create masks. Click a mask to select it. Press Backspace/Delete to remove.</div>
+  </div>
+
+  <script>
+    const drawArea = document.getElementById('draw-area');
+    const boxesLayer = document.getElementById('boxes-layer');
+    let boxes = [];
+    let isDrawing = false;
+    let startX, startY;
+    let currentBox = null;
+    let selectedBoxId = null;
+
+    function loadImage() {
+      document.getElementById('source-img').src = document.getElementById('image-path').value;
+      boxes = [];
+      renderBoxes();
+    }
+
+    drawArea.addEventListener('mousedown', (e) => {
+      if(e.target.classList.contains('box')) {
+        selectedBoxId = e.target.dataset.id;
+        renderBoxes();
+        return;
+      }
+      selectedBoxId = null;
+      renderBoxes();
+      
+      const rect = drawArea.getBoundingClientRect();
+      isDrawing = true;
+      startX = ((e.clientX - rect.left) / rect.width) * 100;
+      startY = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      currentBox = { id: 'm' + Date.now(), x: startX, y: startY, w: 0, h: 0 };
+      boxes.push(currentBox);
+    });
+
+    drawArea.addEventListener('mousemove', (e) => {
+      if (!isDrawing) return;
+      const rect = drawArea.getBoundingClientRect();
+      const currX = ((e.clientX - rect.left) / rect.width) * 100;
+      const currY = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      currentBox.x = Math.min(startX, currX);
+      currentBox.y = Math.min(startY, currY);
+      currentBox.w = Math.abs(currX - startX);
+      currentBox.h = Math.abs(currY - startY);
+      renderBoxes();
+    });
+
+    drawArea.addEventListener('mouseup', () => {
+      if (!isDrawing) return;
+      isDrawing = false;
+      if (currentBox.w < 1 || currentBox.h < 1) {
+        boxes.pop(); // Remove accidental clicks
+      } else {
+        selectedBoxId = currentBox.id;
+      }
+      currentBox = null;
+      renderBoxes();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if ((e.key === 'Backspace' || e.key === 'Delete') && selectedBoxId) {
+        boxes = boxes.filter(b => b.id !== selectedBoxId);
+        selectedBoxId = null;
+        renderBoxes();
+      }
+    });
+
+    function renderBoxes() {
+      boxesLayer.innerHTML = '';
+      boxes.forEach(b => {
+        const div = document.createElement('div');
+        div.className = `box ${b.id === selectedBoxId ? 'selected' : ''}`;
+        div.dataset.id = b.id;
+        div.style.left = `${b.x}%`;
+        div.style.top = `${b.y}%`;
+        div.style.width = `${b.w}%`;
+        div.style.height = `${b.h}%`;
+        boxesLayer.appendChild(div);
+      });
+    }
+
+    function exportJSON() {
+      const data = {
+        id: document.getElementById('topic-id').value,
+        title: document.getElementById('topic-title').value,
+        image: document.getElementById('image-path').value,
+        masks: boxes.map((b, i) => ({
+          id: `m${i+1}`,
+          x: Number(b.x.toFixed(1)),
+          y: Number(b.y.toFixed(1)),
+          w: Number(b.w.toFixed(1)),
+          h: Number(b.h.toFixed(1))
+        }))
+      };
+      
+      navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+        alert("JSON copied to clipboard! Paste it into a new file in your /flashcards/ folder.");
+      });
+    }
+
+    // Load initial image
+    loadImage();
+  </script>
+</body>
+</html>
