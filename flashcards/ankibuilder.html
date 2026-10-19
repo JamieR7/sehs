@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Anki Flashcard Builder</title>
+  <title>IGCSE PE Flashcard Builder</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -30,71 +30,48 @@
       color: #ffffff;
       font-size: 11px;
       font-weight: 700;
-      transition: background-color 0.1s ease;
     }
-    .box:hover { background: rgba(0, 69, 135, 0.8); }
     .box.selected {
       background: rgba(231, 48, 55, 0.55);
       border: 2px solid #e73037;
-      box-shadow: 0 0 10px rgba(231, 48, 55, 0.5);
       z-index: 20;
     }
-    .peek-mode .box {
-      opacity: 0.15 !important;
-    }
+    .peek-mode .box { opacity: 0.15 !important; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 p-6 h-screen flex flex-col overflow-hidden">
 
   <div class="max-w-7xl w-full mx-auto flex flex-col h-full gap-4">
     
-    <!-- TOP CONTROLS BAR -->
+    <!-- CONTROLS BAR -->
     <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap gap-3 items-end z-30">
       
-      <!-- Searchable Image Selector -->
-      <div class="flex-1 min-w-[240px] relative">
-        <div class="flex justify-between items-center mb-1">
-          <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Image File (in /images)</label>
-          <span id="repo-status" class="text-[10px] text-slate-400 font-medium">Preset + Custom</span>
-        </div>
-        <div class="relative">
-          <input type="text" id="image-path" value="images/Bones.png" 
-                 placeholder="Search or type path (e.g. images/Bones.png)..."
-                 autocomplete="off"
-                 onfocus="openImageDropdown()"
-                 oninput="filterImageDropdown()"
-                 onchange="loadImage(false)"
-                 class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-brandNavy font-medium">
-          <button type="button" onclick="toggleImageDropdown()" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brandNavy">
-            ▼
-          </button>
-        </div>
-
-        <!-- Dropdown List -->
-        <div id="image-dropdown" class="hidden absolute left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl max-h-56 overflow-y-auto z-50 divide-y divide-slate-100">
-          <!-- Populated by JS -->
-        </div>
+      <!-- Image Path -->
+      <div class="flex-1 min-w-[240px]">
+        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Image Path (in /images)</label>
+        <input type="text" id="image-path" value="images/Bones.png" onchange="loadImage()"
+               class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brandNavy font-medium">
       </div>
 
       <!-- Topic Title -->
       <div class="flex-1 min-w-[200px]">
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Topic Title</label>
-        <input type="text" id="topic-title" value="Structure of the Skeletal System" 
+        <input type="text" id="topic-title" value="Skeletal and Muscular System" 
                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-brandNavy">
       </div>
 
-      <!-- Topic ID -->
-      <div class="w-44">
+      <!-- Filename ID -->
+      <div class="w-48">
         <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">JSON Filename / ID</label>
-        <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm focus-within:border-brandNavy">
-          <input type="text" id="topic-id" value="bones" class="w-full bg-transparent focus:outline-none font-mono text-sm">
+        <div class="flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          <input type="text" id="topic-id" value="skeletal-system" class="w-full bg-transparent focus:outline-none font-mono text-sm">
           <span class="text-slate-400 text-xs font-mono">.json</span>
         </div>
       </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-2">
-        <button onclick="clearAllBoxes()" title="Clear all masks" class="bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brandRed border border-slate-300 font-bold px-3 py-2 rounded-lg text-sm transition">
+        <button onclick="clearAllBoxes()" class="bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-brandRed border border-slate-300 font-bold px-3 py-2 rounded-lg text-sm transition">
           Clear (<span id="mask-count">0</span>)
         </button>
         <button onclick="exportJSON('copy')" id="copy-btn" class="bg-brandNavy hover:bg-blue-900 text-white font-bold px-4 py-2 rounded-lg text-sm shadow-sm transition">
@@ -108,31 +85,26 @@
 
     <!-- WORKSPACE -->
     <div class="flex-1 relative bg-slate-200 rounded-xl overflow-hidden shadow-inner border border-slate-300 flex items-center justify-center p-4">
-      
-      <!-- Empty / Error State -->
       <div id="img-error" class="hidden text-center max-w-md p-6 bg-white rounded-xl shadow border border-slate-200">
         <div class="text-brandRed font-bold text-sm mb-1">Could not load image at path:</div>
         <code id="error-path" class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-700 block mb-3"></code>
-        <p class="text-xs text-slate-500">Check that the filename and extension (e.g. <b>.png</b> vs <b>.jpg</b>) match your <code>/images</code> folder exactly.</p>
       </div>
 
-      <!-- Draw Canvas -->
       <div id="draw-area" class="relative inline-block shadow-xl bg-white rounded overflow-hidden">
         <img id="source-img" src="" class="block max-h-[72vh] max-w-full w-auto h-auto pointer-events-none select-none" alt="Diagram">
         <div id="boxes-layer" class="absolute inset-0"></div>
       </div>
     </div>
 
-    <!-- FOOTER SHORTCUTS BAR -->
+    <!-- FOOTER SHORTCUTS -->
     <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 font-medium px-1">
       <div>
-        <span class="font-bold text-brandNavy">Draw:</span> Click &amp; drag on image &nbsp;|&nbsp;
-        <span class="font-bold text-brandNavy">Move:</span> Drag existing box or use <kbd class="bg-white border px-1.5 py-0.5 rounded">Arrow Keys</kbd> &nbsp;|&nbsp;
-        <span class="font-bold text-brandNavy">Duplicate Box:</span> <kbd class="bg-white border px-1.5 py-0.5 rounded">Ctrl/Cmd + D</kbd> &nbsp;|&nbsp;
-        <span class="font-bold text-brandNavy">Peek Under Masks:</span> Hold <kbd class="bg-white border px-1.5 py-0.5 rounded">Alt</kbd> &nbsp;|&nbsp;
+        <span class="font-bold text-brandNavy">Draw:</span> Click &amp; drag &nbsp;|&nbsp; 
+        <span class="font-bold text-brandNavy">Duplicate:</span> <kbd class="bg-white border px-1.5 py-0.5 rounded">Ctrl/Cmd + D</kbd> &nbsp;|&nbsp; 
+        <span class="font-bold text-brandNavy">Peek:</span> Hold <kbd class="bg-white border px-1.5 py-0.5 rounded">Alt</kbd> &nbsp;|&nbsp; 
         <span class="font-bold text-brandNavy">Delete:</span> <kbd class="bg-white border px-1.5 py-0.5 rounded">Backspace</kbd>
       </div>
-      <div>Save exported file into <code class="bg-white border px-1.5 py-0.5 rounded text-brandNavy font-bold">json/<span id="footer-filename">bones</span>.json</code></div>
+      <div>Save into folder: <code class="bg-white border px-1.5 py-0.5 rounded text-brandNavy font-bold">json/<span id="footer-filename">skeletal-system</span>.json</code></div>
     </div>
 
   </div>
@@ -141,132 +113,20 @@
     const drawArea = document.getElementById('draw-area');
     const boxesLayer = document.getElementById('boxes-layer');
     const sourceImg = document.getElementById('source-img');
-    const imageDropdown = document.getElementById('image-dropdown');
-
-    // Default known images in your /images folder + auto-discovered GitHub images
-    let availableImages = [
-      { path: 'images/Bones.png', title: 'Structure of the Skeletal System', id: 'bones' },
-      { path: 'images/VoluntaryMuscles.png', title: 'Voluntary Muscles', id: 'muscles' }
-    ];
 
     let boxes = [];
     let selectedBoxId = null;
-
-    // Interaction state
-    let mode = null; // 'drawing' | 'moving' | null
+    let mode = null;
     let startX = 0, startY = 0;
     let moveOffsetX = 0, moveOffsetY = 0;
     let activeBox = null;
-
-    // 1. Auto-discover images from GitHub repo if hosted on github.io
-    async function discoverGitHubImages() {
-      const host = window.location.hostname;
-      const pathParts = window.location.pathname.split('/').filter(Boolean);
-      if (!host.endsWith('github.io') || pathParts.length === 0) {
-        renderImageDropdown();
-        return;
-      }
-      const owner = host.split('.')[0];
-      const repo = pathParts[0];
-      // Determine sub-path if inside a subfolder like /flashcards/
-      const folderPrefix = pathParts.slice(1, -1).join('/');
-      const apiPath = folderPrefix ? `${folderPrefix}/images` : 'images';
-
-      try {
-        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${apiPath}`);
-        if (!res.ok) throw new Error('GitHub API not reachable');
-        const files = await res.json();
-        const imgFiles = files.filter(f => /\.(png|jpe?g|webp|svg|gif)$/i.test(f.name));
-        if (imgFiles.length > 0) {
-          availableImages = imgFiles.map(f => {
-            const baseName = f.name.replace(/\.[^/.]+$/, '');
-            const cleanId = baseName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-            const cleanTitle = baseName.replace(/([A-Z])/g, ' $1').replace(/[-_]/g, ' ').trim();
-            return {
-              path: `images/${f.name}`,
-              title: cleanTitle.charAt(0).toUpperCase() + cleanTitle.slice(1),
-              id: cleanId
-            };
-          });
-          document.getElementById('repo-status').innerText = `✓ Synced ${imgFiles.length} from GitHub`;
-          document.getElementById('repo-status').className = 'text-[10px] text-emerald-600 font-bold';
-        }
-      } catch (e) {
-        // Fallback to preset list silently
-      }
-      renderImageDropdown();
-    }
-
-    function renderImageDropdown(filterText = '') {
-      const query = filterText.toLowerCase().trim();
-      const filtered = availableImages.filter(img => 
-        img.path.toLowerCase().includes(query) || img.title.toLowerCase().includes(query)
-      );
-
-      if (filtered.length === 0) {
-        imageDropdown.innerHTML = `<div class="px-3 py-2 text-xs text-slate-400">No preset match — press Enter to load custom path</div>`;
-        return;
-      }
-
-      imageDropdown.innerHTML = filtered.map(img => `
-        <button type="button" onclick="selectImageFromDropdown('${img.path}', '${img.title.replace(/'/g, "\\'")}', '${img.id}')"
-                class="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center justify-between text-sm transition">
-          <span class="font-medium text-slate-800">${img.path}</span>
-          <span class="text-xs text-slate-400 truncate ml-2">${img.title}</span>
-        </button>
-      `).join('');
-    }
-
-    function openImageDropdown() {
-      renderImageDropdown('');
-      imageDropdown.classList.remove('hidden');
-    }
-
-    function toggleImageDropdown() {
-      imageDropdown.classList.toggle('hidden');
-      if (!imageDropdown.classList.contains('hidden')) renderImageDropdown('');
-    }
-
-    function filterImageDropdown() {
-      renderImageDropdown(document.getElementById('image-path').value);
-      imageDropdown.classList.remove('hidden');
-    }
-
-    function selectImageFromDropdown(path, title, id) {
-      const currentPath = document.getElementById('image-path').value;
-      if (boxes.length > 0 && currentPath !== path) {
-        if (!confirm('Switching images will clear your current masks. Continue?')) {
-          imageDropdown.classList.add('hidden');
-          return;
-        }
-      }
-      document.getElementById('image-path').value = path;
-      document.getElementById('topic-title').value = title;
-      document.getElementById('topic-id').value = id;
-      document.getElementById('footer-filename').innerText = id;
-      imageDropdown.classList.add('hidden');
-      loadImage(true);
-    }
-
-    // Close dropdown when clicking outside
-    window.addEventListener('click', (e) => {
-      if (!e.target.closest('#image-dropdown') && !e.target.closest('#image-path') && !e.target.closest('button[onclick="toggleImageDropdown()"]')) {
-        imageDropdown.classList.add('hidden');
-      }
-    });
 
     document.getElementById('topic-id').addEventListener('input', (e) => {
       document.getElementById('footer-filename').innerText = e.target.value || 'topic';
     });
 
-    function loadImage(resetMasks = false) {
-      const path = document.getElementById('image-path').value.trim();
-      sourceImg.src = path;
-      if (resetMasks) {
-        boxes = [];
-        selectedBoxId = null;
-        renderBoxes();
-      }
+    function loadImage() {
+      sourceImg.src = document.getElementById('image-path').value.trim();
     }
 
     sourceImg.onload = () => {
@@ -280,16 +140,14 @@
       document.getElementById('img-error').classList.remove('hidden');
     };
 
-    // 2. Drawing & Dragging Logic (Clamped 0-100%)
     const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
 
     drawArea.addEventListener('mousedown', (e) => {
-      if (e.button !== 0) return; // Only left click
+      if (e.button !== 0) return;
       const rect = drawArea.getBoundingClientRect();
       const clickX = clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100);
       const clickY = clamp(((e.clientY - rect.top) / rect.height) * 100, 0, 100);
 
-      // Check if clicking an existing box to select & move it
       if (e.target.classList.contains('box')) {
         selectedBoxId = e.target.dataset.id;
         activeBox = boxes.find(b => b.id === selectedBoxId);
@@ -300,7 +158,6 @@
         return;
       }
 
-      // Otherwise start drawing a new box
       selectedBoxId = null;
       mode = 'drawing';
       startX = clickX;
@@ -332,7 +189,7 @@
       if (!mode) return;
       if (mode === 'drawing' && activeBox) {
         if (activeBox.w < 0.8 || activeBox.h < 0.8) {
-          boxes.pop(); // Ignore accidental tiny clicks
+          boxes.pop();
         } else {
           selectedBoxId = activeBox.id;
         }
@@ -342,18 +199,14 @@
       renderBoxes();
     });
 
-    // 3. Keyboard Shortcuts (Safe around inputs!)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Alt') drawArea.classList.add('peek-mode');
-
-      // Do not trigger mask shortcuts while typing inside an input field
       const tag = document.activeElement?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
 
       const selected = boxes.find(b => b.id === selectedBoxId);
       if (!selected) return;
 
-      // Delete selected box
       if (e.key === 'Backspace' || e.key === 'Delete') {
         e.preventDefault();
         boxes = boxes.filter(b => b.id !== selectedBoxId);
@@ -361,14 +214,12 @@
         renderBoxes();
       }
 
-      // Arrow keys to nudge selected box
       const step = e.shiftKey ? 1.0 : 0.2;
       if (e.key === 'ArrowLeft')  { e.preventDefault(); selected.x = clamp(selected.x - step, 0, 100 - selected.w); renderBoxes(); }
       if (e.key === 'ArrowRight') { e.preventDefault(); selected.x = clamp(selected.x + step, 0, 100 - selected.w); renderBoxes(); }
       if (e.key === 'ArrowUp')    { e.preventDefault(); selected.y = clamp(selected.y - step, 0, 100 - selected.h); renderBoxes(); }
       if (e.key === 'ArrowDown')  { e.preventDefault(); selected.y = clamp(selected.y + step, 0, 100 - selected.h); renderBoxes(); }
 
-      // Ctrl+D or Cmd+D to duplicate selected box (great for uniform labels)
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
         e.preventDefault();
         const dup = {
@@ -390,7 +241,7 @@
 
     function clearAllBoxes() {
       if (boxes.length === 0) return;
-      if (confirm('Remove all masks from this diagram?')) {
+      if (confirm('Remove all masks?')) {
         boxes = [];
         selectedBoxId = null;
         renderBoxes();
@@ -449,9 +300,7 @@
       }
     }
 
-    // Initialize
-    discoverGitHubImages();
-    loadImage(true);
+    loadImage();
   </script>
 </body>
 </html>
