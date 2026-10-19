@@ -65,6 +65,37 @@
             color: #004587;
             background-color: #f9fafb;
         }
+
+        /* Explicit styling for lists and tables inside questions and mark schemes */
+        #display-mark-scheme ul, #display-question ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        #display-mark-scheme li, #display-question li {
+            margin-bottom: 0.25rem;
+        }
+        .exam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+            background-color: #ffffff;
+        }
+        .exam-table th, .exam-table td {
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            color: #1f2937;
+            font-weight: normal;
+        }
+        .exam-table th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: #004587;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center py-10 px-4">
@@ -81,7 +112,7 @@
                 </a>
             </div>
             <h1 class="text-3xl font-light text-cdlBlue mb-1">IGCSE <span class="highlight-text font-bold">Physical Education</span></h1>
-            <h2 class="text-lg font-bold text-gray-500">Topic 1: Anatomy and Physiology</h2>
+            <h2 class="text-lg font-bold text-gray-500">Topic 1: Anatomy and Physiology (1.1 Skeletal & Muscular System)</h2>
         </div>
         <div class="hidden sm:block flex-shrink-0">
             <img src="../../images/athletics-logo.png" alt="Collège du Léman Athletics" class="h-16 w-auto object-contain">
@@ -126,8 +157,8 @@
             </div>
 
             <div class="flex justify-between items-start pt-2">
-                <h3 class="text-xl font-bold text-cdlBlue" id="display-question">Question goes here</h3>
-                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4"></span>
+                <div class="text-xl font-bold text-cdlBlue w-full" id="display-question">Question goes here</div>
+                <span id="display-marks" class="bg-cdlRed text-white text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap ml-4 flex-shrink-0"></span>
             </div>
             
             <div class="flex flex-col space-y-2">
@@ -162,7 +193,7 @@
                 </svg>
                 Mark Scheme
             </h3>
-            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed prose max-w-none">
+            <div id="display-mark-scheme" class="bg-gray-50 p-5 rounded-md border border-gray-200 text-gray-800 leading-relaxed max-w-none">
                 <!-- Mark scheme content injected here -->
             </div>
 
@@ -198,9 +229,75 @@
 
     <script>
         const questions = [
-            // ==========================================
-            // Functions of the skeleton
-            // ==========================================
+            // =========================================================================
+            // SECTION 1: Functions of the skeleton (7 Official, 7 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Functions of the skeleton",
+                paper: "May/June 2019 (0413/11) Q4",
+                marks: 2,
+                question: "State two functions of the skeleton.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>1 mark for each correct function.</em><br>Any 2 of:<ul><li>provide shape / support;</li><li>muscle attachment / movement;</li><li>protection;</li><li>(red) blood (cell) production;</li></ul>",
+                hint: "Recall the four main syllabus functions of the human skeleton.",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "May/June 2019 (0413/13) Q10",
+                marks: 4,
+                question: "Describe how two functions of the skeleton provide a benefit for a performer in a named physical activity.<br><span class='text-base font-normal text-gray-600'>Physical activity -<br>Function 1 -<br>Benefit -<br>Function 2 -<br>Benefit -</span>",
+                markScheme: "<em>No mark for naming a physical activity.<br>1 mark for each function.<br>1 mark for each benefit.</em><ul><li>shape / support – the ribs provide shape to the chest area – the ribs provide space for the lungs to fully inflate aids good cardiovascular endurance in sprint events;</li><li>muscle attachments / movement – the ability to throw a javelin requires movement at the shoulder;</li><li>protection – the cranium protects the brain – a footballer is able to head the ball without damage;</li><li>(red) blood (cell) production – increased supply of oxygen to the muscles – cross-country runners can keep going for the whole race;</li></ul>",
+                hint: "Name a sport first, then state two functions of the skeleton and link each directly to a specific action or benefit in that sport.",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "November 2019 (0413/12) Q1",
+                marks: 2,
+                question: "Describe two functions of the skeleton that benefit a performer during a combat activity.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>1 mark for each correct description of a function.</em><br>for example:<ul><li>gives protection to vital organs / when being hit / when falling;</li><li>allows muscle (attachments) to create movement / movement to allow a performer to push an opponent away etc.;</li><li>provides shape / support for appropriate body position (to give a physical advantage such a long reach);</li><li>provide shape / support to provide a framework to support the organs and tissues of the body;</li><li>produces red blood cells that help transport oxygen (for better endurance) / to maintain performance / platelets clot blood to allow a performer to continue when they have a minor cut;</li></ul><em>Accept descriptions of how other functions of the skeleton benefit a performer.</em>",
+                hint: "Link two skeletal functions directly to what happens in combat sports like boxing, judo, or taekwondo.",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "May/June 2020 (0413/12) Q7(c)(i)",
+                marks: 2,
+                question: "One function of the skeleton is protection. State two other functions of the skeleton.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<ul><li>shape and support;</li><li>muscle attachment / movement;</li><li>red blood cell production;</li></ul>",
+                hint: "Other than protection, what are the other three syllabus functions of the skeleton?",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "May/June 2020 (0413/12) Q7(c)(ii)",
+                marks: 2,
+                question: "Describe two examples of the skeleton providing protection when performing different skills in a named physical activity.<br><span class='text-base font-normal text-gray-600'>Physical activity -<br>Skill 1 -<br>Skill 2 -</span>",
+                markScheme: "<em>max 2 marks for examples linked to a named activity</em><br>examples could include:<br><strong>football</strong><ul><li>skill 1 – when heading the ball the cranium protects the brain;</li><li>skill 2 – when controlling the ball on the chest the rib cage protects the heart / lungs;</li></ul>",
+                hint: "Pick one sport and name two different skills where specific bones protect vital organs from impact.",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "May/June 2022 (0413/11) Q7(b)(ii)",
+                marks: 3,
+                question: "Describe three different functions of the skeleton.<br><span class='text-base font-normal text-gray-600'>Function 1 -<br>Function 2 -<br>Function 3 -</span>",
+                markScheme: "<em>1 mark for each description.</em><br>3 from:<ul><li>provides shape / support for the body / creates a framework to which muscles can attach and in which our internal organs sit;</li><li>provides muscle attachment / movement;</li><li>provides protection to vital internal organs;</li><li>produces red blood cells;</li></ul><em>Accept alternative wording.</em>",
+                hint: "State three of the four main syllabus functions of the skeleton.",
+                isOfficial: true
+            },
+            {
+                section: "Functions of the skeleton",
+                paper: "November 2022 (0413/11) Q1(a)",
+                marks: 6,
+                question: "Identify three functions of the skeleton. Describe an example of each function being used in either judo or taekwondo.<br><span class='text-base font-normal text-gray-600'>Function 1 -<br>Example 1 -<br>Function 2 -<br>Example 2 -<br>Function 3 -<br>Example 3 -</span>",
+                markScheme: "<em>3 marks max. for identifying functions and 3 marks max. for relevant examples, e.g.:</em><ul><li>allows muscle attachment for movement;<br>when punching / kicking;</li><li>gives protection;<br>when being hit / ribs protecting the heart / lungs / organs;</li><li>(red / white) blood (cell) production;<br>(red) to give oxygen to working muscles to last the bout / match / competition / (white) to keep them healthy for competition;</li><li>provides shape / support;<br>to maintain balance / not fall over when being pushed by opponent / perform with correct technique / stance;</li></ul><em>Accept descriptions of how other functions of the skeleton benefit a performer. Examples must be applied to either judo or taekwondo.</em>",
+                hint: "State three functions (3 marks) and give a specific example from judo or taekwondo for each (3 marks).",
+                isOfficial: true,
+                isDiagramAdapted: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Functions of the skeleton",
                 marks: 4,
@@ -221,7 +318,7 @@
                 section: "Functions of the skeleton",
                 marks: 2,
                 question: "Describe the role of the skeleton in red blood cell production.",
-                markScheme: "<ul><li>Red blood cells are produced in the bone marrow (found inside larger bones). (1 mark)</li><li>These cells are crucial for carrying oxygen to working muscles during physical activity. (1 mark)</li></ul>",
+                markScheme: "<ul><li>Red blood cells are produced in the bone marrow (found inside larger/long bones). (1 mark)</li><li>These cells are crucial for carrying oxygen to working muscles during physical activity. (1 mark)</li></ul>",
                 hint: "Where are blood cells made, and why do athletes need them?",
                 isOfficial: false
             },
@@ -237,7 +334,7 @@
                 section: "Functions of the skeleton",
                 marks: 2,
                 question: "Describe how the skeleton provides shape and support for a performer.",
-                markScheme: "<ul><li>It acts as a framework that holds the body upright. (1 mark)</li><li>It gives the body its general size and shape, allowing athletes to maintain posture during activity. (1 mark)</li></ul>",
+                markScheme: "<ul><li>It acts as a rigid framework that holds the body upright and supports internal organs. (1 mark)</li><li>It gives the body its general size and shape, allowing athletes to maintain posture and balance during activity. (1 mark)</li></ul>",
                 hint: "Imagine a body without a skeleton—what would happen to our posture?",
                 isOfficial: false
             },
@@ -249,10 +346,92 @@
                 hint: "Without this function, your muscles would just squeeze themselves without moving your limbs.",
                 isOfficial: false
             },
+            {
+                section: "Functions of the skeleton",
+                marks: 4,
+                question: "Explain how both protection and muscle attachment for movement benefit a rugby player when making a tackle.",
+                markScheme: "<ul><li><strong>Protection (1 mark):</strong> Flat bones act as a shield for vital internal organs.</li><li><strong>Sporting application (1 mark):</strong> The ribs protect the heart and lungs (or cranium protects the brain) from high-impact collisions during the tackle.</li><li><strong>Muscle attachment (1 mark):</strong> Bones provide attachment points for muscles via tendons so they can pull on bones to create movement.</li><li><strong>Sporting application (1 mark):</strong> Allows the player to forcefully extend their legs to drive into the opponent and wrap their arms around them.</li></ul>",
+                hint: "Break your answer into two parts: how the bones protect organs during impact, and how muscles pull on bones to drive into the tackle.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Skeleton
-            // ==========================================
+            // =========================================================================
+            // SECTION 2: Skeleton (8 Official, 9 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Skeleton",
+                paper: "May/June 2019 (0413/12) Q1",
+                marks: 2,
+                question: "State two bones in the arm.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>Any 2 of:</em><ul><li>radius;</li><li>ulna;</li><li>humerus;</li></ul>",
+                hint: "Name any two of the three long bones located between the shoulder and the wrist.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "November 2019 (0413/11) Q9",
+                marks: 3,
+                question: "Complete the table to classify each bone as either long, short or flat.<table class='exam-table'><thead><tr><th>bone</th><th>classification</th></tr></thead><tbody><tr><td>scapula</td><td>?</td></tr><tr><td>femur</td><td>?</td></tr><tr><td>carpal</td><td>?</td></tr></tbody></table>",
+                markScheme: "<em>1 mark for each correct classification.</em><ul><li>(scapula) flat bone;</li><li>(femur) long bone;</li><li>(carpal) short bone;</li></ul>",
+                hint: "Scapula is the shoulder blade, femur is the thigh bone, and carpal is in the wrist.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "November 2020 (0413/13) Q1(a)",
+                marks: 2,
+                question: "Name two bones at the elbow.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>1 mark for each bone named.</em><ul><li>humerus;</li><li>radius;</li><li>ulna;</li></ul>",
+                hint: "Which three bones meet at the elbow joint?",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "May/June 2021 (0413/11) Q1",
+                marks: 2,
+                question: "State two classifications of bones.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>2 from:</em><ul><li>short;</li><li>long;</li><li>flat;</li></ul>",
+                hint: "Think of the three bone categories listed in the syllabus.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "May/June 2022 (0413/11) Q7(b)(i)",
+                marks: 3,
+                question: "Complete the table to classify each named bone.<table class='exam-table'><thead><tr><th>name of bone</th><th>classification of bone</th></tr></thead><tbody><tr><td>tarsals</td><td>?</td></tr><tr><td>sternum</td><td>?</td></tr><tr><td>femur</td><td>?</td></tr></tbody></table>",
+                markScheme: "<em>1 mark for each bone classified (3 marks max).</em><ul><li>A (tarsals): short bone;</li><li>B (sternum): flat bone;</li><li>C (femur): long bone;</li></ul>",
+                hint: "Tarsals are in the ankle/foot, sternum is the breastbone, and femur is the thigh bone.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "May/June 2022 (0413/13) Q1(a)",
+                marks: 2,
+                question: "Identify the two bones in the lower leg located between the knee joint and the ankle joint.",
+                markScheme: "<em>2 marks for:</em><ul><li>tibia;</li><li>fibula;</li></ul>",
+                hint: "Think of the shin bone and the smaller bone running alongside it.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "November 2022 (0413/11) Q2(b)",
+                marks: 1,
+                question: "The same name is given to a set of bones in the fingers and the toes. State the name of this set of bones.",
+                markScheme: "<em>1 mark for:</em><ul><li>phalanges;</li></ul>",
+                hint: "Starts with 'p' and is located at the tips of both hands and feet.",
+                isOfficial: true
+            },
+            {
+                section: "Skeleton",
+                paper: "May/June 2024 (0413/12) Q6(a)",
+                marks: 6,
+                question: "Complete the table to show the name of each bone, the location of each bone, and the classification of each bone.<table class='exam-table'><thead><tr><th>name of the bone</th><th>location of the bone</th><th>classification of the bone</th></tr></thead><tbody><tr><td>?</td><td>upper arm</td><td>?</td></tr><tr><td>talus</td><td>?</td><td>?</td></tr><tr><td>?</td><td>?</td><td>flat</td></tr></tbody></table>",
+                markScheme: "<em>1 mark for each correct response (in bold).</em><table class='exam-table'><thead><tr><th>name</th><th>location</th><th>classification of bone</th></tr></thead><tbody><tr><td><strong>humerus;</strong></td><td>upper arm</td><td><strong>long;</strong></td></tr><tr><td>talus</td><td><strong>ankle;</strong></td><td><strong>short;</strong></td></tr><tr><td><strong>scapula or cranium or pelvis;</strong></td><td><strong>shoulder or head or hips;</strong></td><td>flat</td></tr></tbody></table>",
+                hint: "Fill in all 6 missing cells: Row 1 needs the upper arm bone and its classification; Row 2 needs the location and classification of the talus; Row 3 needs any flat bone and its location.",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Skeleton",
                 marks: 3,
@@ -289,22 +468,111 @@
                 section: "Skeleton",
                 marks: 3,
                 question: "State the location of the carpals, metacarpals, and phalanges.",
-                markScheme: "1 mark for identifying they make up the hand / wrist area.<br><em>(Allow specific breakdown: Carpals = wrist, Metacarpals = hand, Phalanges = fingers).</em>",
-                hint: "Look at the end of your arms.",
+                markScheme: "1 mark for each specific location:<br><ul><li><strong>Carpals:</strong> Wrist (1 mark)</li><li><strong>Metacarpals:</strong> Palm / hand (1 mark)</li><li><strong>Phalanges:</strong> Fingers / digits (and toes) (1 mark)</li></ul>",
+                hint: "Look at the end of your arms from the wrist to the fingertips.",
                 isOfficial: false
             },
             {
                 section: "Skeleton",
                 marks: 2,
                 question: "Compare a flat bone and a long bone by giving one example of each from the human skeleton.",
-                markScheme: "<ul><li><strong>Flat bone example (1 mark):</strong> Scapula / ribs / cranium / pelvis.</li><li><strong>Long bone example (1 mark):</strong> Femur / humerus / tibia / fibula / radius / ulna.</li></ul>",
+                markScheme: "<ul><li><strong>Flat bone example (1 mark):</strong> Scapula / ribs / cranium / pelvis.</li><li><strong>Long bone example (1 mark):</strong> Femur / humerus / tibia / fibula / radius / ulna / clavicle.</li></ul>",
                 hint: "Think of a bone that protects organs vs a bone that acts as a lever for large movements.",
                 isOfficial: false
             },
+            {
+                section: "Skeleton",
+                marks: 3,
+                question: "State the location and primary function of the clavicle, ribs, and pelvis.",
+                markScheme: "1 mark for each bone's location and function:<br><ul><li><strong>Clavicle:</strong> Located at the collarbone / shoulder girdle; supports the shoulder and allows free movement of the arm.</li><li><strong>Ribs:</strong> Located in the chest / thorax; flat bones that protect vital internal organs (heart and lungs).</li><li><strong>Pelvis:</strong> Located at the hips / pelvic girdle; flat bone that protects reproductive/digestive organs and provides muscle attachment for the lower body.</li></ul>",
+                hint: "Think about the collarbone, the ribcage, and the hip girdle.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 4,
+                question: "Identify the four bones or bone groups of the ankle and foot, and classify the tarsals and metatarsals.",
+                markScheme: "<ul><li><strong>Ankle & foot bones (2 marks for all four, 1 mark for two or three):</strong> Talus, tarsals, metatarsals, phalanges.</li><li><strong>Tarsals classification (1 mark):</strong> Short bones (supports weight bearing).</li><li><strong>Metatarsals classification (1 mark):</strong> Long bones (forms the arch of the foot and acts as levers during propulsion).</li></ul>",
+                hint: "Start at the ankle joint bone (talus) and work your way down to the toes.",
+                isOfficial: false
+            },
+            {
+                section: "Skeleton",
+                marks: 2,
+                question: "State the anatomical location and function of the cranium and the patella.",
+                markScheme: "<ul><li><strong>Cranium (1 mark):</strong> Located in the head (skull); a flat bone that protects the brain.</li><li><strong>Patella (1 mark):</strong> Located over the front of the knee joint (kneecap); protects the knee joint and increases leverage for the quadriceps tendon.</li></ul>",
+                hint: "One protects your brain, the other sits at the front of your knee.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Joint types
-            // ==========================================
+            // =========================================================================
+            // SECTION 3: Joint types (7 Official, 7 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Joint types",
+                paper: "May/June 2019 (0413/13) Q1",
+                marks: 2,
+                question: "State two different joint types found in the human skeleton.",
+                markScheme: "<em>Any 2 of:</em><ul><li>fixed / immovable / fibrous joints;</li><li>slightly movable / cartilaginous joints;</li><li>freely movable / synovial joints;</li></ul><em>Accept ball and socket, hinge and other joint types.</em>",
+                hint: "Think of the three main categories of joints based on how much movement they allow.",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "May/June 2020 (0413/12) Q7(a)",
+                marks: 2,
+                question: "Identify the joint type at each of the following locations in the human skeleton:<br><span class='text-base font-normal text-gray-600'>The cranium -<br>The elbow -</span>",
+                markScheme: "<ul><li>cranium: fixed (fused) or immovable joint / fibrous joint;</li><li>elbow: freely movable joint / synovial joint (accept hinge joint);</li></ul>",
+                hint: "How much movement occurs between the plates of the skull vs. at the elbow?",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "May/June 2020 (0413/12) Q7(b)(i)",
+                marks: 1,
+                question: "Name the type of synovial joint found at the hip.",
+                markScheme: "<ul><li>ball and socket;</li></ul>",
+                hint: "It allows movement in all planes, just like the shoulder.",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "November 2020 (0413/11) Q4(b)(i)",
+                marks: 2,
+                question: "Name the type of synovial joint at each of the following:<br><span class='text-base font-normal text-gray-600'>Shoulder joint -<br>Elbow joint -</span>",
+                markScheme: "<em>1 mark for naming each type of synovial joint.</em><ul><li>shoulder: ball and socket (joint);</li><li>elbow: hinge (joint);</li></ul>",
+                hint: "Name the specific synovial joint classification for the shoulder and the elbow.",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "November 2023 (0413/12) Q10(c)",
+                marks: 3,
+                question: "Within the body there are three main types of joint.<br>State a different name for each of the following types of joint:<br><span class='text-base font-normal text-gray-600'>Fixed -<br>Slightly movable -<br>Freely movable -</span>",
+                markScheme: "<em>3 marks for:</em><ul><li>(fixed) immovable / fibrous;</li><li>(slightly movable) cartilaginous;</li><li>(freely movable) synovial;</li></ul>",
+                hint: "Give the scientific/anatomical terms for fixed, slightly movable, and freely movable joints.",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "November 2023 (0413/13) Q1(c)(i)",
+                marks: 2,
+                question: "The knee is an example of a synovial joint.<br>State where you would find an example of each of the following types of joint:<br><span class='text-base font-normal text-gray-600'>Fixed -<br>Slightly movable -</span>",
+                markScheme: "<em>1 mark per joint type, for example:</em><ul><li>(fixed) cranium / skull;</li><li>(slightly movable) spine / vertebrae / ribs;</li></ul><em>Accept other appropriate sites for these types of joint.</em>",
+                hint: "Give a body location where bones are fused together, and one where bones move only slightly on cushions of cartilage.",
+                isOfficial: true
+            },
+            {
+                section: "Joint types",
+                paper: "May/June 2024 (0413/11) Q7(b)",
+                marks: 4,
+                question: "A synovial joint is one type of joint.<br>Identify two types of joint other than synovial joints. State an example of each type of joint.<br><span class='text-base font-normal text-gray-600'>Type of joint 1 -<br>Example -<br>Type of joint 2 -<br>Example -</span>",
+                markScheme: "<em>1 mark for identifying each joint type (2 marks max.).<br>1 mark for each example (2 marks max.).</em><ul><li>(joint type) fixed / immovable / fibrous;</li><li>(example) cranium;</li><li>(joint type) slightly movable / cartilaginous;</li><li>(example) between the sternum and the ribs / between the joint at the front of the pelvis / between the vertebrae to form the spinal column;</li></ul><em>Accept other appropriate examples.</em>",
+                hint: "Name the two non-synovial joint categories and give an anatomical location for each.",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Joint types",
                 marks: 3,
@@ -342,18 +610,99 @@
                 marks: 2,
                 question: "Explain why cartilaginous (slightly movable) joints are important in the human body.",
                 markScheme: "<ul><li>They provide a small amount of flexibility/movement. (1 mark)</li><li>While simultaneously maintaining high stability and support (e.g., between the vertebrae in the spine to absorb shock while standing upright). (1 mark)</li></ul>",
-                hint: "Think about your spine. Why do you want a *little* bit of movement but not *too much*?",
+                hint: "Think about your spine. Why do you want a little bit of movement but not too much?",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 4,
+                question: "Classify the hip, knee, ankle, and shoulder joints into their specific synovial joint types.",
+                markScheme: "1 mark for each correct classification:<br><ul><li><strong>Hip:</strong> Ball and socket joint</li><li><strong>Knee:</strong> Hinge joint</li><li><strong>Ankle:</strong> Hinge joint</li><li><strong>Shoulder:</strong> Ball and socket joint</li></ul>",
+                hint: "Two of these are hinge joints and two are ball and socket joints.",
+                isOfficial: false
+            },
+            {
+                section: "Joint types",
+                marks: 2,
+                question: "Compare a fibrous joint and a cartilaginous joint in terms of movement permitted and anatomical location.",
+                markScheme: "<ul><li><strong>Fibrous joint (1 mark):</strong> Allows no movement (fixed/immovable), found in the cranium/pelvis.</li><li><strong>Cartilaginous joint (1 mark):</strong> Allows slight movement, found between the vertebrae in the spine or at the ribs/sternum.</li></ul>",
+                hint: "Contrast fixed joints with slightly movable joints and state where each is found.",
                 isOfficial: false
             },
 
-            // ==========================================
-            // Joint structure and function
-            // ==========================================
+            // =========================================================================
+            // SECTION 4: Joint structure and function (7 Official, 7 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Joint structure and function",
+                paper: "May/June 2020 (0413/12) Q7(b)(ii)",
+                marks: 3,
+                question: "Describe different functions of each of the following components of the hip joint:<br><span class='text-base font-normal text-gray-600'>Joint (fibrous) capsule -<br>Cartilage -<br>Ligament -</span>",
+                markScheme: "<ul><li>joint (fibrous) capsule: the structure that surrounds and protects the joint / holds the bones together;</li><li>cartilage: acts as a cushion / stops bones knocking together;</li><li>ligament: holds bones together / keeps bones in place;</li></ul>",
+                hint: "Make sure each of the three descriptions is distinct—don't repeat the exact same function twice.",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "November 2020 (0413/11) Q4(b)(ii)",
+                marks: 6,
+                question: "Name three components of a synovial joint and describe a different function of each component.<br><span class='text-base font-normal text-gray-600'>Component 1 -<br>Function -<br>Component 2 -<br>Function -<br>Component 3 -<br>Function -</span>",
+                markScheme: "<em>1 mark for naming each component (3 marks max.). 1 mark for each description of a different function of each named component (3 marks max.).</em><ul><li>synovial membrane;<br>surrounds the joint capsule / produces synovial fluid / lines the cavity of the joint / encloses the joint;</li><li>synovial fluid;<br>acts as a lubricant / allows smooth movement / reduces wear / reduces friction / absorbs shock;</li><li>joint (fibrous) capsule;<br>surrounds / protects the joint / holds the joint together / encloses the joint;</li><li>ligament;<br>holds the bones together / keep bones in place;</li><li>cartilage;<br>stops the bones knocking together / acts as a shock absorber / cushion / reduces friction;</li></ul><em>Accept other suitable components and appropriate descriptions of functions.</em>",
+                hint: "Choose any three of the five syllabus synovial joint components and give a unique function for each.",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "November 2022 (0413/11) Q2(c)",
+                marks: 2,
+                question: "Describe the functions of ligaments in a synovial joint.",
+                markScheme: "<em>1 mark for each description:</em><ul><li>they connect bone to bone;</li><li>help to stabilise joints during movement / helps prevent dislocation / restrict movement;</li><li>they can absorb shock;</li><li>help maintain correct posture / ensures correct movement;</li></ul>",
+                hint: "What do ligaments attach together, and how do they protect the joint during movement?",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "May/June 2023 (0413/12) Q2(b)",
+                marks: 1,
+                question: "Describe a function of the synovial membrane.",
+                markScheme: "<em>1 mark for:</em><ul><li>produces synovial fluid / lines the cavity of the joint / encloses the joint;</li></ul>",
+                hint: "What fluid does this membrane secrete into the joint cavity?",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "May/June 2023 (0413/13) Q9(b)(ii)",
+                marks: 4,
+                question: "Describe one different function for each of the following components:<br><span class='text-base font-normal text-gray-600'>Cartilage -<br>Ligament -<br>Synovial fluid -<br>Synovial membrane -</span>",
+                markScheme: "<em>1 mark for each description of a different function of each component.<br>4 marks for:</em><ul><li>(cartilage) stops the bones knocking together / acts as a shock absorber / cushion / reduces friction;</li><li>(ligament) holds the bones together / keep bones in place / stabilise the joint;</li><li>(synovial fluid) acts as a lubricant / allows smooth movement / reduces wear / reduces friction / absorbs shock;</li><li>(synovial membrane) produces synovial fluid / lines the cavity of the joint / encloses the joint;</li></ul>",
+                hint: "Crucial exam tip: the question asks for a DIFFERENT function for each. If you use 'reduces friction' for cartilage, use 'acts as a lubricant' for synovial fluid!",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "November 2023 (0413/11) Q7(c)",
+                marks: 6,
+                question: "Cartilage absorbs shock when landing in the long jump.<br>Other than cartilage, identify three components of a synovial joint. Describe a different role of each component.<br><span class='text-base font-normal text-gray-600'>Component 1 -<br>Description of role -<br>Component 2 -<br>Description of role -<br>Component 3 -<br>Description of role -</span>",
+                markScheme: "<em>1 mark for each identification (3 marks max.). 1 mark for each description of a different role (3 marks max.), for example:</em><ul><li>synovial membrane;<br>produces synovial fluid / lines the cavity of the joint / encloses the joint;</li><li>synovial fluid;<br>acts as a lubricant / allows smooth movement / protects the joint / reduces wear or tear / helps reduces friction / absorbs shock;</li><li>joint (fibrous) capsule;<br>surround / protects the joint / hold bones together / cushions;</li><li>ligaments;<br>attaches bone to bone / holds bones together / keeps bones in place / stabilises the joint;</li></ul><em>Accept other relevant components and appropriate roles.</em>",
+                hint: "Do not include cartilage! Pick three from: synovial membrane, synovial fluid, joint (fibrous) capsule, and ligaments.",
+                isOfficial: true
+            },
+            {
+                section: "Joint structure and function",
+                paper: "May/June 2025 (0413/13) Q8(b)",
+                marks: 6,
+                question: "The joint capsule is one component of a synovial joint.<br>Identify three other components of a synovial joint. Describe a different function for each component.<br><span class='text-base font-normal text-gray-600'>component 1 -<br>function -<br>component 2 -<br>function -<br>component 3 -<br>function -</span>",
+                markScheme: "<em>1 mark for naming each component of a joint. (3 marks max.)<br>1 mark for each description of a different function of each named component. (3 marks max.)</em><ul><li>synovial membrane;<br>surrounds the joint capsule / produces synovial fluid / lines the cavity of the joint / encloses the joint;</li><li>synovial fluid;<br>acts as a lubricant / allows smooth movement / reduces wear / reduces friction / absorbs shock;</li><li>ligament;<br>holds the bones together / keep bones in place;</li><li>cartilage;<br>stops the bones knocking together / acts as a shock absorber / cushion / reduces friction;</li></ul><em>Accept other suitable components and appropriate descriptions of functions.</em>",
+                hint: "Do not include the joint capsule! Pick three from: synovial membrane, synovial fluid, ligament, and cartilage.",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Joint structure and function",
                 marks: 2,
                 question: "Describe the function of ligaments and cartilage in a synovial joint.",
-                markScheme: "<ul><li><strong>Ligaments:</strong> Attach bone to bone to provide joint stability and prevent dislocation. (1 mark)</li><li><strong>Cartilage:</strong> Covers the ends of bones to act as a shock absorber and reduce friction. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Ligaments:</strong> Attach bone to bone to provide joint stability and prevent dislocation. (1 mark)</li><li><strong>Cartilage:</strong> Covers the ends of bones to act as a shock absorber and stop bones knocking together. (1 mark)</li></ul>",
                 hint: "One acts as strong elastic bands holding the bones together, the other is a smooth cushion on the ends of the bones.",
                 isOfficial: false
             },
@@ -361,7 +710,7 @@
                 section: "Joint structure and function",
                 marks: 3,
                 question: "Explain the roles of the synovial membrane, synovial fluid, and the joint capsule.",
-                markScheme: "1 mark for each:<br><ul><li><strong>Synovial membrane:</strong> Produces and secretes synovial fluid.</li><li><strong>Synovial fluid:</strong> Lubricates the joint to reduce friction during movement.</li><li><strong>Joint (fibrous) capsule:</strong> Encloses and protects the joint complex.</li></ul>",
+                markScheme: "1 mark for each:<br><ul><li><strong>Synovial membrane:</strong> Produces and secretes synovial fluid.</li><li><strong>Synovial fluid:</strong> Lubricates the joint to reduce friction during movement.</li><li><strong>Joint (fibrous) capsule:</strong> Surrounds, encloses, and protects the joint cavity.</li></ul>",
                 hint: "Think of the membrane as the factory, the fluid as the oil, and the capsule as the protective envelope.",
                 isOfficial: false
             },
@@ -369,7 +718,7 @@
                 section: "Joint structure and function",
                 marks: 2,
                 question: "Explain the role of synovial fluid during physical activity.",
-                markScheme: "<ul><li>It acts as a lubricant within the joint. (1 mark)</li><li>This reduces friction between the articulating bones, allowing for smooth, pain-free movement during exercise. (1 mark)</li></ul>",
+                markScheme: "<ul><li>It acts as a lubricant within the joint. (1 mark)</li><li>This reduces friction and wear and tear between the articulating bones, allowing for smooth movement during exercise. (1 mark)</li></ul>",
                 hint: "Think about what oil does for a rusty hinge.",
                 isOfficial: false
             },
@@ -385,27 +734,109 @@
                 section: "Joint structure and function",
                 marks: 2,
                 question: "Explain the relationship between the synovial membrane and synovial fluid during a physical activity.",
-                markScheme: "<ul><li>The synovial membrane secretes/produces the synovial fluid. (1 mark)</li><li>During physical activity, it produces more fluid to lubricate the joint and reduce friction. (1 mark)</li></ul>",
-                hint: "One produces the other. What happens to production when you warm up and start moving?",
+                markScheme: "<ul><li>The synovial membrane lines the joint cavity and secretes/produces the synovial fluid. (1 mark)</li><li>During physical activity, the synovial fluid lubricates the joint to reduce friction and allow smooth movement. (1 mark)</li></ul>",
+                hint: "One produces the other. What does the fluid do once secreted?",
                 isOfficial: false
             },
             {
                 section: "Joint structure and function",
                 marks: 1,
                 question: "State the function of cartilage in a freely movable joint.",
-                markScheme: "Acts as a shock absorber / prevents bones from rubbing together / reduces friction. (1 mark)",
+                markScheme: "Acts as a shock absorber / cushion / prevents bones from rubbing or knocking together / reduces friction. (1 mark)",
                 hint: "What sits on the ends of bones to stop them grinding?",
                 isOfficial: false
             },
+            {
+                section: "Joint structure and function",
+                marks: 2,
+                question: "Describe how the joint (fibrous) capsule and ligaments work together to protect a basketball player's knee when landing from a jump.",
+                markScheme: "<ul><li><strong>Joint (fibrous) capsule (1 mark):</strong> Surrounds, encloses, and protects the entire joint cavity while helping hold the bones together.</li><li><strong>Ligaments (1 mark):</strong> Connect femur to tibia to stabilise the joint, restrict excessive movement, and prevent dislocation on landing.</li></ul>",
+                hint: "Focus on how the capsule encloses the joint and how ligaments connect bone to bone for stability.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Movement at joints
-            // ==========================================
+            // =========================================================================
+            // SECTION 5: Movement at joints (8 Official, 8 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Movement at joints",
+                paper: "May/June 2019 (0413/11) Q12(b)(i)",
+                marks: 2,
+                question: "Name a different type of movement that occurs at each of the following joints:<br><span class='text-base font-normal text-gray-600'>The elbow joint -<br>The shoulder joint -</span>",
+                markScheme: "<em>1 mark for the type of movement at each joint.<br>Types of movement must be different.</em><ul><li>the elbow joint:<br>extension / flexion;</li><li>the shoulder joint:<br>abduction / adduction / flexion / extension;<br><em>(Accept circumduction / rotation.)</em></li></ul>",
+                hint: "Make sure you do not write the same movement for both joints!",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "May/June 2019 (0413/11) Q12(b)(ii)",
+                marks: 2,
+                question: "Explain the difference in stability between the elbow joint and the shoulder joint.",
+                markScheme: "<em>1 mark for:</em><ul><li>the elbow is more stable than the shoulder;</li></ul><em>1 mark for any 1 of:</em><ul><li>more planes of movement at the shoulder than the elbow;</li><li>greater complexity for the shoulder than the elbow;</li><li>stability of a joint depends on position / arrangement of ligaments / tighter for the elbow;</li><li>depends the shape of the articulating / bone surfaces / how they fit together / shallow fit of cup at shoulder;</li><li>differences in muscle tone between muscles around joint;</li></ul>",
+                hint: "First state which joint is more stable, then explain why (e.g., planes of movement or depth of socket).",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "November 2019 (0413/12) Q5(b)",
+                marks: 4,
+                question: "State a different type of movement that occurs at each of the following types of joint and describe an example of each type of movement from one named physical activity.<br><span class='text-base font-normal text-gray-600'>Physical activity -<br>Type of movement at hinge joint -<br>Example -<br>Type of movement at ball and socket joint -<br>Example -</span>",
+                markScheme: "<em>No mark for naming a physical activity.<br>Types of movement must be different and appropriate.<br>Examples must be applied to the same physical activity.<br>1 mark for stating an appropriate type of movement at each joint.<br>1 mark for an appropriate example in the named physical activity.<br>Max. 2 marks for each type of joint.</em><br><br>for example in basketball:<ul><li><strong>hinge joint:</strong><br>type of movement: extension / flexion;<br>example for extension: straightening the elbow during the shooting action;</li><li><strong>ball and socket joint:</strong><br>type of movement: flexion / extension / abduction / adduction; <em>(Accept circumduction / rotation;)</em><br>example for abduction: when raising the arm at the side to block a pass;</li></ul><em>Accept descriptions of other examples.</em>",
+                hint: "Both examples MUST come from the same physical activity, and the two movement types must be different.",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "May/June 2020 (0413/13) Q2(a)",
+                marks: 2,
+                question: "Plantar flexion is a type of movement. Describe an example of when plantar flexion is used in two different physical activities.<br><span class='text-base font-normal text-gray-600'>Physical activity 1 -<br>Example -<br>Physical activity 2 -<br>Example -</span>",
+                markScheme: "<em>No mark for naming the physical activity.<br>2 from:</em><ul><li>(swimming) a swimmer pushes off the wall when turning at the end of a length;</li><li>(gymnastics) gymnast points toes during a floor exercise;</li><li>(athletics) an athlete points his toes to land on the balls of the feet when running;</li><li>(cycling) a cyclist pushing down on the peddles of a bike.</li></ul><em>accept other appropriate examples.</em>",
+                hint: "Plantar flexion is pointing the toes downwards / pushing up onto tiptoes. Give examples from two different sports.",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "May/June 2021 (0413/11) Q5(b)",
+                marks: 2,
+                question: "Describe a named type of movement, other than rotation, that can occur at a ball and socket joint.<br><span class='text-base font-normal text-gray-600'>Type of movement -<br>Description -</span>",
+                markScheme: "<em>1 mark for naming a type of movement<br>1 mark for a description</em><br><strong>movements:</strong> abduction / adduction / extension / flexion;<br><strong>description:</strong><ul><li><strong>abduction:</strong> movement occurring away from the midline of the body / moving a limb away from the body;</li><li><strong>adduction:</strong> movement occurring towards the midline of the body / moving a limb towards the body;</li><li><strong>extension:</strong> an increase in the angle that occurs around a joint;</li><li><strong>flexion:</strong> a decrease in the angle that occurs around a joint;</li></ul>",
+                hint: "Pick one from flexion, extension, abduction, or adduction, and define it.",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "May/June 2022 (0413/12) Q6(b)",
+                marks: 4,
+                question: "State two named types of movement possible at the ankle joint.<br>Describe a different example of how each type of movement may be used in a named physical activity.<br><span class='text-base font-normal text-gray-600'>Physical activity -<br>Type of movement 1 -<br>Example -<br>Type of movement 2 -<br>Example -</span>",
+                markScheme: "<em>No mark for the physical activity.<br>2 marks max for movements.<br>2 marks max for examples.</em><br><strong>movement (2 from):</strong><ul><li>dorsiflexion;</li><li>plantar flexion;</li></ul><strong>examples could include:</strong><ul><li><strong>gymnastics:</strong><br>plantar flexion: pointing their toes during a floor sequence;<br>dorsiflexion: when landing on the mat following a vault prevents the need to take a step forward;</li><li><strong>taekwondo:</strong><br>plantar flexion: a performer lifts themselves onto their toes to gain extra height in a kicking movement;<br>dorsiflexion: a front kick with the heel;</li><li><strong>cricket:</strong><br>plantar flexion: the position of the back foot in the final stride in the bowling action;<br>dorsiflexion: the position of the batsman's front foot when playing a forward defensive stroke;</li><li><strong>athletics:</strong><br>plantar flexion: the position of the foot as the performer pushes from the take-off board in long jump;<br>dorsiflexion: during the turning movement when moving across the circle in the hammer;</li></ul><em>Accept other examples.</em>",
+                hint: "Name the two ankle movements and apply both to the same sport.",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "November 2022 (0413/13) Q1(a)",
+                marks: 6,
+                question: "Complete the table to identify the type of synovial joint and some possible types of movement at the named joints.<table class='exam-table'><thead><tr><th>joint</th><th>type of synovial joint</th><th>some possible types of movement</th></tr></thead><tbody><tr><td>ankle</td><td>hinge</td><td>1. ?<br>2. ?</td></tr><tr><td>knee</td><td>?</td><td>flexion<br>extension</td></tr><tr><td>hip</td><td>?</td><td>flexion<br>extension<br>1. ?<br>2. ?</td></tr></tbody></table>",
+                markScheme: "<em>6 marks for:</em><ul><li>(ankle movements):<br>plantar flexion;<br>dorsiflexion;</li><li>(knee type of synovial joint):<br>hinge;</li><li>(hip type of synovial joint):<br>ball and socket;</li><li>(hip movements - any 2 of):<br>abduction;<br>adduction;<br>rotation;<br>circumduction;</li></ul>",
+                hint: "Fill in all 6 missing items: 2 movements at the ankle, the joint type at the knee, the joint type at the hip, and 2 additional movements at the hip.",
+                isOfficial: true
+            },
+            {
+                section: "Movement at joints",
+                paper: "November 2024 (0413/12) Q5(c)",
+                marks: 2,
+                question: "Compare the range of movement and stability at the knee joint with the range of movement and stability at the hip joint.",
+                markScheme: "<em>1 mark for range of movement.<br>1 mark for stability.</em><ul><li><strong>(range of movement)</strong><br>hip has a greater range of movement than the knee;<br>both knee and hip allow extension / flexion;<br>only hip allows adduction / abduction / rotation / circumduction;</li><li><strong>(stability)</strong><br>hip is less stable than the knee;</li></ul>",
+                hint: "Compare both range of movement (1 mark) and stability (1 mark) between the knee and the hip.",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Movement at joints",
                 marks: 2,
                 question: "Compare the range of movement and stability of a ball and socket joint with a hinge joint.",
-                markScheme: "<ul><li>A ball and socket joint allows for a wider range of movement (movement in all directions/rotation) but is generally less stable and more prone to dislocation. (1 mark)</li><li>A hinge joint only allows movement in one plane (flexion/extension) making it highly stable but restricting its range of motion. (1 mark)</li></ul>",
+                markScheme: "<ul><li>A ball and socket joint allows for a wider range of movement (flexion, extension, abduction, adduction, rotation) but is generally less stable and more prone to dislocation. (1 mark)</li><li>A hinge joint only allows movement in one plane (flexion/extension or plantar flexion/dorsiflexion) making it more stable but restricting its range of motion. (1 mark)</li></ul>",
                 hint: "Which one can rotate freely? Which one acts like a door? How does that affect how easily it pops out of place?",
                 isOfficial: false
             },
@@ -421,7 +852,7 @@
                 section: "Movement at joints",
                 marks: 2,
                 question: "Describe plantar flexion and identify the joint where it occurs.",
-                markScheme: "<ul><li><strong>Description:</strong> Pointing the toes downwards / increasing the angle at the ankle joint. (1 mark)</li><li><strong>Joint:</strong> Occurs at the ankle joint. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Description:</strong> Pointing the toes downwards / away from the shin (standing on tiptoes). (1 mark)</li><li><strong>Joint:</strong> Occurs at the ankle joint. (1 mark)</li></ul>",
                 hint: "Think about the movement a gymnast or dancer makes to stand on their toes.",
                 isOfficial: false
             },
@@ -437,15 +868,15 @@
                 section: "Movement at joints",
                 marks: 2,
                 question: "Describe the movement of rotation and give an example of a sporting action where it occurs.",
-                markScheme: "<ul><li><strong>Description:</strong> Turning a limb or body part around its long axis. (1 mark)</li><li><strong>Example:</strong> Arm action in front crawl swimming / throwing a discus / turning the head to breathe in swimming. (1 mark)</li></ul>",
-                hint: "Think about turning in a circle.",
+                markScheme: "<ul><li><strong>Description:</strong> Turning a bone or limb around its long axis. (1 mark)</li><li><strong>Example:</strong> Arm action in front crawl/backstroke swimming / throwing a discus / turning the head to breathe in front crawl. (1 mark)</li></ul>",
+                hint: "Think about turning a limb around its axis.",
                 isOfficial: false
             },
             {
                 section: "Movement at joints",
                 marks: 2,
                 question: "Compare abduction and adduction at the shoulder joint when performing a jumping jack (star jump).",
-                markScheme: "<ul><li><strong>Abduction:</strong> Occurs during the upward phase of the jump, where the arms move away from the midline of the body. (1 mark)</li><li><strong>Adduction:</strong> Occurs during the downward phase of the jump, where the arms return towards the midline of the body. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Abduction:</strong> Occurs during the outward/upward phase of the jump, where the arms move away from the midline of the body. (1 mark)</li><li><strong>Adduction:</strong> Occurs during the inward/downward phase of the jump, where the arms return towards the midline of the body. (1 mark)</li></ul>",
                 hint: "Which part is 'adding' to the midline and which is 'taking away'?",
                 isOfficial: false
             },
@@ -457,10 +888,75 @@
                 hint: "It is the opposite of plantar flexion.",
                 isOfficial: false
             },
+            {
+                section: "Movement at joints",
+                marks: 2,
+                question: "Explain how a sprint hurdler uses both plantar flexion and dorsiflexion at the ankle joint when clearing a hurdle.",
+                markScheme: "<ul><li><strong>Plantar flexion (1 mark):</strong> Used when pushing off the track with the take-off foot to drive upwards over the hurdle.</li><li><strong>Dorsiflexion (1 mark):</strong> Used in the lead foot (pulling the toes up towards the shin) to avoid clipping the top of the hurdle bar and prepare for landing.</li></ul>",
+                hint: "Think about what the take-off ankle does on the ground vs. what the lead ankle does as it passes over the barrier.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Muscles
-            // ==========================================
+            // =========================================================================
+            // SECTION 6: Muscles (6 Official, 8 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Muscles",
+                paper: "May/June 2019 (0413/11) Q1",
+                marks: 2,
+                question: "Name the two main muscle groups that enable movement at the knee when running.<br><span class='text-base font-normal text-gray-600'>1 -<br>2 -</span>",
+                markScheme: "<em>1 mark for each named muscle group.</em><ul><li>quadriceps / quadriceps group;</li><li>hamstrings / hamstring group;</li></ul>",
+                hint: "Name the muscle groups on the front and back of the thigh.",
+                isOfficial: true
+            },
+            {
+                section: "Muscles",
+                paper: "May/June 2019 (0413/13) Q4(b)(i)",
+                marks: 1,
+                question: "Describe the role of tendons.",
+                markScheme: "<em>Any 1 of:</em><ul><li>join / connect muscles to bone;</li><li>pull on bones when muscles contract;</li><li>withstand tension when a muscle contracts;</li></ul>",
+                hint: "What do tendons connect, and what happens when a muscle contracts?",
+                isOfficial: true
+            },
+            {
+                section: "Muscles",
+                paper: "May/June 2020 (0413/12) Q1",
+                marks: 2,
+                question: "Name the muscle group that causes each of the following types of movement at the knee:<br><span class='text-base font-normal text-gray-600'>Flexion -<br>Extension -</span>",
+                markScheme: "<ul><li>A – flexion: hamstring group;</li><li>B – extension: quadricep group;</li></ul>",
+                hint: "Which upper leg muscle bends the knee, and which straightens it?",
+                isOfficial: true
+            },
+            {
+                section: "Muscles",
+                paper: "May/June 2022 (0413/12) Q8(b)",
+                marks: 2,
+                question: "Identify [the muscle group located at the front of the upper leg] and describe its role during extension at the knee.<br><span class='text-base font-normal text-gray-600'>Muscle -<br>Role -</span>",
+                markScheme: "<ul><li>muscle C: quadricep(s) group;</li></ul><em>1 from:</em><ul><li>acts as the agonist / prime mover;</li><li>shortens to pull on the tibia;</li><li>the quadriceps create an isotonic / concentric contraction;</li></ul>",
+                hint: "Name the front thigh muscle group and describe how it creates extension at the knee.",
+                isOfficial: true,
+                isDiagramAdapted: true
+            },
+            {
+                section: "Muscles",
+                paper: "May/June 2024 (0413/11) Q15(b)",
+                marks: 2,
+                question: "Use an example to describe the role of tendons in movement at the elbow.",
+                markScheme: "<em>1 mark for description of tendon.<br>1 mark for description of movement.</em><ul><li>tendon attaches muscle to bone;</li><li>the tendon pulls on the radius to create flexion / the tendon pulls on the ulna to create extension;</li></ul>",
+                hint: "First state what a tendon attaches, then give the specific example of the biceps/triceps tendon pulling on the forearm bone.",
+                isOfficial: true
+            },
+            {
+                section: "Muscles",
+                paper: "May/June 2025 (0413/11) Q14(c)",
+                marks: 2,
+                question: "Describe the role of tendons during movement at the knee.",
+                markScheme: "<em>1 mark for each description.</em><ul><li>joins muscle to bone;</li><li>(hamstring) tendon pulls the tibia to create flexion;</li><li>(quadricep) tendon pulls on the tibia to create extension;</li><li>absorb some of the impact during movement;</li></ul>",
+                hint: "State what tendons connect and how the quadriceps or hamstring tendon pulls on the lower leg bone.",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Muscles",
                 marks: 2,
@@ -473,7 +969,7 @@
                 section: "Muscles",
                 marks: 2,
                 question: "Describe the role of tendons in the muscular system.",
-                markScheme: "<ul><li>Tendons attach muscle to bone. (1 mark)</li><li>They transmit the force created by a muscular contraction to the bone, causing movement to occur at the joint. (1 mark)</li></ul>",
+                markScheme: "<ul><li>Tendons attach muscle to bone. (1 mark)</li><li>They transmit the force/pull created by a muscular contraction to the bone, causing movement to occur at the joint. (1 mark)</li></ul>",
                 hint: "Unlike ligaments (bone to bone), what do tendons connect, and what happens when the muscle pulls?",
                 isOfficial: false
             },
@@ -489,35 +985,128 @@
                 section: "Muscles",
                 marks: 2,
                 question: "Identify the muscle located across the chest and state its role.",
-                markScheme: "<ul><li><strong>Muscle:</strong> Pectorals. (1 mark)</li><li><strong>Role:</strong> Adducts the arm at the shoulder (or draws the arm across the chest/pushing action). (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Muscle:</strong> Pectorals. (1 mark)</li><li><strong>Role:</strong> Adducts and horizontally flexes the arm at the shoulder (draws the arm across the chest during pushing/throwing actions). (1 mark)</li></ul>",
                 hint: "The muscle used heavily in a bench press or push-up.",
                 isOfficial: false
             },
             {
                 section: "Muscles",
                 marks: 2,
-                question: "State the location of the trapezius and latissimus dorsi muscles.",
-                markScheme: "<ul><li><strong>Trapezius:</strong> Upper back / neck area. (1 mark)</li><li><strong>Latissimus dorsi:</strong> Mid / lower back / wrapping around the side of the torso. (1 mark)</li></ul>",
-                hint: "Both are on the posterior (back) of the body. One shrugs the shoulders, the other pulls the arms down.",
+                question: "State the location and role of the trapezius and latissimus dorsi muscles.",
+                markScheme: "<ul><li><strong>Trapezius (1 mark):</strong> Located at the upper back / neck; supports/rotates the scapula and extends the neck / shrugs the shoulders.</li><li><strong>Latissimus dorsi (1 mark):</strong> Located at the mid/lower back (broadest muscle of the back); adducts and extends the arm at the shoulder (e.g., pulling down in swimming or rowing).</li></ul>",
+                hint: "Both are on the posterior (back) of the body. One shrugs the shoulders, the other pulls the arms down and back.",
                 isOfficial: false
             },
             {
                 section: "Muscles",
                 marks: 1,
                 question: "Describe the role of the deltoid muscle during a tennis serve.",
-                markScheme: "Abducts the arm at the shoulder / raises the arm to hit the ball. (1 mark)",
+                markScheme: "Abducts and flexes the arm at the shoulder joint / raises the arm to toss and hit the ball. (1 mark)",
                 hint: "The deltoid is the shoulder muscle. What does it do to lift the racket?",
                 isOfficial: false
             },
+            {
+                section: "Muscles",
+                marks: 3,
+                question: "State the location and role of the abdominals, gluteals, and hip flexors.",
+                markScheme: "1 mark for each muscle's location and role:<br><ul><li><strong>Abdominals:</strong> Located at the front of the abdomen (stomach); flexes the trunk/spine and stabilises the core.</li><li><strong>Gluteals:</strong> Located at the buttocks (back of the hip); extends and abducts the leg at the hip joint.</li><li><strong>Hip flexors:</strong> Located at the front of the upper hip/groin; flexes the leg at the hip joint (lifting the knee upwards).</li></ul>",
+                hint: "Think stomach muscles, buttock muscles, and the muscles at the front of the hip crease.",
+                isOfficial: false
+            },
+            {
+                section: "Muscles",
+                marks: 2,
+                question: "State the location and role of the triceps and the tibialis anterior.",
+                markScheme: "<ul><li><strong>Triceps (1 mark):</strong> Located at the back of the upper arm; extends (straightens) the arm at the elbow joint.</li><li><strong>Tibialis anterior (1 mark):</strong> Located at the front of the lower leg (shin); causes dorsiflexion at the ankle joint (pulling the toes up towards the shin).</li></ul>",
+                hint: "One is at the back of the upper arm, the other runs alongside your shinbone.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Antagonistic muscle action
-            // ==========================================
+            // =========================================================================
+            // SECTION 7: Antagonistic muscle action (8 Official, 8 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2019 (0413/13) Q4(a)",
+                marks: 3,
+                question: "Flexion occurs as the knee is bent. Describe, naming the agonist and antagonist, how this movement occurs.<br><span class='text-base font-normal text-gray-600'>Agonist -<br>Antagonist -<br>Description -</span>",
+                markScheme: "<em>1 mark for each muscle named.<br>1 mark for the description.</em><ul><li><strong>agonist:</strong> hamstring(s) (group);</li><li><strong>antagonist:</strong> quadricep(s) (group);</li><li><strong>description:</strong> the hamstrings contract / shorten and pull on the lower leg to bring it up <strong>AND</strong> the quadriceps relax / lengthen (to allow the movement to take place);</li></ul>",
+                hint: "Note the 'AND' in the mark scheme—for the description mark, you must state what BOTH muscles do (one contracts/shortens AND the other relaxes/lengthens).",
+                isOfficial: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "November 2021 (0413/12) Q12(a)",
+                marks: 4,
+                question: "Complete the table for the two different types of isotonic muscle contraction.<table class='exam-table'><thead><tr><th>name of type of isotonic muscle contraction</th><th>description of type of isotonic muscle contraction</th><th>example including named muscle</th></tr></thead><tbody><tr><td>1. ?</td><td>2. ?</td><td>the biceps contracting when flexing the elbow</td></tr><tr><td>3. ?</td><td>muscle lengthens while contracting</td><td>4. ?</td></tr></tbody></table>",
+                markScheme: "<em>1 mark for each correct response.</em><ul><li>1: concentric;</li><li>2: muscle shortens while contracting;</li><li>3: eccentric;</li><li>4: for example: biceps when lowering a weight in a bicep curl / quadriceps during the downward phase of a squat;<br><em>Accept other appropriate examples.</em></li></ul>",
+                hint: "Be sure to include a named muscle in your example for #4!",
+                isOfficial: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2022 (0413/11) Q3(a)",
+                marks: 4,
+                question: "[A performer is] completing a squat exercise.<br>Describe the different named types of muscle contraction that take place in the quadriceps group during the following movements:<br><span class='text-base font-normal text-gray-600'>Flexion at the knee [during the downward phase]<br>Type of contraction -<br>Description -<br><br>Extension at the knee [during the upward phase]<br>Type of contraction -<br>Description -</span>",
+                markScheme: "<em>2 marks max for named type of contraction.<br>2 marks max for matching description.</em><ul><li><strong>A to B [Downward phase - Flexion at the knee]</strong><br>type of contraction: eccentric;<br>description: a muscle contraction takes place while the muscle lengthens;</li><li><strong>B to C [Upward phase - Extension at the knee]</strong><br>type of contraction: concentric;<br>description: a muscle contraction takes place while the muscle shortens;</li></ul>",
+                hint: "Careful! On the way down in a squat, gravity is pulling you down while your quadriceps lengthen under tension to control the descent.",
+                isOfficial: true,
+                isDiagramAdapted: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2022 (0413/12) Q6(a)",
+                marks: 6,
+                question: "Describe the following muscle contraction types, giving a different example of how each contraction may be used in gymnastics.<br><span class='text-base font-normal text-gray-600'>Concentric muscle contraction<br>Description -<br>Example -<br><br>Eccentric muscle contraction<br>Description -<br>Example -<br><br>Isometric muscle contraction<br>Description -<br>Example -</span>",
+                markScheme: "<em>1 mark for each description.<br>1 mark for each example.<br>example could include: gymnastics</em><ul><li><strong>concentric muscle contraction:</strong><br>description: muscular contraction takes place when the muscle shortens;<br>example: during a run up to complete a vault / running across the mat to complete a somersault during a floor exercise routine;</li><li><strong>eccentric muscle contraction:</strong><br>description: muscular contraction when the muscle lengthens;<br>example: when they controlling body weight when landing after a vault / lowering the body on parallel bars;</li><li><strong>isometric muscle contraction:</strong><br>description: muscle contraction but stays the same length;<br>example: holding a crucifix position on the rings / splits / holding a handstand;</li></ul><em>Accept other examples from gymnastics.</em>",
+                hint: "Define all three contraction types (3 marks) and give a specific gymnastics example for each (3 marks).",
+                isOfficial: true,
+                isDiagramAdapted: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "November 2022 (0413/13) Q1(b)",
+                marks: 5,
+                question: "Describe how a pair of named muscles work together to cause flexion and extension at the hip joint.",
+                markScheme: "<em>1 mark for naming the two muscles.</em><ul><li>hip flexors AND gluteals;</li></ul><em>2 marks for:</em><ul><li>flexion AND hip flexors AND agonist / prime mover / contract / shorten / to pull femur up;</li><li>flexion AND gluteals AND antagonist / relax / lengthen / to allow femur to move up;</li></ul><em>2 marks for:</em><ul><li>extension AND gluteals AND agonist / prime mover / contract / shorten / to pull femur down;</li><li>extension AND hip flexors AND antagonist / relax / lengthen / to allow femur to move down;</li></ul>",
+                hint: "5-mark breakdown: 1 mark for naming both muscles, 2 marks for explaining the agonist/antagonist roles during hip flexion, and 2 marks for explaining their roles during hip extension.",
+                isOfficial: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2023 (0413/11) Q9",
+                marks: 2,
+                question: "[A performer is] completing the downward phase of a dip on parallel bars.<br>Describe the named type of isotonic muscle contraction of the triceps being used in the movement.<br><span class='text-base font-normal text-gray-600'>Muscle contraction -<br>Description -</span>",
+                markScheme: "<em>1 mark for the muscle contraction.<br>1 mark for description.</em><ul><li>contraction: eccentric contraction;</li><li>description: muscle lengthens whilst under tension / muscle contraction takes place while the muscle lengthens;</li></ul>",
+                hint: "During the downward phase of a dip, the elbows bend while the triceps control the lowering of the body.",
+                isOfficial: true,
+                isDiagramAdapted: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2023 (0413/12) Q7",
+                marks: 6,
+                question: "Complete the table to show the agonist muscle (prime mover), the antagonist muscle, the movement created by the agonist muscle and an example of when the movement is used in a physical activity.<table class='exam-table'><thead><tr><th>agonist muscle (prime mover)</th><th>antagonist muscle</th><th>movement</th><th>example of movement</th></tr></thead><tbody><tr><td>1. ?</td><td>triceps</td><td>flexion</td><td>2. ?</td></tr><tr><td>3. ?</td><td>hamstring group</td><td>4. ?</td><td>straightening the leg when kicking a ball in football</td></tr><tr><td>gastrocnemius</td><td>5. ?</td><td>6. ?</td><td>standing on tip toes when preparing to dive into a swimming pool</td></tr></tbody></table>",
+                markScheme: "<em>1 mark for each answer shown in bold.</em><table class='exam-table'><thead><tr><th>agonist muscle (prime mover)</th><th>antagonist muscle</th><th>movement</th><th>example</th></tr></thead><tbody><tr><td><strong>1. biceps;</strong></td><td>triceps</td><td>flexion</td><td><strong>2. upward phase of the bicep curl;</strong></td></tr><tr><td><strong>3. quadriceps group;</strong></td><td>hamstring group</td><td><strong>4. extension;</strong></td><td>straightening the leg when kicking a ball</td></tr><tr><td>gastrocnemius</td><td><strong>5. tibialis anterior;</strong></td><td><strong>6. plantar flexion;</strong></td><td>standing on tip toes when preparing to dive into a swimming pool</td></tr></tbody></table><em>Accept other appropriate examples.</em>",
+                hint: "Complete all 6 numbered cells in the table.",
+                isOfficial: true
+            },
+            {
+                section: "Antagonistic muscle action",
+                paper: "May/June 2024 (0413/13) Q2(c)",
+                marks: 4,
+                question: "Describe how two named muscles in the lower leg cause movement at the ankle joint.",
+                markScheme: "<em>1 mark for each named muscle.<br>2 marks for correct explanation.<br>4 marks for:</em><ul><li>gastrocnemius;</li><li>tibialis anterior;</li><li>for plantarflexion tibialis anterior relaxes / lengthens OR tibialis anterior acts as the antagonist;</li><li>for plantarflexion gastrocnemius contracts / shortens OR gastrocnemius acts as the prime mover / agonist;</li></ul><strong>OR</strong><ul><li>for dorsiflexion gastrocnemius relaxes / lengthens OR gastrocnemius acts as the antagonist;</li><li>for dorsiflexion tibialis anterior contracts / shortens OR tibialis anterior acts as the prime mover / agonist;</li></ul>",
+                hint: "Name the calf and shin muscles (2 marks), then explain how one acts as agonist (contracts) and the other acts as antagonist (relaxes) for a named ankle movement (2 marks).",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Antagonistic muscle action",
                 marks: 3,
                 question: "Explain antagonistic muscle action at the elbow during the upward phase of a bicep curl. Identify the agonist and antagonist.",
-                markScheme: "<ul><li>Muscles work in pairs; as one contracts, the other relaxes. (1 mark)</li><li><strong>Agonist (Prime Mover):</strong> The Biceps contract (shorten) to flex the elbow. (1 mark)</li><li><strong>Antagonist:</strong> The Triceps relax to allow the movement to happen. (1 mark)</li></ul>",
+                markScheme: "<ul><li>Muscles work in pairs; as one contracts, the other relaxes. (1 mark)</li><li><strong>Agonist (Prime Mover):</strong> The Biceps contract (shorten) to flex the elbow. (1 mark)</li><li><strong>Antagonist:</strong> The Triceps relax (lengthen) to allow the movement to happen. (1 mark)</li></ul>",
                 hint: "Which muscle is doing the work to lift the weight, and which one has to stretch out to let it happen?",
                 isOfficial: false
             },
@@ -525,7 +1114,7 @@
                 section: "Antagonistic muscle action",
                 marks: 2,
                 question: "Differentiate between a concentric and an eccentric isotonic contraction.",
-                markScheme: "<ul><li><strong>Concentric:</strong> The muscle shortens while generating force (e.g. lifting a weight). (1 mark)</li><li><strong>Eccentric:</strong> The muscle lengthens while under tension (e.g. lowering a weight slowly under control). (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Concentric:</strong> The muscle shortens while contracting / generating force (e.g. lifting a weight). (1 mark)</li><li><strong>Eccentric:</strong> The muscle lengthens while contracting / under tension (e.g. lowering a weight slowly under control). (1 mark)</li></ul>",
                 hint: "Both involve movement (isotonic), but one shortens the muscle and the other lengthens it under tension.",
                 isOfficial: false
             },
@@ -533,7 +1122,7 @@
                 section: "Antagonistic muscle action",
                 marks: 2,
                 question: "Define an isometric contraction and provide a sporting example.",
-                markScheme: "<ul><li><strong>Definition:</strong> The muscle contracts and generates tension, but there is no change in muscle length and no movement at the joint. (1 mark)</li><li><strong>Example:</strong> Pushing in a rugby scrum / holding a handstand in gymnastics / holding a plank position. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Definition:</strong> The muscle contracts and generates tension, but stays the same length and no movement occurs at the joint. (1 mark)</li><li><strong>Example:</strong> Pushing in a rugby scrum / holding a handstand or crucifix in gymnastics / holding the set position in sprint blocks. (1 mark)</li></ul>",
                 hint: "Think 'iso' = same, 'metric' = length. What sports require you to hold a pose and push hard without moving?",
                 isOfficial: false
             },
@@ -541,7 +1130,7 @@
                 section: "Antagonistic muscle action",
                 marks: 3,
                 question: "Explain the antagonistic muscle action at the knee joint when a basketball player jumps for a rebound.",
-                markScheme: "<ul><li><strong>Agonist:</strong> Quadriceps group contract to extend the knee. (1 mark)</li><li><strong>Antagonist:</strong> Hamstring group relaxes to allow the extension. (1 mark)</li><li>This coordinated action allows the player to straighten their legs forcefully to jump. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Agonist:</strong> Quadriceps group contracts/shortens to extend the knee. (1 mark)</li><li><strong>Antagonist:</strong> Hamstring group relaxes/lengthens to allow the extension. (1 mark)</li><li>This coordinated action straightens the knee joint forcefully to propel the player upwards. (1 mark)</li></ul>",
                 hint: "To jump, you have to straighten your legs. Which muscle fires to straighten the knee?",
                 isOfficial: false
             },
@@ -549,28 +1138,109 @@
                 section: "Antagonistic muscle action",
                 marks: 2,
                 question: "Describe an isometric contraction, giving an example from gymnastics.",
-                markScheme: "<ul><li><strong>Description:</strong> The muscle contracts and creates tension but stays the same length (no movement at the joint). (1 mark)</li><li><strong>Example:</strong> Holding a crucifix position on the rings / holding a handstand. (1 mark)</li></ul>",
+                markScheme: "<ul><li><strong>Description:</strong> The muscle contracts and creates tension but stays the same length (no movement at the joint). (1 mark)</li><li><strong>Example:</strong> Holding a crucifix position on the rings / holding a handstand / holding the splits. (1 mark)</li></ul>",
                 hint: "Think of poses where the gymnast is perfectly still but their muscles are working incredibly hard.",
                 isOfficial: false
             },
             {
                 section: "Antagonistic muscle action",
                 marks: 2,
-                question: "Identify the agonist and antagonist at the knee joint when a footballer prepares to kick a ball by pulling their leg backwards.",
-                markScheme: "<ul><li><strong>Agonist (Prime Mover):</strong> Hamstring group (contracts to flex the knee). (1 mark)</li><li><strong>Antagonist:</strong> Quadriceps group (relaxes). (1 mark)</li></ul>",
+                question: "Identify the agonist and antagonist at the knee joint when a footballer prepares to kick a ball by pulling their lower leg backwards.",
+                markScheme: "<ul><li><strong>Agonist (Prime Mover):</strong> Hamstring group (contracts to flex the knee). (1 mark)</li><li><strong>Antagonist:</strong> Quadriceps group (relaxes/lengthens). (1 mark)</li></ul>",
                 hint: "This is the 'wind up' phase where the knee bends backwards. Which muscle bends the knee?",
                 isOfficial: false
             },
+            {
+                section: "Antagonistic muscle action",
+                marks: 3,
+                question: "Describe the antagonistic muscle action at the shoulder joint when a swimmer pulls their arm downwards through the water during front crawl (shoulder extension/adduction).",
+                markScheme: "<ul><li><strong>Agonist (Prime Mover):</strong> Latissimus dorsi (and pectorals) contract/shorten to pull the arm downwards and backwards. (1 mark)</li><li><strong>Antagonist:</strong> Deltoid (and trapezius) relax/lengthen to allow the arm to be pulled through the water. (1 mark)</li><li><strong>Contraction type:</strong> The agonist performs a concentric isotonic contraction to generate propulsion. (1 mark)</li></ul>",
+                hint: "Think about the large back muscle that pulls the arm down and back, and the shoulder muscle that must relax.",
+                isOfficial: false
+            },
+            {
+                section: "Antagonistic muscle action",
+                marks: 4,
+                question: "When a sprinter drives out of the starting blocks, extension occurs at the back hip and plantar flexion occurs at the back ankle. Identify the agonist and antagonist for both joints.",
+                markScheme: "<ul><li><strong>Hip extension agonist (1 mark):</strong> Gluteals</li><li><strong>Hip extension antagonist (1 mark):</strong> Hip flexors</li><li><strong>Ankle plantar flexion agonist (1 mark):</strong> Gastrocnemius</li><li><strong>Ankle plantar flexion antagonist (1 mark):</strong> Tibialis anterior</li></ul>",
+                hint: "Name the agonist and antagonist pair at the hip, and the agonist and antagonist pair at the ankle.",
+                isOfficial: false
+            },
 
-            // ==========================================
-            // Muscle fibre types
-            // ==========================================
+            // =========================================================================
+            // SECTION 8: Muscle fibre types (7 Official, 7 AI-Generated)
+            // =========================================================================
+            // --- OFFICIAL QUESTIONS ---
+            {
+                section: "Muscle fibre types",
+                paper: "May/June 2019 (0413/11) Q3(a)(ii)",
+                marks: 3,
+                question: "Describe the different characteristics of the main muscle fibre type used by a sprinter and the main muscle fibre type used by a long-distance runner.",
+                markScheme: "<em>1 mark awarded for each comparison made.</em><br>for example:<ul><li><strong>force created:</strong> a sprinter will use muscle fibres that generate high levels of force while a long-distance runner will use muscle fibres that have a low level of force;</li><li><strong>fatigue tolerance:</strong> fast-twitch fibres will work for a much shorter time than slow-twitch fibres that have better levels of endurance;</li><li><strong>energy supply:</strong> fast-twitch use anaerobic / no oxygen and slow-twitch use aerobic / require oxygen;</li><li><strong>muscle contractions:</strong> sprinter uses fast-twitch fibres which contract quickly while a long-distance runner uses slow-twitch which contract more slowly;</li></ul><em>Accept other valid comparisons, e.g.<br>colour: fast-twitch are white / slow-twitch are red;<br>capillarisation: fast-twitch have smaller number of capillaries than slow-twitch;</em>",
+                hint: "Make three direct comparisons (both fast-twitch and slow-twitch must be mentioned in each point).",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "November 2019 (0413/12) Q2(c)(i)",
+                marks: 2,
+                question: "Name different physical activities in which a high proportion of the following muscle fibre types is beneficial.<br><span class='text-base font-normal text-gray-600'>Slow-twitch muscle fibres<br>Physical activity -<br><br>Fast-twitch muscle fibres<br>Physical activity -</span>",
+                markScheme: "<em>1 mark for each suitable named physical activity. Physical activities must be different.</em><br>for example:<ul><li><strong>slow-twitch fibres:</strong><br>cross-country running / (long-distance / road) cycling / (long-distance) swimming;</li><li><strong>fast-twitch fibres:</strong><br>sprinting / named throwing event, e.g. shot put / named jumping event, e.g. long jump;</li></ul><em>Accept other appropriate physical activities.</em>",
+                hint: "Be specific when naming athletics events (e.g., 'long-distance running' and '100m sprinting', not just 'athletics').",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "November 2019 (0413/13) Q8(a)",
+                marks: 4,
+                question: "The table shows approximate percentages of slow-twitch muscle fibres and fast-twitch muscle fibres for performers that have taken part in different physical activities.<table class='exam-table'><thead><tr><th>physical activity</th><th>percentage of slow-twitch muscle fibres</th><th>percentage of fast-twitch muscle fibres</th></tr></thead><tbody><tr><td>100 m / 200 m sprinting</td><td>25</td><td>75</td></tr><tr><td>cross-country running</td><td>80</td><td>20</td></tr></tbody></table>Suggest why the percentage of slow-twitch muscle fibres and the percentage of fast-twitch muscle fibres shown in the table benefits each of the following performers:<br><span class='text-base font-normal text-gray-600'>A 100m/200m sprinter -<br>A cross-country runner -</span>",
+                markScheme: "<em>Benefits of both types of fibre for the performer must be included for 2 marks max. per performer.</em><ul><li><strong>100 m / 200 m runner:</strong><br>needs more fast-twitch fibres to have explosive power at the start of a race;<br>needs more fast-twitch fibres to provide speed over a short distance / over a short period of time;<br>may need slow-twitch fibres to maintain speed endurance towards the end (of a 200 m race);<br>may need slow-twitch fibres to speed recovery after a race / aerobic elements of cool down / training;</li><li><strong>cross-country runner:</strong><br>fast-twitch fibres are needed if there is a sprint at the end of the race;<br>fast-twitch fibres may be needed to maintain position / hold off a challenge;<br>slow-twitch fibres allow cross-country running to take place at a steady pace;<br>slow-twitch fibres will allow the runner to perform over a long period of time / over a long distance;</li></ul>",
+                hint: "Read carefully! To get all 4 marks, you must explain how BOTH slow-twitch AND fast-twitch fibres benefit the sprinter (2 marks), and how BOTH slow-twitch AND fast-twitch fibres benefit the cross-country runner (2 marks).",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "November 2020 (0413/13) Q13(a)",
+                marks: 3,
+                question: "The table shows the percentage of fast-twitch muscle fibres and the percentage of slow-twitch muscle fibres for three different performers.<table class='exam-table'><thead><tr><th>performer</th><th>percentage of fast-twitch muscle fibres</th><th>percentage of slow-twitch muscle fibres</th></tr></thead><tbody><tr><td>A</td><td>15</td><td>85</td></tr><tr><td>B</td><td>70</td><td>30</td></tr><tr><td>C</td><td>45</td><td>55</td></tr></tbody></table>Suggest a different physical activity that would be suitable for each performer. Give a reason for each answer.<br><span class='text-base font-normal text-gray-600'>Activity for performer A -<br>Reason -<br>Activity for performer B -<br>Reason -<br>Activity for performer C -<br>Reason -</span>",
+                markScheme: "<em>1 mark for each reason for an appropriate activity. Activities must be different.</em><br>for example:<ul><li><strong>A: long-distance running / cross country running / cycling</strong><br>reason: mainly aerobic energy demand / low intensity / long duration / do not fatigue quickly / can work for long periods of time / contract slowly so suitable for distance races that are run at a steady pace or able to last the whole of an event / better for endurance;</li><li><strong>B: sprints events, e.g. 100 m / 200 m / jumping events / throwing events</strong><br>reason: mainly anaerobic energy demand / high intensity / short duration / provides large amounts of force / tire quickly but events are completed quickly / provide strength / power / speed;</li><li><strong>C: games activity, e.g. tennis</strong><br>reason: needs both aerobic and anaerobic energy demands / needs powerful shots to stay in rallies / there are changes in intensity within the activity, accept specific examples of this / mix provides endurance with the ability to sprint / able to respond to changes in the pace of the event;</li></ul>",
+                hint: "Performer A is endurance-dominant, Performer B is power/speed-dominant, and Performer C has a balanced mix suited to team/racket games.",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "May/June 2022 (0413/12) Q8(c)",
+                marks: 2,
+                question: "Compare the following features of fast twitch muscle fibres and slow twitch muscle fibres:<br><span class='text-base font-normal text-gray-600'>Fatigue tolerance -<br>Force created -</span>",
+                markScheme: "<em>1 mark for each comparison made.</em><ul><li><strong>fatigue tolerance:</strong> slow-twitch fibres have high fatigue tolerance / do not tire quickly / last long period of time AND fast-twitch fibres have low fatigue tolerance / tire quickly / last a short period of time;</li><li><strong>force created:</strong> slow-twitch fibres produce little force AND fast-twitch produce large force;</li></ul>",
+                hint: "You must mention BOTH slow-twitch AND fast-twitch for each feature to earn the comparison mark.",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "November 2022 (0413/13) Q10",
+                marks: 6,
+                question: "Complete the table to:<ul><li>identify the two main muscle fibre types</li><li>state the type of respiration used to release energy for each muscle fibre type</li><li>describe an example of how each muscle fibre type may benefit performance in one named physical activity.</li></ul><table class='exam-table'><thead><tr><th>physical activity</th><th>main muscle fibre type</th><th>type of respiration used to release energy</th><th>example of how each muscle fibre type may benefit performance in one named physical activity</th></tr></thead><tbody><tr><td rowspan='2'>?</td><td>1. ?</td><td>2. ?</td><td>3. ?</td></tr><tr><td>4. ?</td><td>5. ?</td><td>6. ?</td></tr></tbody></table>",
+                markScheme: "<em>Physical activity must be appropriate.<br>2 marks for muscle fibre types in any order.<br>2 marks for correct types of respiration used to release energy.<br>2 marks for appropriate examples, for example in basketball:</em><ul><li><strong>fast twitch;</strong><br><strong>anaerobic;</strong><br><strong>can jump higher to reach ball before an opponent;</strong></li><li><strong>slow twitch;</strong><br><strong>aerobic;</strong><br><strong>can keep running up and down the court for the whole game / for longer;</strong></li></ul>",
+                hint: "Pick a single sport (like basketball, football, or hockey) where both fibre types are used, then fill in all 6 cells.",
+                isOfficial: true
+            },
+            {
+                section: "Muscle fibre types",
+                paper: "May/June 2023 (0413/13) Q10",
+                marks: 4,
+                question: "Explain how each of the following muscle fibre types may benefit a long-distance cyclist:<br><span class='text-base font-normal text-gray-600'>Slow-twitch muscle fibres -<br>Fast-twitch muscle fibres -</span>",
+                markScheme: "<em>1 mark for each benefit.<br>1 mark for each explanation.</em><ul><li><strong>(slow-twitch)</strong> when cycling at a steady pace;<br>high fatigue tolerance / high endurance / can be used for a long period of time / uses aerobic energy system / contract slowly / produces a little force;</li><li><strong>(fast-twitch)</strong> when sprinting for the finishing line / accelerating;<br>create a lot of force / contract quickly / low fatigue tolerance / can only be used for a short period of time / uses anaerobic energy system;</li></ul>",
+                hint: "For each fibre type, state WHEN the cyclist uses it (1 mark) and WHY its characteristics suit that part of the race (1 mark).",
+                isOfficial: true
+            },
+            // --- AI-GENERATED QUESTIONS ---
             {
                 section: "Muscle fibre types",
                 marks: 3,
                 question: "Compare slow twitch and fast twitch muscle fibres in terms of force created, fatigue tolerance, and energy supply.",
-                markScheme: "Award 1 mark for each correct comparison, up to 3 marks:<br><ul><li><strong>Force created:</strong> Fast twitch fibres generate a high amount of force quickly, whereas slow twitch generate low force.</li><li><strong>Fatigue tolerance:</strong> Slow twitch fibres have high fatigue tolerance (can work for a long time), whereas fast twitch tire very quickly.</li><li><strong>Energy supply:</strong> Slow twitch rely on the aerobic energy supply (using oxygen), whereas fast twitch rely on the anaerobic energy supply.</li></ul>",
-                hint: "Compare a marathon runner's muscles to a shot putter's muscles.",
+                markScheme: "Award 1 mark for each correct comparison, up to 3 marks:<br><ul><li><strong>Force created:</strong> Fast twitch fibres generate a high amount of force quickly, whereas slow twitch generate low force.</li><li><strong>Fatigue tolerance:</strong> Slow twitch fibres have high fatigue tolerance (can work for a long time), whereas fast twitch have low fatigue tolerance (tire quickly).</li><li><strong>Energy supply:</strong> Slow twitch rely on the aerobic energy supply (using oxygen), whereas fast twitch rely on the anaerobic energy supply.</li></ul>",
+                hint: "Compare a marathon runner's muscles to a shot putter's muscles across all three syllabus points.",
                 isOfficial: false
             },
             {
@@ -585,23 +1255,23 @@
                 section: "Muscle fibre types",
                 marks: 2,
                 question: "Identify the main muscle fibre type used by a 100m sprinter and explain why it is suited to this event.",
-                markScheme: "<ul><li><strong>Fibre type:</strong> Fast twitch muscle fibres. (1 mark)</li><li><strong>Explanation:</strong> They generate maximum force quickly for explosive speed, utilizing the anaerobic energy system for the short duration of the race. (1 mark)</li></ul>",
-                hint: "Explosive speed requires high force very quickly, but it tires out fast.",
+                markScheme: "<ul><li><strong>Fibre type:</strong> Fast twitch muscle fibres. (1 mark)</li><li><strong>Explanation:</strong> They contract quickly and generate large amounts of force for explosive speed, utilizing the anaerobic energy supply for the short duration of the race. (1 mark)</li></ul>",
+                hint: "Explosive speed requires high force very quickly, using anaerobic energy.",
                 isOfficial: false
             },
             {
                 section: "Muscle fibre types",
                 marks: 2,
                 question: "Suggest why a 1500-metre swimmer requires a high percentage of slow-twitch muscle fibres.",
-                markScheme: "<ul><li>Slow twitch fibres have high fatigue tolerance (they can work for a long time without tiring). (1 mark)</li><li>This suits the long-duration, aerobic nature of the 1500m swim. (1 mark)</li></ul>",
-                hint: "It's a long race. What property of slow-twitch fibres makes them perfect for this?",
+                markScheme: "<ul><li>Slow twitch fibres have high fatigue tolerance (they can work for a long time without tiring). (1 mark)</li><li>They release energy aerobically, which suits the long-duration, steady-state nature of a 1500m swim. (1 mark)</li></ul>",
+                hint: "It's a long race. What properties of slow-twitch fibres make them perfect for endurance?",
                 isOfficial: false
             },
             {
                 section: "Muscle fibre types",
                 marks: 2,
                 question: "Explain the difference in energy supply between fast-twitch and slow-twitch muscle fibres.",
-                markScheme: "<ul><li>Slow-twitch fibres rely primarily on the aerobic energy supply (using oxygen to release energy). (1 mark)</li><li>Fast-twitch fibres rely primarily on the anaerobic energy supply (releasing energy without oxygen for quick bursts). (1 mark)</li></ul>",
+                markScheme: "<ul><li>Slow-twitch fibres rely on the aerobic energy supply (using oxygen to release energy over long periods). (1 mark)</li><li>Fast-twitch fibres rely on the anaerobic energy supply (releasing energy rapidly without oxygen for short, high-intensity bursts). (1 mark)</li></ul>",
                 hint: "One uses oxygen, the other doesn't.",
                 isOfficial: false
             },
@@ -609,8 +1279,16 @@
                 section: "Muscle fibre types",
                 marks: 2,
                 question: "Identify the muscle fibre type most suited to a weightlifter performing a 1-rep max lift, and justify your choice.",
-                markScheme: "<ul><li><strong>Fibre type:</strong> Fast-twitch fibres. (1 mark)</li><li><strong>Justification:</strong> They produce maximum force quickly for explosive movements (even though they fatigue quickly). (1 mark)</li></ul>",
-                hint: "A 1-rep max requires immense power for just a few seconds.",
+                markScheme: "<ul><li><strong>Fibre type:</strong> Fast-twitch fibres. (1 mark)</li><li><strong>Justification:</strong> They produce a large amount of force rapidly using the anaerobic energy supply (even though they have low fatigue tolerance). (1 mark)</li></ul>",
+                hint: "A 1-rep max requires immense force for just a few seconds.",
+                isOfficial: false
+            },
+            {
+                section: "Muscle fibre types",
+                marks: 4,
+                question: "Explain why a football midfielder benefits from having a balanced mix of both slow-twitch and fast-twitch muscle fibres during a 90-minute match.",
+                markScheme: "<ul><li><strong>Slow-twitch benefit (1 mark):</strong> Allows the midfielder to continuously jog and cover ground throughout the 90-minute match.</li><li><strong>Slow-twitch characteristic (1 mark):</strong> Because slow-twitch fibres have high fatigue tolerance and use the aerobic energy supply.</li><li><strong>Fast-twitch benefit (1 mark):</strong> Allows the midfielder to sprint to beat an opponent to the ball, jump for a header, or strike the ball powerfully.</li><li><strong>Fast-twitch characteristic (1 mark):</strong> Because fast-twitch fibres create high levels of force rapidly using the anaerobic energy supply.</li></ul>",
+                hint: "Explain the match action and fibre characteristic for slow-twitch (2 marks) and for fast-twitch (2 marks).",
                 isOfficial: false
             }
         ];
@@ -628,7 +1306,7 @@
         ];
 
         let currentQuestion = null;
-        let recentQuestions = []; // Anti-repeat session tracker
+        let recentQuestions = []; // Exhaustive session tracker ("Deck of Cards" anti-repeat)
         let bypassActive = false;
 
         // DOM Elements
@@ -701,32 +1379,39 @@
                 return;
             }
 
-            // Filter out recently asked questions to avoid immediate repeats
+            // Exhaustive Anti-Repeat: Filter out any question already seen in this cycle
             let availableQuestions = filteredQuestions.filter(q => !recentQuestions.includes(q));
             
-            // If all questions in this category have been shown recently, reset history
+            // Once all questions in the selected section have been seen, reset the deck
             if (availableQuestions.length === 0) {
                 recentQuestions = [];
-                availableQuestions = filteredQuestions;
+                // Prevent the very last question of the previous cycle from being the very first of the new cycle
+                if (filteredQuestions.length > 1 && currentQuestion) {
+                    availableQuestions = filteredQuestions.filter(q => q !== currentQuestion);
+                } else {
+                    availableQuestions = filteredQuestions;
+                }
             }
 
             const randomIndex = Math.floor(Math.random() * availableQuestions.length);
             currentQuestion = availableQuestions[randomIndex];
 
-            // Track recent questions (store up to 4 recent picks)
+            // Add to seen pile (never shifts out until the entire section is completed)
             recentQuestions.push(currentQuestion);
-            if (recentQuestions.length > 4) {
-                recentQuestions.shift();
-            }
 
-            // Setup Traffic Light UI
+            // Setup Three-Tier Traffic Light UI
             trafficBanner.classList.remove('bg-green-100', 'border-green-300', 'bg-amber-100', 'border-amber-300');
             trafficDot.classList.remove('bg-green-500', 'bg-amber-500');
             
             if (currentQuestion.isOfficial) {
                 trafficBanner.classList.add('bg-green-100', 'border-green-300');
                 trafficDot.classList.add('bg-green-500');
-                trafficText.innerHTML = "Official Cambridge Mark Scheme. Highly reliable.";
+                const paperRef = currentQuestion.paper ? ` (${currentQuestion.paper})` : '';
+                if (currentQuestion.isDiagramAdapted) {
+                    trafficText.innerHTML = `Official Cambridge Mark Scheme${paperRef}. Highly reliable. <span class="font-normal text-gray-600">(Note: Question text slightly adapted to remove diagram reference).</span>`;
+                } else {
+                    trafficText.innerHTML = `Official Cambridge Question & Mark Scheme${paperRef}. 100% Verbatim & highly reliable.`;
+                }
             } else {
                 trafficBanner.classList.add('bg-amber-100', 'border-amber-300');
                 trafficDot.classList.add('bg-amber-500');
@@ -766,15 +1451,16 @@
                 return;
             }
 
-            // Word count validation (approx > 50% of mark scheme words)
+            // Smart Word-Count Validator: Math.min(currentQuestion.marks * 6, msWordCount * 0.4)
             const tempDiv = document.createElement("div");
             tempDiv.innerHTML = currentQuestion.markScheme;
             const markSchemeText = tempDiv.textContent || tempDiv.innerText || "";
             
             const msWordCount = markSchemeText.split(/\s+/).filter(word => word.length > 0).length;
             const answerWordCount = answer.split(/\s+/).filter(word => word.length > 0).length;
+            const minRequiredWords = Math.min(currentQuestion.marks * 6, msWordCount * 0.4);
 
-            if (!bypassActive && (answerWordCount < (msWordCount * 0.5))) {
+            if (!bypassActive && (answerWordCount < minRequiredWords)) {
                 showModal(
                     "Are you sure?", 
                     "Your answer looks a bit brief compared to what the examiner is looking for. <br><br>Have you given it your best shot?", 
@@ -810,6 +1496,12 @@
 
         // Event Listeners
         btnRandom.addEventListener('click', loadQuestion);
+        
+        // Reset seen pile for new category and auto-load when dropdown changes
+        sectionSelect.addEventListener('change', () => {
+            recentQuestions = [];
+            loadQuestion();
+        });
         
         btnHint.addEventListener('click', () => {
             if (currentQuestion && currentQuestion.hint) {
