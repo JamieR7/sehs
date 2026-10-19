@@ -17,9 +17,9 @@
         { "id": "health-wellbeing", "title": "Health and Well-being", "file": "json/health-wellbeing.json" },
         { "id": "components-fitness", "title": "Components of Fitness & Testing", "file": "json/components-fitness.json" },
         { "id": "training-principles", "title": "Principles of Training & SPORT/FITT", "file": "json/training-principles.json" },
-         { "id": "training-principles", "title": "FITT Principle", "file": "json/fitt.json" },
-         { "id": "training-principles", "title": "SPORT Principle", "file": "json/sport.json" },
-        { "id": "training-methods", "title": "Training Methods & Altitude Training", "file": "json/training-methods.json" },
+         { "id": "training-principles", "title": "FITT Principle (do not select all)", "file": "json/fitt.json" },
+         { "id": "training-principles", "title": "SPORT Principle (do not select all)", "file": "json/sport.json" },
+        { "id": "training-methods", "title": "Training Methods (do not select all)", "file": "json/training-methods.json" },
         { "id": "warm-up-cool-down", "title": "Warming Up & Cooling Down", "file": "json/warm-up-cool-down.json" }
       ]
     },
