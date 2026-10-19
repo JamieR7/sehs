@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Occlusion Player</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Gotham', 'Helvetica Neue', 'sans-serif'] },
+          colors: { brandNavy: '#004587', brandGold: '#fbba07', brandRed: '#e73037' }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Gotham', 'Helvetica Neue', sans-serif; }
+    .mask {
+      position: absolute;
+      background-color: #004587; 
+      border: 2px solid #fbba07; 
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .mask.active {
+      background-color: #e73037; 
+      border-color: #e73037;
+      box-shadow: 0 0 12px rgba(231, 48, 55, 0.6);
+      animation: pulse 1.5s infinite;
+      z-index: 10;
+    }
+    .mask.revealed {
+      background-color: transparent;
+      border: 2px dashed rgba(0, 69, 135, 0.4);
+      pointer-events: none;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-brandNavy text-white px-6 py-4 flex flex-wrap items-center justify-between shadow-md z-30">
+    <div class="flex items-center gap-4">
+      <div class="bg-brandGold text-brandNavy font-bold px-3 py-1 rounded text-sm tracking-wide">STUDY</div>
+      <h1 id="session-title" class="text-lg font-semibold">Image Occlusion Player</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="toggleTopicMenu()" class="bg-white/10 hover:bg-white/20 border border-white/20 text-white px-4 py-2 rounded font-medium flex items-center gap-2 transition">
+        <span>📚 Select Topics</span>
+        <span id="selected-count-badge" class="bg-brandRed text-white text-xs px-2 py-0.5 rounded-full">0</span>
+      </button>
+      <button id="start-session-btn" onclick="startSession()" class="bg-brandGold hover:bg-yellow-400 text-brandNavy px-5 py-2 rounded font-bold shadow hidden transition">
+        ▶ Start Session
+      </button>
+    </div>
+  </header>
+
+  <!-- Dropdown Menu -->
+  <div id="topic-dropdown-panel" class="hidden absolute top-20 right-6 w-96 bg-white border border-slate-200 rounded-xl shadow-2xl p-5 z-40">
+    <div class="flex justify-between items-center mb-3 pb-2 border-b border-slate-100">
+      <h3 class="font-bold text-slate-800">Choose Flashcards</h3>
+      <button onclick="toggleTopicMenu()" class="text-slate-400 hover:text-slate-700">✕</button>
+    </div>
+    <div id="topic-list-container" class="space-y-4 max-h-96 overflow-y-auto"></div>
+    <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
+      <button onclick="applyTopicSelection()" class="w-full bg-brandNavy hover:bg-blue-800 text-white px-4 py-2 rounded font-bold">Apply Selection</button>
+    </div>
+  </div>
+
+  <!-- Study Engine -->
+  <main class="flex-1 flex flex-col items-center justify-center p-6 relative">
+    <div class="w-full max-w-4xl flex justify-between text-sm text-slate-500 font-medium mb-2">
+      <span id="progress-text">Select topics to begin</span>
+      <span id="queue-stats"></span>
+    </div>
+    <div class="w-full max-w-4xl bg-slate-200 h-2 rounded-full mb-6 overflow-hidden">
+      <div id="progress-bar" class="bg-brandNavy h-full transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <!-- Image Container -->
+    <div id="canvas-container" class="relative inline-block shadow-lg border border-slate-300 bg-white max-h-[65vh]">
+      <img id="topic-image" src="" class="block max-h-[62vh] w-auto object-contain select-none pointer-events-none opacity-0 transition-opacity duration-300">
+      <div id="masks-layer" class="absolute inset-0"></div>
+    </div>
+
+    <!-- Controls -->
+    <div id="action-bar" class="mt-8 w-full max-w-2xl hidden">
+      <button id="reveal-btn" onclick="revealAnswer()" class="w-full bg-brandNavy hover:bg-blue-800 text-white font-bold py-4 rounded-xl shadow-lg transition text-lg flex justify-center items-center gap-3">
+        Reveal Answer <kbd class="bg-white/20 text-sm px-2 py-1 rounded">Space</kbd>
+      </button>
+
+      <div id="srs-buttons" class="hidden flex gap-3 w-full">
+        <button onclick="gradeCard('again')" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 rounded-xl font-bold border-b-4 border-slate-300 active:border-b-0 active:translate-y-1 transition">Again (1)</button>
+        <button onclick="gradeCard('hard')" class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-800 py-3 rounded-xl font-bold border-b-4 border-slate-300 active:border-b-0 active:translate-y-1 transition">Hard (2)</button>
+        <button onclick="gradeCard('ok')" class="flex-1 bg-brandNavy hover:bg-blue-800 text-white py-3 rounded-xl font-bold border-b-4 border-blue-900 active:border-b-0 active:translate-y-1 transition">OK (3)</button>
+        <button onclick="gradeCard('easy')" class="flex-1 bg-brandGold hover:bg-yellow-400 text-brandNavy py-3 rounded-xl font-bold border-b-4 border-yellow-600 active:border-b-0 active:translate-y-1 transition">Easy (4)</button>
+      </div>
+    </div>
+
+    <!-- Celebration -->
+    <div id="celebration-overlay" class="hidden absolute inset-0 bg-white/90 backdrop-blur flex flex-col items-center justify-center z-50">
+      <div class="text-center">
+        <div class="text-6xl mb-4">🏆</div>
+        <h2 id="win-headline" class="text-4xl font-black text-brandNavy mb-2"></h2>
+        <p id="win-sub" class="text-slate-600 mb-8"></p>
+        <button onclick="resetSession()" class="bg-brandGold text-brandNavy font-bold px-8 py-4 rounded-xl shadow-lg hover:scale-105 transition">Study Again</button>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let manifestData = { categories: [] };
+    let topicCache = {}; 
+    let sessionQueue = []; 
+    let initialQueueSize = 0;
+    let currentCard = null;
+    let isRevealed = false;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('flashcards/manifest.json');
+        manifestData = await res.json();
+        renderTopicMenu();
+      } catch (err) {
+        document.getElementById('progress-text').innerText = "Error loading flashcards/manifest.json";
+      }
+      setupKeyboardShortcuts();
+    });
+
+    function renderTopicMenu() {
+      const container = document.getElementById('topic-list-container');
+      manifestData.categories.forEach(cat => {
+        let html = `<div class="mb-4"><div class="font-bold text-sm text-brandNavy mb-2">${cat.name}</div><div class="space-y-2 pl-2">`;
+        cat.topics.forEach(top => {
+          html += `<label class="flex items-center gap-2 text-sm text-slate-700 cursor-pointer">
+            <input type="checkbox" value="${top.id}" data-file="${top.file}" class="topic-checkbox accent-brandNavy w-4 h-4" onchange="updateBadgeCount()">
+            ${top.title}
+          </label>`;
+        });
+        container.innerHTML += html + `</div></div>`;
+      });
+    }
+
+    function toggleTopicMenu() { document.getElementById('topic-dropdown-panel').classList.toggle('hidden'); }
+
+    function updateBadgeCount() {
+      const count = document.querySelectorAll('.topic-checkbox:checked').length;
+      document.getElementById('selected-count-badge').innerText = count;
+      document.getElementById('start-session-btn').style.display = count > 0 ? 'block' : 'none';
+    }
+
+    async function applyTopicSelection() {
+      toggleTopicMenu();
+      const checked = document.querySelectorAll('.topic-checkbox:checked');
+      if (checked.length === 0) return;
+
+      sessionQueue = [];
+      topicCache = {};
+
+      for (const cb of checked) {
+        const res = await fetch(cb.dataset.file);
+        const data = await res.json();
+        topicCache[cb.value] = data;
+        data.masks.forEach(m => sessionQueue.push({ topicId: cb.value, maskId: m.id }));
+      }
+
+      sessionQueue.sort(() => Math.random() - 0.5);
+      initialQueueSize = sessionQueue.length;
+      startSession();
+    }
+
+    function startSession() {
+      document.getElementById('celebration-overlay').classList.add('hidden');
+      document.getElementById('action-bar').classList.remove('hidden');
+      nextCard();
+    }
+
+    function nextCard() {
+      if (sessionQueue.length === 0) return triggerCelebration();
+
+      currentCard = sessionQueue[0];
+      isRevealed = false;
+      const topic = topicCache[currentCard.topicId];
+      
+      const img = document.getElementById('topic-image');
+      img.src = topic.image;
+      img.classList.remove('opacity-0');
+
+      const layer = document.getElementById('masks-layer');
+      layer.innerHTML = '';
+      topic.masks.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `mask ${m.id === currentCard.maskId ? 'active' : ''}`;
+        div.style.left = `${m.x}%`; div.style.top = `${m.y}%`; div.style.width = `${m.w}%`; div.style.height = `${m.h}%`;
+        layer.appendChild(div);
+      });
+
+      document.getElementById('reveal-btn').classList.remove('hidden');
+      document.getElementById('srs-buttons').classList.add('hidden');
+      updateProgress();
+    }
+
+    function revealAnswer() {
+      if (isRevealed) return;
+      isRevealed = true;
+      document.querySelector('.mask.active')?.classList.replace('active', 'revealed');
+      document.getElementById('reveal-btn').classList.add('hidden');
+      document.getElementById('srs-buttons').classList.remove('hidden');
+    }
+
+    function gradeCard(rating) {
+      if (!isRevealed) return;
+      const card = sessionQueue.shift();
+      if (rating === 'again') sessionQueue.splice(2, 0, card);
+      else if (rating === 'hard') sessionQueue.splice(Math.ceil(sessionQueue.length / 2), 0, card);
+      else if (rating === 'ok') sessionQueue.push(card);
+      nextCard();
+    }
+
+    function updateProgress() {
+      const completed = initialQueueSize - sessionQueue.length;
+      document.getElementById('progress-bar').style.width = `${(completed / initialQueueSize) * 100}%`;
+      document.getElementById('queue-stats').innerText = `${sessionQueue.length} remaining`;
+    }
+
+    function triggerCelebration() {
+      document.getElementById('action-bar').classList.add('hidden');
+      document.getElementById('celebration-overlay').classList.remove('hidden');
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+
+      const wins = [
+        { h: "Clinical Finish!", sub: "Every label locked down. That diagram didn't stand a chance." },
+        { h: "Top-Bins Recall!", sub: "Not a single blind spot remaining on the page." }
+      ];
+      const win = wins[Math.floor(Math.random() * wins.length)];
+      document.getElementById('win-headline').innerText = win.h;
+      document.getElementById('win-sub').innerText = win.sub;
+    }
+
+    function resetSession() { applyTopicSelection(); }
+
+    function setupKeyboardShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !isRevealed && !document.getElementById('action-bar').classList.contains('hidden')) {
+          e.preventDefault(); revealAnswer();
+        } else if (isRevealed) {
+          if (e.key === '1') gradeCard('again');
+          if (e.key === '2') gradeCard('hard');
+          if (e.key === '3') gradeCard('ok');
+          if (e.key === '4') gradeCard('easy');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
