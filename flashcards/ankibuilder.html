@@ -32,7 +32,7 @@
     #draw-area { cursor: crosshair; user-select: none; }
     .box {
       position: absolute;
-      background: rgba(0, 69, 135, 0.65);
+      background: rgba(0, 69, 135, 0.68);
       border: 2px solid #FBBA07;
       cursor: move;
       display: flex;
@@ -43,11 +43,11 @@
       font-weight: 700;
       transition: background-color 0.1s ease;
     }
-    .box:hover { background: rgba(0, 69, 135, 0.8); }
+    .box:hover { background: rgba(0, 69, 135, 0.85); }
     .box.selected {
-      background: rgba(231, 48, 55, 0.55);
-      border: 2px solid #E73037;
-      box-shadow: 0 0 10px rgba(231, 48, 55, 0.5);
+      background: rgba(231, 48, 55, 0.65);
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 12px rgba(231, 48, 55, 0.8);
       z-index: 20;
     }
     .peek-mode .box { opacity: 0.15 !important; }
@@ -61,12 +61,12 @@
 <body class="text-slate-800 h-screen flex flex-col overflow-hidden">
 
   <!-- Header -->
-  <header class="w-full bg-white px-6 py-4 flex justify-between items-center border-b-[4px] border-cdlRed shadow-[0_4px_30px_rgba(0,69,135,0.05)] z-40 relative flex-shrink-0">
+  <header class="w-full bg-white px-6 py-3.5 flex justify-between items-center border-b-[4px] border-cdlRed shadow-[0_4px_30px_rgba(0,69,135,0.05)] z-40 relative flex-shrink-0">
     <div class="flex flex-col text-left">
       <h1 class="m-0 font-light text-2xl sm:text-3xl text-cdlNavy tracking-tight">
         IGCSE <span class="font-bold text-cdlBrightBlue">Flashcard Builder</span>
       </h1>
-      <div class="font-serif italic text-cdlRed text-sm sm:text-base mt-1">Creation & Mapping Tool</div>
+      <div class="font-serif italic text-cdlRed text-xs sm:text-sm mt-0.5">Creation &amp; Mapping Tool</div>
     </div>
     
     <div class="flex items-center gap-4">
@@ -76,60 +76,66 @@
     </div>
   </header>
 
-  <div class="max-w-7xl w-full mx-auto flex flex-col flex-1 gap-4 p-4 min-h-0">
+  <div class="max-w-7xl w-full mx-auto flex flex-col flex-1 gap-3 p-4 min-h-0">
     
     <!-- CONTROLS BAR -->
-    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-end z-30 flex-shrink-0">
+    <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap gap-4 items-end z-30 flex-shrink-0">
       
-      <!-- Searchable Image Path Dropdown -->
-      <div class="flex-1 min-w-[260px] relative">
+      <!-- 1. Searchable Image Path Dropdown + File Picker -->
+      <div class="flex-1 min-w-[260px] relative" id="image-picker-wrapper">
         <div class="flex justify-between items-center mb-1.5">
           <label class="text-[11px] font-bold text-cdlNavy uppercase tracking-wider">1. Select Diagram Image</label>
-          <span id="repo-status" class="text-[10px] text-slate-400 font-medium">Auto-Discovery</span>
+          <label class="text-[11px] font-bold text-cdlBrightBlue hover:underline cursor-pointer flex items-center gap-1">
+            <span>📂 Browse `/images`</span>
+            <input type="file" id="local-file-picker" accept="image/*" class="hidden" onchange="handleFilePick(event)">
+          </label>
         </div>
         <div class="relative">
           <input type="text" id="image-path" value="images/Bones.png" 
-                 placeholder="Search or type path..."
+                 placeholder="images/YourDiagram.png"
                  autocomplete="off"
                  onfocus="openImageDropdown()"
                  oninput="filterImageDropdown()"
                  onchange="loadImage(false)"
-                 class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 text-sm focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow">
+                 class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow">
           <button type="button" onclick="toggleImageDropdown()" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-cdlNavy px-2">
             ▼
           </button>
         </div>
-        <div id="image-dropdown" class="hidden absolute left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl max-h-56 overflow-y-auto z-50 divide-y divide-slate-100"></div>
+        <div id="image-dropdown" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl max-h-60 overflow-y-auto z-50 divide-y divide-slate-100"></div>
       </div>
 
-      <!-- Syllabus Topic Selector -->
-      <div class="flex-1 min-w-[300px] relative">
+      <!-- 2. Nested Checkbox Dropdown for Syllabus Topic -->
+      <div class="flex-1 min-w-[280px] relative" id="syllabus-picker-wrapper">
         <div class="flex justify-between items-center mb-1.5">
           <label class="text-[11px] font-bold text-cdlNavy uppercase tracking-wider">2. Map to Syllabus Topic</label>
+          <span id="selected-id-badge" class="text-[10px] font-mono bg-slate-100 text-cdlNavy px-2 py-0.5 rounded font-bold">skeletal-system.json</span>
         </div>
         <div class="relative">
           <button type="button" id="topic-selector-btn" onclick="toggleSyllabusDropdown()" 
-                  class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2.5 text-sm text-left focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow truncate flex items-center justify-between">
-            <span id="topic-selector-text" class="truncate text-slate-500">Select an IGCSE topic...</span>
+                  class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-3 pr-8 py-2 text-sm text-left focus:outline-none focus:border-cdlBrightBlue focus:ring-1 focus:ring-cdlBrightBlue font-medium transition-shadow truncate flex items-center justify-between">
+            <span id="topic-selector-text" class="truncate text-cdlNavy font-semibold">Skeletal and Muscular System</span>
             <span class="text-slate-400 text-xs">▼</span>
           </button>
         </div>
-        <div id="syllabus-dropdown" class="hidden absolute left-0 right-0 mt-2 bg-white border border-slate-200 rounded-xl shadow-xl max-h-72 overflow-y-auto z-50"></div>
+
+        <!-- Expandable Accordion Checkbox Menu (matches index.html) -->
+        <div id="syllabus-dropdown" class="hidden absolute left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl p-3 max-h-80 overflow-y-auto z-50 space-y-2"></div>
         
         <!-- Hidden inputs for JSON export -->
-        <input type="hidden" id="topic-title" value="">
-        <input type="hidden" id="topic-id" value="">
+        <input type="hidden" id="topic-title" value="Skeletal and Muscular System">
+        <input type="hidden" id="topic-id" value="skeletal-system">
       </div>
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-2">
-        <button onclick="clearAllBoxes()" title="Clear all masks" class="bg-white hover:bg-red-50 text-slate-600 hover:text-cdlRed border border-slate-300 font-bold px-4 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-1.5">
-          Clear <span id="mask-count" class="bg-slate-200 text-slate-600 text-[10px] px-1.5 py-0.5 rounded-full">0</span>
+        <button type="button" onclick="clearAllBoxes()" title="Clear all masks" class="bg-white hover:bg-red-50 text-slate-600 hover:text-cdlRed border border-slate-300 font-bold px-3.5 py-2 rounded-lg text-sm transition-colors flex items-center gap-1.5">
+          Clear <span id="mask-count" class="bg-slate-200 text-slate-700 text-[10px] px-1.5 py-0.5 rounded-full">0</span>
         </button>
-        <button onclick="exportJSON('copy')" id="copy-btn" class="bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold px-5 py-2 rounded-lg text-sm transition-all hover:-translate-y-0.5">
+        <button type="button" onclick="exportJSON('copy')" id="copy-btn" class="bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold px-4 py-1.5 rounded-lg text-sm transition-all">
           📋 Copy JSON
         </button>
-        <button onclick="exportJSON('download')" class="bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold px-5 py-2.5 rounded-lg text-sm shadow-[0_4px_10px_rgba(0,69,135,0.1)] transition-all hover:shadow-[0_8px_15px_rgba(30,185,220,0.2)] hover:-translate-y-0.5">
+        <button type="button" onclick="exportJSON('download')" class="bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold px-4 py-2 rounded-lg text-sm shadow transition-all">
           ⬇ Save .json
         </button>
       </div>
@@ -140,24 +146,25 @@
       <div id="img-error" class="hidden text-center max-w-md p-8 bg-white rounded-2xl shadow-lg border border-slate-200">
         <div class="text-cdlRed font-bold text-base mb-2">Could not load image at path:</div>
         <code id="error-path" class="text-sm bg-slate-100 px-3 py-1.5 rounded-md text-slate-700 block mb-4 border border-slate-200"></code>
-        <p class="text-xs text-slate-500 leading-relaxed">Check that the filename matches your <code class="font-bold">/images</code> folder exactly.</p>
+        <p class="text-xs text-slate-500 leading-relaxed">Click <strong>📂 Browse `/images`</strong> above to select the file directly from your folder, or check that the filename case (`.png` vs `.PNG`) matches exactly.</p>
       </div>
 
       <div id="draw-area" class="relative inline-block shadow-2xl bg-white rounded-sm overflow-hidden">
-        <img id="source-img" src="" class="block max-h-[calc(100vh-270px)] max-w-full w-auto h-auto pointer-events-none select-none" alt="Diagram">
-        <div id="masks-layer" class="absolute inset-0"></div>
+        <img id="source-img" src="" class="block max-h-[calc(100vh-250px)] max-w-full w-auto h-auto pointer-events-none select-none" alt="Diagram">
+        <!-- FIXED: Unified ID so JavaScript can draw & select boxes properly -->
+        <div id="boxes-layer" class="absolute inset-0"></div>
       </div>
     </div>
 
     <!-- FOOTER SHORTCUTS -->
-    <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 font-medium px-2 pb-1 flex-shrink-0">
+    <div class="flex flex-wrap justify-between items-center text-xs text-slate-500 font-medium px-2 flex-shrink-0">
       <div class="flex items-center gap-3">
-        <span><strong class="text-cdlNavy">Draw:</strong> Click & drag</span> <span class="opacity-30">|</span>
+        <span><strong class="text-cdlNavy">Draw:</strong> Click &amp; drag on image</span> <span class="opacity-30">|</span>
         <span><strong class="text-cdlNavy">Duplicate:</strong> <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Ctrl/Cmd + D</kbd></span> <span class="opacity-30">|</span>
         <span><strong class="text-cdlNavy">Peek:</strong> Hold <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Alt</kbd></span> <span class="opacity-30">|</span>
         <span><strong class="text-cdlNavy">Delete:</strong> <kbd class="bg-white border border-slate-300 px-1.5 py-0.5 rounded shadow-sm">Backspace</kbd></span>
       </div>
-      <div>Save into folder: <code class="bg-white border border-slate-200 px-2 py-1 rounded text-cdlNavy font-bold shadow-sm">json/<span id="footer-filename">...</span>.json</code></div>
+      <div>Save into folder: <code class="bg-white border border-slate-200 px-2 py-0.5 rounded text-cdlNavy font-bold shadow-sm">json/<span id="footer-filename">skeletal-system</span>.json</code></div>
     </div>
 
   </div>
@@ -175,16 +182,15 @@
     let startX = 0, startY = 0;
     let moveOffsetX = 0, moveOffsetY = 0;
     let activeBox = null;
-    
-    let manifestData = { categories: [] };
 
-    // HARDCODED FALLBACK MAP (Prevents Local CORS errors)
+    // Embedded IGCSE Syllabus Map (Works offline & online)
     const fallbackSyllabusMap = {
       "categories": [
         {
           "name": "1. Anatomy and Physiology",
           "topics": [
             { "id": "skeletal-system", "title": "Skeletal and Muscular System" },
+            { "id": "voluntary-muscles", "title": "Voluntary Muscles" },
             { "id": "respiratory-system", "title": "Respiratory System" },
             { "id": "circulatory-system", "title": "Circulatory System" },
             { "id": "energy-supply", "title": "Energy Supply & Effects of Exercise" },
@@ -224,122 +230,143 @@
       ]
     };
 
+    let manifestData = fallbackSyllabusMap;
+
     let availableImages = [
-      { path: 'images/Bones.png', title: 'Structure of the Skeletal System', id: 'skeletal-system' },
-      { path: 'images/VoluntaryMuscles.png', title: 'Voluntary Muscles', id: 'voluntary-muscles' },
-      { path: 'images/TrainingMethods.png', title: 'Training Methods', id: 'training-methods' }
+      { path: 'images/Bones.png', topicId: 'skeletal-system', topicTitle: 'Skeletal and Muscular System' },
+      { path: 'images/VoluntaryMuscles.png', topicId: 'voluntary-muscles', topicTitle: 'Voluntary Muscles' },
+      { path: 'images/TrainingMethods.png', topicId: 'training-methods', topicTitle: 'Training Methods & Altitude Training' }
     ];
 
     window.addEventListener('DOMContentLoaded', async () => {
-      discoverGitHubImages();
+      renderSyllabusDropdown();
+      renderImageDropdown();
       loadImage(true);
-      
+
+      // Load live manifest.json if available and merge any new topics
       try {
         const res = await fetch('manifest.json');
         if (res.ok) {
           manifestData = await res.json();
-        } else {
-          throw new Error('Fallback trigger');
+          renderSyllabusDropdown();
         }
       } catch (err) {
-        // If running locally without a server, use the fallback map
-        manifestData = fallbackSyllabusMap;
+        // Uses embedded fallbackSyllabusMap seamlessly
       }
-      
-      renderSyllabusDropdown();
     });
 
-    /* --- Syllabus Dropdown Logic --- */
+    /* --- 2. Nested Accordion Checkbox Dropdown for Syllabus Topics --- */
     function renderSyllabusDropdown() {
-      let html = '';
-      manifestData.categories.forEach(cat => {
-        html += `<div class="px-4 py-2 bg-slate-100 border-y border-slate-200 text-[10px] font-black text-cdlNavy uppercase tracking-wider sticky top-0 z-10 shadow-sm">${cat.name}</div>`;
-        cat.topics.forEach(top => {
-          html += `
-            <button type="button" onclick="selectSyllabusTopic('${top.id}', '${top.title.replace(/'/g, "\\'")}')"
-                    class="w-full text-left px-4 py-2.5 hover:bg-slate-50 text-sm transition-colors border-l-2 border-transparent hover:border-cdlBrightBlue group flex flex-col items-start bg-white">
-              <span class="font-bold text-slate-700 group-hover:text-cdlNavy">${top.title}</span>
-              <span class="text-[10px] text-slate-400 font-mono mt-0.5 group-hover:text-cdlBrightBlue">ID: ${top.id}</span>
-            </button>
+      const currentId = document.getElementById('topic-id').value;
+      syllabusDropdown.innerHTML = '';
+
+      manifestData.categories.forEach((cat, catIdx) => {
+        const section = document.createElement('div');
+        section.className = 'border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm';
+
+        const topicsHtml = cat.topics.map(top => {
+          const isChecked = top.id === currentId;
+          return `
+            <label class="flex items-center gap-2.5 py-2 px-3 rounded hover:bg-slate-50 text-xs sm:text-sm text-slate-700 cursor-pointer transition">
+              <input type="checkbox" name="builder-topic" value="${top.id}" 
+                     ${isChecked ? 'checked' : ''}
+                     onchange="selectSyllabusTopic('${top.id}', '${top.title.replace(/'/g, "\\'")}')"
+                     class="builder-topic-cb accent-cdlNavy w-4 h-4 rounded cursor-pointer">
+              <span class="flex-1 font-medium ${isChecked ? 'text-cdlNavy font-bold' : ''}">${top.title}</span>
+              <span class="text-[10px] font-mono text-slate-400">${top.id}.json</span>
+            </label>
           `;
-        });
+        }).join('');
+
+        section.innerHTML = `
+          <div class="flex items-center justify-between px-3 py-2 bg-slate-100/90 border-b border-slate-200 cursor-pointer" onclick="toggleBuilderCat(${catIdx})">
+            <span class="text-xs font-bold text-cdlNavy uppercase tracking-wider">${cat.name}</span>
+            <span id="builder-cat-arrow-${catIdx}" class="text-slate-400 text-xs">▼</span>
+          </div>
+          <div id="builder-cat-body-${catIdx}" class="p-1.5 space-y-0.5">
+            ${topicsHtml}
+          </div>
+        `;
+        syllabusDropdown.appendChild(section);
       });
-      syllabusDropdown.innerHTML = html;
+    }
+
+    function toggleBuilderCat(catIdx) {
+      const body = document.getElementById(`builder-cat-body-${catIdx}`);
+      const arrow = document.getElementById(`builder-cat-arrow-${catIdx}`);
+      const isHidden = body.classList.toggle('hidden');
+      arrow.innerText = isHidden ? '▶' : '▼';
     }
 
     function toggleSyllabusDropdown() {
       syllabusDropdown.classList.toggle('hidden');
+      imageDropdown.classList.add('hidden');
     }
 
     function selectSyllabusTopic(id, title) {
       document.getElementById('topic-id').value = id;
       document.getElementById('topic-title').value = title;
-      
-      const btnText = document.getElementById('topic-selector-text');
-      btnText.innerText = title;
-      btnText.classList.remove('text-slate-500');
-      btnText.classList.add('text-cdlNavy');
-      
+      document.getElementById('topic-selector-text').innerText = title;
+      document.getElementById('selected-id-badge').innerText = `${id}.json`;
       document.getElementById('footer-filename').innerText = id;
+
+      // Update checkboxes so only the active topic is checked
+      renderSyllabusDropdown();
       syllabusDropdown.classList.add('hidden');
     }
 
-    /* --- Image Dropdown Logic --- */
-    async function discoverGitHubImages() {
-      const host = window.location.hostname;
-      const pathParts = window.location.pathname.split('/').filter(Boolean);
-      
-      if (!host.endsWith('github.io') || pathParts.length === 0) {
-        renderImageDropdown();
-        return;
-      }
-      
-      const owner = host.split('.')[0];
-      const repo = pathParts[0];
-      const folderPrefix = pathParts.slice(1, -1).join('/');
-      const apiPath = folderPrefix ? `${folderPrefix}/images` : 'images';
-
-      try {
-        const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${apiPath}`);
-        if (!res.ok) throw new Error('API not reachable');
-        const files = await res.json();
-        const imgFiles = files.filter(f => /\.(png|jpe?g|webp|svg|gif)$/i.test(f.name));
-        
-        if (imgFiles.length > 0) {
-          availableImages = imgFiles.map(f => {
-            return { path: `images/${f.name}`, title: f.name, id: '' };
-          });
-          document.getElementById('repo-status').innerText = `✓ Synced ${imgFiles.length} images`;
-          document.getElementById('repo-status').className = 'text-[10px] text-emerald-600 font-bold tracking-wider uppercase';
-        }
-      } catch (e) { }
-      renderImageDropdown();
-    }
-
+    /* --- 1. Image Selector & File Browser --- */
     function renderImageDropdown(filterText = '') {
       const query = filterText.toLowerCase().trim();
       const filtered = availableImages.filter(img => img.path.toLowerCase().includes(query));
 
-      if (filtered.length === 0) {
-        imageDropdown.innerHTML = `<div class="px-4 py-3 text-sm text-slate-400 italic">No matches. Press Enter to load custom path.</div>`;
-        return;
-      }
-
-      imageDropdown.innerHTML = filtered.map(img => `
-        <button type="button" onclick="selectImageFromDropdown('${img.path}')"
+      let html = filtered.map(img => `
+        <button type="button" onclick="selectImageFromDropdown('${img.path}', '${img.topicId || ''}', '${(img.topicTitle || '').replace(/'/g, "\\'")}')"
                 class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center justify-between text-sm transition-colors border-l-2 border-transparent hover:border-cdlBrightBlue group">
           <span class="font-medium text-slate-700 group-hover:text-cdlNavy">${img.path}</span>
+          <span class="text-[11px] text-slate-400">${img.topicTitle || ''}</span>
         </button>
       `).join('');
+
+      html += `
+        <button type="button" onclick="document.getElementById('local-file-picker').click()"
+                class="w-full text-left px-4 py-2.5 bg-slate-50 hover:bg-blue-50 text-cdlBrightBlue font-bold text-xs flex items-center gap-2">
+          <span>📂 Browse your computer / images folder...</span>
+        </button>
+      `;
+
+      imageDropdown.innerHTML = html;
+    }
+
+    function handleFilePick(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const relativePath = `images/${file.name}`;
+
+      if (!availableImages.some(i => i.path === relativePath)) {
+        availableImages.unshift({ path: relativePath, topicId: '', topicTitle: 'Selected file' });
+      }
+
+      document.getElementById('image-path').value = relativePath;
+      imageDropdown.classList.add('hidden');
+
+      // Preview immediately using local object URL so it works even before pushing to GitHub
+      const previewUrl = URL.createObjectURL(file);
+      sourceImg.src = previewUrl;
+      boxes = [];
+      selectedBoxId = null;
+      renderBoxes();
     }
 
     function openImageDropdown() {
       renderImageDropdown('');
       imageDropdown.classList.remove('hidden');
+      syllabusDropdown.classList.add('hidden');
     }
 
     function toggleImageDropdown() {
       imageDropdown.classList.toggle('hidden');
+      syllabusDropdown.classList.add('hidden');
       if (!imageDropdown.classList.contains('hidden')) renderImageDropdown('');
     }
 
@@ -348,7 +375,7 @@
       imageDropdown.classList.remove('hidden');
     }
 
-    function selectImageFromDropdown(path) {
+    function selectImageFromDropdown(path, topicId, topicTitle) {
       if (boxes.length > 0 && document.getElementById('image-path').value !== path) {
         if (!confirm('Switching images will clear your current masks. Continue?')) {
           imageDropdown.classList.add('hidden');
@@ -356,21 +383,24 @@
         }
       }
       document.getElementById('image-path').value = path;
+      if (topicId && topicTitle) {
+        selectSyllabusTopic(topicId, topicTitle);
+      }
       imageDropdown.classList.add('hidden');
       loadImage(true);
     }
 
-    // Close dropdowns on outside click
+    // Close dropdowns when clicking outside
     window.addEventListener('click', (e) => {
-      if (!e.target.closest('#image-dropdown') && !e.target.closest('#image-path') && !e.target.closest('button[onclick="toggleImageDropdown()"]')) {
+      if (!e.target.closest('#image-picker-wrapper')) {
         imageDropdown.classList.add('hidden');
       }
-      if (!e.target.closest('#syllabus-dropdown') && !e.target.closest('#topic-selector-btn')) {
+      if (!e.target.closest('#syllabus-picker-wrapper')) {
         syllabusDropdown.classList.add('hidden');
       }
     });
 
-    /* --- Canvas & Drawing Logic --- */
+    /* --- Canvas & Box Drawing Logic --- */
     function loadImage(resetMasks = false) {
       sourceImg.src = document.getElementById('image-path').value.trim();
       if (resetMasks) {
@@ -395,6 +425,7 @@
 
     drawArea.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
+      e.preventDefault();
       const rect = drawArea.getBoundingClientRect();
       const clickX = clamp(((e.clientX - rect.left) / rect.width) * 100, 0, 100);
       const clickY = clamp(((e.clientY - rect.top) / rect.height) * 100, 0, 100);
@@ -518,9 +549,8 @@
 
     function exportJSON(action = 'copy') {
       const topicId = document.getElementById('topic-id').value.trim();
-      
       if (!topicId) {
-        alert("Please map this diagram to a Syllabus Topic first!");
+        alert("Please select a Syllabus Topic in Step 2 first!");
         return;
       }
 
