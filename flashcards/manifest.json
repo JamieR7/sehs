@@ -3,8 +3,8 @@
     {
       "name": "1. Anatomy and Physiology",
       "topics": [
-        { "id": "skeletal-system", "title": "Skeletal and Muscular System", "file": "json/skeletal-system.json" },
-        { "id": "voluntary-muscles", "title": "Voluntary Muscles", "file": "json/voluntary-muscles.json" },
+        { "id": "skeletal-system", "title": "Skeletal System (hard mode recommended!)", "file": "json/skeletal-system.json" },
+        { "id": "voluntary-muscles", "title": "Voluntary Muscles (hard mode recommended!)", "file": "json/voluntary-muscles.json" },
         { "id": "respiratory-system", "title": "Respiratory System", "file": "json/respiratory-system.json" },
         { "id": "circulatory-system", "title": "Circulatory System", "file": "json/circulatory-system.json" },
         { "id": "energy-supply", "title": "Energy Supply & Effects of Exercise", "file": "json/energy-supply.json" },
@@ -17,9 +17,9 @@
         { "id": "health-wellbeing", "title": "Health and Well-being", "file": "json/health-wellbeing.json" },
         { "id": "components-fitness", "title": "Components of Fitness & Testing", "file": "json/components-fitness.json" },
         { "id": "training-principles", "title": "Principles of Training & SPORT/FITT", "file": "json/training-principles.json" },
-         { "id": "fitt", "title": "FITT Principle (unselect hide all)", "file": "json/fitt.json" },
-         { "id": "sport", "title": "SPORT Principle (unselect hide all)", "file": "json/sport.json" },
-        { "id": "training-methods", "title": "Training Methods (unselect hide all)", "file": "json/training-methods.json" },
+         { "id": "fitt", "title": "FITT Principle (do not select hide all)", "file": "json/fitt.json" },
+         { "id": "sport", "title": "SPORT Principle (do not select hide all)", "file": "json/sport.json" },
+        { "id": "training-methods", "title": "Training Methods (do not select hide all)", "file": "json/training-methods.json" },
         { "id": "warm-up-cool-down", "title": "Warming Up & Cooling Down", "file": "json/warm-up-cool-down.json" }
       ]
     },
