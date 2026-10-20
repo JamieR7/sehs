@@ -162,11 +162,11 @@
 
     <!-- Empty State -->
     <div id="empty-state" class="hidden text-center max-w-lg bg-white border border-slate-200 rounded-2xl p-10 shadow-lg mt-10">
-      <div class="text-5xl mb-4">📚</div>
-      <h2 class="text-2xl font-bold text-cdlNavy mb-2">Ready to Study?</h2>
+      <div class="text-5xl mb-4">🎯</div>
+      <h2 class="text-2xl font-bold text-cdlNavy mb-2">Ready to Train?</h2>
       <p id="empty-state-text" class="text-base text-slate-600 mb-8 leading-relaxed"></p>
       <button onclick="toggleTopicMenu(true)" class="bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold px-8 py-4 rounded-full shadow-[0_8px_15px_rgba(0,69,135,0.1)] transition-all hover:-translate-y-1">
-        Open Deck Selection
+        Choose a Topic 📋
       </button>
     </div>
 
@@ -203,24 +203,40 @@
       </div>
     </div>
 
-    <!-- Celebration Modal -->
+    <!-- Celebration Modal Pop-Up -->
     <div id="celebration-overlay" class="hidden absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-6">
-      <div class="bg-white rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border-t-8 border-cdlGold">
-        <div class="text-6xl mb-4">🏆</div>
-        <div id="win-badge" class="inline-block bg-slate-100 text-cdlNavy text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full mb-4"></div>
-        <h2 id="win-headline" class="text-3xl font-black text-cdlNavy mb-2"></h2>
-        <p id="win-sub" class="text-slate-600 font-medium mb-8"></p>
+      <div class="bg-white rounded-3xl shadow-2xl p-8 sm:p-10 max-w-xl w-full text-center border-t-8 border-cdlGold relative overflow-hidden">
+        
+        <!-- Emoji Display Area -->
+        <div id="commentator-emojis" class="text-4xl sm:text-5xl mb-2 tracking-wide"></div>
 
-        <div id="session-summary-stats" class="bg-slate-50 border border-slate-100 rounded-2xl p-5 mb-8 text-sm text-slate-500 flex justify-around"></div>
+        <!-- Floating Subtitle (No pill container) -->
+        <div id="win-badge" class="font-black text-xs sm:text-sm text-cdlBrightBlue uppercase tracking-widest mb-3"></div>
 
+        <!-- Main Headline -->
+        <h2 id="win-headline" class="text-2xl sm:text-3xl font-black text-cdlNavy mb-4 leading-tight"></h2>
+
+        <!-- Commentator Box -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5 mb-6 text-left shadow-inner">
+          <div class="mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-cdlRed bg-cdlRed/10 px-2 py-0.5 rounded">🎙️ BROADCAST BOOTH</span>
+          </div>
+          <p id="win-sub" class="text-slate-700 font-serif italic text-sm sm:text-base leading-relaxed m-0"></p>
+        </div>
+
+        <!-- Session Stats Summary -->
+        <div id="session-summary-stats" class="bg-white border border-slate-100 rounded-2xl p-4 mb-8 text-sm text-slate-500 flex justify-around shadow-sm"></div>
+
+        <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3">
-          <button onclick="inspectCompletedDiagram()" class="flex-1 bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold py-3.5 px-4 rounded-full transition-all hover:-translate-y-0.5">
+          <button onclick="inspectCompletedDiagram()" class="flex-1 bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold py-3.5 px-4 rounded-full transition-all hover:-translate-y-0.5 shadow-sm">
             👁 View Diagram
           </button>
           <button onclick="resetSession()" class="flex-1 bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold py-3.5 px-4 rounded-full shadow-lg transition-all hover:shadow-[0_8px_15px_rgba(30,185,220,0.2)] hover:-translate-y-0.5">
             ↻ Study Again
           </button>
         </div>
+
       </div>
     </div>
 
@@ -237,12 +253,148 @@
     let currentCard = null;
     let isRevealed = false;
 
-    const WIN_MESSAGES = [
-      { h: "Clinical Finish!", sub: "Every single label locked down. That diagram didn't stand a chance." },
-      { h: "Top-Bins Recall!", sub: "Not a single blind spot remaining on the page." },
-      { h: "Synapses Wired!", sub: "Active recall complete. Your future exam-self says thank you." },
-      { h: "100% Board Cleared!", sub: "Zero hesitation left. You own this topic now." },
-      { h: "Mic Drop.", sub: "If this diagram comes up on the paper, it’s basically free marks." }
+    // Complete 20-Tier Sports Commentator Dataset with Jeff Co-Host Dynamic
+    const COMMENTATOR_TIERS = [
+      {
+        min: 1, max: 5,
+        emojis: "😐⏱️🪨",
+        badge: "THE MERE ESSENTIALS",
+        headline: "Well... you touched the keyboard.",
+        sub: "“Well, Jeff, they managed a couple. It’s giving heavy 'Sunday morning rec-league team that forgot their water bottles' energy. The stopwatch didn't even break a sweat, and quite frankly, neither did they.”"
+      },
+      {
+        min: 6, max: 10,
+        emojis: "📋👟🤨",
+        badge: "STILL NOT GREAT",
+        headline: "A valiant lack of excellence.",
+        sub: "“They’re clearing a few hurdles, Jeff, but it looks like a cross-country runner trying to navigate a velodrome. Lots of movement, very little direction. Back to the training cones.”"
+      },
+      {
+        min: 11, max: 15,
+        emojis: "🤷‍♂️🧊🧩",
+        badge: "BARE MINIMUM ACHIEVED",
+        headline: "A pulse has been detected.",
+        sub: "“I’ll give credit where it’s due, Jeff—they actually finished a sequence. It’s like watching someone complete a puzzle where half the pieces are missing, but hey, the box art is visible.”"
+      },
+      {
+        min: 16, max: 20,
+        emojis: "🎯📈🧱",
+        badge: "THE MIDFIELD GRIND",
+        headline: "Now that's a legal movement.",
+        sub: "“Look at that, Jeff! They’re holding a steady cadence now. It's not setting any course records, but it's clean enough that the referee isn't reaching for a penalty card.”"
+      },
+      {
+        min: 21, max: 25,
+        emojis: "⚡👀🔋",
+        badge: "CAUTIOUS OPTIMISM",
+        headline: "We might have a pulse here.",
+        sub: "“Hold on a second, Jeff, check the telemetry. The form is straightening out! If they keep this up through the final stretch, we might actually see them finish without needing a timeout.”"
+      },
+      {
+        min: 26, max: 30,
+        emojis: "🔥🏅🦾",
+        badge: "TURNING HEADS",
+        headline: "Well look who decided to show up.",
+        sub: "“I’m starting to eat my words, Jeff. The mechanics are locking in. That’s some clean execution right there—smoother than a fresh sheet of ice before the opening faceoff.”"
+      },
+      {
+        min: 31, max: 35,
+        emojis: "🌟🧠🎯",
+        badge: "TACTICAL MASTERCLASS",
+        headline: "The scouts are taking notes.",
+        sub: "“Well, well, Jeff... look at the scoreboard. We’ve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
+      },
+      {
+        min: 36, max: 40,
+        emojis: "🏛️📜⚡",
+        badge: "HALL OF FAME TRAJECTORY",
+        headline: "Etch it in stone.",
+        sub: "“This is textbook execution, Jeff. Years from now, coaches will be showing clips of this exact session to rookies in the locker room. Absolute precision.”"
+      },
+      {
+        min: 41, max: 45,
+        emojis: "🤯🌪️🚀",
+        badge: "ABSOLUTE HIGHLIGHT REEL",
+        headline: "Stop the clock, look at the monitor!",
+        sub: "“Wow, Jeff, did you see that?! The velocity, the angles—it’s like watching a grandmaster effortlessly clean the board while everyone else is still tying their shoelaces!”"
+      },
+      {
+        min: 46, max: 50,
+        emojis: "💎🔥🏆",
+        badge: "ELITE TIER OPERATOR",
+        headline: "Pure platinum performance.",
+        sub: "“We are witnessing greatness unfold in real-time, Jeff. Halfway to the century mark and there isn’t a single blemish on the stat sheet. Flawless execution!”"
+      },
+      {
+        min: 51, max: 55,
+        emojis: "🌌⚡🦅",
+        badge: "GRAVITY IS OPTIONAL",
+        headline: "The laws of motion have left the building.",
+        sub: "“At this point, Jeff, I'm convinced they aren't even bound by gravity anymore. They're gliding through this board like a downhill racer carving fresh powder at Mach 3.”"
+      },
+      {
+        min: 56, max: 60,
+        emojis: "🏟️🎉🔊",
+        badge: "STADIUM ECLIPSE",
+        headline: "The roof is officially coming off!",
+        sub: "“Listen to that crowd roar, Jeff! You'd think it was the final minute of a championship match. The opposition has packed their bags and left the venue!”"
+      },
+      {
+        min: 61, max: 65,
+        emojis: "☄️🚂💨",
+        badge: "UNSTOPPABLE FREIGHT TRAIN",
+        headline: "No brakes, all gas!",
+        sub: "“There’s no slowing them down now, Jeff. They’ve hit terminal velocity. The judges don't even need to score this anymore, they're just standing up and applauding.”"
+      },
+      {
+        min: 66, max: 70,
+        emojis: "🦄🔮✨",
+        badge: "MYTHICAL CREATURE STATUS",
+        headline: "Is this real life or a simulation?",
+        sub: "“I checked the rulebook twice, Jeff, and what they’re doing shouldn't even be mathematically possible. It’s like watching a solo breakaway happen in slow motion where everyone else is standing still.”"
+      },
+      {
+        min: 71, max: 75,
+        emojis: "🧬🏔️🔥",
+        badge: "PEAK BIOLOGICAL SPECIMEN",
+        headline: "Evolution complete.",
+        sub: "“Darwin would write a whole new chapter based on this, Jeff. We are looking at the absolute apex of human coordination. Absolutely breathtaking.”"
+      },
+      {
+        min: 76, max: 80,
+        emojis: "📜✍️🌐",
+        badge: "GLOBAL RECORD OBLITERATOR",
+        headline: "Tear up the rulebooks!",
+        sub: "“Every single benchmark set in the history of the sport has just been shattered into a million tiny pieces, Jeff. The statisticians are crying in the back office!”"
+      },
+      {
+        min: 81, max: 85,
+        emojis: "🪐🌠⭐",
+        badge: "CELESTIAL ALIGNMENT",
+        headline: "The universe bends to their will.",
+        sub: "“The planets are aligned, the weather is perfect, and our competitor is operating on a higher plane of consciousness, Jeff. Absolutely untouchable.”"
+      },
+      {
+        min: 86, max: 90,
+        emojis: "⚡🌩️🏛️",
+        badge: "OLYMPIAN DEITY",
+        headline: "Send down the golden laurels.",
+        sub: "“At this point, Jeff, they aren't even competing against other humans anymore. They're competing against the gods of antiquity and winning by a landslide.”"
+      },
+      {
+        min: 91, max: 95,
+        emojis: "⏳🌀⚛️",
+        badge: "TEMPORAL ANOMALY",
+        headline: "Bending the continuum.",
+        sub: "“Look at the timestamps, Jeff! They’re answering questions before they're even asked. We are looking at a literal glitch in the matrix of sport!”"
+      },
+      {
+        min: 96, max: 9999,
+        emojis: "👑🐐💎🏆🔥",
+        badge: "THE ULTIMATE GOAT",
+        headline: "CLOSE THE STADIUM. PERFECTION ACHIEVED.",
+        sub: "“That’s it, Jeff. Drop the microphones, lock the stadium gates, and turn off the lights. We will never, EVER see anything remotely close to this again in our lifetimes. Absolute perfection!”"
+      }
     ];
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -289,12 +441,13 @@
           document.querySelectorAll('.topic-checkbox').forEach(cb => {
             cb.checked = requestedIds.includes(cb.value);
           });
+          updateBadgeCount();
+          await applyTopicSelection(false);
         } else {
-          const firstCb = document.querySelector('.topic-checkbox');
-          if (firstCb) firstCb.checked = true;
+          // Leave all unchecked by default and display welcoming prompt
+          updateBadgeCount();
+          showEmptyState("Select one or more topics from the menu above to get started! 🏃‍♂️💨");
         }
-        updateBadgeCount();
-        await applyTopicSelection(false);
       } catch (err) {
         showEmptyState("Could not load manifest.json. Ensure the file is in your root folder.");
       }
@@ -400,7 +553,7 @@
 
       const checked = Array.from(document.querySelectorAll('.topic-checkbox:checked'));
       if (checked.length === 0) {
-        showEmptyState("Please select at least one topic from the menu.");
+        showEmptyState("Please select at least one topic from the menu! 🎯");
         return;
       }
 
@@ -533,26 +686,61 @@
       document.getElementById('action-bar').classList.add('hidden');
       document.getElementById('celebration-overlay').classList.remove('hidden');
 
-      const end = Date.now() + 2200;
-      (function frame() {
-        confetti({ particleCount: 5, angle: 60, spread: 65, origin: { x: 0, y: 0.65 }, colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037'] });
-        confetti({ particleCount: 5, angle: 120, spread: 65, origin: { x: 1, y: 0.65 }, colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037'] });
-        if (Date.now() < end) requestAnimationFrame(frame);
-      })();
+      const finalScore = initialQueueSize > 0 ? initialQueueSize : 1;
 
-      const win = WIN_MESSAGES[Math.floor(Math.random() * WIN_MESSAGES.length)];
-      document.getElementById('win-headline').innerText = win.h;
-      document.getElementById('win-sub').innerText = win.sub;
+      // Match commentator tier based on mastered count
+      const tier = COMMENTATOR_TIERS.find(t => finalScore >= t.min && finalScore <= t.max) || COMMENTATOR_TIERS[COMMENTATOR_TIERS.length - 1];
 
-      let badge = "⚡ Session Complete";
-      if (totalReviewsCount === initialQueueSize) badge = "🎯 Flawless First-Try Sweep!";
-      else if (againCount >= 3) badge = "🛡️ Relentless Grit — Mastered!";
-      document.getElementById('win-badge').innerText = badge;
+      document.getElementById('commentator-emojis').innerText = tier.emojis;
+      document.getElementById('win-badge').innerText = tier.badge;
+      document.getElementById('win-headline').innerText = tier.headline;
+      document.getElementById('win-sub').innerText = tier.sub;
 
       document.getElementById('session-summary-stats').innerHTML = `
-        <div><div class="text-slate-400 font-medium">Labels Mastered</div><div class="text-2xl font-black text-cdlNavy mt-1">${initialQueueSize}</div></div>
-        <div><div class="text-slate-400 font-medium">Total Reviews</div><div class="text-2xl font-black text-cdlNavy mt-1">${totalReviewsCount}</div></div>
+        <div><div class="text-slate-400 font-medium text-xs">Labels Mastered</div><div class="text-2xl font-black text-cdlNavy mt-1">${finalScore}</div></div>
+        <div><div class="text-slate-400 font-medium text-xs">Total Reviews</div><div class="text-2xl font-black text-cdlNavy mt-1">${totalReviewsCount}</div></div>
       `;
+
+      triggerScaledFireworks(finalScore);
+    }
+
+    function triggerScaledFireworks(score) {
+      // Scale intensity multiplier from 1x up to 5x as score climbs from 1 to 100
+      const intensity = Math.min(5, Math.max(1, score / 20));
+      const duration = 1500 + (score * 30);
+      const end = Date.now() + duration;
+
+      (function frame() {
+        // Side cannons (ticker tape streams)
+        confetti({
+          particleCount: Math.floor(3 * intensity),
+          angle: 60,
+          spread: 55 + (intensity * 3),
+          origin: { x: 0, y: 0.7 },
+          colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037']
+        });
+        confetti({
+          particleCount: Math.floor(3 * intensity),
+          angle: 120,
+          spread: 55 + (intensity * 3),
+          origin: { x: 1, y: 0.7 },
+          colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037']
+        });
+
+        // Aerial fireworks explosions for higher tiers (50+ mastered)
+        if (score >= 50 && Math.random() < (0.25 + (intensity * 0.05))) {
+          confetti({
+            particleCount: Math.floor(15 * intensity),
+            spread: 120,
+            origin: { x: Math.random(), y: Math.random() * 0.6 },
+            colors: ['#FBBA07', '#ffffff', '#1EB9DC', '#E73037', '#004587']
+          });
+        }
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
     }
 
     function inspectCompletedDiagram() {
