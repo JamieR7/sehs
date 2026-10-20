@@ -148,7 +148,10 @@
     <!-- Progress Tracker -->
     <div class="w-full max-w-5xl flex justify-between items-end text-xs sm:text-sm text-slate-500 font-bold mb-2 px-1">
       <span id="progress-text" class="uppercase tracking-wider">Select a topic to begin</span>
-      <span id="queue-stats" class="text-cdlBrightBlue"></span>
+      <div class="flex items-center gap-4">
+        <button id="end-session-btn" onclick="endSessionEarly()" class="hidden text-[11px] sm:text-xs text-slate-400 hover:text-cdlRed underline transition-colors">End Session</button>
+        <span id="queue-stats" class="text-cdlBrightBlue"></span>
+      </div>
     </div>
     <div class="w-full max-w-5xl bg-white border border-slate-200 h-3 rounded-full mb-6 overflow-hidden shadow-sm">
       <div id="progress-bar" class="bg-cdlBrightBlue h-full transition-all duration-300" style="width: 0%"></div>
@@ -164,10 +167,7 @@
     <div id="empty-state" class="hidden text-center max-w-lg bg-white border border-slate-200 rounded-2xl p-10 shadow-lg mt-10">
       <div class="text-5xl mb-4">🎯</div>
       <h2 class="text-2xl font-bold text-cdlNavy mb-2">Ready to Train?</h2>
-      <p id="empty-state-text" class="text-base text-slate-600 mb-8 leading-relaxed"></p>
-      <button onclick="toggleTopicMenu(true)" class="bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold px-8 py-4 rounded-full shadow-[0_8px_15px_rgba(0,69,135,0.1)] transition-all hover:-translate-y-1">
-        Choose a Topic 📋
-      </button>
+      <p id="empty-state-text" class="text-base text-slate-600 leading-relaxed m-0"></p>
     </div>
 
     <!-- Action & Grading Controls -->
@@ -273,7 +273,7 @@
         min: 11, max: 15,
         emojis: "🤷‍♂️🧊🧩",
         badge: "BARE MINIMUM ACHIEVED",
-        headline: "A pulse has been detected.",
+        headline: "Signs of life!",
         sub: "“I’ll give credit where it’s due, Jeff—they actually finished a sequence. It’s like watching someone complete a puzzle where half the pieces are missing, but hey, the box art is visible.”"
       },
       {
@@ -287,7 +287,7 @@
         min: 21, max: 25,
         emojis: "⚡👀🔋",
         badge: "CAUTIOUS OPTIMISM",
-        headline: "We might have a pulse here.",
+        headline: "A steady pulse has been detected.",
         sub: "“Hold on a second, Jeff, check the telemetry. The form is straightening out! If they keep this up through the final stretch, we might actually see them finish without needing a timeout.”"
       },
       {
@@ -584,12 +584,14 @@
 
       document.getElementById('empty-state').classList.add('hidden');
       document.getElementById('canvas-container').classList.remove('hidden');
+      document.getElementById('end-session-btn').classList.remove('hidden');
       startSession();
     }
 
     function showEmptyState(msg) {
       document.getElementById('action-bar').classList.add('hidden');
       document.getElementById('canvas-container').classList.add('hidden');
+      document.getElementById('end-session-btn').classList.add('hidden');
       document.getElementById('empty-state-text').innerText = msg;
       document.getElementById('empty-state').classList.remove('hidden');
       document.getElementById('progress-text').innerText = "Waiting for setup...";
@@ -680,16 +682,25 @@
       document.getElementById('queue-stats').innerText = `${sessionQueue.length} remaining`;
     }
 
+    function endSessionEarly() {
+      if (confirm("Are you sure you want to end this session early?")) {
+        triggerCelebration();
+      }
+    }
+
     function triggerCelebration() {
       updateProgress();
       document.getElementById('masks-layer').innerHTML = '';
       document.getElementById('action-bar').classList.add('hidden');
+      document.getElementById('end-session-btn').classList.add('hidden');
       document.getElementById('celebration-overlay').classList.remove('hidden');
 
-      const finalScore = initialQueueSize > 0 ? initialQueueSize : 1;
+      // Calculate actual mastered count in case they ended early
+      const masteredCount = initialQueueSize - sessionQueue.length;
+      const finalScore = Math.max(0, masteredCount);
 
-      // Match commentator tier based on mastered count
-      const tier = COMMENTATOR_TIERS.find(t => finalScore >= t.min && finalScore <= t.max) || COMMENTATOR_TIERS[COMMENTATOR_TIERS.length - 1];
+      // Match commentator tier based on mastered count (fallback to tier 1 if 0)
+      const tier = COMMENTATOR_TIERS.find(t => finalScore >= t.min && finalScore <= t.max) || COMMENTATOR_TIERS[0];
 
       document.getElementById('commentator-emojis').innerText = tier.emojis;
       document.getElementById('win-badge').innerText = tier.badge;
@@ -705,6 +716,8 @@
     }
 
     function triggerScaledFireworks(score) {
+      if (score === 0) return; // No fireworks if they mastered 0
+
       // Scale intensity multiplier from 1x up to 5x as score climbs from 1 to 100
       const intensity = Math.min(5, Math.max(1, score / 20));
       const duration = 1500 + (score * 30);
