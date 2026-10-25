@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IGCSE PE Flashcards: Collège du Léman</title>
+  <title>IGCSE PE Flashcards - Collège du Léman</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
@@ -69,7 +69,7 @@
   <!-- CDL Branded Header -->
   <header class="w-full bg-white px-6 py-5 flex justify-between items-center border-b-[4px] border-cdlRed shadow-[0_4px_30px_rgba(0,69,135,0.05)] z-40 relative">
     <div class="flex flex-col text-left flex-grow">
-      <a href="index.html" onclick="returnToHub(event)" class="no-underline group inline-block w-fit" title="Return to IGCSE PE Exam Hub">
+      <a href="../" onclick="returnToHub(event)" class="no-underline group inline-block w-fit" title="Return to IGCSE PE Exam Hub">
         <h1 class="m-0 font-light text-2xl sm:text-[38px] leading-tight text-cdlNavy tracking-tight group-hover:opacity-80 transition-opacity">
           IGCSE <span class="font-bold text-cdlBrightBlue">Physical Education</span>
         </h1>
@@ -79,7 +79,7 @@
     
     <div class="flex items-center gap-3 sm:gap-4">
       <!-- Desktop Back to Exam Hub Pill -->
-      <a href="index.html" onclick="returnToHub(event)" class="hidden md:flex bg-white hover:bg-slate-50 border-2 border-cdlNavy text-cdlNavy px-5 py-2.5 rounded-full text-sm font-bold items-center gap-2 transition-all duration-300 hover:-translate-y-0.5 shadow-sm">
+      <a href="../" onclick="returnToHub(event)" class="hidden md:flex bg-white hover:bg-slate-50 border-2 border-cdlNavy text-cdlNavy px-5 py-2.5 rounded-full text-sm font-bold items-center gap-2 transition-all duration-300 hover:-translate-y-0.5 shadow-sm">
         <span>←</span>
         <span>Exam Hub</span>
       </a>
@@ -92,7 +92,6 @@
 
       <!-- CDL Athletics Logo -->
       <div class="pl-3 sm:pl-4 hidden sm:block border-l border-slate-200">
-        <!-- Reverts to placeholder if images/athletics-logo.png isn't available locally -->
         <img src="images/athletics-logo.png" onerror="this.style.display='none'" alt="CDL Athletics" class="h-16 w-auto object-contain">
       </div>
     </div>
@@ -100,7 +99,7 @@
 
   <!-- Mobile Navigation & Topic Bar -->
   <div class="w-full bg-white p-3 md:hidden border-b border-slate-200 flex justify-center items-center gap-2.5 z-30 shadow-sm">
-    <a href="index.html" onclick="returnToHub(event)" class="bg-white border-2 border-cdlNavy text-cdlNavy px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-1.5 shadow-sm shrink-0">
+    <a href="../" onclick="returnToHub(event)" class="bg-white border-2 border-cdlNavy text-cdlNavy px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-1.5 shadow-sm shrink-0">
       <span>←</span>
       <span>Hub</span>
     </a>
@@ -253,7 +252,7 @@
         </div>
 
         <!-- Return to Exam Hub Link -->
-        <a href="index.html#exam-practice" onclick="returnToHub(event)" class="inline-block mt-5 text-xs sm:text-sm font-bold text-slate-400 hover:text-cdlNavy underline transition-colors">
+        <a href="../#exam-practice" onclick="returnToHub(event)" class="inline-block mt-5 text-xs sm:text-sm font-bold text-slate-400 hover:text-cdlNavy underline transition-colors">
           ← Done warming up? Return to Past Paper Hub
         </a>
 
@@ -273,14 +272,12 @@
     let currentCard = null;
     let isRevealed = false;
 
-    // Smart Back Navigation to Exam Hub
+    // Smart Back Navigation to Exam Hub (Steps up from /flashcards/ to parent /)
     function returnToHub(e) {
-      // If opened via target="_blank" from the hub, close the tab cleanly to return to the original tab
       if (window.opener && !window.opener.closed) {
         e.preventDefault();
         window.close();
       }
-      // Otherwise, the standard href="index.html" navigates smoothly in the same tab
     }
 
     // 21 Dramatic Sports & PE Quit Quotes (Natural Casing)
