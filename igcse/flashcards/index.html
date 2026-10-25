@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IGCSE PE Flashcards - Collège du Léman</title>
+  <title>IGCSE PE Flashcards: Collège du Léman</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
@@ -69,13 +69,21 @@
   <!-- CDL Branded Header -->
   <header class="w-full bg-white px-6 py-5 flex justify-between items-center border-b-[4px] border-cdlRed shadow-[0_4px_30px_rgba(0,69,135,0.05)] z-40 relative">
     <div class="flex flex-col text-left flex-grow">
-      <h1 class="m-0 font-light text-3xl sm:text-[38px] leading-tight text-cdlNavy tracking-tight">
-        IGCSE <span class="font-bold text-cdlBrightBlue">Physical Education</span>
-      </h1>
-      <div class="font-serif italic text-cdlRed text-[18px] mt-1.5">Preparation, Practice, Performance</div>
+      <a href="index.html" onclick="returnToHub(event)" class="no-underline group inline-block w-fit" title="Return to IGCSE PE Exam Hub">
+        <h1 class="m-0 font-light text-2xl sm:text-[38px] leading-tight text-cdlNavy tracking-tight group-hover:opacity-80 transition-opacity">
+          IGCSE <span class="font-bold text-cdlBrightBlue">Physical Education</span>
+        </h1>
+      </a>
+      <div class="font-serif italic text-cdlRed text-[16px] sm:text-[18px] mt-1.5">Preparation, Practice, Performance</div>
     </div>
     
-    <div class="flex items-center gap-6">
+    <div class="flex items-center gap-3 sm:gap-4">
+      <!-- Desktop Back to Exam Hub Pill -->
+      <a href="index.html" onclick="returnToHub(event)" class="hidden md:flex bg-white hover:bg-slate-50 border-2 border-cdlNavy text-cdlNavy px-5 py-2.5 rounded-full text-sm font-bold items-center gap-2 transition-all duration-300 hover:-translate-y-0.5 shadow-sm">
+        <span>←</span>
+        <span>Exam Hub</span>
+      </a>
+
       <!-- Topic Menu Trigger Pill -->
       <button id="topic-menu-btn" onclick="toggleTopicMenu()" class="hidden md:flex bg-cdlNavy hover:bg-cdlBrightBlue text-white px-6 py-3 rounded-full text-sm font-bold items-center gap-3 transition-all duration-300 shadow-[0_8px_15px_rgba(0,69,135,0.1)] hover:shadow-[0_12px_20px_rgba(30,185,220,0.2)] hover:-translate-y-0.5">
         <span>📚 Select Flashcards</span>
@@ -83,16 +91,20 @@
       </button>
 
       <!-- CDL Athletics Logo -->
-      <div class="pl-5 hidden sm:block border-l border-slate-200">
+      <div class="pl-3 sm:pl-4 hidden sm:block border-l border-slate-200">
         <!-- Reverts to placeholder if images/athletics-logo.png isn't available locally -->
         <img src="images/athletics-logo.png" onerror="this.style.display='none'" alt="CDL Athletics" class="h-16 w-auto object-contain">
       </div>
     </div>
   </header>
 
-  <!-- Mobile Topic Button -->
-  <div class="w-full bg-white p-3 md:hidden border-b border-slate-200 flex justify-center z-30 shadow-sm">
-    <button onclick="toggleTopicMenu()" class="w-full max-w-sm bg-cdlNavy text-white px-6 py-3 rounded-full text-sm font-bold flex justify-between items-center shadow-md">
+  <!-- Mobile Navigation & Topic Bar -->
+  <div class="w-full bg-white p-3 md:hidden border-b border-slate-200 flex justify-center items-center gap-2.5 z-30 shadow-sm">
+    <a href="index.html" onclick="returnToHub(event)" class="bg-white border-2 border-cdlNavy text-cdlNavy px-4 py-2.5 rounded-full text-sm font-bold flex items-center gap-1.5 shadow-sm shrink-0">
+      <span>←</span>
+      <span>Hub</span>
+    </a>
+    <button id="mobile-topic-btn" onclick="toggleTopicMenu()" class="flex-1 max-w-xs bg-cdlNavy text-white px-5 py-3 rounded-full text-sm font-bold flex justify-between items-center shadow-md">
       <span>📚 Select Flashcards</span>
       <span id="mobile-badge" class="bg-cdlRed px-2 py-0.5 rounded-full text-xs">0</span>
     </button>
@@ -228,7 +240,7 @@
         </div>
 
         <!-- Session Stats Summary -->
-        <div id="session-summary-stats" class="bg-white border border-slate-100 rounded-2xl p-4 mb-8 text-sm text-slate-500 flex justify-around shadow-sm"></div>
+        <div id="session-summary-stats" class="bg-white border border-slate-100 rounded-2xl p-4 mb-6 text-sm text-slate-500 flex justify-around shadow-sm"></div>
 
         <!-- Action Buttons -->
         <div class="flex flex-col sm:flex-row gap-3">
@@ -239,6 +251,11 @@
             ↻ Study Again
           </button>
         </div>
+
+        <!-- Return to Exam Hub Link -->
+        <a href="index.html#exam-practice" onclick="returnToHub(event)" class="inline-block mt-5 text-xs sm:text-sm font-bold text-slate-400 hover:text-cdlNavy underline transition-colors">
+          ← Done warming up? Return to Past Paper Hub
+        </a>
 
       </div>
     </div>
@@ -255,6 +272,16 @@
     let againCount = 0;
     let currentCard = null;
     let isRevealed = false;
+
+    // Smart Back Navigation to Exam Hub
+    function returnToHub(e) {
+      // If opened via target="_blank" from the hub, close the tab cleanly to return to the original tab
+      if (window.opener && !window.opener.closed) {
+        e.preventDefault();
+        window.close();
+      }
+      // Otherwise, the standard href="index.html" navigates smoothly in the same tab
+    }
 
     // 21 Dramatic Sports & PE Quit Quotes (Natural Casing)
     const QUIT_QUOTES = [
@@ -570,7 +597,7 @@
     window.addEventListener('click', (e) => {
       const panel = document.getElementById('topic-dropdown-panel');
       const btnDesktop = document.getElementById('topic-menu-btn');
-      const btnMobile = document.querySelector('.md\\:hidden button');
+      const btnMobile = document.getElementById('mobile-topic-btn');
       if (!panel.classList.contains('hidden') && !panel.contains(e.target) && !btnDesktop.contains(e.target) && (!btnMobile || !btnMobile.contains(e.target))) {
         panel.classList.add('hidden');
       }
