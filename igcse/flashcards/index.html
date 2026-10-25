@@ -145,13 +145,16 @@
   <!-- Main Study Viewport -->
   <main class="flex-1 flex flex-col items-center justify-start p-4 sm:p-6 relative">
 
-    <!-- Progress Tracker -->
-    <div class="w-full max-w-5xl flex justify-between items-end text-xs sm:text-sm text-slate-500 font-bold mb-2 px-1">
-      <span id="progress-text" class="uppercase tracking-wider">Select a topic to begin</span>
-      <div class="flex items-center gap-4">
-        <button id="end-session-btn" onclick="endSessionEarly()" class="hidden text-[11px] sm:text-xs text-slate-400 hover:text-cdlRed underline transition-colors">End Session</button>
-        <span id="queue-stats" class="text-cdlBrightBlue"></span>
+    <!-- Progress Tracker & High-Visibility Quit Button -->
+    <div class="w-full max-w-5xl flex flex-wrap justify-between items-center gap-2 text-xs sm:text-sm text-slate-500 font-bold mb-3 px-1">
+      <div class="flex items-center gap-3">
+        <span id="progress-text" class="uppercase tracking-wider text-cdlNavy">Select a topic to begin</span>
+        <span id="queue-stats" class="text-cdlBrightBlue bg-cdlBrightBlue/10 px-2.5 py-0.5 rounded-full text-xs"></span>
       </div>
+      <button id="end-session-btn" onclick="endSessionEarly()" class="hidden bg-cdlRed/10 hover:bg-cdlRed text-cdlRed hover:text-white border-2 border-cdlRed font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-sm hover:shadow-[0_6px_15px_rgba(231,48,55,0.3)] transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
+        <span>🏳️</span>
+        <span id="quit-btn-text">"Alright that's enough, I quit!"</span>
+      </button>
     </div>
     <div class="w-full max-w-5xl bg-white border border-slate-200 h-3 rounded-full mb-6 overflow-hidden shadow-sm">
       <div id="progress-bar" class="bg-cdlBrightBlue h-full transition-all duration-300" style="width: 0%"></div>
@@ -252,6 +255,31 @@
     let againCount = 0;
     let currentCard = null;
     let isRevealed = false;
+
+    // 21 Dramatic Sports & PE Quit Quotes (Natural Casing)
+    const QUIT_QUOTES = [
+      "\"Alright that's enough, I quit!\"",
+      "\"Throw in the towel, Coach!\"",
+      "\"Sub me out, my hamstring!\"",
+      "\"Blow the final whistle, Ref!\"",
+      "\"I'm calling for the stretcher!\"",
+      "\"Fake a cramp & walk off!\"",
+      "\"Lactic acid has won today, I'm out!\"",
+      "\"Where's the team bus? I'm going home.\"",
+      "\"Put me in the ice bath, I'm done!\"",
+      "\"Tell the scouts to come back tomorrow.\"",
+      "\"I forgot to tie my laces, stop the clock!\"",
+      "\"Get the magic sponge, I can't go on!\"",
+      "\"That's a tactical DNF from me.\"",
+      "\"Wait, this wasn't just the warm-up?!\"",
+      "\"My VO2 max has officially left the chat.\"",
+      "\"I'm transferring to the bench, thanks.\"",
+      "\"Forfeit! Save yourselves!\"",
+      "\"Someone call VAR, I want out of this game!\"",
+      "\"My legs have turned to jelly, sub me!\"",
+      "\"Ring the bell, I'm heading to the locker room!\"",
+      "\"I'm retiring at halftime. Good luck everyone.\""
+    ];
 
     // Complete 20-Tier Sports Commentator Dataset with Jeff Co-Host Dynamic
     const COMMENTATOR_TIERS = [
@@ -602,6 +630,11 @@
       if (sessionQueue.length === 0) return;
       document.getElementById('celebration-overlay').classList.add('hidden');
       document.getElementById('action-bar').classList.remove('hidden');
+      
+      // Pick a random funny quote for the quit button each session
+      const randomQuote = QUIT_QUOTES[Math.floor(Math.random() * QUIT_QUOTES.length)];
+      document.getElementById('quit-btn-text').innerText = randomQuote;
+
       nextCard();
     }
 
@@ -683,7 +716,7 @@
     }
 
     function endSessionEarly() {
-      if (confirm("Are you sure you want to end this session early?")) {
+      if (confirm("Heading to the locker room early? Jeff and the broadcast booth are going to judge this! 🎙️👀")) {
         triggerCelebration();
       }
     }
