@@ -15,6 +15,7 @@
       "name": "2. Health, Fitness and Training",
       "topics": [
         { "id": "health-wellbeing", "title": "Health and Well-being", "file": "json/health-wellbeing.json" },
+        { "id": "fitdef", "title": "FITT Principle", "file": "json/fitdef.json" },
         { "id": "components-fitness", "title": "Components of Fitness & Testing", "file": "json/components-fitness.json" },
         { "id": "training-principles", "title": "Principles of Training & SPORT/FITT", "file": "json/training-principles.json" },
          { "id": "fitt", "title": "FITT Principle (do not select hide all)", "file": "json/fitt.json" },
