@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IGCSE PE Flashcards - Collège du Léman</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { 
+            sans: ['Gotham', 'Helvetica', 'Arial', 'sans-serif'],
+            serif: ['Georgia', 'serif']
+          },
+          colors: { 
+            cdlNavy: '#004587', 
+            cdlBrightBlue: '#1EB9DC', 
+            cdlBrightRed: '#EF8162',
+            cdlRed: '#E73037',
+            cdlGold: '#FBBA07' 
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { 
+      font-family: 'Gotham', 'Helvetica', 'Arial', sans-serif; 
+      background-color: #f8f9fa;
+    }
+    
+    /* Image Occlusion Mask Styles */
+    .mask {
+      position: absolute;
+      background-color: #004587; /* cdlNavy */
+      border: 2px solid #FBBA07; /* cdlGold */
+      transition: all 0.2s ease;
+      user-select: none;
+      border-radius: 2px;
+    }
+    .mask.active {
+      background-color: #E73037; /* cdlRed */
+      border-color: #ffffff;
+      box-shadow: 0 0 16px rgba(231, 48, 55, 0.8);
+      animation: pulse 1.5s infinite;
+      z-index: 10;
+      cursor: pointer;
+    }
+    .mask.revealed {
+      opacity: 0;
+      pointer-events: none;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+    }
+
+    /* Custom Scrollbar for Dropdown */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  </style>
+</head>
+<body class="text-cdlNavy min-h-screen flex flex-col">
+
+  <!-- CDL Branded Header -->
+  <header class="w-full bg-white px-6 py-5 flex justify-between items-center border-b-[4px] border-cdlRed shadow-[0_4px_30px_rgba(0,69,135,0.05)] z-40 relative">
+    <div class="flex flex-col text-left flex-grow">
+      <h1 class="m-0 font-light text-3xl sm:text-[38px] leading-tight text-cdlNavy tracking-tight">
+        IGCSE <span class="font-bold text-cdlBrightBlue">Physical Education</span>
+      </h1>
+      <div class="font-serif italic text-cdlRed text-[18px] mt-1.5">Preparation, Practice, Performance</div>
+    </div>
+    
+    <div class="flex items-center gap-6">
+      <!-- Topic Menu Trigger Pill -->
+      <button id="topic-menu-btn" onclick="toggleTopicMenu()" class="hidden md:flex bg-cdlNavy hover:bg-cdlBrightBlue text-white px-6 py-3 rounded-full text-sm font-bold items-center gap-3 transition-all duration-300 shadow-[0_8px_15px_rgba(0,69,135,0.1)] hover:shadow-[0_12px_20px_rgba(30,185,220,0.2)] hover:-translate-y-0.5">
+        <span>📚 Select Flashcards</span>
+        <span id="selected-count-badge" class="bg-cdlRed text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </button>
+
+      <!-- CDL Athletics Logo -->
+      <div class="pl-5 hidden sm:block border-l border-slate-200">
+        <!-- Reverts to placeholder if images/athletics-logo.png isn't available locally -->
+        <img src="images/athletics-logo.png" onerror="this.style.display='none'" alt="CDL Athletics" class="h-16 w-auto object-contain">
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Topic Button -->
+  <div class="w-full bg-white p-3 md:hidden border-b border-slate-200 flex justify-center z-30 shadow-sm">
+    <button onclick="toggleTopicMenu()" class="w-full max-w-sm bg-cdlNavy text-white px-6 py-3 rounded-full text-sm font-bold flex justify-between items-center shadow-md">
+      <span>📚 Select Flashcards</span>
+      <span id="mobile-badge" class="bg-cdlRed px-2 py-0.5 rounded-full text-xs">0</span>
+    </button>
+  </div>
+
+  <!-- Expanding Topic Dropdown Panel -->
+  <div id="topic-dropdown-panel" class="hidden fixed sm:absolute top-[120px] md:top-[90px] right-4 sm:right-8 w-[92vw] sm:w-[450px] bg-white border border-slate-100 rounded-2xl shadow-2xl p-5 z-50 transition-all">
+    <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+      <div>
+        <h3 class="font-bold text-cdlNavy text-lg">Syllabus Deck Selection</h3>
+        <p class="text-xs text-slate-500 font-medium">Available topics dynamically loaded</p>
+      </div>
+      <button onclick="toggleTopicMenu(false)" class="text-slate-400 hover:text-cdlRed text-2xl leading-none px-2 transition-colors">✕</button>
+    </div>
+
+    <!-- Accordion List -->
+    <div id="topic-list-container" class="space-y-3 max-h-[45vh] overflow-y-auto pr-2">
+      <p class="text-sm text-slate-400 py-6 text-center italic">Scanning /json/ directory...</p>
+    </div>
+
+    <!-- Actions & Start -->
+    <div class="mt-5 pt-4 border-t border-slate-100 space-y-3">
+      
+      <div class="flex justify-between items-center px-1">
+        <label class="flex items-center gap-2.5 text-sm text-cdlNavy cursor-pointer font-medium">
+          <input type="checkbox" id="interleave-toggle" checked class="accent-cdlBrightBlue w-4 h-4 rounded">
+          Shuffle selected topics together
+        </label>
+        <div class="space-x-2 text-xs font-bold">
+          <button onclick="selectAllTopics(true)" class="text-cdlBrightBlue hover:underline">All</button>
+          <span class="text-slate-300">|</span>
+          <button onclick="selectAllTopics(false)" class="text-slate-400 hover:text-cdlRed hover:underline">None</button>
+        </div>
+      </div>
+
+      <!-- Hide 1 vs Hide All Toggle (Unchecked by default) -->
+      <div class="flex justify-between items-center px-1 pb-1">
+        <label class="flex items-center gap-2.5 text-sm text-cdlNavy cursor-pointer font-medium" title="Check this to use Hard Mode (hide all labels)">
+          <input type="checkbox" id="hide-all-toggle" class="accent-cdlBrightBlue w-4 h-4 rounded">
+          Hide all labels (Hard Mode)
+        </label>
+      </div>
+
+      <button onclick="applyTopicSelection(true)" class="w-full bg-cdlNavy hover:bg-cdlBrightBlue text-white px-6 py-4 rounded-full text-[15px] font-bold shadow-[0_8px_15px_rgba(0,69,135,0.1)] hover:shadow-[0_12px_20px_rgba(30,185,220,0.2)] transition-all hover:-translate-y-0.5 flex justify-center items-center gap-2">
+        Start Session <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Study Viewport -->
+  <main class="flex-1 flex flex-col items-center justify-start p-4 sm:p-6 relative">
+
+    <!-- Progress Tracker -->
+    <div class="w-full max-w-5xl flex justify-between items-end text-xs sm:text-sm text-slate-500 font-bold mb-2 px-1">
+      <span id="progress-text" class="uppercase tracking-wider">Select a topic to begin</span>
+      <div class="flex items-center gap-4">
+        <button id="end-session-btn" onclick="endSessionEarly()" class="hidden text-[11px] sm:text-xs text-slate-400 hover:text-cdlRed underline transition-colors">End Session</button>
+        <span id="queue-stats" class="text-cdlBrightBlue"></span>
+      </div>
+    </div>
+    <div class="w-full max-w-5xl bg-white border border-slate-200 h-3 rounded-full mb-6 overflow-hidden shadow-sm">
+      <div id="progress-bar" class="bg-cdlBrightBlue h-full transition-all duration-300" style="width: 0%"></div>
+    </div>
+
+    <!-- GIANT Diagram & Occlusion Canvas -->
+    <div id="canvas-container" class="relative inline-block shadow-lg border border-slate-200 bg-white rounded-xl overflow-hidden max-h-[78vh] max-w-[96vw]">
+      <img id="topic-image" src="" alt="Study Diagram" class="block max-h-[78vh] max-w-[96vw] w-auto h-auto object-contain select-none pointer-events-none opacity-0 transition-opacity duration-300">
+      <div id="masks-layer" class="absolute inset-0"></div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center max-w-lg bg-white border border-slate-200 rounded-2xl p-10 shadow-lg mt-10">
+      <div class="text-5xl mb-4">🎯</div>
+      <h2 class="text-2xl font-bold text-cdlNavy mb-2">Ready to Train?</h2>
+      <p id="empty-state-text" class="text-base text-slate-600 leading-relaxed m-0"></p>
+    </div>
+
+    <!-- Action & Grading Controls -->
+    <div id="action-bar" class="mt-8 w-full max-w-3xl hidden">
+      
+      <!-- Reveal Button -->
+      <button id="reveal-btn" onclick="revealAnswer()" class="w-full bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold py-4 px-8 rounded-full shadow-[0_8px_15px_rgba(0,69,135,0.1)] transition-all hover:shadow-[0_12px_20px_rgba(30,185,220,0.2)] hover:-translate-y-1 text-lg flex justify-between items-center">
+        <span>Reveal Active Label</span>
+        <div class="flex items-center gap-3">
+          <kbd class="bg-white/20 text-xs px-2.5 py-1 rounded font-mono hidden sm:inline-block">Space</kbd>
+          <span class="text-xl">→</span>
+        </div>
+      </button>
+
+      <!-- SRS Grading Buttons -->
+      <div id="srs-buttons" class="hidden grid grid-cols-4 gap-3 w-full">
+        <button onclick="gradeCard('again')" class="bg-white hover:bg-slate-50 border border-slate-200 text-cdlRed py-3 sm:py-4 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col items-center">
+          <span class="text-sm sm:text-base">Again</span>
+          <span class="text-[10px] sm:text-xs opacity-60 font-medium mt-0.5 text-slate-500">Key: 1</span>
+        </button>
+        <button onclick="gradeCard('hard')" class="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 py-3 sm:py-4 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col items-center">
+          <span class="text-sm sm:text-base">Hard</span>
+          <span class="text-[10px] sm:text-xs opacity-60 font-medium mt-0.5 text-slate-500">Key: 2</span>
+        </button>
+        <button onclick="gradeCard('ok')" class="bg-white hover:bg-slate-50 border border-slate-200 text-cdlNavy py-3 sm:py-4 rounded-2xl font-bold shadow-sm transition-all hover:shadow-md hover:-translate-y-0.5 flex flex-col items-center">
+          <span class="text-sm sm:text-base">OK</span>
+          <span class="text-[10px] sm:text-xs opacity-60 font-medium mt-0.5 text-slate-500">Key: 3</span>
+        </button>
+        <button onclick="gradeCard('easy')" class="bg-cdlNavy hover:bg-cdlBrightBlue border border-cdlNavy hover:border-cdlBrightBlue text-white py-3 sm:py-4 rounded-2xl font-bold shadow-[0_4px_10px_rgba(0,69,135,0.15)] transition-all hover:shadow-[0_8px_15px_rgba(30,185,220,0.25)] hover:-translate-y-0.5 flex flex-col items-center">
+          <span class="text-sm sm:text-base tracking-wide">Easy</span>
+          <span class="text-[10px] sm:text-xs text-white/80 font-medium mt-0.5">Key: 4 ✓</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Celebration Modal Pop-Up -->
+    <div id="celebration-overlay" class="hidden absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-6">
+      <div class="bg-white rounded-3xl shadow-2xl p-8 sm:p-10 max-w-xl w-full text-center border-t-8 border-cdlGold relative overflow-hidden">
+        
+        <!-- Emoji Display Area -->
+        <div id="commentator-emojis" class="text-4xl sm:text-5xl mb-2 tracking-wide"></div>
+
+        <!-- Floating Subtitle (No pill container) -->
+        <div id="win-badge" class="font-black text-xs sm:text-sm text-cdlBrightBlue uppercase tracking-widest mb-3"></div>
+
+        <!-- Main Headline -->
+        <h2 id="win-headline" class="text-2xl sm:text-3xl font-black text-cdlNavy mb-4 leading-tight"></h2>
+
+        <!-- Commentator Box -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5 mb-6 text-left shadow-inner">
+          <div class="mb-2">
+            <span class="text-[11px] font-bold uppercase tracking-wider text-cdlRed bg-cdlRed/10 px-2 py-0.5 rounded">🎙️ BROADCAST BOOTH</span>
+          </div>
+          <p id="win-sub" class="text-slate-700 font-serif italic text-sm sm:text-base leading-relaxed m-0"></p>
+        </div>
+
+        <!-- Session Stats Summary -->
+        <div id="session-summary-stats" class="bg-white border border-slate-100 rounded-2xl p-4 mb-8 text-sm text-slate-500 flex justify-around shadow-sm"></div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="inspectCompletedDiagram()" class="flex-1 bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold py-3.5 px-4 rounded-full transition-all hover:-translate-y-0.5 shadow-sm">
+            👁 View Diagram
+          </button>
+          <button onclick="resetSession()" class="flex-1 bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold py-3.5 px-4 rounded-full shadow-lg transition-all hover:shadow-[0_8px_15px_rgba(30,185,220,0.2)] hover:-translate-y-0.5">
+            ↻ Study Again
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let manifestData = { categories: [] };
+    let topicCache = {};
+    let activeCategories = [];
+    let sessionQueue = [];
+    let initialQueueSize = 0;
+    let totalReviewsCount = 0;
+    let againCount = 0;
+    let currentCard = null;
+    let isRevealed = false;
+
+    // Complete 20-Tier Sports Commentator Dataset with Jeff Co-Host Dynamic
+    const COMMENTATOR_TIERS = [
+      {
+        min: 1, max: 5,
+        emojis: "😐⏱️🪨",
+        badge: "THE MERE ESSENTIALS",
+        headline: "Well... you touched the keyboard.",
+        sub: "“Well, Jeff, they managed a couple. It’s giving heavy 'Sunday morning rec-league team that forgot their water bottles' energy. The stopwatch didn't even break a sweat, and quite frankly, neither did they.”"
+      },
+      {
+        min: 6, max: 10,
+        emojis: "📋👟🤨",
+        badge: "STILL NOT GREAT",
+        headline: "A valiant lack of excellence.",
+        sub: "“They’re clearing a few hurdles, Jeff, but it looks like a cross-country runner trying to navigate a velodrome. Lots of movement, very little direction. Back to the training cones.”"
+      },
+      {
+        min: 11, max: 15,
+        emojis: "🤷‍♂️🧊🧩",
+        badge: "BARE MINIMUM ACHIEVED",
+        headline: "Signs of life!",
+        sub: "“I’ll give credit where it’s due, Jeff—they actually finished a sequence. It’s like watching someone complete a puzzle where half the pieces are missing, but hey, the box art is visible.”"
+      },
+      {
+        min: 16, max: 20,
+        emojis: "🎯📈🧱",
+        badge: "THE MIDFIELD GRIND",
+        headline: "Now that's a legal movement.",
+        sub: "“Look at that, Jeff! They’re holding a steady cadence now. It's not setting any course records, but it's clean enough that the referee isn't reaching for a penalty card.”"
+      },
+      {
+        min: 21, max: 25,
+        emojis: "⚡👀🔋",
+        badge: "CAUTIOUS OPTIMISM",
+        headline: "A steady pulse has been detected.",
+        sub: "“Hold on a second, Jeff, check the telemetry. The form is straightening out! If they keep this up through the final stretch, we might actually see them finish without needing a timeout.”"
+      },
+      {
+        min: 26, max: 30,
+        emojis: "🔥🏅🦾",
+        badge: "TURNING HEADS",
+        headline: "Well look who decided to show up.",
+        sub: "“I’m starting to eat my words, Jeff. The mechanics are locking in. That’s some clean execution right there—smoother than a fresh sheet of ice before the opening faceoff.”"
+      },
+      {
+        min: 31, max: 35,
+        emojis: "🌟🧠🎯",
+        badge: "TACTICAL MASTERCLASS",
+        headline: "The scouts are taking notes.",
+        sub: "“Well, well, Jeff... look at the scoreboard. We’ve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
+      },
+      {
+        min: 36, max: 40,
+        emojis: "🏛️📜⚡",
+        badge: "HALL OF FAME TRAJECTORY",
+        headline: "Etch it in stone.",
+        sub: "“This is textbook execution, Jeff. Years from now, coaches will be showing clips of this exact session to rookies in the locker room. Absolute precision.”"
+      },
+      {
+        min: 41, max: 45,
+        emojis: "🤯🌪️🚀",
+        badge: "ABSOLUTE HIGHLIGHT REEL",
+        headline: "Stop the clock, look at the monitor!",
+        sub: "“Wow, Jeff, did you see that?! The velocity, the angles—it’s like watching a grandmaster effortlessly clean the board while everyone else is still tying their shoelaces!”"
+      },
+      {
+        min: 46, max: 50,
+        emojis: "💎🔥🏆",
+        badge: "ELITE TIER OPERATOR",
+        headline: "Pure platinum performance.",
+        sub: "“We are witnessing greatness unfold in real-time, Jeff. Halfway to the century mark and there isn’t a single blemish on the stat sheet. Flawless execution!”"
+      },
+      {
+        min: 51, max: 55,
+        emojis: "🌌⚡🦅",
+        badge: "GRAVITY IS OPTIONAL",
+        headline: "The laws of motion have left the building.",
+        sub: "“At this point, Jeff, I'm convinced they aren't even bound by gravity anymore. They're gliding through this board like a downhill racer carving fresh powder at Mach 3.”"
+      },
+      {
+        min: 56, max: 60,
+        emojis: "🏟️🎉🔊",
+        badge: "STADIUM ECLIPSE",
+        headline: "The roof is officially coming off!",
+        sub: "“Listen to that crowd roar, Jeff! You'd think it was the final minute of a championship match. The opposition has packed their bags and left the venue!”"
+      },
+      {
+        min: 61, max: 65,
+        emojis: "☄️🚂💨",
+        badge: "UNSTOPPABLE FREIGHT TRAIN",
+        headline: "No brakes, all gas!",
+        sub: "“There’s no slowing them down now, Jeff. They’ve hit terminal velocity. The judges don't even need to score this anymore, they're just standing up and applauding.”"
+      },
+      {
+        min: 66, max: 70,
+        emojis: "🦄🔮✨",
+        badge: "MYTHICAL CREATURE STATUS",
+        headline: "Is this real life or a simulation?",
+        sub: "“I checked the rulebook twice, Jeff, and what they’re doing shouldn't even be mathematically possible. It’s like watching a solo breakaway happen in slow motion where everyone else is standing still.”"
+      },
+      {
+        min: 71, max: 75,
+        emojis: "🧬🏔️🔥",
+        badge: "PEAK BIOLOGICAL SPECIMEN",
+        headline: "Evolution complete.",
+        sub: "“Darwin would write a whole new chapter based on this, Jeff. We are looking at the absolute apex of human coordination. Absolutely breathtaking.”"
+      },
+      {
+        min: 76, max: 80,
+        emojis: "📜✍️🌐",
+        badge: "GLOBAL RECORD OBLITERATOR",
+        headline: "Tear up the rulebooks!",
+        sub: "“Every single benchmark set in the history of the sport has just been shattered into a million tiny pieces, Jeff. The statisticians are crying in the back office!”"
+      },
+      {
+        min: 81, max: 85,
+        emojis: "🪐🌠⭐",
+        badge: "CELESTIAL ALIGNMENT",
+        headline: "The universe bends to their will.",
+        sub: "“The planets are aligned, the weather is perfect, and our competitor is operating on a higher plane of consciousness, Jeff. Absolutely untouchable.”"
+      },
+      {
+        min: 86, max: 90,
+        emojis: "⚡🌩️🏛️",
+        badge: "OLYMPIAN DEITY",
+        headline: "Send down the golden laurels.",
+        sub: "“At this point, Jeff, they aren't even competing against other humans anymore. They're competing against the gods of antiquity and winning by a landslide.”"
+      },
+      {
+        min: 91, max: 95,
+        emojis: "⏳🌀⚛️",
+        badge: "TEMPORAL ANOMALY",
+        headline: "Bending the continuum.",
+        sub: "“Look at the timestamps, Jeff! They’re answering questions before they're even asked. We are looking at a literal glitch in the matrix of sport!”"
+      },
+      {
+        min: 96, max: 9999,
+        emojis: "👑🐐💎🏆🔥",
+        badge: "THE ULTIMATE GOAT",
+        headline: "CLOSE THE STADIUM. PERFECTION ACHIEVED.",
+        sub: "“That’s it, Jeff. Drop the microphones, lock the stadium gates, and turn off the lights. We will never, EVER see anything remotely close to this again in our lifetimes. Absolute perfection!”"
+      }
+    ];
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      setupKeyboardShortcuts();
+      try {
+        const res = await fetch('manifest.json');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        manifestData = await res.json();
+
+        // CONDITIONAL FILTERING: Verify questions exist
+        activeCategories = [];
+        for (const cat of manifestData.categories) {
+          const validTopics = [];
+          for (const top of cat.topics) {
+            try {
+              const tRes = await fetch(top.file);
+              if (tRes.ok) {
+                const tData = await tRes.json();
+                if (tData.masks && tData.masks.length > 0) {
+                  topicCache[top.id] = tData;
+                  validTopics.push(top);
+                }
+              }
+            } catch (e) {
+              // File doesn't exist yet — skip silently
+            }
+          }
+          if (validTopics.length > 0) {
+            activeCategories.push({ name: cat.name, topics: validTopics });
+          }
+        }
+
+        renderTopicMenu();
+
+        if (activeCategories.length === 0) {
+          showEmptyState("No question files found in your /json/ folder yet. Use ankibuilder.html to map your first diagram!");
+          return;
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const topicParam = params.get('topics') || params.get('topic');
+        if (topicParam) {
+          const requestedIds = topicParam.split(',').map(s => s.trim());
+          document.querySelectorAll('.topic-checkbox').forEach(cb => {
+            cb.checked = requestedIds.includes(cb.value);
+          });
+          updateBadgeCount();
+          await applyTopicSelection(false);
+        } else {
+          // Leave all unchecked by default and display welcoming prompt
+          updateBadgeCount();
+          showEmptyState("Select one or more topics from the menu above to get started! 🏃‍♂️💨");
+        }
+      } catch (err) {
+        showEmptyState("Could not load manifest.json. Ensure the file is in your root folder.");
+      }
+    });
+
+    function renderTopicMenu() {
+      const container = document.getElementById('topic-list-container');
+      container.innerHTML = '';
+
+      activeCategories.forEach((cat, catIdx) => {
+        const section = document.createElement('div');
+        section.className = 'border border-slate-200 rounded-xl overflow-hidden bg-white mb-3 shadow-sm';
+
+        const topicsHtml = cat.topics.map(top => `
+          <label class="flex items-center gap-3 py-2.5 px-3 rounded-lg hover:bg-slate-50 text-sm text-slate-700 cursor-pointer transition-colors">
+            <input type="checkbox" value="${top.id}" data-cat="${catIdx}"
+                   class="topic-checkbox accent-cdlNavy w-4 h-4 rounded cursor-pointer"
+                   onchange="onTopicCheckboxChange(${catIdx})">
+            <span class="flex-1 font-medium">${top.title}</span>
+            <span class="text-[10px] bg-slate-100 text-cdlNavy font-bold px-2 py-1 rounded-full">${topicCache[top.id].masks.length} Qs</span>
+          </label>
+        `).join('');
+
+        section.innerHTML = `
+          <div class="flex items-center justify-between px-4 py-3 bg-slate-50/80 border-b border-slate-100 cursor-pointer" onclick="toggleCategoryCollapse(${catIdx})">
+            <label class="flex items-center gap-3 text-[13px] font-bold text-cdlNavy uppercase tracking-wider cursor-pointer" onclick="event.stopPropagation()">
+              <input type="checkbox" id="cat-cb-${catIdx}" class="accent-cdlNavy w-4 h-4 rounded cursor-pointer"
+                     onchange="toggleCategoryCheckboxes(${catIdx}, this.checked)">
+              <span>${cat.name}</span>
+            </label>
+            <button type="button" class="text-slate-400 hover:text-cdlBrightBlue text-xs px-2 py-1 transition-colors">
+              <span id="cat-arrow-${catIdx}">▼</span>
+            </button>
+          </div>
+          <div id="cat-body-${catIdx}" class="p-2.5 space-y-1">
+            ${topicsHtml}
+          </div>
+        `;
+        container.appendChild(section);
+      });
+    }
+
+    function toggleCategoryCollapse(catIdx) {
+      const body = document.getElementById(`cat-body-${catIdx}`);
+      const arrow = document.getElementById(`cat-arrow-${catIdx}`);
+      const isHidden = body.classList.toggle('hidden');
+      arrow.innerText = isHidden ? '▶' : '▼';
+    }
+
+    function toggleCategoryCheckboxes(catIdx, checked) {
+      document.querySelectorAll(`.topic-checkbox[data-cat="${catIdx}"]`).forEach(cb => {
+        cb.checked = checked;
+      });
+      updateBadgeCount();
+    }
+
+    function onTopicCheckboxChange(catIdx) {
+      updateCategoryParentCheckbox(catIdx);
+      updateBadgeCount();
+    }
+
+    function updateCategoryParentCheckbox(catIdx) {
+      const children = Array.from(document.querySelectorAll(`.topic-checkbox[data-cat="${catIdx}"]`));
+      const parentCb = document.getElementById(`cat-cb-${catIdx}`);
+      if (!parentCb || children.length === 0) return;
+      const checkedCount = children.filter(c => c.checked).length;
+      parentCb.checked = checkedCount === children.length;
+      parentCb.indeterminate = checkedCount > 0 && checkedCount < children.length;
+    }
+
+    function selectAllTopics(status) {
+      document.querySelectorAll('.topic-checkbox').forEach(cb => cb.checked = status);
+      activeCategories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
+      updateBadgeCount();
+    }
+
+    function updateBadgeCount() {
+      const count = document.querySelectorAll('.topic-checkbox:checked').length;
+      document.getElementById('selected-count-badge').innerText = count;
+      document.getElementById('mobile-badge').innerText = count;
+    }
+
+    function toggleTopicMenu(forceState) {
+      const panel = document.getElementById('topic-dropdown-panel');
+      if (typeof forceState === 'boolean') {
+        panel.classList.toggle('hidden', !forceState);
+      } else {
+        panel.classList.toggle('hidden');
+      }
+    }
+
+    window.addEventListener('click', (e) => {
+      const panel = document.getElementById('topic-dropdown-panel');
+      const btnDesktop = document.getElementById('topic-menu-btn');
+      const btnMobile = document.querySelector('.md\\:hidden button');
+      if (!panel.classList.contains('hidden') && !panel.contains(e.target) && !btnDesktop.contains(e.target) && (!btnMobile || !btnMobile.contains(e.target))) {
+        panel.classList.add('hidden');
+      }
+    });
+
+    async function applyTopicSelection(closeMenu = true) {
+      if (closeMenu) toggleTopicMenu(false);
+
+      const checked = Array.from(document.querySelectorAll('.topic-checkbox:checked'));
+      if (checked.length === 0) {
+        showEmptyState("Please select at least one topic from the menu! 🎯");
+        return;
+      }
+
+      sessionQueue = [];
+      totalReviewsCount = 0;
+      againCount = 0;
+
+      for (const cb of checked) {
+        const topicId = cb.value;
+        const data = topicCache[topicId];
+        if (data && data.masks) {
+          const topicCards = data.masks.map(m => ({ topicId, maskId: m.id }));
+          topicCards.sort(() => Math.random() - 0.5);
+          sessionQueue.push(...topicCards);
+        }
+      }
+
+      if (sessionQueue.length === 0) {
+        showEmptyState("Selected topics have no occlusion masks built yet.");
+        return;
+      }
+
+      if (document.getElementById('interleave-toggle').checked && checked.length > 1) {
+        sessionQueue.sort(() => Math.random() - 0.5);
+      }
+
+      initialQueueSize = sessionQueue.length;
+
+      document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('canvas-container').classList.remove('hidden');
+      document.getElementById('end-session-btn').classList.remove('hidden');
+      startSession();
+    }
+
+    function showEmptyState(msg) {
+      document.getElementById('action-bar').classList.add('hidden');
+      document.getElementById('canvas-container').classList.add('hidden');
+      document.getElementById('end-session-btn').classList.add('hidden');
+      document.getElementById('empty-state-text').innerText = msg;
+      document.getElementById('empty-state').classList.remove('hidden');
+      document.getElementById('progress-text').innerText = "Waiting for setup...";
+      document.getElementById('queue-stats').innerText = "";
+    }
+
+    function startSession() {
+      if (sessionQueue.length === 0) return;
+      document.getElementById('celebration-overlay').classList.add('hidden');
+      document.getElementById('action-bar').classList.remove('hidden');
+      nextCard();
+    }
+
+    function nextCard() {
+      if (sessionQueue.length === 0) {
+        triggerCelebration();
+        return;
+      }
+
+      currentCard = sessionQueue[0];
+      isRevealed = false;
+      const topic = topicCache[currentCard.topicId];
+      
+      const hideAll = document.getElementById('hide-all-toggle').checked;
+
+      const img = document.getElementById('topic-image');
+      if (img.getAttribute('src') !== topic.image) {
+        img.src = topic.image;
+      }
+      img.classList.remove('opacity-0');
+
+      const layer = document.getElementById('masks-layer');
+      layer.innerHTML = '';
+
+      topic.masks.forEach(m => {
+        const div = document.createElement('div');
+        const isTarget = m.id === currentCard.maskId;
+        
+        div.className = `mask ${isTarget ? 'active' : (hideAll ? '' : 'revealed')}`;
+        
+        div.style.left = `${m.x}%`;
+        div.style.top = `${m.y}%`;
+        div.style.width = `${m.w}%`;
+        div.style.height = `${m.h}%`;
+
+        if (isTarget) {
+          div.title = "Click or press Space to reveal";
+          div.addEventListener('click', revealAnswer);
+        }
+        layer.appendChild(div);
+      });
+
+      document.getElementById('reveal-btn').classList.remove('hidden');
+      document.getElementById('srs-buttons').classList.add('hidden');
+      updateProgress();
+    }
+
+    function revealAnswer() {
+      if (isRevealed || sessionQueue.length === 0) return;
+      isRevealed = true;
+      document.querySelector('.mask.active')?.classList.replace('active', 'revealed');
+      document.getElementById('reveal-btn').classList.add('hidden');
+      document.getElementById('srs-buttons').classList.remove('hidden');
+    }
+
+    function gradeCard(rating) {
+      if (!isRevealed) return;
+      totalReviewsCount++;
+      const card = sessionQueue.shift();
+
+      if (rating === 'again') {
+        againCount++;
+        sessionQueue.splice(Math.min(2, sessionQueue.length), 0, card);
+      } else if (rating === 'hard') {
+        sessionQueue.splice(Math.ceil(sessionQueue.length / 2), 0, card);
+      } else if (rating === 'ok') {
+        sessionQueue.push(card);
+      }
+
+      nextCard();
+    }
+
+    function updateProgress() {
+      const completed = initialQueueSize - sessionQueue.length;
+      const pct = initialQueueSize > 0 ? Math.round((completed / initialQueueSize) * 100) : 0;
+      document.getElementById('progress-bar').style.width = `${pct}%`;
+      document.getElementById('progress-text').innerText = `Progress: ${completed} / ${initialQueueSize} Mastered`;
+      document.getElementById('queue-stats').innerText = `${sessionQueue.length} remaining`;
+    }
+
+    function endSessionEarly() {
+      if (confirm("Are you sure you want to end this session early?")) {
+        triggerCelebration();
+      }
+    }
+
+    function triggerCelebration() {
+      updateProgress();
+      document.getElementById('masks-layer').innerHTML = '';
+      document.getElementById('action-bar').classList.add('hidden');
+      document.getElementById('end-session-btn').classList.add('hidden');
+      document.getElementById('celebration-overlay').classList.remove('hidden');
+
+      // Calculate actual mastered count in case they ended early
+      const masteredCount = initialQueueSize - sessionQueue.length;
+      const finalScore = Math.max(0, masteredCount);
+
+      // Match commentator tier based on mastered count (fallback to tier 1 if 0)
+      const tier = COMMENTATOR_TIERS.find(t => finalScore >= t.min && finalScore <= t.max) || COMMENTATOR_TIERS[0];
+
+      document.getElementById('commentator-emojis').innerText = tier.emojis;
+      document.getElementById('win-badge').innerText = tier.badge;
+      document.getElementById('win-headline').innerText = tier.headline;
+      document.getElementById('win-sub').innerText = tier.sub;
+
+      document.getElementById('session-summary-stats').innerHTML = `
+        <div><div class="text-slate-400 font-medium text-xs">Labels Mastered</div><div class="text-2xl font-black text-cdlNavy mt-1">${finalScore}</div></div>
+        <div><div class="text-slate-400 font-medium text-xs">Total Reviews</div><div class="text-2xl font-black text-cdlNavy mt-1">${totalReviewsCount}</div></div>
+      `;
+
+      triggerScaledFireworks(finalScore);
+    }
+
+    function triggerScaledFireworks(score) {
+      if (score === 0) return; // No fireworks if they mastered 0
+
+      // Scale intensity multiplier from 1x up to 5x as score climbs from 1 to 100
+      const intensity = Math.min(5, Math.max(1, score / 20));
+      const duration = 1500 + (score * 30);
+      const end = Date.now() + duration;
+
+      (function frame() {
+        // Side cannons (ticker tape streams)
+        confetti({
+          particleCount: Math.floor(3 * intensity),
+          angle: 60,
+          spread: 55 + (intensity * 3),
+          origin: { x: 0, y: 0.7 },
+          colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037']
+        });
+        confetti({
+          particleCount: Math.floor(3 * intensity),
+          angle: 120,
+          spread: 55 + (intensity * 3),
+          origin: { x: 1, y: 0.7 },
+          colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037']
+        });
+
+        // Aerial fireworks explosions for higher tiers (50+ mastered)
+        if (score >= 50 && Math.random() < (0.25 + (intensity * 0.05))) {
+          confetti({
+            particleCount: Math.floor(15 * intensity),
+            spread: 120,
+            origin: { x: Math.random(), y: Math.random() * 0.6 },
+            colors: ['#FBBA07', '#ffffff', '#1EB9DC', '#E73037', '#004587']
+          });
+        }
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
+
+    function inspectCompletedDiagram() {
+      document.getElementById('celebration-overlay').classList.add('hidden');
+    }
+
+    function resetSession() {
+      applyTopicSelection(false);
+    }
+
+    function setupKeyboardShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (e.code === 'Space' && !isRevealed && !document.getElementById('action-bar').classList.contains('hidden')) {
+          e.preventDefault();
+          revealAnswer();
+        } else if (isRevealed) {
+          if (e.key === '1') gradeCard('again');
+          if (e.key === '2') gradeCard('hard');
+          if (e.key === '3') gradeCard('ok');
+          if (e.key === '4') gradeCard('easy');
+        }
+      });
+    }
+  </script>
+</body>
+</html>
