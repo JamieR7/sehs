@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IGCSE PE Flashcards - Collège du Léman</title>
+  <title>IGCSE PE Flashcards: Collège du Léman</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script>
@@ -269,10 +269,11 @@
     let initialQueueSize = 0;
     let totalReviewsCount = 0;
     let againCount = 0;
+    let masteredCount = 0;
     let currentCard = null;
     let isRevealed = false;
 
-    // Smart Back Navigation to Exam Hub (Steps up from /flashcards/ to parent /)
+    // Smart Back Navigation to Exam Hub
     function returnToHub(e) {
       if (window.opener && !window.opener.closed) {
         e.preventDefault();
@@ -280,7 +281,7 @@
       }
     }
 
-    // 21 Dramatic Sports & PE Quit Quotes (Natural Casing)
+    // 21 Dramatic Sports & PE Quit Quotes
     const QUIT_QUOTES = [
       "\"Alright that's enough, I quit!\"",
       "\"Throw in the towel, Coach!\"",
@@ -305,7 +306,7 @@
       "\"I'm retiring at halftime. Good luck everyone.\""
     ];
 
-    // Complete 20-Tier Sports Commentator Dataset with Jeff Co-Host Dynamic
+    // Complete 20-Tier Sports Commentator Dataset
     const COMMENTATOR_TIERS = [
       {
         min: 1, max: 5,
@@ -354,7 +355,7 @@
         emojis: "🌟🧠🎯",
         badge: "TACTICAL MASTERCLASS",
         headline: "The scouts are taking notes.",
-        sub: "“Well, well, Jeff... look at the scoreboard. We’ve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
+        sub: "“Well, well, Jeff... look at the scoreboard. We’gve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
       },
       {
         min: 36, max: 40,
@@ -612,6 +613,7 @@
       sessionQueue = [];
       totalReviewsCount = 0;
       againCount = 0;
+      masteredCount = 0;
 
       for (const cb of checked) {
         const topicId = cb.value;
@@ -655,7 +657,6 @@
       document.getElementById('celebration-overlay').classList.add('hidden');
       document.getElementById('action-bar').classList.remove('hidden');
       
-      // Pick a random funny quote for the quit button each session
       const randomQuote = QUIT_QUOTES[Math.floor(Math.random() * QUIT_QUOTES.length)];
       document.getElementById('quit-btn-text').innerText = randomQuote;
 
@@ -721,22 +722,27 @@
 
       if (rating === 'again') {
         againCount++;
-        sessionQueue.splice(Math.min(2, sessionQueue.length), 0, card);
+        // Re-insert right near the front (after 1 card) so it shows up very frequently
+        sessionQueue.splice(Math.min(1, sessionQueue.length), 0, card);
       } else if (rating === 'hard') {
-        sessionQueue.splice(Math.ceil(sessionQueue.length / 2), 0, card);
+        // Re-insert in the near-middle
+        sessionQueue.splice(Math.min(3, sessionQueue.length), 0, card);
       } else if (rating === 'ok') {
+        // Push further back in the queue
         sessionQueue.push(card);
+      } else if (rating === 'easy') {
+        // Mastered successfully! Do NOT re-queue.
+        masteredCount++;
       }
 
       nextCard();
     }
 
     function updateProgress() {
-      const completed = initialQueueSize - sessionQueue.length;
-      const pct = initialQueueSize > 0 ? Math.round((completed / initialQueueSize) * 100) : 0;
+      const pct = initialQueueSize > 0 ? Math.round((masteredCount / initialQueueSize) * 100) : 0;
       document.getElementById('progress-bar').style.width = `${pct}%`;
-      document.getElementById('progress-text').innerText = `Progress: ${completed} / ${initialQueueSize} Mastered`;
-      document.getElementById('queue-stats').innerText = `${sessionQueue.length} remaining`;
+      document.getElementById('progress-text').innerText = `Progress: ${masteredCount} / ${initialQueueSize} Mastered`;
+      document.getElementById('queue-stats').innerText = `${sessionQueue.length} remaining in queue`;
     }
 
     function endSessionEarly() {
@@ -752,11 +758,7 @@
       document.getElementById('end-session-btn').classList.add('hidden');
       document.getElementById('celebration-overlay').classList.remove('hidden');
 
-      // Calculate actual mastered count in case they ended early
-      const masteredCount = initialQueueSize - sessionQueue.length;
-      const finalScore = Math.max(0, masteredCount);
-
-      // Match commentator tier based on mastered count (fallback to tier 1 if 0)
+      const finalScore = masteredCount;
       const tier = COMMENTATOR_TIERS.find(t => finalScore >= t.min && finalScore <= t.max) || COMMENTATOR_TIERS[0];
 
       document.getElementById('commentator-emojis').innerText = tier.emojis;
@@ -773,15 +775,13 @@
     }
 
     function triggerScaledFireworks(score) {
-      if (score === 0) return; // No fireworks if they mastered 0
+      if (score === 0) return;
 
-      // Scale intensity multiplier from 1x up to 5x as score climbs from 1 to 100
       const intensity = Math.min(5, Math.max(1, score / 20));
       const duration = 1500 + (score * 30);
       const end = Date.now() + duration;
 
       (function frame() {
-        // Side cannons (ticker tape streams)
         confetti({
           particleCount: Math.floor(3 * intensity),
           angle: 60,
@@ -797,7 +797,6 @@
           colors: ['#004587', '#1EB9DC', '#FBBA07', '#E73037']
         });
 
-        // Aerial fireworks explosions for higher tiers (50+ mastered)
         if (score >= 50 && Math.random() < (0.25 + (intensity * 0.05))) {
           confetti({
             particleCount: Math.floor(15 * intensity),
