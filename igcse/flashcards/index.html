@@ -114,14 +114,14 @@
     <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
       <div>
         <h3 class="font-bold text-cdlNavy text-lg">Syllabus Deck Selection</h3>
-        <p class="text-xs text-slate-500 font-medium">Available topics dynamically loaded</p>
+        <p class="text-xs text-slate-500 font-medium">Choose your training drills below</p>
       </div>
       <button onclick="toggleTopicMenu(false)" class="text-slate-400 hover:text-cdlRed text-2xl leading-none px-2 transition-colors">✕</button>
     </div>
 
     <!-- Accordion List -->
     <div id="topic-list-container" class="space-y-3 max-h-[45vh] overflow-y-auto pr-2">
-      <p class="text-sm text-slate-400 py-6 text-center italic">Scanning /json/ directory...</p>
+      <p id="dropdown-loading-msg" class="text-sm text-slate-500 py-6 text-center italic font-medium">🏃 Athletes are warming up...</p>
     </div>
 
     <!-- Actions & Start -->
@@ -142,7 +142,7 @@
       <!-- Hide 1 vs Hide All Toggle (Unchecked by default) -->
       <div class="flex justify-between items-center px-1 pb-1">
         <label class="flex items-center gap-2.5 text-sm text-cdlNavy cursor-pointer font-medium" title="Check this to use Hard Mode (hide all labels)">
-          <input type="checkbox" id="hide-all-toggle" class="accent-cdlBrightBlue w-4 h-4 rounded">
+          <input type="checkbox" id="hide-all-toggle" onchange="refreshMasksVisibility()" class="accent-cdlBrightBlue w-4 h-4 rounded">
           Hide all labels (Hard Mode)
         </label>
       </div>
@@ -159,8 +159,8 @@
     <!-- Progress Tracker & High-Visibility Quit Button -->
     <div class="w-full max-w-5xl flex flex-wrap justify-between items-center gap-2 text-xs sm:text-sm text-slate-500 font-bold mb-3 px-1">
       <div class="flex items-center gap-3">
-        <span id="progress-text" class="uppercase tracking-wider text-cdlNavy">Select a topic to begin</span>
-        <span id="queue-stats" class="text-cdlBrightBlue bg-cdlBrightBlue/10 px-2.5 py-0.5 rounded-full text-xs"></span>
+        <span id="progress-text" class="uppercase tracking-wider text-cdlNavy">🏃 Athletes are warming up...</span>
+        <span id="queue-stats" class="text-cdlBrightBlue bg-cdlBrightBlue/10 px-2.5 py-0.5 rounded-full text-xs hidden"></span>
       </div>
       <button id="end-session-btn" onclick="endSessionEarly()" class="hidden bg-cdlRed/10 hover:bg-cdlRed text-cdlRed hover:text-white border-2 border-cdlRed font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-sm hover:shadow-[0_6px_15px_rgba(231,48,55,0.3)] transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2 cursor-pointer">
         <span>🏳️</span>
@@ -172,16 +172,16 @@
     </div>
 
     <!-- GIANT Diagram & Occlusion Canvas -->
-    <div id="canvas-container" class="relative inline-block shadow-lg border border-slate-200 bg-white rounded-xl overflow-hidden max-h-[78vh] max-w-[96vw]">
+    <div id="canvas-container" class="hidden relative inline-block shadow-lg border border-slate-200 bg-white rounded-xl overflow-hidden max-h-[78vh] max-w-[96vw]">
       <img id="topic-image" src="" alt="Study Diagram" class="block max-h-[78vh] max-w-[96vw] w-auto h-auto object-contain select-none pointer-events-none opacity-0 transition-opacity duration-300">
       <div id="masks-layer" class="absolute inset-0"></div>
     </div>
 
-    <!-- Empty State -->
-    <div id="empty-state" class="hidden text-center max-w-lg bg-white border border-slate-200 rounded-2xl p-10 shadow-lg mt-10">
-      <div class="text-5xl mb-4">🎯</div>
-      <h2 class="text-2xl font-bold text-cdlNavy mb-2">Ready to Train?</h2>
-      <p id="empty-state-text" class="text-base text-slate-600 leading-relaxed m-0"></p>
+    <!-- Empty / Loading State -->
+    <div id="empty-state" class="text-center max-w-lg bg-white border border-slate-200 rounded-2xl p-10 shadow-lg mt-10">
+      <div id="empty-state-icon" class="text-5xl mb-4 animate-bounce">🏟️</div>
+      <h2 id="empty-state-title" class="text-2xl font-bold text-cdlNavy mb-2">Prepping the Arena...</h2>
+      <p id="empty-state-text" class="text-base text-slate-600 leading-relaxed m-0">🏃 Athletes are warming up...</p>
     </div>
 
     <!-- Action & Grading Controls -->
@@ -217,6 +217,16 @@
       </div>
     </div>
 
+    <!-- Post-Celebration Diagram Inspection Bar -->
+    <div id="inspect-return-bar" class="mt-6 w-full max-w-md hidden flex gap-3">
+      <button onclick="reopenCelebrationModal()" class="flex-1 bg-white border-2 border-cdlNavy text-cdlNavy hover:bg-slate-50 font-bold py-3 px-5 rounded-full shadow-md transition-all hover:-translate-y-0.5">
+        🏆 Back to Broadcast Summary
+      </button>
+      <button onclick="resetSession()" class="flex-1 bg-cdlNavy hover:bg-cdlBrightBlue text-white font-bold py-3 px-5 rounded-full shadow-md transition-all hover:-translate-y-0.5">
+        ↻ Study Again
+      </button>
+    </div>
+
     <!-- Celebration Modal Pop-Up -->
     <div id="celebration-overlay" class="hidden absolute inset-0 bg-slate-900/40 backdrop-blur-sm flex flex-col items-center justify-center z-50 p-6">
       <div class="bg-white rounded-3xl shadow-2xl p-8 sm:p-10 max-w-xl w-full text-center border-t-8 border-cdlGold relative overflow-hidden">
@@ -224,7 +234,7 @@
         <!-- Emoji Display Area -->
         <div id="commentator-emojis" class="text-4xl sm:text-5xl mb-2 tracking-wide"></div>
 
-        <!-- Floating Subtitle (No pill container) -->
+        <!-- Floating Subtitle -->
         <div id="win-badge" class="font-black text-xs sm:text-sm text-cdlBrightBlue uppercase tracking-widest mb-3"></div>
 
         <!-- Main Headline -->
@@ -272,6 +282,62 @@
     let masteredCount = 0;
     let currentCard = null;
     let isRevealed = false;
+    let loadingInterval = null;
+
+    // Funny Sports-Based Loading Messages
+    const LOADING_MESSAGES = [
+      "🏃 Athletes are warming up...",
+      "🏅 Setting out the cones and bibs...",
+      "🎙️ The commentators are taking their seats...",
+      "⚽ The teams are entering the arena...",
+      "🏊 Checking the pool temperature...",
+      "🏸 Stringing the rackets...",
+      "🏃‍♂️ Stretching the hamstrings...",
+      "📋 Coach is drawing up the game plan...",
+      "🏆 Polishing the trophies...",
+      "⏱️ Starting the stopwatch...",
+      "👟 Tying up the sprint spikes...",
+      "🍌 Handing out the half-time oranges...",
+      "💨 Pumping up the match balls...",
+      "📏 Measuring the long jump pit...",
+      "📢 Testing the stadium announcer's mic..."
+    ];
+
+    function getRandomLoadingMessage() {
+      return LOADING_MESSAGES[Math.floor(Math.random() * LOADING_MESSAGES.length)];
+    }
+
+    function startLoadingTicker() {
+      const updateText = () => {
+        const msg = getRandomLoadingMessage();
+        const dropMsg = document.getElementById('dropdown-loading-msg');
+        const emptyText = document.getElementById('empty-state-text');
+        const progText = document.getElementById('progress-text');
+        if (dropMsg) dropMsg.innerText = msg;
+        if (emptyText) emptyText.innerText = msg;
+        if (progText) progText.innerText = msg;
+      };
+      updateText();
+      loadingInterval = setInterval(updateText, 1200);
+    }
+
+    function stopLoadingTicker() {
+      if (loadingInterval) {
+        clearInterval(loadingInterval);
+        loadingInterval = null;
+      }
+      const icon = document.getElementById('empty-state-icon');
+      if (icon) icon.classList.remove('animate-bounce');
+    }
+
+    // Unbiased Fisher-Yates Shuffle
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
 
     // Smart Back Navigation to Exam Hub
     function returnToHub(e) {
@@ -355,7 +421,7 @@
         emojis: "🌟🧠🎯",
         badge: "TACTICAL MASTERCLASS",
         headline: "The scouts are taking notes.",
-        sub: "“Well, well, Jeff... look at the scoreboard. We’gve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
+        sub: "“Well, well, Jeff... look at the scoreboard. We’ve actually got a competitor on our hands. That spacing and timing belongs on a highlight reel in prime time.”"
       },
       {
         min: 36, max: 40,
@@ -452,38 +518,46 @@
 
     window.addEventListener('DOMContentLoaded', async () => {
       setupKeyboardShortcuts();
+      startLoadingTicker();
+
       try {
         const res = await fetch('manifest.json');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         manifestData = await res.json();
 
-        // CONDITIONAL FILTERING: Verify questions exist
-        activeCategories = [];
-        for (const cat of manifestData.categories) {
-          const validTopics = [];
-          for (const top of cat.topics) {
-            try {
-              const tRes = await fetch(top.file);
-              if (tRes.ok) {
-                const tData = await tRes.json();
-                if (tData.masks && tData.masks.length > 0) {
-                  topicCache[top.id] = tData;
-                  validTopics.push(top);
+        // PARALLEL FETCHING: Load all topic files simultaneously for speed
+        const categoryPromises = manifestData.categories.map(async (cat) => {
+          const topicChecks = await Promise.all(
+            cat.topics.map(async (top) => {
+              try {
+                const tRes = await fetch(top.file);
+                if (tRes.ok) {
+                  const tData = await tRes.json();
+                  if (tData.masks && tData.masks.length > 0) {
+                    topicCache[top.id] = tData;
+                    return top;
+                  }
                 }
+              } catch (e) {
+                // Skip missing or unbuilt topic files silently
               }
-            } catch (e) {
-              // File doesn't exist yet — skip silently
-            }
-          }
-          if (validTopics.length > 0) {
-            activeCategories.push({ name: cat.name, topics: validTopics });
-          }
-        }
+              return null;
+            })
+          );
+          const validTopics = topicChecks.filter(Boolean);
+          return validTopics.length > 0 ? { name: cat.name, topics: validTopics } : null;
+        });
 
+        activeCategories = (await Promise.all(categoryPromises)).filter(Boolean);
+        stopLoadingTicker();
         renderTopicMenu();
 
         if (activeCategories.length === 0) {
-          showEmptyState("No question files found in your /json/ folder yet. Use ankibuilder.html to map your first diagram!");
+          showEmptyState(
+            "No Drills on the Pitch Yet!",
+            "The kit bag is empty! Map your first diagram in the builder to get the training session started. 🏅",
+            "🏟️"
+          );
           return;
         }
 
@@ -494,15 +568,24 @@
           document.querySelectorAll('.topic-checkbox').forEach(cb => {
             cb.checked = requestedIds.includes(cb.value);
           });
+          activeCategories.forEach((_, idx) => updateCategoryParentCheckbox(idx));
           updateBadgeCount();
           await applyTopicSelection(false);
         } else {
-          // Leave all unchecked by default and display welcoming prompt
           updateBadgeCount();
-          showEmptyState("Select one or more topics from the menu above to get started! 🏃‍♂️💨");
+          showEmptyState(
+            "Ready to Train?",
+            "Select one or more topics from the menu above to step onto the pitch! 🏃‍♂️💨",
+            "🎯"
+          );
         }
       } catch (err) {
-        showEmptyState("Could not load manifest.json. Ensure the file is in your root folder.");
+        stopLoadingTicker();
+        showEmptyState(
+          "Match Delayed!",
+          "The stadium gates are locked! Coach couldn't find the playbook (manifest.json) in the locker room.",
+          "🌧️"
+        );
       }
     });
 
@@ -606,7 +689,7 @@
 
       const checked = Array.from(document.querySelectorAll('.topic-checkbox:checked'));
       if (checked.length === 0) {
-        showEmptyState("Please select at least one topic from the menu! 🎯");
+        showEmptyState("No Drills Selected!", "Please select at least one topic from the menu above to get started! 🎯", "📋");
         return;
       }
 
@@ -620,47 +703,68 @@
         const data = topicCache[topicId];
         if (data && data.masks) {
           const topicCards = data.masks.map(m => ({ topicId, maskId: m.id }));
-          topicCards.sort(() => Math.random() - 0.5);
+          shuffleArray(topicCards);
           sessionQueue.push(...topicCards);
         }
       }
 
       if (sessionQueue.length === 0) {
-        showEmptyState("Selected topics have no occlusion masks built yet.");
+        showEmptyState("Cones Still in the Bag!", "The selected topics don't have any occlusion masks set up yet.", "🏅");
         return;
       }
 
       if (document.getElementById('interleave-toggle').checked && checked.length > 1) {
-        sessionQueue.sort(() => Math.random() - 0.5);
+        shuffleArray(sessionQueue);
       }
 
       initialQueueSize = sessionQueue.length;
 
       document.getElementById('empty-state').classList.add('hidden');
+      document.getElementById('inspect-return-bar').classList.add('hidden');
       document.getElementById('canvas-container').classList.remove('hidden');
       document.getElementById('end-session-btn').classList.remove('hidden');
+      document.getElementById('queue-stats').classList.remove('hidden');
       startSession();
     }
 
-    function showEmptyState(msg) {
+    function showEmptyState(title, msg, icon = "🎯") {
       document.getElementById('action-bar').classList.add('hidden');
+      document.getElementById('inspect-return-bar').classList.add('hidden');
       document.getElementById('canvas-container').classList.add('hidden');
       document.getElementById('end-session-btn').classList.add('hidden');
+      document.getElementById('queue-stats').classList.add('hidden');
+      document.getElementById('empty-state-icon').innerText = icon;
+      document.getElementById('empty-state-title').innerText = title;
       document.getElementById('empty-state-text').innerText = msg;
       document.getElementById('empty-state').classList.remove('hidden');
-      document.getElementById('progress-text').innerText = "Waiting for setup...";
-      document.getElementById('queue-stats').innerText = "";
+      document.getElementById('progress-text').innerText = getRandomLoadingMessage();
     }
 
     function startSession() {
       if (sessionQueue.length === 0) return;
       document.getElementById('celebration-overlay').classList.add('hidden');
+      document.getElementById('inspect-return-bar').classList.add('hidden');
       document.getElementById('action-bar').classList.remove('hidden');
       
       const randomQuote = QUIT_QUOTES[Math.floor(Math.random() * QUIT_QUOTES.length)];
       document.getElementById('quit-btn-text').innerText = randomQuote;
 
       nextCard();
+    }
+
+    function refreshMasksVisibility() {
+      if (!currentCard || sessionQueue.length === 0) return;
+      const hideAll = document.getElementById('hide-all-toggle').checked;
+      document.querySelectorAll('#masks-layer .mask').forEach(div => {
+        if (!div.classList.contains('active')) {
+          // Only toggle non-active masks
+          if (hideAll) {
+            div.classList.remove('revealed');
+          } else {
+            div.classList.add('revealed');
+          }
+        }
+      });
     }
 
     function nextCard() {
@@ -722,16 +826,12 @@
 
       if (rating === 'again') {
         againCount++;
-        // Re-insert right near the front (after 1 card) so it shows up very frequently
         sessionQueue.splice(Math.min(1, sessionQueue.length), 0, card);
       } else if (rating === 'hard') {
-        // Re-insert in the near-middle
         sessionQueue.splice(Math.min(3, sessionQueue.length), 0, card);
       } else if (rating === 'ok') {
-        // Push further back in the queue
         sessionQueue.push(card);
       } else if (rating === 'easy') {
-        // Mastered successfully! Do NOT re-queue.
         masteredCount++;
       }
 
@@ -756,6 +856,7 @@
       document.getElementById('masks-layer').innerHTML = '';
       document.getElementById('action-bar').classList.add('hidden');
       document.getElementById('end-session-btn').classList.add('hidden');
+      document.getElementById('inspect-return-bar').classList.add('hidden');
       document.getElementById('celebration-overlay').classList.remove('hidden');
 
       const finalScore = masteredCount;
@@ -814,6 +915,12 @@
 
     function inspectCompletedDiagram() {
       document.getElementById('celebration-overlay').classList.add('hidden');
+      document.getElementById('inspect-return-bar').classList.remove('hidden');
+    }
+
+    function reopenCelebrationModal() {
+      document.getElementById('inspect-return-bar').classList.add('hidden');
+      document.getElementById('celebration-overlay').classList.remove('hidden');
     }
 
     function resetSession() {
@@ -825,7 +932,7 @@
         if (e.code === 'Space' && !isRevealed && !document.getElementById('action-bar').classList.contains('hidden')) {
           e.preventDefault();
           revealAnswer();
-        } else if (isRevealed) {
+        } else if (isRevealed && !document.getElementById('action-bar').classList.contains('hidden')) {
           if (e.key === '1') gradeCard('again');
           if (e.key === '2') gradeCard('hard');
           if (e.key === '3') gradeCard('ok');
