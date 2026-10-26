@@ -21,6 +21,7 @@
         { "id": "training-principles", "title": "Principles of Training & SPORT/FITT", "file": "json/training-principles.json" },
          { "id": "fitt", "title": "FITT Principle (do not select hide all)", "file": "json/fitt.json" },
          { "id": "sport", "title": "SPORT Principle (do not select hide all)", "file": "json/sport.json" },
+        { "id": "stool", "title": "Wellbeing pillars", "file": "json/stool.json" },
         { "id": "training-methods", "title": "Training Methods (do not select hide all)", "file": "json/training-methods.json" },
         { "id": "warm-up-cool-down", "title": "Warming Up & Cooling Down", "file": "json/warm-up-cool-down.json" }
       ]
