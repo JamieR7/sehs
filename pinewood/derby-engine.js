@@ -1,16 +1,16 @@
 /**
  * PACK 130 GENEVA - PINEWOOD DERBY ENGINE (derby-engine.js)
  * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts.
- * Complete Audited & Patched Version (ASCII-Safe Unicode Escapes)
+ * Complete Audited & Patched Version (100% Pure ASCII)
  */
 
 const DENS = [
-  { id: 'Lions',   name: 'Lions',   prefix: 'L',  emoji: '\u{1F981}' }, // 🦁
-  { id: 'Tigers',  name: 'Tigers',  prefix: 'T',  emoji: '\u{1F42F}' }, // 🐯
-  { id: 'Wolves',  name: 'Wolves',  prefix: 'WO', emoji: '\u{1F43A}' }, // 🐺
-  { id: 'Bears',   name: 'Bears',   prefix: 'B',  emoji: '\u{1F43B}' }, // 🐻
-  { id: 'Webelos', name: 'Webelos', prefix: 'WE', emoji: '\u{1F9ED}' }, // 🧭
-  { id: 'AOLs',    name: 'AOLs',    prefix: 'A',  emoji: '\u{1F3F9}' }  // 🏹
+  { id: 'Lions',   name: 'Lions',   prefix: 'L',  emoji: '\u{1F981}' },
+  { id: 'Tigers',  name: 'Tigers',  prefix: 'T',  emoji: '\u{1F42F}' },
+  { id: 'Wolves',  name: 'Wolves',  prefix: 'WO', emoji: '\u{1F43A}' },
+  { id: 'Bears',   name: 'Bears',   prefix: 'B',  emoji: '\u{1F43B}' },
+  { id: 'Webelos', name: 'Webelos', prefix: 'WE', emoji: '\u{1F9ED}' },
+  { id: 'AOLs',    name: 'AOLs',    prefix: 'A',  emoji: '\u{1F3F9}' }
 ];
 
 const STORAGE_KEY = 'PACK_130_DERBY_STATE_V1';
