@@ -1,4 +1,4 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -21,7 +21,7 @@ html_content = """<!DOCTYPE html>
   <header class="navy-bg text-white shadow-lg border-b-4 border-[#fbba07]">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
-        <span class="text-3xl">🏎️</span>
+        <span class="text-3xl">&#127950;&#65039;</span>
         <div>
           <h1 class="text-xl font-black tracking-wider uppercase leading-none">Pack 130 Geneva</h1>
           <p class="text-xs text-[#fbba07] font-bold tracking-widest uppercase mt-0.5">Pinewood Derby Race Control</p>
@@ -44,13 +44,13 @@ html_content = """<!DOCTYPE html>
 
         <!-- Backup / Reset Controls -->
         <button onclick="exportJson()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg" title="Download JSON Backup">
-          💾 Export
+          &#128190; Export
         </button>
         <label class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer" title="Restore JSON Backup">
-          📂 Import <input type="file" accept=".json" onchange="importJson(event)" class="hidden" />
+          &#128194; Import <input type="file" accept=".json" onchange="importJson(event)" class="hidden" />
         </label>
         <button onclick="confirmReset()" class="red-bg hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
-          ⚠️ Reset
+          &#9888;&#65039; Reset
         </button>
       </div>
     </div>
@@ -61,10 +61,10 @@ html_content = """<!DOCTYPE html>
         1. Webelos Check-In
       </button>
       <button onclick="switchTab('RACE_CONTROL')" id="tab-RACE_CONTROL" class="tab-btn px-5 py-2.5 rounded-t-lg font-extrabold text-xs uppercase tracking-wider">
-        2. Live Track & Scoring
+        2. Live Track &amp; Scoring
       </button>
       <button onclick="switchTab('STANDINGS')" id="tab-STANDINGS" class="tab-btn px-5 py-2.5 rounded-t-lg font-extrabold text-xs uppercase tracking-wider">
-        3. Standings & Tie-Breakers
+        3. Standings &amp; Tie-Breakers
       </button>
       <button onclick="switchTab('BRACKET')" id="tab-BRACKET" class="tab-btn px-5 py-2.5 rounded-t-lg font-extrabold text-xs uppercase tracking-wider">
         4. Championship Bracket
@@ -81,15 +81,15 @@ html_content = """<!DOCTYPE html>
     <section id="view-CHECK_IN" class="space-y-6">
       <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 class="text-lg font-black text-[#004587] uppercase">Webelos Car Check-In & Inspection</h2>
+          <h2 class="text-lg font-black text-[#004587] uppercase">Webelos Car Check-In &amp; Inspection</h2>
           <p class="text-xs text-slate-500">Log each Scout and car into their Den. Supports any number of cars per Den (automatically balances 6-lane heats).</p>
         </div>
         <div class="flex flex-wrap gap-3">
           <button onclick="loadDemoAndRender()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-lg border border-slate-300">
-            🧪 Load 33-Car Demo Roster (Sizes: 4, 6, 8, 5, 7, 3)
+            &#129514; Load 33-Car Demo Roster (Sizes: 4, 6, 8, 5, 7, 3)
           </button>
           <button onclick="lockAndStartQualifying()" class="navy-bg hover:bg-blue-900 text-white font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase tracking-wider">
-            🏁 Lock Roster & Generate Qualifying Heats →
+            &#127937; Lock Roster &amp; Generate Qualifying Heats &rarr;
           </button>
         </div>
       </div>
@@ -99,12 +99,12 @@ html_content = """<!DOCTYPE html>
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Den</label>
           <select id="inputDen" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold focus:outline-none focus:border-[#004587]">
-            <option value="Lions">🦁 Lions</option>
-            <option value="Tigers">🐯 Tigers</option>
-            <option value="Wolves">🐺 Wolves</option>
-            <option value="Bears">🐻 Bears</option>
-            <option value="Webelos">🧭 Webelos</option>
-            <option value="AOLs">🏹 AOLs</option>
+            <option value="Lions">&#129409; Lions</option>
+            <option value="Tigers">&#128047; Tigers</option>
+            <option value="Wolves">&#128058; Wolves</option>
+            <option value="Bears">&#128059; Bears</option>
+            <option value="Webelos">&#129517; Webelos</option>
+            <option value="AOLs">&#127993; AOLs</option>
           </select>
         </div>
         <div>
@@ -147,14 +147,14 @@ html_content = """<!DOCTYPE html>
           <div class="p-5 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-50 p-3 rounded-lg border border-slate-200">
               <p class="text-xs font-semibold text-slate-600">
-                👀 <strong>Finish Judges Call Order:</strong> Tap lanes below in the order they finish (<span class="text-[#004587] font-bold">1st tap = 1st place</span>, etc.)
+                &#128064; <strong>Finish Judges Call Order:</strong> Tap lanes below in the order they finish (<span class="text-[#004587] font-bold">1st tap = 1st place</span>, etc.)
               </p>
               <div class="flex gap-2">
                 <button onclick="clearCurrentTapOrder()" class="text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1 rounded">
                   Clear Taps
                 </button>
                 <button onclick="triggerImmediateRerun()" class="text-xs font-bold bg-red-100 hover:bg-red-200 text-[#e73037] px-3 py-1 rounded">
-                  🔄 Tie / Problem: Re-Run Heat
+                  &#128260; Tie / Problem: Re-Run Heat
                 </button>
               </div>
             </div>
@@ -165,7 +165,7 @@ html_content = """<!DOCTYPE html>
             <!-- SUBMIT HEAT BUTTON -->
             <div class="pt-2 flex justify-end">
               <button id="submitHeatBtn" onclick="submitActiveHeatScores()" class="w-full sm:w-auto navy-bg hover:bg-blue-900 disabled:opacity-40 text-white font-black text-sm px-8 py-3 rounded-xl shadow-md uppercase tracking-wider">
-                ✅ Record Finish & Load Next Heat →
+                &#9989; Record Finish &amp; Load Next Heat &rarr;
               </button>
             </div>
           </div>
@@ -175,7 +175,7 @@ html_content = """<!DOCTYPE html>
         <div class="space-y-4">
           <div class="bg-white rounded-xl shadow-sm border-2 border-[#fbba07] overflow-hidden">
             <div class="gold-bg text-slate-900 px-4 py-2.5 flex items-center justify-between">
-              <h3 class="font-black text-sm uppercase tracking-wider">⏳ ON DECK — STAGE NEXT</h3>
+              <h3 class="font-black text-sm uppercase tracking-wider">&#9203; ON DECK — STAGE NEXT</h3>
               <span id="onDeckSubtitle" class="text-xs font-extrabold uppercase"></span>
             </div>
             <div id="onDeckLanesList" class="p-4 space-y-2 text-xs"></div>
@@ -184,7 +184,7 @@ html_content = """<!DOCTYPE html>
           <!-- ALL HEATS QUEUE -->
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="bg-slate-800 text-white px-4 py-2.5 flex items-center justify-between">
-              <h3 class="font-bold text-xs uppercase tracking-wider">📋 Heat Schedule Queue</h3>
+              <h3 class="font-bold text-xs uppercase tracking-wider">&#128203; Heat Schedule Queue</h3>
               <span id="heatProgressCounter" class="text-xs text-[#fbba07] font-bold"></span>
             </div>
             <div id="heatQueueList" class="max-h-72 overflow-y-auto divide-y divide-slate-100 text-xs"></div>
@@ -200,7 +200,7 @@ html_content = """<!DOCTYPE html>
     <section id="view-STANDINGS" class="hidden space-y-6">
       <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h2 class="text-lg font-black text-[#004587] uppercase">Live Standings & Tie-Breaker Control</h2>
+          <h2 class="text-lg font-black text-[#004587] uppercase">Live Standings &amp; Tie-Breaker Control</h2>
           <p class="text-xs text-slate-500">Top 2 from each Den advance to the 12-car Semifinals. Ties for qualifying spots are settled on the track.</p>
         </div>
         <div id="standingsStageFilter" class="flex flex-wrap gap-2">
@@ -220,7 +220,7 @@ html_content = """<!DOCTYPE html>
     <section id="view-BRACKET" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
         <h2 class="text-lg font-black text-[#004587] uppercase">Pack 130 Championship Pathway</h2>
-        <p class="text-xs text-slate-500">6 Dens (Top 2 each) ➔ 12 Semifinalists (Split into Groups A & B) ➔ 6 Finalists ➔ Pack Champion</p>
+        <p class="text-xs text-slate-500">6 Dens (Top 2 each) &rarr; 12 Semifinalists (Split into Groups A &amp; B) &rarr; 6 Finalists &rarr; Pack Champion</p>
       </div>
       <div id="bracketContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
     </section>
@@ -348,7 +348,7 @@ html_content = """<!DOCTYPE html>
                     <span class="font-extrabold text-slate-900">${c.cubName}</span>
                     <span class="text-slate-500 ml-1">(${c.carName})</span>
                   </div>
-                  <button onclick="handleRemoveCar('${c.id}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Remove Car">✕</button>
+                  <button onclick="handleRemoveCar('${c.id}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Remove Car">&#10005;</button>
                 </div>
               `).join('')}
             </div>
@@ -427,7 +427,7 @@ html_content = """<!DOCTYPE html>
         : [];
       if (ties.length > 0) {
         const summary = ties.map(t => `${t.groupName} (${t.carIds.join(' vs ')})`).join(', ');
-        if (!confirm(`⚠️ Unresolved tie at advancement cutoff in: ${summary}.\n\nWe recommend resolving ties on the Standings tab first. Proceed anyway without a tie-breaker race-off?`)) {
+        if (!confirm(`Unresolved tie at advancement cutoff in: ${summary}.\n\nWe recommend resolving ties on the Standings tab first. Proceed anyway without a tie-breaker race-off?`)) {
           activeStandingsStage = currentStage;
           switchTab('STANDINGS');
           return;
@@ -484,13 +484,13 @@ html_content = """<!DOCTYPE html>
       if (unresolvedTies.length > 0) {
         const tieButtons = unresolvedTies.map(t => `
           <button onclick="spawnAndJumpToTieBreaker('${t.stage}', '${t.groupName}', ${JSON.stringify(t.carIds).replace(/"/g, '&quot;')})" class="red-bg hover:bg-red-700 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow uppercase">
-            ⚡ Spawn ${t.groupName} Tie-Breaker (${t.carIds.join(' vs ')})
+            &#9889; Spawn ${t.groupName} Tie-Breaker (${t.carIds.join(' vs ')})
           </button>
         `).join('');
         tieWarningBanner = `
           <div class="w-full bg-amber-50 border border-amber-300 rounded-lg p-3 flex flex-wrap items-center justify-between gap-2 mt-2">
             <span class="text-xs font-extrabold text-amber-900">
-              ⚠️ Tie detected at advancement cutoff! Run a Tie-Breaker heat before advancing:
+              &#9888;&#65039; Tie detected at advancement cutoff! Run a Tie-Breaker heat before advancing:
             </span>
             <div class="flex flex-wrap gap-2">${tieButtons}</div>
           </div>
@@ -501,20 +501,20 @@ html_content = """<!DOCTYPE html>
       let nextStageControls = '';
       if (stageHeats.length > 0 && pendingStageHeats.length === 0) {
         if (engine.state.stage === 'QUALIFYING') {
-          nextStageControls = `<button onclick="handleAdvanceToSemifinals()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">🔥 All Qualifying Complete! Generate 12-Car Semifinals →</button>`;
+          nextStageControls = `<button onclick="handleAdvanceToSemifinals()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#128293; All Qualifying Complete! Generate 12-Car Semifinals &rarr;</button>`;
         } else if (engine.state.stage === 'SEMIFINALS') {
           if (engine.state.rulesMode === 'AVERAGE') {
             nextStageControls = `
-              <button onclick="handleAdvanceToWildcard()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-4 py-2.5 rounded-lg shadow uppercase">⚡ Run Wildcard Race (For Final 2 Spots) →</button>
-              <button onclick="handleAdvanceToGrandFinal()" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance) →</button>
+              <button onclick="handleAdvanceToWildcard()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-4 py-2.5 rounded-lg shadow uppercase">&#9889; Run Wildcard Race (For Final 2 Spots) &rarr;</button>
+              <button onclick="handleAdvanceToGrandFinal()" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance) &rarr;</button>
             `;
           } else {
-            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">🏆 Semifinals Complete! Generate 6-Car Grand Final →</button>`;
+            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Semifinals Complete! Generate 6-Car Grand Final &rarr;</button>`;
           }
         } else if (engine.state.stage === 'WILDCARD') {
-          nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">🏆 Wildcard Complete! Launch 6-Car Grand Final →</button>`;
+          nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Wildcard Complete! Launch 6-Car Grand Final &rarr;</button>`;
         } else if (engine.state.stage === 'FINALS') {
-          nextStageControls = `<button onclick="handleViewChampion()" class="gold-bg text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">🎉 Grand Final Complete! View Pack Champion →</button>`;
+          nextStageControls = `<button onclick="handleViewChampion()" class="gold-bg text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127881; Grand Final Complete! View Pack Champion &rarr;</button>`;
         }
       }
 
@@ -527,7 +527,7 @@ html_content = """<!DOCTYPE html>
           <div class="flex flex-wrap gap-2">
             ${pendingStageHeats.length > 0 ? `
               <button onclick="autoSimulateRemainingStageHeats()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3 py-2 rounded-lg border border-slate-300">
-                ⚡ Quick-Simulate Remaining ${pendingStageHeats.length} Heats (Test Mode)
+                &#9889; Quick-Simulate Remaining ${pendingStageHeats.length} Heats (Test Mode)
               </button>
             ` : ''}
             ${nextStageControls}
@@ -555,7 +555,7 @@ html_content = """<!DOCTYPE html>
       }
 
       document.getElementById('onTrackTitle').textContent = `ON TRACK — ${activeHeat.group.toUpperCase()} (HEAT ${activeHeat.heatNumber})`;
-      document.getElementById('onTrackSubtitle').textContent = activeHeat.status === 'COMPLETED' ? '✅ COMPLETED (TAP TO EDIT)' : '🟢 READY TO RACE';
+      document.getElementById('onTrackSubtitle').textContent = activeHeat.status === 'COMPLETED' ? '\u2705 COMPLETED (TAP TO EDIT)' : '\u{1F7E2} READY TO RACE';
 
       // Render 6 tracks (Lanes 1..6) — SCOUT NAME PRIMARY, (CAR NAME) IN BRACKETS
       onTrackGrid.innerHTML = [1, 2, 3, 4, 5, 6].map(laneNum => {
@@ -573,7 +573,7 @@ html_content = """<!DOCTYPE html>
         const car = engine.state.cars.find(c => c.id === slot.carId);
         const tapRankIdx = currentTapOrder.indexOf(laneNum);
         const finishPos = tapRankIdx !== -1 ? tapRankIdx + 1 : null;
-        const suffixes = ['1st 🥇', '2nd 🥈', '3rd 🥉', '4th', '5th', '6th'];
+        const suffixes = ['1st \u{1F947}', '2nd \u{1F948}', '3rd \u{1F949}', '4th', '5th', '6th'];
 
         return `
           <div onclick="toggleLaneTap(${laneNum})" class="lane-card cursor-pointer p-4 rounded-xl border-2 flex flex-col justify-between ${
@@ -587,7 +587,7 @@ html_content = """<!DOCTYPE html>
             </div>
             <div class="my-3">
               <div class="font-extrabold text-sm text-slate-900 truncate">${car?.cubName || slot.carId}</div>
-              <div class="text-xs text-slate-500 truncate">(${car?.carName || slot.carId}) • ${car?.den || ''}</div>
+              <div class="text-xs text-slate-500 truncate">(${car?.carName || slot.carId}) &bull; ${car?.den || ''}</div>
             </div>
             <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between">
               <span class="text-[11px] font-bold text-slate-400 uppercase">Finish Order:</span>
@@ -675,7 +675,6 @@ html_content = """<!DOCTYPE html>
           ? 1
           : (stageName === 'SEMIFINALS' && engine.state.rulesMode === 'POINTS' ? 3 : 2);
 
-        // Use exact tie-breaker detection from engine (or fallback if older engine)
         const tiedCarIds = typeof engine.getCutoffTieCars === 'function'
           ? engine.getCutoffTieCars(stageName, groupName)
           : [];
@@ -689,9 +688,9 @@ html_content = """<!DOCTYPE html>
 
             ${tiedCarIds.length >= 2 ? `
               <div class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between gap-2">
-                <span class="text-xs font-bold text-amber-900">⚠️ Tie detected at cutoff (${tiedCarIds.join(' vs ')})!</span>
+                <span class="text-xs font-bold text-amber-900">&#9888;&#65039; Tie detected at cutoff (${tiedCarIds.join(' vs ')})!</span>
                 <button onclick="spawnAndJumpToTieBreaker('${stageName}', '${groupName}', ${JSON.stringify(tiedCarIds).replace(/"/g, '&quot;')})" class="red-bg text-white font-black text-[11px] px-3 py-1 rounded shadow uppercase shrink-0">
-                  ⚡ Spawn Race-Off Heat
+                  &#9889; Spawn Race-Off Heat
                 </button>
               </div>
             ` : ''}
@@ -712,7 +711,7 @@ html_content = """<!DOCTYPE html>
                   const isAdvancing = idx < cutoff && r.racesCompleted > 0;
                   return `
                     <tr class="${isAdvancing ? 'bg-green-50/70 font-bold' : ''}">
-                      <td class="py-2 px-3">${idx + 1} ${isAdvancing ? '✅' : ''}</td>
+                      <td class="py-2 px-3">${idx + 1} ${isAdvancing ? '\u2705' : ''}</td>
                       <td class="py-2 px-3">
                         <span class="font-black text-[#004587] mr-1">${r.carId}</span>
                         <span class="font-extrabold text-slate-900">${r.cubName}</span>
@@ -808,7 +807,7 @@ html_content = """<!DOCTYPE html>
           </div>
           ${wc.length ? `
             <div>
-              <h4 class="font-black text-xs uppercase text-amber-700 mb-2">⚡ Wildcard Race (Top 2 Advance)</h4>
+              <h4 class="font-black text-xs uppercase text-amber-700 mb-2">&#9889; Wildcard Race (Top 2 Advance)</h4>
               <div class="space-y-1 text-xs">
                 ${wc.map((r, i) => renderBracketRow(r, i, 2, 'border-[#fbba07]')).join('')}
               </div>
@@ -820,10 +819,10 @@ html_content = """<!DOCTYPE html>
           <div class="bg-emerald-700 text-white px-3 py-2 rounded font-black text-xs uppercase tracking-wider">3. Grand Final (6 Lanes)</div>
           ${champ ? `
             <div class="gold-bg p-4 rounded-xl text-center shadow-inner">
-              <div class="text-3xl mb-1">🏆</div>
+              <div class="text-3xl mb-1">&#127942;</div>
               <div class="text-[11px] font-black uppercase tracking-widest text-slate-800">Pack 130 Champion</div>
               <div class="text-xl font-black text-[#004587] mt-1">${champ.cubName}</div>
-              <div class="text-xs font-bold text-slate-800 mt-0.5"><span class="font-black">${champ.carId}</span> (${champ.carName}) • ${champ.den}</div>
+              <div class="text-xs font-bold text-slate-800 mt-0.5"><span class="font-black">${champ.carId}</span> (${champ.carName}) &bull; ${champ.den}</div>
             </div>
           ` : ''}
           <div class="space-y-1.5 text-xs">
@@ -886,9 +885,3 @@ html_content = """<!DOCTYPE html>
   </script>
 </body>
 </html>
-"""
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_content)
-
-print("Saved index.html successfully.")
