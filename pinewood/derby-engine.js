@@ -1,16 +1,16 @@
 /**
  * PACK 130 GENEVA - PINEWOOD DERBY ENGINE (derby-engine.js)
  * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts.
- * Complete Audited & Patched Version
+ * Complete Audited & Patched Version (ASCII-Safe Unicode Escapes)
  */
 
 const DENS = [
-  { id: 'Lions', name: 'Lions', prefix: 'L', emoji: '🦁' },
-  { id: 'Tigers', name: 'Tigers', prefix: 'T', emoji: '🐯' },
-  { id: 'Wolves', name: 'Wolves', prefix: 'WO', emoji: '🐺' },
-  { id: 'Bears', name: 'Bears', prefix: 'B', emoji: '🐻' },
-  { id: 'Webelos', name: 'Webelos', prefix: 'WE', emoji: '🧭' },
-  { id: 'AOLs', name: 'AOLs', prefix: 'A', emoji: '🏹' }
+  { id: 'Lions',   name: 'Lions',   prefix: 'L',  emoji: '\u{1F981}' }, // 🦁
+  { id: 'Tigers',  name: 'Tigers',  prefix: 'T',  emoji: '\u{1F42F}' }, // 🐯
+  { id: 'Wolves',  name: 'Wolves',  prefix: 'WO', emoji: '\u{1F43A}' }, // 🐺
+  { id: 'Bears',   name: 'Bears',   prefix: 'B',  emoji: '\u{1F43B}' }, // 🐻
+  { id: 'Webelos', name: 'Webelos', prefix: 'WE', emoji: '\u{1F9ED}' }, // 🧭
+  { id: 'AOLs',    name: 'AOLs',    prefix: 'A',  emoji: '\u{1F3F9}' }  // 🏹
 ];
 
 const STORAGE_KEY = 'PACK_130_DERBY_STATE_V1';
@@ -101,8 +101,8 @@ class DerbyEngine {
   loadDemoRoster() {
     this.state = this.getInitialState();
     const sampleCounts = { Lions: 4, Tigers: 6, Wolves: 8, Bears: 5, Webelos: 7, AOLs: 3 };
-    const sampleNames = ['Thunder', 'Swiss Miss', 'Jet d\'Eau', 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
-    
+    const sampleNames = ['Thunder', 'Swiss Miss', "Jet d'Eau", 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
+
     DENS.forEach(den => {
       const count = sampleCounts[den.id];
       for (let i = 1; i <= count; i++) {
@@ -357,22 +357,19 @@ class DerbyEngine {
   }
 
   /**
-   * Helper: Returns an array of tied car IDs at the advancement cutoff for a given stage & group,
+   * Helper: Returns an array of tied car IDs at the advancement cutoff(s) for a given stage & group,
    * using exact cross-multiplication (AVERAGE) or exact points (POINTS).
    */
   getCutoffTieCars(stage, groupName) {
     const rows = this.getGroupStandings(stage, groupName);
-    const cutoff = stage === 'FINALS'
+    const primaryCutoff = stage === 'FINALS'
       ? 1
       : (stage === 'SEMIFINALS' && this.state.rulesMode === 'POINTS' ? 3 : 2);
 
-    if (rows.length <= cutoff || rows[cutoff - 1].racesCompleted === 0) {
-      return [];
-    }
-
-    const boundaryRow = rows[cutoff - 1];
-    const nextRow = rows[cutoff];
-    if (nextRow.racesCompleted === 0) return [];
+    // In SEMIFINALS under AVERAGE mode, Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard
+    const cutoffsToCheck = (stage === 'SEMIFINALS' && this.state.rulesMode === 'AVERAGE')
+      ? [2, 5]
+      : [primaryCutoff];
 
     const isSameMetric = (r1, r2) => {
       if (this.state.rulesMode === 'AVERAGE') {
@@ -381,13 +378,19 @@ class DerbyEngine {
       return r1.pointsSum === r2.pointsSum;
     };
 
-    if (
-      isSameMetric(boundaryRow, nextRow) &&
-      (boundaryRow.tieBreakerRank === null || nextRow.tieBreakerRank === null)
-    ) {
-      return rows
-        .filter(r => r.racesCompleted > 0 && isSameMetric(r, boundaryRow) && r.tieBreakerRank === null)
-        .map(r => r.carId);
+    for (const cutoff of cutoffsToCheck) {
+      if (rows.length > cutoff && rows[cutoff - 1].racesCompleted > 0 && rows[cutoff].racesCompleted > 0) {
+        const boundaryRow = rows[cutoff - 1];
+        const nextRow = rows[cutoff];
+        if (
+          isSameMetric(boundaryRow, nextRow) &&
+          (boundaryRow.tieBreakerRank === null || nextRow.tieBreakerRank === null)
+        ) {
+          return rows
+            .filter(r => r.racesCompleted > 0 && isSameMetric(r, boundaryRow) && r.tieBreakerRank === null)
+            .map(r => r.carId);
+        }
+      }
     }
 
     return [];
