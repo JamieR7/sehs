@@ -1,4 +1,4 @@
-js_content = """/**
+/**
  * PACK 130 GENEVA - PINEWOOD DERBY ENGINE (derby-engine.js)
  * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts.
  * Complete Audited & Patched Version
@@ -101,7 +101,7 @@ class DerbyEngine {
   loadDemoRoster() {
     this.state = this.getInitialState();
     const sampleCounts = { Lions: 4, Tigers: 6, Wolves: 8, Bears: 5, Webelos: 7, AOLs: 3 };
-    const sampleNames = ['Thunder', 'Swiss Miss', 'Jet d\\'Eau', 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
+    const sampleNames = ['Thunder', 'Swiss Miss', 'Jet d\'Eau', 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
     
     DENS.forEach(den => {
       const count = sampleCounts[den.id];
@@ -533,9 +533,3 @@ class DerbyEngine {
 // Expose globally for index.html
 window.DENS = DENS;
 window.DerbyEngine = DerbyEngine;
-"""
-
-with open("derby-engine.js", "w", encoding="utf-8") as f:
-    f.write(js_content)
-
-print("Saved derby-engine.js successfully.")
