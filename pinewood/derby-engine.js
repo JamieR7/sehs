@@ -1,7 +1,7 @@
 /**
  * PACK 130 GENEVA - PINEWOOD DERBY ENGINE (derby-engine.js)
- * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts.
- * Complete Audited & Patched Version (100% Pure ASCII)
+ * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts,
+ * and configurable per-Den qualifier counts (default 2, editable at Check-In).
  */
 
 const DENS = [
@@ -30,6 +30,17 @@ function shuffleArray(array) {
 class DerbyEngine {
   constructor() {
     this.state = this.loadState() || this.getInitialState();
+    // Backfill denQualifiers if loading an older saved state
+    if (!this.state.denQualifiers) {
+      this.state.denQualifiers = this.getDefaultDenQualifiers();
+      this.saveState();
+    }
+  }
+
+  getDefaultDenQualifiers() {
+    const map = {};
+    DENS.forEach(d => { map[d.id] = 2; });
+    return map;
   }
 
   getInitialState() {
@@ -39,9 +50,26 @@ class DerbyEngine {
       rulesMode: 'AVERAGE',
       stage: 'CHECK_IN', // CHECK_IN | QUALIFYING | SEMIFINALS | WILDCARD | FINALS
       activeHeatId: null,
+      denQualifiers: this.getDefaultDenQualifiers(),
       cars: [],
       heats: []
     };
+  }
+
+  getDenQualifierCount(denId) {
+    const val = this.state.denQualifiers?.[denId];
+    return typeof val === 'number' && val >= 1 ? val : 2;
+  }
+
+  setDenQualifierCount(denId, count) {
+    if (!this.state.denQualifiers) {
+      this.state.denQualifiers = this.getDefaultDenQualifiers();
+    }
+    const parsed = parseInt(count, 10);
+    if (!isNaN(parsed) && parsed >= 1 && parsed <= 6) {
+      this.state.denQualifiers[denId] = parsed;
+      this.saveState();
+    }
   }
 
   saveState() {
@@ -99,7 +127,10 @@ class DerbyEngine {
   }
 
   loadDemoRoster() {
+    const preservedQualifiers = { ...(this.state.denQualifiers || this.getDefaultDenQualifiers()) };
     this.state = this.getInitialState();
+    this.state.denQualifiers = preservedQualifiers;
+
     const sampleCounts = { Lions: 4, Tigers: 6, Wolves: 8, Bears: 5, Webelos: 7, AOLs: 3 };
     const sampleNames = ['Thunder', 'Swiss Miss', "Jet d'Eau", 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
 
@@ -357,14 +388,29 @@ class DerbyEngine {
   }
 
   /**
+   * Helper: Returns the primary advancement cutoff for any stage & group,
+   * respecting custom per-Den qualifier settings in QUALIFYING.
+   */
+  getGroupCutoff(stage, groupName) {
+    if (stage === 'QUALIFYING') {
+      return this.getDenQualifierCount(groupName);
+    }
+    if (stage === 'FINALS') {
+      return 1;
+    }
+    if (stage === 'SEMIFINALS' && this.state.rulesMode === 'POINTS') {
+      return 3;
+    }
+    return 2;
+  }
+
+  /**
    * Helper: Returns an array of tied car IDs at the advancement cutoff(s) for a given stage & group,
    * using exact cross-multiplication (AVERAGE) or exact points (POINTS).
    */
   getCutoffTieCars(stage, groupName) {
     const rows = this.getGroupStandings(stage, groupName);
-    const primaryCutoff = stage === 'FINALS'
-      ? 1
-      : (stage === 'SEMIFINALS' && this.state.rulesMode === 'POINTS' ? 3 : 2);
+    const primaryCutoff = this.getGroupCutoff(stage, groupName);
 
     // In SEMIFINALS under AVERAGE mode, Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard
     const cutoffsToCheck = (stage === 'SEMIFINALS' && this.state.rulesMode === 'AVERAGE')
@@ -448,21 +494,28 @@ class DerbyEngine {
     const groupACars = [];
     const groupBCars = [];
 
-    DENS.forEach((den, idx) => {
-      const standings = this.getGroupStandings('QUALIFYING', den.id);
-      const first = standings[0];
-      const second = standings[1];
+    // Balanced snake seeding across all Dens and any custom per-Den qualifier counts (e.g. Webelos = 4)
+    DENS.forEach((den, denIdx) => {
+      const standings = this.getGroupStandings('QUALIFYING', den.id).filter(r => r.racesCompleted > 0);
+      const limit = this.getDenQualifierCount(den.id);
+      const qualifiers = standings.slice(0, limit);
 
-      if (first) {
-        const carObj = this.state.cars.find(c => c.id === first.carId);
-        if (idx % 2 === 0) groupACars.push(carObj);
-        else groupBCars.push(carObj);
-      }
-      if (second) {
-        const carObj = this.state.cars.find(c => c.id === second.carId);
-        if (idx % 2 === 0) groupBCars.push(carObj);
-        else groupACars.push(carObj);
-      }
+      qualifiers.forEach((qRow, rankIdx) => {
+        const carObj = this.state.cars.find(c => c.id === qRow.carId);
+        if (!carObj) return;
+
+        // Alternate initial direction by Den, and alternate within the Den by rank (1st, 2nd, 3rd, 4th...)
+        // If Group A and Group B ever drift by >1 car due to odd qualifier counts, balance to smaller group
+        if (groupACars.length < groupBCars.length) {
+          groupACars.push(carObj);
+        } else if (groupBCars.length < groupACars.length) {
+          groupBCars.push(carObj);
+        } else if ((denIdx + rankIdx) % 2 === 0) {
+          groupACars.push(carObj);
+        } else {
+          groupBCars.push(carObj);
+        }
+      });
     });
 
     const semiRuns = this.state.rulesMode === 'AVERAGE' ? 3 : 2;
