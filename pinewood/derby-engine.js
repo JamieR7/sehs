@@ -14,6 +14,10 @@ const DENS = [
   { id: 'AOLs',    name: 'AOLs',    prefix: 'A',  emoji: '\u{1F3F9}' }
 ];
 
+// Non-consecutive lane progression: spreads 3-heat runs across Left/Center/Right
+// and covers all 6 unique lanes without repeats on up to 6-heat Finals.
+const STEPPED_LANE_ORDER = [1, 3, 5, 2, 4, 6];
+
 const STORAGE_KEY = 'PACK_130_DERBY_STATE_V1';
 
 /**
@@ -171,6 +175,11 @@ class DerbyEngine {
 
   removeCar(carId) {
     this.state.cars = this.state.cars.filter(c => c.id !== carId);
+    // Also remove any references from existing heats to avoid ghost entries
+    this.state.heats.forEach(h => {
+      h.lanes = h.lanes.filter(l => l.carId !== carId);
+    });
+    this.state.heats = this.state.heats.filter(h => h.lanes.length > 0);
     this.saveState();
   }
 
@@ -187,14 +196,23 @@ class DerbyEngine {
     this.state.rulesMode = preservedRulesMode;
 
     const sampleCounts = { Lions: 4, Tigers: 6, Wolves: 8, Bears: 5, Webelos: 7, AOLs: 3 };
+    const singularLabels = {
+      Lions: 'Lion',
+      Tigers: 'Tiger',
+      Wolves: 'Wolf',
+      Bears: 'Bear',
+      Webelos: 'Webelos',
+      AOLs: 'AOL'
+    };
     const sampleNames = ['Thunder', 'Swiss Miss', "Jet d'Eau", 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
 
     DENS.forEach(den => {
       const count = sampleCounts[den.id];
+      const singular = singularLabels[den.id] || den.id;
       for (let i = 1; i <= count; i++) {
         this.addCar(
           den.id,
-          `${den.id.slice(0, -1)} Cub ${i}`,
+          `${singular} Cub ${i}`,
           `${sampleNames[(i - 1) % sampleNames.length]} ${i}`
         );
       }
@@ -210,19 +228,20 @@ class DerbyEngine {
     if (N === 0) return [];
 
     // Case 1: 6 or fewer cars -> Shuffle initial lane order so check-in order doesn't bias lanes,
-    // then run together in `runsPerCar` heats, shifting +1 lane each heat
+    // then assign lanes using STEPPED_LANE_ORDER ([1, 3, 5, 2, 4, 6]) so consecutive runs jump by 2 lanes
+    // and up to 6 runs cover all 6 lanes without repeating.
     if (N <= 6) {
       const seededCars = shuffleArray(cars);
       const heats = [];
       for (let h = 0; h < runsPerCar; h++) {
         const lanes = [];
         for (let cIdx = 0; cIdx < N; cIdx++) {
-          const laneNum = ((cIdx + h) % 6) + 1;
+          const laneNum = STEPPED_LANE_ORDER[(cIdx + h) % 6];
           lanes.push({ lane: laneNum, carId: seededCars[cIdx].id, finish: null });
         }
         lanes.sort((a, b) => a.lane - b.lane);
         heats.push({
-          id: `${stage}_${groupName}_H${h + 1}_${Date.now().toString().slice(-3)}`,
+          id: `${stage}_${groupName}_H${h + 1}_${Date.now().toString().slice(-4)}_${Math.floor(Math.random() * 100)}`,
           stage,
           group: groupName,
           heatNumber: h + 1,
@@ -305,6 +324,7 @@ class DerbyEngine {
 
     // Fallback cyclic assignment if strict lane constraint needs relaxation
     const fallbackBuckets = Array.from({ length: numHeats }, () => []);
+    const fallbackCarLanes = new Map(cars.map(c => [c.id, new Set()]));
     let heatCursor = 0;
     for (let r = 0; r < runsPerCar; r++) {
       for (const car of cars) {
@@ -314,9 +334,14 @@ class DerbyEngine {
         ) {
           heatCursor = (heatCursor + 1) % numHeats;
         }
-        const usedLanes = new Set(fallbackBuckets[heatCursor].map(s => s.lane));
-        const lane = [1, 2, 3, 4, 5, 6].find(l => !usedLanes.has(l)) || 1;
+        const usedLanesInHeat = new Set(fallbackBuckets[heatCursor].map(s => s.lane));
+        const usedByCar = fallbackCarLanes.get(car.id);
+        const lane =
+          STEPPED_LANE_ORDER.find(l => !usedLanesInHeat.has(l) && !usedByCar.has(l)) ||
+          STEPPED_LANE_ORDER.find(l => !usedLanesInHeat.has(l)) ||
+          1;
         fallbackBuckets[heatCursor].push({ lane, carId: car.id, finish: null });
+        usedByCar.add(lane);
         heatCursor = (heatCursor + 1) % numHeats;
       }
     }
@@ -332,7 +357,7 @@ class DerbyEngine {
   }
 
   // ==========================================
-  // 3. STAGE TRANSITIONS & SCORING
+  // 3. STAGE TRANSITIONS, UNDO & SCORING
   // ==========================================
   startQualifying() {
     this.state.heats = [];
@@ -349,6 +374,45 @@ class DerbyEngine {
     this.saveState();
   }
 
+  /**
+   * Returns the stage that precedes the current stage so the user can safely undo a stage transition.
+   */
+  getPreviousStage() {
+    if (this.state.stage === 'FINALS') {
+      const hasWildcard = this.state.heats.some(h => h.stage === 'WILDCARD');
+      return hasWildcard ? 'WILDCARD' : 'SEMIFINALS';
+    }
+    if (this.state.stage === 'WILDCARD') {
+      return 'SEMIFINALS';
+    }
+    if (this.state.stage === 'SEMIFINALS') {
+      return 'QUALIFYING';
+    }
+    return null;
+  }
+
+  /**
+   * Reverts from the current stage back to the previous stage, clearing only the current stage's heats
+   * and preserving all completed heats and scores from the previous stage.
+   */
+  revertToPreviousStage() {
+    const prevStage = this.getPreviousStage();
+    if (!prevStage) return false;
+
+    const currentStage = this.state.stage;
+    this.state.heats = this.state.heats.filter(h => h.stage !== currentStage);
+    this.state.stage = prevStage;
+
+    const prevStageHeats = this.state.heats.filter(h => h.stage === prevStage);
+    const pendingInPrev = prevStageHeats.find(h => h.status === 'PENDING');
+    this.state.activeHeatId = pendingInPrev
+      ? pendingInPrev.id
+      : (prevStageHeats[prevStageHeats.length - 1]?.id || null);
+
+    this.saveState();
+    return true;
+  }
+
   recordHeatResult(heatId, laneFinishesMap) {
     const heat = this.state.heats.find(h => h.id === heatId);
     if (!heat) return;
@@ -358,7 +422,8 @@ class DerbyEngine {
     });
     heat.status = 'COMPLETED';
 
-    const nextPending = this.state.heats.find(h => h.status === 'PENDING');
+    const nextPending = this.state.heats.find(h => h.stage === this.state.stage && h.status === 'PENDING') ||
+                        this.state.heats.find(h => h.status === 'PENDING');
     this.state.activeHeatId = nextPending ? nextPending.id : heat.id;
     this.saveState();
   }
@@ -443,8 +508,18 @@ class DerbyEngine {
   }
 
   /**
+   * Helper: Returns true if the race is in Finals (or has Finals heats) and Wildcard was skipped in 2-group mode.
+   */
+  didSkipWildcardInTwoGroupMode() {
+    if (this.getEffectiveSemiGroupCount() !== 2) return false;
+    const hasFinals = this.state.heats.some(h => h.stage === 'FINALS');
+    const hasWildcard = this.state.heats.some(h => h.stage === 'WILDCARD');
+    return hasFinals && !hasWildcard;
+  }
+
+  /**
    * Helper: Returns the primary advancement cutoff for any stage & group,
-   * respecting custom per-Den qualifier settings and 2-vs-3 Semifinal format.
+   * respecting custom per-Den qualifier settings, 2-vs-3 Semifinal format, and skipped Wildcard.
    */
   getGroupCutoff(stage, groupName) {
     if (stage === 'QUALIFYING') {
@@ -458,7 +533,11 @@ class DerbyEngine {
       if (this.getEffectiveSemiGroupCount() === 3) {
         return 2;
       }
-      return this.state.rulesMode === 'POINTS' ? 3 : 2;
+      // In 2-group mode, if POINTS mode OR if Wildcard was skipped to go straight to Finals, Top 3 advance
+      if (this.state.rulesMode === 'POINTS' || this.didSkipWildcardInTwoGroupMode()) {
+        return 3;
+      }
+      return 2;
     }
     return 2;
   }
@@ -471,12 +550,12 @@ class DerbyEngine {
     const rows = this.getGroupStandings(stage, groupName);
     const primaryCutoff = this.getGroupCutoff(stage, groupName);
 
-    // In 2-Group SEMIFINALS under AVERAGE mode, Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard.
-    // In 3-Group SEMIFINALS, Top 2 from each group advance directly to the 6-car Final (no Wildcard needed).
+    // In 2-Group SEMIFINALS under AVERAGE mode (before skipping Wildcard), Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard.
     const isTwoGroupAvgSemi =
       stage === 'SEMIFINALS' &&
       this.state.rulesMode === 'AVERAGE' &&
-      this.getEffectiveSemiGroupCount() === 2;
+      this.getEffectiveSemiGroupCount() === 2 &&
+      !this.didSkipWildcardInTwoGroupMode();
 
     const cutoffsToCheck = isTwoGroupAvgSemi ? [2, 5] : [primaryCutoff];
 
@@ -527,13 +606,13 @@ class DerbyEngine {
 
   spawnTieBreakerHeat(stage, groupName, carIds) {
     const lanes = carIds.slice(0, 6).map((carId, idx) => ({
-      lane: idx + 1,
+      lane: STEPPED_LANE_ORDER[idx % 6],
       carId,
       finish: null
-    }));
+    })).sort((a, b) => a.lane - b.lane);
 
     const tbHeat = {
-      id: `${stage}_${groupName}_TB_${Date.now().toString().slice(-3)}`,
+      id: `${stage}_${groupName}_TB_${Date.now().toString().slice(-4)}_${Math.floor(Math.random() * 100)}`,
       stage,
       group: groupName,
       heatNumber: 'TIE-BREAKER',
@@ -591,25 +670,30 @@ class DerbyEngine {
       ? ['Semifinal A', 'Semifinal B', 'Semifinal C']
       : ['Semifinal A', 'Semifinal B'];
     const buckets = Array.from({ length: numGroups }, () => []);
+    const targetMaxPerGroup = Math.ceil(allQualifiersOrdered.length / numGroups);
 
-    // Assign each qualifier to the smallest group that has the fewest cars from the same Den
+    // Assign each qualifier, prioritizing Den separation as long as a group hasn't hit targetMaxPerGroup
     allQualifiersOrdered.forEach((item, idx) => {
-      const candidates = buckets.map((b, gIdx) => ({
-        gIdx,
-        size: b.length,
-        sameDenCount: b.filter(c => c.den === item.denId).length
-      }));
+      const candidates = buckets
+        .map((b, gIdx) => ({
+          gIdx,
+          size: b.length,
+          sameDenCount: b.filter(c => c.den === item.denId).length
+        }))
+        .filter(c => c.size < targetMaxPerGroup);
 
       candidates.sort((a, b) => {
-        if (a.size !== b.size) return a.size - b.size;
         if (a.sameDenCount !== b.sameDenCount) return a.sameDenCount - b.sameDenCount;
+        if (a.size !== b.size) return a.size - b.size;
         return ((a.gIdx + idx) % numGroups) - ((b.gIdx + idx) % numGroups);
       });
 
-      buckets[candidates[0].gIdx].push(item.car);
+      const chosenIdx = candidates.length > 0 ? candidates[0].gIdx : (idx % numGroups);
+      buckets[chosenIdx].push(item.car);
     });
 
-    const semiRuns = this.state.rulesMode === 'AVERAGE' ? 3 : 2;
+    // Always run 3 heats in Semifinals for consistent 3-lane track coverage across both modes
+    const semiRuns = 3;
     const generatedHeats = [];
 
     groupNames.forEach((gName, gIdx) => {
@@ -639,7 +723,7 @@ class DerbyEngine {
       semiB[2]?.carId, semiB[3]?.carId, semiB[4]?.carId
     ].filter(Boolean).slice(0, 6);
 
-    const wildcardCars = wildcardPoolIds.map(id => this.state.cars.find(c => c.id === id));
+    const wildcardCars = wildcardPoolIds.map(id => this.state.cars.find(c => c.id === id)).filter(Boolean);
     const wcHeats = this.generateGroupHeats(wildcardCars, 'WILDCARD', 'Wildcard Race', 1);
 
     this.state.heats.push(...wcHeats);
@@ -684,10 +768,10 @@ class DerbyEngine {
       ].filter(Boolean);
     }
 
-    const finalCars = finalistIds.map(id => this.state.cars.find(c => c.id === id));
+    const finalCars = finalistIds.map(id => this.state.cars.find(c => c.id === id)).filter(Boolean);
     const finalRuns = typeof this.state.finalRuns === 'number' && this.state.finalRuns >= 1
       ? this.state.finalRuns
-      : (this.state.rulesMode === 'AVERAGE' ? 2 : 3);
+      : 3;
     const finalHeats = this.generateGroupHeats(finalCars, 'FINALS', 'Grand Final', finalRuns);
 
     this.state.heats.push(...finalHeats);
