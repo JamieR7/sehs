@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pack 130 Geneva: Pinewood Derby Manager</title>
+  <title>Pack 130 Geneva — Pinewood Derby Manager</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -28,13 +28,34 @@
         </div>
       </div>
 
-      <!-- Rules Mode & Stage Pill -->
-      <div class="flex flex-wrap items-center gap-3">
-        <div class="bg-blue-950/80 px-3 py-1.5 rounded-lg border border-blue-700 flex items-center gap-2 text-xs">
-          <span class="text-blue-200 font-semibold">Scoring Mode:</span>
+      <!-- Rules Mode, Semis Format, Final Heats & Stage Pill -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="bg-blue-950/80 px-2.5 py-1.5 rounded-lg border border-blue-700 flex items-center gap-1.5 text-xs">
+          <span class="text-blue-200 font-semibold">Scoring:</span>
           <select id="rulesModeSelect" onchange="changeRulesMode(this.value)" class="bg-transparent font-bold text-[#fbba07] focus:outline-none cursor-pointer">
-            <option value="AVERAGE" class="text-slate-900">Deck Rules (Lowest Avg + Wildcard)</option>
-            <option value="POINTS" class="text-slate-900">Manual Plan (6-5-4-3-2-1 Pts + Top 3)</option>
+            <option value="AVERAGE" class="text-slate-900">Lowest Avg</option>
+            <option value="POINTS" class="text-slate-900">Points (6..1)</option>
+          </select>
+        </div>
+
+        <div class="bg-blue-950/80 px-2.5 py-1.5 rounded-lg border border-blue-700 flex items-center gap-1.5 text-xs" title="Choose 2 Semifinals (with Wildcard option) or 3 Semifinals of <=6 cars (Top 2 each advance to Final)">
+          <span class="text-blue-200 font-semibold">Semis:</span>
+          <select id="semiFormatSelect" onchange="changeSemiFormat(this.value)" class="bg-transparent font-bold text-[#fbba07] focus:outline-none cursor-pointer">
+            <option value="AUTO" class="text-slate-900">Auto (3 Semis if &gt;12)</option>
+            <option value="2_GROUPS" class="text-slate-900">2 Groups (A &amp; B)</option>
+            <option value="3_GROUPS" class="text-slate-900">3 Groups (A, B, C &bull; Top 2)</option>
+          </select>
+        </div>
+
+        <div class="bg-blue-950/80 px-2.5 py-1.5 rounded-lg border border-blue-700 flex items-center gap-1.5 text-xs" title="Number of heats in the 6-car Grand Final">
+          <span class="text-blue-200 font-semibold">Final:</span>
+          <select id="finalRunsSelect" onchange="changeFinalRuns(this.value)" class="bg-transparent font-bold text-[#fbba07] focus:outline-none cursor-pointer">
+            <option value="1" class="text-slate-900">1 Heat</option>
+            <option value="2" class="text-slate-900">2 Heats</option>
+            <option value="3" class="text-slate-900">3 Heats</option>
+            <option value="4" class="text-slate-900">4 Heats</option>
+            <option value="5" class="text-slate-900">5 Heats</option>
+            <option value="6" class="text-slate-900">6 Heats (All Lanes)</option>
           </select>
         </div>
 
@@ -43,13 +64,13 @@
         </div>
 
         <!-- Backup / Reset Controls -->
-        <button onclick="exportJson()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg" title="Download JSON Backup">
+        <button onclick="exportJson()" class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg" title="Download JSON Backup">
           &#128190; Export
         </button>
-        <label class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer" title="Restore JSON Backup">
+        <label class="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg cursor-pointer" title="Restore JSON Backup">
           &#128194; Import <input type="file" accept=".json" onchange="importJson(event)" class="hidden" />
         </label>
-        <button onclick="confirmReset()" class="red-bg hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg">
+        <button onclick="confirmReset()" class="red-bg hover:bg-red-700 text-white text-xs font-bold px-2.5 py-1.5 rounded-lg">
           &#9888;&#65039; Reset
         </button>
       </div>
@@ -82,7 +103,7 @@
       <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 class="text-lg font-black text-[#004587] uppercase">Webelos Car Check-In &amp; Inspection</h2>
-          <p class="text-xs text-slate-500">Log each Scout and car into their Den. You can also adjust how many cars advance per Den (default: Top 2).</p>
+          <p class="text-xs text-slate-500">Log each Scout and car into their Den. Adjust how many cars advance per Den (e.g., Top 4 for Webelos; if total &gt;12, Semis auto-split into 3 groups of &le;6).</p>
         </div>
         <div class="flex flex-wrap gap-3">
           <button onclick="loadDemoAndRender()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-lg border border-slate-300">
@@ -220,7 +241,7 @@
     <section id="view-BRACKET" class="hidden space-y-6">
       <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
         <h2 class="text-lg font-black text-[#004587] uppercase">Pack 130 Championship Pathway</h2>
-        <p id="bracketPathwaySubtitle" class="text-xs text-slate-500">6 Dens &rarr; Semifinalists (Split into Groups A &amp; B) &rarr; 6 Finalists &rarr; Pack Champion</p>
+        <p id="bracketPathwaySubtitle" class="text-xs text-slate-500">6 Dens &rarr; Semifinalists &rarr; 6 Finalists &rarr; Pack Champion</p>
       </div>
       <div id="bracketContainer" class="grid grid-cols-1 lg:grid-cols-3 gap-6"></div>
     </section>
@@ -237,12 +258,8 @@
     let currentTapOrder = []; // Stores lane numbers tapped in sequence for active heat
     let activeStandingsStage = 'QUALIFYING';
 
-    function getTotalPlannedSemifinalists() {
-      return DENS.reduce((sum, d) => sum + engine.getDenQualifierCount(d.id), 0);
-    }
-
     function initApp() {
-      document.getElementById('rulesModeSelect').value = engine.state.rulesMode;
+      syncHeaderControls();
       if (engine.state.stage !== 'CHECK_IN' && engine.state.heats.length > 0) {
         activeStandingsStage = engine.state.stage;
         switchTab('RACE_CONTROL');
@@ -250,6 +267,12 @@
         switchTab('CHECK_IN');
       }
       renderAll();
+    }
+
+    function syncHeaderControls() {
+      document.getElementById('rulesModeSelect').value = engine.state.rulesMode || 'AVERAGE';
+      document.getElementById('semiFormatSelect').value = engine.state.semiFormat || 'AUTO';
+      document.getElementById('finalRunsSelect').value = String(engine.state.finalRuns || 3);
     }
 
     function switchTab(tabId) {
@@ -274,12 +297,28 @@
       renderAll();
     }
 
+    function changeSemiFormat(format) {
+      engine.state.semiFormat = format;
+      engine.saveState();
+      renderAll();
+    }
+
+    function changeFinalRuns(runs) {
+      const parsed = parseInt(runs, 10);
+      if (!isNaN(parsed) && parsed >= 1 && parsed <= 6) {
+        engine.state.finalRuns = parsed;
+        engine.saveState();
+        renderAll();
+      }
+    }
+
     function handleDenQualifierChange(denId, newCount) {
       engine.setDenQualifierCount(denId, newCount);
       renderAll();
     }
 
     function renderAll() {
+      syncHeaderControls();
       document.getElementById('stageBadge').textContent = `STAGE: ${engine.state.stage}`;
       renderCheckIn();
       renderRaceControl();
@@ -516,24 +555,28 @@
         `;
       }
 
-      const totalSemiSlots = getTotalPlannedSemifinalists();
+      const totalSemiSlots = engine.getTotalPlannedSemifinalists();
+      const numSemiGroups = engine.getEffectiveSemiGroupCount();
+      const finalHeatsCount = engine.state.finalRuns || 3;
 
       // Stage transition button logic
       let nextStageControls = '';
       if (stageHeats.length > 0 && pendingStageHeats.length === 0) {
         if (engine.state.stage === 'QUALIFYING') {
-          nextStageControls = `<button onclick="handleAdvanceToSemifinals()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#128293; All Qualifying Complete! Generate ${totalSemiSlots}-Car Semifinals &rarr;</button>`;
+          nextStageControls = `<button onclick="handleAdvanceToSemifinals()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#128293; All Qualifying Complete! Generate ${totalSemiSlots}-Car Semifinals (${numSemiGroups} Groups) &rarr;</button>`;
         } else if (engine.state.stage === 'SEMIFINALS') {
-          if (engine.state.rulesMode === 'AVERAGE') {
+          if (numSemiGroups === 3) {
+            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; 3 Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
+          } else if (engine.state.rulesMode === 'AVERAGE') {
             nextStageControls = `
               <button onclick="handleAdvanceToWildcard()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-4 py-2.5 rounded-lg shadow uppercase">&#9889; Run Wildcard Race (For Final 2 Spots) &rarr;</button>
-              <button onclick="handleAdvanceToGrandFinal()" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance) &rarr;</button>
+              <button onclick="handleAdvanceToGrandFinal()" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance to ${finalHeatsCount}-Heat Final) &rarr;</button>
             `;
           } else {
-            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Semifinals Complete! Generate 6-Car Grand Final &rarr;</button>`;
+            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
           }
         } else if (engine.state.stage === 'WILDCARD') {
-          nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Wildcard Complete! Launch 6-Car Grand Final &rarr;</button>`;
+          nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Wildcard Complete! Launch 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
         } else if (engine.state.stage === 'FINALS') {
           nextStageControls = `<button onclick="handleViewChampion()" class="gold-bg text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127881; Grand Final Complete! View Pack Champion &rarr;</button>`;
         }
@@ -686,7 +729,7 @@
 
       let groups = [];
       if (stageName === 'QUALIFYING') groups = DENS.map(d => d.id);
-      else if (stageName === 'SEMIFINALS') groups = ['Semifinal A', 'Semifinal B'];
+      else if (stageName === 'SEMIFINALS') groups = engine.getSemiGroupNames();
       else if (stageName === 'WILDCARD') groups = ['Wildcard Race'];
       else if (stageName === 'FINALS') groups = ['Grand Final'];
 
@@ -761,11 +804,13 @@
     function renderBracket() {
       const container = document.getElementById('bracketContainer');
       const rankLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th'];
-      const totalPlannedSemi = getTotalPlannedSemifinalists();
+      const totalPlannedSemi = engine.getTotalPlannedSemifinalists();
+      const numSemiGroups = engine.getEffectiveSemiGroupCount();
+      const finalHeatsCount = engine.state.finalRuns || 3;
 
       const subtitleEl = document.getElementById('bracketPathwaySubtitle');
       if (subtitleEl) {
-        subtitleEl.innerHTML = `6 Dens &rarr; ${totalPlannedSemi} Semifinalists (Split into Groups A &amp; B) &rarr; 6 Finalists &rarr; Pack Champion`;
+        subtitleEl.innerHTML = `6 Dens &rarr; ${totalPlannedSemi} Semifinalists (${numSemiGroups} Groups) &rarr; 6 Finalists (${finalHeatsCount} Heats) &rarr; Pack Champion`;
       }
 
       // Column 1: 6 Dens (Dynamic Top K per Den) — SCOUT NAME PRIMARY, (CAR NAME) IN BRACKETS
@@ -796,12 +841,12 @@
         `;
       }).join('');
 
-      // Column 2: Semifinals A & B + Wildcard
-      const semiA = engine.getGroupStandings('SEMIFINALS', 'Semifinal A');
-      const semiB = engine.getGroupStandings('SEMIFINALS', 'Semifinal B');
+      // Column 2: Semifinals (A, B, and optional C) + Wildcard
+      const semiGroupNames = engine.getSemiGroupNames();
       const wc = engine.getGroupStandings('WILDCARD', 'Wildcard Race');
-      const semiAdvanceCutoff = engine.state.rulesMode === 'POINTS' && wc.length === 0 ? 3 : 2;
-      const actualSemiCount = (semiA.length + semiB.length) || totalPlannedSemi;
+      const semiAdvanceCutoff = numSemiGroups === 3
+        ? 2
+        : (engine.state.rulesMode === 'POINTS' && wc.length === 0 ? 3 : 2);
 
       const renderBracketRow = (r, i, cutoff, highlightColor = 'border-green-500') => `
         <div class="p-2 rounded bg-slate-50 flex items-center justify-between gap-2 ${i < cutoff ? `font-bold border-l-4 ${highlightColor}` : ''}">
@@ -815,6 +860,22 @@
         </div>
       `;
 
+      let totalActualSemiCars = 0;
+      const semiGroupsHtml = semiGroupNames.map(gName => {
+        const rows = engine.getGroupStandings('SEMIFINALS', gName);
+        totalActualSemiCars += rows.length;
+        return `
+          <div>
+            <h4 class="font-black text-xs uppercase text-slate-600 mb-2">${gName} ${rows.length ? `(${rows.length} Cars &bull; Top ${semiAdvanceCutoff} Advance)` : ''}</h4>
+            <div class="space-y-1 text-xs">
+              ${rows.length ? rows.map((r, i) => renderBracketRow(r, i, semiAdvanceCutoff)).join('') : `<p class="text-xs text-slate-400 italic">Waiting for ${gName}...</p>`}
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const actualSemiCount = totalActualSemiCars || totalPlannedSemi;
+
       // Column 3: Grand Final
       const finals = engine.getGroupStandings('FINALS', 'Grand Final');
       const finalsTies = typeof engine.getCutoffTieCars === 'function' ? engine.getCutoffTieCars('FINALS', 'Grand Final') : [];
@@ -827,19 +888,8 @@
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4">
-          <div class="red-bg text-white px-3 py-2 rounded font-black text-xs uppercase tracking-wider">2. Semifinals (${actualSemiCount} Cars)</div>
-          <div>
-            <h4 class="font-black text-xs uppercase text-slate-600 mb-2">Semifinal Group A ${semiA.length ? `(${semiA.length} Cars)` : ''}</h4>
-            <div class="space-y-1 text-xs">
-              ${semiA.length ? semiA.map((r, i) => renderBracketRow(r, i, semiAdvanceCutoff)).join('') : '<p class="text-xs text-slate-400 italic">Waiting for Semifinals...</p>'}
-            </div>
-          </div>
-          <div>
-            <h4 class="font-black text-xs uppercase text-slate-600 mb-2">Semifinal Group B ${semiB.length ? `(${semiB.length} Cars)` : ''}</h4>
-            <div class="space-y-1 text-xs">
-              ${semiB.length ? semiB.map((r, i) => renderBracketRow(r, i, semiAdvanceCutoff)).join('') : '<p class="text-xs text-slate-400 italic">Waiting for Semifinals...</p>'}
-            </div>
-          </div>
+          <div class="red-bg text-white px-3 py-2 rounded font-black text-xs uppercase tracking-wider">2. Semifinals (${actualSemiCount} Cars &bull; ${numSemiGroups} Groups)</div>
+          ${semiGroupsHtml}
           ${wc.length ? `
             <div>
               <h4 class="font-black text-xs uppercase text-amber-700 mb-2">&#9889; Wildcard Race (Top 2 Advance)</h4>
@@ -851,7 +901,7 @@
         </div>
 
         <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-4">
-          <div class="bg-emerald-700 text-white px-3 py-2 rounded font-black text-xs uppercase tracking-wider">3. Grand Final (6 Lanes)</div>
+          <div class="bg-emerald-700 text-white px-3 py-2 rounded font-black text-xs uppercase tracking-wider">3. Grand Final (6 Lanes &bull; ${finalHeatsCount} Heats)</div>
           ${champ ? `
             <div class="gold-bg p-4 rounded-xl text-center shadow-inner">
               <div class="text-3xl mb-1">&#127942;</div>
@@ -899,6 +949,12 @@
           engine.state = JSON.parse(e.target.result);
           if (!engine.state.denQualifiers) {
             engine.state.denQualifiers = engine.getDefaultDenQualifiers();
+          }
+          if (!engine.state.semiFormat) {
+            engine.state.semiFormat = 'AUTO';
+          }
+          if (typeof engine.state.finalRuns !== 'number') {
+            engine.state.finalRuns = 3;
           }
           engine.saveState();
           renderAll();
