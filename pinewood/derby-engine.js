@@ -1,7 +1,8 @@
 /**
  * PACK 130 GENEVA - PINEWOOD DERBY ENGINE (derby-engine.js)
  * Pure JS state & scheduling engine for 6 Dens, 6 Lanes, variable car counts,
- * and configurable per-Den qualifier counts (default 2, editable at Check-In).
+ * configurable per-Den qualifiers, 2-or-3 Semifinal groups, and selectable Final heats.
+ * Complete Audited & Patched Version (100% Pure ASCII)
  */
 
 const DENS = [
@@ -30,9 +31,21 @@ function shuffleArray(array) {
 class DerbyEngine {
   constructor() {
     this.state = this.loadState() || this.getInitialState();
-    // Backfill denQualifiers if loading an older saved state
+    // Backfill new settings if loading an older saved state
+    letneedsSave = false;
     if (!this.state.denQualifiers) {
       this.state.denQualifiers = this.getDefaultDenQualifiers();
+      letneedsSave = true;
+    }
+    if (!this.state.semiFormat) {
+      this.state.semiFormat = 'AUTO'; // 'AUTO' | '2_GROUPS' | '3_GROUPS'
+      letneedsSave = true;
+    }
+    if (typeof this.state.finalRuns !== 'number') {
+      this.state.finalRuns = 3; // Default to 3 heats in Grand Final (editable 1..6)
+      letneedsSave = true;
+    }
+    if (letneedsSave) {
       this.saveState();
     }
   }
@@ -45,9 +58,14 @@ class DerbyEngine {
 
   getInitialState() {
     return {
-      // "AVERAGE" = Lowest avg finish wins + Top 2 per semi + Wildcard race (Slide Deck)
-      // "POINTS"  = 6-5-4-3-2-1 pts + Top 3 per semi advance (Manual Plan)
+      // "AVERAGE" = Lowest avg finish wins + Wildcard option (Slide Deck)
+      // "POINTS"  = 6-5-4-3-2-1 pts (Manual Plan)
       rulesMode: 'AVERAGE',
+      // "AUTO" = 2 Semis if <=12 qualifiers, 3 Semis (Top 2 each) if >12 qualifiers
+      // "2_GROUPS" = Always 2 Semifinals (A & B)
+      // "3_GROUPS" = Always 3 Semifinals (A, B, C - Top 2 each advance to 6-car Final)
+      semiFormat: 'AUTO',
+      finalRuns: 3, // Number of heats in the Grand Final (1..6)
       stage: 'CHECK_IN', // CHECK_IN | QUALIFYING | SEMIFINALS | WILDCARD | FINALS
       activeHeatId: null,
       denQualifiers: this.getDefaultDenQualifiers(),
@@ -70,6 +88,36 @@ class DerbyEngine {
       this.state.denQualifiers[denId] = parsed;
       this.saveState();
     }
+  }
+
+  getTotalPlannedSemifinalists() {
+    return DENS.reduce((sum, d) => sum + this.getDenQualifierCount(d.id), 0);
+  }
+
+  /**
+   * Returns 2 or 3 depending on semiFormat and/or active Semifinal heats
+   */
+  getEffectiveSemiGroupCount() {
+    const existingSemiC = this.state.heats.some(
+      h => h.stage === 'SEMIFINALS' && h.group === 'Semifinal C'
+    );
+    const existingSemiA = this.state.heats.some(
+      h => h.stage === 'SEMIFINALS' && h.group === 'Semifinal A'
+    );
+    // If Semifinals have already been generated, respect the generated structure
+    if (existingSemiA) {
+      return existingSemiC ? 3 : 2;
+    }
+    if (this.state.semiFormat === '3_GROUPS') return 3;
+    if (this.state.semiFormat === '2_GROUPS') return 2;
+    // AUTO mode: use 3 groups whenever total planned semifinalists > 12
+    return this.getTotalPlannedSemifinalists() > 12 ? 3 : 2;
+  }
+
+  getSemiGroupNames() {
+    return this.getEffectiveSemiGroupCount() === 3
+      ? ['Semifinal A', 'Semifinal B', 'Semifinal C']
+      : ['Semifinal A', 'Semifinal B'];
   }
 
   saveState() {
@@ -128,8 +176,15 @@ class DerbyEngine {
 
   loadDemoRoster() {
     const preservedQualifiers = { ...(this.state.denQualifiers || this.getDefaultDenQualifiers()) };
+    const preservedSemiFormat = this.state.semiFormat || 'AUTO';
+    const preservedFinalRuns = this.state.finalRuns || 3;
+    const preservedRulesMode = this.state.rulesMode || 'AVERAGE';
+
     this.state = this.getInitialState();
     this.state.denQualifiers = preservedQualifiers;
+    this.state.semiFormat = preservedSemiFormat;
+    this.state.finalRuns = preservedFinalRuns;
+    this.state.rulesMode = preservedRulesMode;
 
     const sampleCounts = { Lions: 4, Tigers: 6, Wolves: 8, Bears: 5, Webelos: 7, AOLs: 3 };
     const sampleNames = ['Thunder', 'Swiss Miss', "Jet d'Eau", 'Red Arrow', 'Matterhorn', 'Fondue Express', 'Vortex', 'Falcon', 'Cobra'];
@@ -389,7 +444,7 @@ class DerbyEngine {
 
   /**
    * Helper: Returns the primary advancement cutoff for any stage & group,
-   * respecting custom per-Den qualifier settings in QUALIFYING.
+   * respecting custom per-Den qualifier settings and 2-vs-3 Semifinal format.
    */
   getGroupCutoff(stage, groupName) {
     if (stage === 'QUALIFYING') {
@@ -398,8 +453,12 @@ class DerbyEngine {
     if (stage === 'FINALS') {
       return 1;
     }
-    if (stage === 'SEMIFINALS' && this.state.rulesMode === 'POINTS') {
-      return 3;
+    if (stage === 'SEMIFINALS') {
+      // If running 3 Semifinal groups (A, B, C), Top 2 from each of the 3 groups advance to 6-car Grand Final
+      if (this.getEffectiveSemiGroupCount() === 3) {
+        return 2;
+      }
+      return this.state.rulesMode === 'POINTS' ? 3 : 2;
     }
     return 2;
   }
@@ -412,10 +471,14 @@ class DerbyEngine {
     const rows = this.getGroupStandings(stage, groupName);
     const primaryCutoff = this.getGroupCutoff(stage, groupName);
 
-    // In SEMIFINALS under AVERAGE mode, Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard
-    const cutoffsToCheck = (stage === 'SEMIFINALS' && this.state.rulesMode === 'AVERAGE')
-      ? [2, 5]
-      : [primaryCutoff];
+    // In 2-Group SEMIFINALS under AVERAGE mode, Top 2 advance to Finals AND 3rd-5th (cutoff 5) advance to Wildcard.
+    // In 3-Group SEMIFINALS, Top 2 from each group advance directly to the 6-car Final (no Wildcard needed).
+    const isTwoGroupAvgSemi =
+      stage === 'SEMIFINALS' &&
+      this.state.rulesMode === 'AVERAGE' &&
+      this.getEffectiveSemiGroupCount() === 2;
+
+    const cutoffsToCheck = isTwoGroupAvgSemi ? [2, 5] : [primaryCutoff];
 
     const isSameMetric = (r1, r2) => {
       if (this.state.rulesMode === 'AVERAGE') {
@@ -448,7 +511,7 @@ class DerbyEngine {
   getStageUnresolvedTies(stage) {
     let groups = [];
     if (stage === 'QUALIFYING') groups = DENS.map(d => d.id);
-    else if (stage === 'SEMIFINALS') groups = ['Semifinal A', 'Semifinal B'];
+    else if (stage === 'SEMIFINALS') groups = this.getSemiGroupNames();
     else if (stage === 'WILDCARD') groups = ['Wildcard Race'];
     else if (stage === 'FINALS') groups = ['Grand Final'];
 
@@ -491,40 +554,74 @@ class DerbyEngine {
       h => h.stage === 'QUALIFYING'
     );
 
-    const groupACars = [];
-    const groupBCars = [];
+    // Collect qualifiers by rank tier across all 6 Dens so 1st-place Den winners
+    // and 2nd-place Den runners-up are distributed first, followed by 3rd/4th-place qualifiers.
+    const maxQuals = Math.max(...DENS.map(d => this.getDenQualifierCount(d.id)));
+    const allQualifiersOrdered = [];
 
-    // Balanced snake seeding across all Dens and any custom per-Den qualifier counts (e.g. Webelos = 4)
-    DENS.forEach((den, denIdx) => {
-      const standings = this.getGroupStandings('QUALIFYING', den.id).filter(r => r.racesCompleted > 0);
-      const limit = this.getDenQualifierCount(den.id);
-      const qualifiers = standings.slice(0, limit);
-
-      qualifiers.forEach((qRow, rankIdx) => {
-        const carObj = this.state.cars.find(c => c.id === qRow.carId);
-        if (!carObj) return;
-
-        // Alternate initial direction by Den, and alternate within the Den by rank (1st, 2nd, 3rd, 4th...)
-        // If Group A and Group B ever drift by >1 car due to odd qualifier counts, balance to smaller group
-        if (groupACars.length < groupBCars.length) {
-          groupACars.push(carObj);
-        } else if (groupBCars.length < groupACars.length) {
-          groupBCars.push(carObj);
-        } else if ((denIdx + rankIdx) % 2 === 0) {
-          groupACars.push(carObj);
-        } else {
-          groupBCars.push(carObj);
+    for (let rankIdx = 0; rankIdx < maxQuals; rankIdx++) {
+      // Alternate Den direction on odd/even rank tiers (snake order)
+      const denOrder = rankIdx % 2 === 0 ? DENS : [...DENS].reverse();
+      denOrder.forEach(den => {
+        const limit = this.getDenQualifierCount(den.id);
+        if (rankIdx < limit) {
+          const standings = this.getGroupStandings('QUALIFYING', den.id).filter(r => r.racesCompleted > 0);
+          const qRow = standings[rankIdx];
+          if (qRow) {
+            const carObj = this.state.cars.find(c => c.id === qRow.carId);
+            if (carObj) {
+              allQualifiersOrdered.push({ car: carObj, denId: den.id, rank: rankIdx + 1 });
+            }
+          }
         }
       });
+    }
+
+    // Decide 2 or 3 Semifinal groups based on semiFormat & actual qualifier count
+    let numGroups = 2;
+    if (this.state.semiFormat === '3_GROUPS') {
+      numGroups = 3;
+    } else if (this.state.semiFormat === '2_GROUPS') {
+      numGroups = 2;
+    } else {
+      numGroups = allQualifiersOrdered.length > 12 ? 3 : 2;
+    }
+
+    const groupNames = numGroups === 3
+      ? ['Semifinal A', 'Semifinal B', 'Semifinal C']
+      : ['Semifinal A', 'Semifinal B'];
+    const buckets = Array.from({ length: numGroups }, () => []);
+
+    // Assign each qualifier to the smallest group that has the fewest cars from the same Den
+    allQualifiersOrdered.forEach((item, idx) => {
+      const candidates = buckets.map((b, gIdx) => ({
+        gIdx,
+        size: b.length,
+        sameDenCount: b.filter(c => c.den === item.denId).length
+      }));
+
+      candidates.sort((a, b) => {
+        if (a.size !== b.size) return a.size - b.size;
+        if (a.sameDenCount !== b.sameDenCount) return a.sameDenCount - b.sameDenCount;
+        return ((a.gIdx + idx) % numGroups) - ((b.gIdx + idx) % numGroups);
+      });
+
+      buckets[candidates[0].gIdx].push(item.car);
     });
 
     const semiRuns = this.state.rulesMode === 'AVERAGE' ? 3 : 2;
-    const semiAHeats = this.generateGroupHeats(groupACars, 'SEMIFINALS', 'Semifinal A', semiRuns);
-    const semiBHeats = this.generateGroupHeats(groupBCars, 'SEMIFINALS', 'Semifinal B', semiRuns);
+    const generatedHeats = [];
 
-    this.state.heats.push(...semiAHeats, ...semiBHeats);
+    groupNames.forEach((gName, gIdx) => {
+      if (buckets[gIdx].length > 0) {
+        const gHeats = this.generateGroupHeats(buckets[gIdx], 'SEMIFINALS', gName, semiRuns);
+        generatedHeats.push(...gHeats);
+      }
+    });
+
+    this.state.heats.push(...generatedHeats);
     this.state.stage = 'SEMIFINALS';
-    this.state.activeHeatId = semiAHeats[0]?.id || null;
+    this.state.activeHeatId = generatedHeats[0]?.id || null;
     this.saveState();
   }
 
@@ -557,18 +654,30 @@ class DerbyEngine {
       h => h.stage !== 'FINALS'
     );
 
+    const numSemiGroups = this.getEffectiveSemiGroupCount();
     const semiA = this.getGroupStandings('SEMIFINALS', 'Semifinal A');
     const semiB = this.getGroupStandings('SEMIFINALS', 'Semifinal B');
+    const semiC = this.getGroupStandings('SEMIFINALS', 'Semifinal C');
     let finalistIds = [];
 
     const wcStandings = this.getGroupStandings('WILDCARD', 'Wildcard Race');
-    if (wcStandings.length > 0) {
+
+    if (numSemiGroups === 3) {
+      // 3 Semifinal groups: Top 2 from A, B, and C = 6 finalists
+      finalistIds = [
+        semiA[0]?.carId, semiA[1]?.carId,
+        semiB[0]?.carId, semiB[1]?.carId,
+        semiC[0]?.carId, semiC[1]?.carId
+      ].filter(Boolean);
+    } else if (wcStandings.length > 0) {
+      // 2 Semifinal groups + Wildcard: Top 2 from A & B + Top 2 from Wildcard = 6 finalists
       finalistIds = [
         semiA[0]?.carId, semiA[1]?.carId,
         semiB[0]?.carId, semiB[1]?.carId,
         wcStandings[0]?.carId, wcStandings[1]?.carId
       ].filter(Boolean);
     } else {
+      // 2 Semifinal groups without Wildcard: Top 3 from A & B = 6 finalists
       finalistIds = [
         semiA[0]?.carId, semiA[1]?.carId, semiA[2]?.carId,
         semiB[0]?.carId, semiB[1]?.carId, semiB[2]?.carId
@@ -576,7 +685,9 @@ class DerbyEngine {
     }
 
     const finalCars = finalistIds.map(id => this.state.cars.find(c => c.id === id));
-    const finalRuns = this.state.rulesMode === 'AVERAGE' ? 2 : 3;
+    const finalRuns = typeof this.state.finalRuns === 'number' && this.state.finalRuns >= 1
+      ? this.state.finalRuns
+      : (this.state.rulesMode === 'AVERAGE' ? 2 : 3);
     const finalHeats = this.generateGroupHeats(finalCars, 'FINALS', 'Grand Final', finalRuns);
 
     this.state.heats.push(...finalHeats);
