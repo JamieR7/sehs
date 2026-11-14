@@ -258,8 +258,31 @@
     let currentTapOrder = []; // Stores lane numbers tapped in sequence for active heat
     let activeStandingsStage = 'QUALIFYING';
 
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function syncTapOrderFromActiveHeat() {
+      const activeHeat = engine.state.heats.find(h => h.id === engine.state.activeHeatId);
+      if (activeHeat && activeHeat.status === 'COMPLETED') {
+        currentTapOrder = [...activeHeat.lanes]
+          .filter(l => l.finish !== null)
+          .sort((a, b) => a.finish - b.finish)
+          .map(l => l.lane);
+      } else {
+        currentTapOrder = [];
+      }
+    }
+
     function initApp() {
       syncHeaderControls();
+      syncTapOrderFromActiveHeat();
       if (engine.state.stage !== 'CHECK_IN' && engine.state.heats.length > 0) {
         activeStandingsStage = engine.state.stage;
         switchTab('RACE_CONTROL');
@@ -342,12 +365,12 @@
 
     function handleRemoveCar(carId) {
       if (engine.state.heats.length > 0) {
-        if (!confirm(`Race heats have already been generated! Removing car ${carId} will require regenerating heats. Remove anyway?`)) {
+        if (!confirm(`Race heats have already been generated! Removing car ${carId} will remove it from any heats. Remove anyway?`)) {
           return;
         }
       }
       engine.removeCar(carId);
-      renderCheckIn();
+      renderAll();
     }
 
     function loadDemoAndRender() {
@@ -357,6 +380,7 @@
         }
       }
       engine.loadDemoRoster();
+      currentTapOrder = [];
       renderAll();
     }
 
@@ -371,7 +395,7 @@
         }
       }
       engine.startQualifying();
-      currentTapOrder = [];
+      syncTapOrderFromActiveHeat();
       activeStandingsStage = 'QUALIFYING';
       switchTab('RACE_CONTROL');
     }
@@ -386,7 +410,7 @@
         return `
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col">
             <div class="navy-bg text-white px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2">
-              <span class="font-extrabold text-sm uppercase">${den.emoji} ${den.name}</span>
+              <span class="font-extrabold text-sm uppercase">${den.emoji} ${escapeHtml(den.name)}</span>
               <div class="flex items-center gap-2">
                 <label class="flex items-center gap-1 bg-blue-950/90 border border-blue-700 px-2 py-0.5 rounded text-[11px] font-bold text-blue-200" title="Number of cars advancing to Semifinals">
                   <span>Advance:</span>
@@ -402,11 +426,11 @@
               ${denCars.map(c => `
                 <div class="py-2 flex items-center justify-between">
                   <div>
-                    <span class="inline-block w-9 font-black text-[#004587]">${c.id}</span>
-                    <span class="font-extrabold text-slate-900">${c.cubName}</span>
-                    <span class="text-slate-500 ml-1">(${c.carName})</span>
+                    <span class="inline-block w-9 font-black text-[#004587]">${escapeHtml(c.id)}</span>
+                    <span class="font-extrabold text-slate-900">${escapeHtml(c.cubName)}</span>
+                    <span class="text-slate-500 ml-1">(${escapeHtml(c.carName)})</span>
                   </div>
-                  <button onclick="handleRemoveCar('${c.id}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Remove Car">&#10005;</button>
+                  <button onclick="handleRemoveCar('${escapeHtml(c.id)}')" class="text-red-500 hover:text-red-700 font-bold px-1" title="Remove Car">&#10005;</button>
                 </div>
               `).join('')}
             </div>
@@ -420,8 +444,8 @@
     // ==========================================
     function selectHeat(heatId) {
       engine.state.activeHeatId = heatId;
-      currentTapOrder = [];
       engine.saveState();
+      syncTapOrderFromActiveHeat();
       renderRaceControl();
     }
 
@@ -463,7 +487,7 @@
       });
 
       engine.recordHeatResult(activeHeat.id, finishMap);
-      currentTapOrder = [];
+      syncTapOrderFromActiveHeat();
       renderAll();
     }
 
@@ -475,11 +499,11 @@
         shuffledLanes.forEach((slot, idx) => { map[slot.lane] = idx + 1; });
         engine.recordHeatResult(heat.id, map);
       });
-      currentTapOrder = [];
+      syncTapOrderFromActiveHeat();
       renderAll();
     }
 
-    function guardStageTransition(currentStage, proceedCallback) {
+    function guardStageTransition(currentStage, actionDescription, proceedCallback) {
       const ties = typeof engine.getStageUnresolvedTies === 'function'
         ? engine.getStageUnresolvedTies(currentStage)
         : [];
@@ -490,40 +514,59 @@
           switchTab('STANDINGS');
           return;
         }
+      } else if (actionDescription) {
+        if (!confirm(`Are you ready to ${actionDescription}?`)) {
+          return;
+        }
       }
       proceedCallback();
     }
 
     function handleAdvanceToSemifinals() {
-      guardStageTransition('QUALIFYING', () => {
+      guardStageTransition('QUALIFYING', 'complete Den Qualifying and generate the Semifinal heats', () => {
         engine.startSemifinals();
-        currentTapOrder = [];
+        syncTapOrderFromActiveHeat();
         activeStandingsStage = 'SEMIFINALS';
         renderAll();
       });
     }
 
     function handleAdvanceToWildcard() {
-      guardStageTransition('SEMIFINALS', () => {
+      guardStageTransition('SEMIFINALS', 'generate the Wildcard Race for the final 2 spots', () => {
         engine.startWildcardRace();
-        currentTapOrder = [];
+        syncTapOrderFromActiveHeat();
         activeStandingsStage = 'WILDCARD';
         renderAll();
       });
     }
 
-    function handleAdvanceToGrandFinal() {
+    function handleAdvanceToGrandFinal(isSkippingWildcard = false) {
       const currentStage = engine.state.stage;
-      guardStageTransition(currentStage, () => {
+      const desc = isSkippingWildcard
+        ? 'skip the Wildcard Race and advance the Top 3 per Semifinal directly to the Grand Final'
+        : 'generate the 6-Car Grand Final heats';
+      guardStageTransition(currentStage, desc, () => {
         engine.startGrandFinal();
-        currentTapOrder = [];
+        syncTapOrderFromActiveHeat();
         activeStandingsStage = 'FINALS';
         renderAll();
       });
     }
 
+    function handleStepBackStage() {
+      const prevStage = engine.getPreviousStage();
+      if (!prevStage) return;
+      if (!confirm(`Step back from ${engine.state.stage} to ${prevStage}?\n\nThis will clear any heats in ${engine.state.stage} and restore ${prevStage} with all of its recorded results intact.`)) {
+        return;
+      }
+      engine.revertToPreviousStage();
+      syncTapOrderFromActiveHeat();
+      activeStandingsStage = engine.state.stage;
+      renderAll();
+    }
+
     function handleViewChampion() {
-      guardStageTransition('FINALS', () => {
+      guardStageTransition('FINALS', null, () => {
         switchTab('BRACKET');
       });
     }
@@ -542,7 +585,7 @@
       if (unresolvedTies.length > 0) {
         const tieButtons = unresolvedTies.map(t => `
           <button onclick="spawnAndJumpToTieBreaker('${t.stage}', '${t.groupName}', ${JSON.stringify(t.carIds).replace(/"/g, '&quot;')})" class="red-bg hover:bg-red-700 text-white font-black text-xs px-3 py-1.5 rounded-lg shadow uppercase">
-            &#9889; Spawn ${t.groupName} Tie-Breaker (${t.carIds.join(' vs ')})
+            &#9889; Spawn ${escapeHtml(t.groupName)} Tie-Breaker (${t.carIds.map(escapeHtml).join(' vs ')})
           </button>
         `).join('');
         tieWarningBanner = `
@@ -558,6 +601,7 @@
       const totalSemiSlots = engine.getTotalPlannedSemifinalists();
       const numSemiGroups = engine.getEffectiveSemiGroupCount();
       const finalHeatsCount = engine.state.finalRuns || 3;
+      const prevStage = typeof engine.getPreviousStage === 'function' ? engine.getPreviousStage() : null;
 
       // Stage transition button logic
       let nextStageControls = '';
@@ -566,17 +610,17 @@
           nextStageControls = `<button onclick="handleAdvanceToSemifinals()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#128293; All Qualifying Complete! Generate ${totalSemiSlots}-Car Semifinals (${numSemiGroups} Groups) &rarr;</button>`;
         } else if (engine.state.stage === 'SEMIFINALS') {
           if (numSemiGroups === 3) {
-            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; 3 Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
+            nextStageControls = `<button onclick="handleAdvanceToGrandFinal(false)" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; 3 Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
           } else if (engine.state.rulesMode === 'AVERAGE') {
             nextStageControls = `
               <button onclick="handleAdvanceToWildcard()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-4 py-2.5 rounded-lg shadow uppercase">&#9889; Run Wildcard Race (For Final 2 Spots) &rarr;</button>
-              <button onclick="handleAdvanceToGrandFinal()" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance to ${finalHeatsCount}-Heat Final) &rarr;</button>
+              <button onclick="handleAdvanceToGrandFinal(true)" class="navy-bg text-white font-bold text-xs px-4 py-2.5 rounded-lg">Skip Wildcard (Top 3 Advance to ${finalHeatsCount}-Heat Final) &rarr;</button>
             `;
           } else {
-            nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
+            nextStageControls = `<button onclick="handleAdvanceToGrandFinal(false)" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Semifinals Complete! Generate 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
           }
         } else if (engine.state.stage === 'WILDCARD') {
-          nextStageControls = `<button onclick="handleAdvanceToGrandFinal()" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Wildcard Complete! Launch 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
+          nextStageControls = `<button onclick="handleAdvanceToGrandFinal(false)" class="gold-bg hover:bg-amber-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127942; Wildcard Complete! Launch 6-Car Grand Final (${finalHeatsCount} Heats) &rarr;</button>`;
         } else if (engine.state.stage === 'FINALS') {
           nextStageControls = `<button onclick="handleViewChampion()" class="gold-bg text-slate-900 font-black text-xs px-5 py-2.5 rounded-lg shadow uppercase">&#127881; Grand Final Complete! View Pack Champion &rarr;</button>`;
         }
@@ -584,9 +628,16 @@
 
       banner.innerHTML = `
         <div class="w-full flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <span class="text-xs font-extrabold uppercase text-[#004587]">Current Stage: ${engine.state.stage}</span>
-            <p class="text-xs text-slate-500">${stageHeats.length - pendingStageHeats.length} of ${stageHeats.length} heats completed in this stage.</p>
+          <div class="flex flex-wrap items-center gap-3">
+            <div>
+              <span class="text-xs font-extrabold uppercase text-[#004587]">Current Stage: ${escapeHtml(engine.state.stage)}</span>
+              <p class="text-xs text-slate-500">${stageHeats.length - pendingStageHeats.length} of ${stageHeats.length} heats completed in this stage.</p>
+            </div>
+            ${prevStage ? `
+              <button onclick="handleStepBackStage()" class="bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-xs px-3 py-1.5 rounded-lg border border-amber-300" title="Undo stage transition and return to ${prevStage}">
+                &#8617; Step Back to ${prevStage}
+              </button>
+            ` : ''}
           </div>
           <div class="flex flex-wrap gap-2">
             ${pendingStageHeats.length > 0 ? `
@@ -608,14 +659,6 @@
         document.getElementById('onTrackSubtitle').textContent = '';
         onTrackGrid.innerHTML = `<p class="col-span-3 text-center py-8 text-slate-400 text-sm">Lock the Check-In Roster first to generate heats.</p>`;
         return;
-      }
-
-      // Populate pre-existing finishes if viewing a completed heat
-      if (activeHeat.status === 'COMPLETED' && currentTapOrder.length === 0) {
-        currentTapOrder = [...activeHeat.lanes]
-          .filter(l => l.finish !== null)
-          .sort((a, b) => a.finish - b.finish)
-          .map(l => l.lane);
       }
 
       document.getElementById('onTrackTitle').textContent = `ON TRACK — ${activeHeat.group.toUpperCase()} (HEAT ${activeHeat.heatNumber})`;
@@ -647,11 +690,11 @@
           }">
             <div class="flex items-center justify-between">
               <span class="text-xs font-black uppercase px-2 py-0.5 rounded bg-slate-900 text-white">LANE ${laneNum}</span>
-              <span class="text-lg font-black text-[#004587]">${slot.carId}</span>
+              <span class="text-lg font-black text-[#004587]">${escapeHtml(slot.carId)}</span>
             </div>
             <div class="my-3">
-              <div class="font-extrabold text-sm text-slate-900 truncate">${car?.cubName || slot.carId}</div>
-              <div class="text-xs text-slate-500 truncate">(${car?.carName || slot.carId}) &bull; ${car?.den || ''}</div>
+              <div class="font-extrabold text-sm text-slate-900 truncate">${escapeHtml(car?.cubName || slot.carId)}</div>
+              <div class="text-xs text-slate-500 truncate">(${escapeHtml(car?.carName || slot.carId)}) &bull; ${escapeHtml(car?.den || '')}</div>
             </div>
             <div class="pt-2 border-t border-slate-200/80 flex items-center justify-between">
               <span class="text-[11px] font-bold text-slate-400 uppercase">Finish Order:</span>
@@ -667,23 +710,23 @@
       document.getElementById('submitHeatBtn').disabled = currentTapOrder.length < activeHeat.lanes.length;
 
       // Render ON DECK (Next Pending Heat) — SCOUT NAME PRIMARY, (CAR NAME) IN BRACKETS
-      const pendingHeats = engine.state.heats.filter(h => h.status === 'PENDING' && h.id !== activeHeat.id);
+      const pendingHeats = engine.state.heats.filter(h => h.stage === engine.state.stage && h.status === 'PENDING' && h.id !== activeHeat.id);
       const onDeckHeat = pendingHeats[0];
       const onDeckList = document.getElementById('onDeckLanesList');
 
       if (!onDeckHeat) {
         document.getElementById('onDeckSubtitle').textContent = 'NONE';
-        onDeckList.innerHTML = `<p class="text-slate-400 italic py-2">No more pending heats in queue.</p>`;
+        onDeckList.innerHTML = `<p class="text-slate-400 italic py-2">No more pending heats in this stage.</p>`;
       } else {
         document.getElementById('onDeckSubtitle').textContent = `${onDeckHeat.group} — Heat ${onDeckHeat.heatNumber}`;
         onDeckList.innerHTML = onDeckHeat.lanes.map(slot => {
           const car = engine.state.cars.find(c => c.id === slot.carId);
           return `
             <div class="flex items-center justify-between py-1.5 px-2.5 bg-amber-50/60 rounded border border-amber-200/80">
-              <span class="font-black text-slate-800">Lane ${slot.lane}: <span class="text-[#004587]">${slot.carId}</span></span>
+              <span class="font-black text-slate-800">Lane ${slot.lane}: <span class="text-[#004587]">${escapeHtml(slot.carId)}</span></span>
               <span class="text-right">
-                <strong class="font-extrabold text-slate-900">${car?.cubName || ''}</strong>
-                <span class="text-slate-500 ml-1">(${car?.carName || ''})</span>
+                <strong class="font-extrabold text-slate-900">${escapeHtml(car?.cubName || '')}</strong>
+                <span class="text-slate-500 ml-1">(${escapeHtml(car?.carName || '')})</span>
               </span>
             </div>
           `;
@@ -697,7 +740,7 @@
       document.getElementById('heatQueueList').innerHTML = stageHeats.map(h => `
         <div onclick="selectHeat('${h.id}')" class="px-4 py-2.5 flex items-center justify-between cursor-pointer hover:bg-slate-50 ${h.id === activeHeat.id ? 'bg-blue-50 font-bold border-l-4 border-[#004587]' : ''}">
           <div>
-            <span class="font-extrabold text-slate-800">${h.group} — Heat ${h.heatNumber}</span>
+            <span class="font-extrabold text-slate-800">${escapeHtml(h.group)} — Heat ${escapeHtml(h.heatNumber)}</span>
             <span class="text-slate-400 ml-1">(${h.lanes.length} cars)</span>
           </div>
           <span class="px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${
@@ -744,13 +787,13 @@
         return `
           <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
             <div class="navy-bg text-white px-4 py-2.5 flex items-center justify-between">
-              <span class="font-extrabold text-sm uppercase">${groupName} Standings</span>
+              <span class="font-extrabold text-sm uppercase">${escapeHtml(groupName)} Standings</span>
               <span class="text-[11px] font-bold text-[#fbba07]">${stageName === 'FINALS' ? 'Top 1 Wins Pack Championship' : `Top ${cutoff} Advance`}</span>
             </div>
 
             ${tiedCarIds.length >= 2 ? `
               <div class="bg-amber-50 border-b border-amber-200 px-4 py-2.5 flex items-center justify-between gap-2">
-                <span class="text-xs font-bold text-amber-900">&#9888;&#65039; Tie detected at cutoff (${tiedCarIds.join(' vs ')})!</span>
+                <span class="text-xs font-bold text-amber-900">&#9888;&#65039; Tie detected at cutoff (${tiedCarIds.map(escapeHtml).join(' vs ')})!</span>
                 <button onclick="spawnAndJumpToTieBreaker('${stageName}', '${groupName}', ${JSON.stringify(tiedCarIds).replace(/"/g, '&quot;')})" class="red-bg text-white font-black text-[11px] px-3 py-1 rounded shadow uppercase shrink-0">
                   &#9889; Spawn Race-Off Heat
                 </button>
@@ -768,16 +811,16 @@
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100">
-                ${rows.length === 0 ? `<tr><td colspan="5" class="py-4 text-center text-slate-400 italic">No heats recorded for ${groupName} yet.</td></tr>` : ''}
+                ${rows.length === 0 ? `<tr><td colspan="5" class="py-4 text-center text-slate-400 italic">No heats recorded for ${escapeHtml(groupName)} yet.</td></tr>` : ''}
                 ${rows.map((r, idx) => {
                   const isAdvancing = idx < cutoff && r.racesCompleted > 0;
                   return `
                     <tr class="${isAdvancing ? 'bg-green-50/70 font-bold' : ''}">
                       <td class="py-2 px-3">${idx + 1} ${isAdvancing ? '\u2705' : ''}</td>
                       <td class="py-2 px-3">
-                        <span class="font-black text-[#004587] mr-1">${r.carId}</span>
-                        <span class="font-extrabold text-slate-900">${r.cubName}</span>
-                        <span class="text-slate-500 ml-1">(${r.carName})</span>
+                        <span class="font-black text-[#004587] mr-1">${escapeHtml(r.carId)}</span>
+                        <span class="font-extrabold text-slate-900">${escapeHtml(r.cubName)}</span>
+                        <span class="text-slate-500 ml-1">(${escapeHtml(r.carName)})</span>
                       </td>
                       <td class="py-2 px-3">${r.racesCompleted}</td>
                       <td class="py-2 px-3 font-extrabold">${engine.state.rulesMode === 'AVERAGE' ? (r.racesCompleted ? r.avgFinish : '-') : r.pointsSum}</td>
@@ -794,7 +837,7 @@
 
     function spawnAndJumpToTieBreaker(stageName, groupName, carIds) {
       engine.spawnTieBreakerHeat(stageName, groupName, carIds);
-      currentTapOrder = [];
+      syncTapOrderFromActiveHeat();
       switchTab('RACE_CONTROL');
     }
 
@@ -820,7 +863,7 @@
         const slotsHtml = Array.from({ length: qualCount }, (_, idx) => {
           const row = st[idx];
           const formatted = row?.racesCompleted
-            ? `<span class="text-[#004587] font-black">${row.carId}</span> <strong class="text-slate-900">${row.cubName}</strong> <span class="text-slate-500">(${row.carName})</span>`
+            ? `<span class="text-[#004587] font-black">${escapeHtml(row.carId)}</span> <strong class="text-slate-900">${escapeHtml(row.cubName)}</strong> <span class="text-slate-500">(${escapeHtml(row.carName)})</span>`
             : '<span class="text-slate-400">TBD</span>';
           return `
             <div class="flex justify-between">
@@ -833,7 +876,7 @@
         return `
           <div class="p-3 rounded-lg border border-slate-200 bg-slate-50 space-y-1 text-xs">
             <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-1">
-              <span class="font-black text-[#004587] uppercase">${d.emoji} ${d.name}</span>
+              <span class="font-black text-[#004587] uppercase">${d.emoji} ${escapeHtml(d.name)}</span>
               <span class="text-[10px] font-bold text-slate-500 uppercase">Top ${qualCount}</span>
             </div>
             ${slotsHtml}
@@ -844,17 +887,15 @@
       // Column 2: Semifinals (A, B, and optional C) + Wildcard
       const semiGroupNames = engine.getSemiGroupNames();
       const wc = engine.getGroupStandings('WILDCARD', 'Wildcard Race');
-      const semiAdvanceCutoff = numSemiGroups === 3
-        ? 2
-        : (engine.state.rulesMode === 'POINTS' && wc.length === 0 ? 3 : 2);
+      const semiAdvanceCutoff = engine.getGroupCutoff('SEMIFINALS', 'Semifinal A');
 
       const renderBracketRow = (r, i, cutoff, highlightColor = 'border-green-500') => `
-        <div class="p-2 rounded bg-slate-50 flex items-center justify-between gap-2 ${i < cutoff ? `font-bold border-l-4 ${highlightColor}` : ''}">
+        <div class="p-2 rounded bg-slate-50 flex items-center justify-between gap-2 ${i < cutoff && r.racesCompleted > 0 ? `font-bold border-l-4 ${highlightColor}` : ''}">
           <div class="truncate">
             <span class="text-slate-400 mr-1">#${i + 1}</span>
-            <span class="font-black text-[#004587] mr-1">${r.carId}</span>
-            <strong class="text-slate-900">${r.cubName}</strong>
-            <span class="text-slate-500 ml-1">(${r.carName})</span>
+            <span class="font-black text-[#004587] mr-1">${escapeHtml(r.carId)}</span>
+            <strong class="text-slate-900">${escapeHtml(r.cubName)}</strong>
+            <span class="text-slate-500 ml-1">(${escapeHtml(r.carName)})</span>
           </div>
           <span class="font-extrabold text-slate-700 shrink-0">${engine.state.rulesMode === 'AVERAGE' ? r.avgFinish : r.pointsSum}</span>
         </div>
@@ -866,9 +907,9 @@
         totalActualSemiCars += rows.length;
         return `
           <div>
-            <h4 class="font-black text-xs uppercase text-slate-600 mb-2">${gName} ${rows.length ? `(${rows.length} Cars &bull; Top ${semiAdvanceCutoff} Advance)` : ''}</h4>
+            <h4 class="font-black text-xs uppercase text-slate-600 mb-2">${escapeHtml(gName)} ${rows.length ? `(${rows.length} Cars &bull; Top ${semiAdvanceCutoff} Advance)` : ''}</h4>
             <div class="space-y-1 text-xs">
-              ${rows.length ? rows.map((r, i) => renderBracketRow(r, i, semiAdvanceCutoff)).join('') : `<p class="text-xs text-slate-400 italic">Waiting for ${gName}...</p>`}
+              ${rows.length ? rows.map((r, i) => renderBracketRow(r, i, semiAdvanceCutoff)).join('') : `<p class="text-xs text-slate-400 italic">Waiting for ${escapeHtml(gName)}...</p>`}
             </div>
           </div>
         `;
@@ -906,8 +947,8 @@
             <div class="gold-bg p-4 rounded-xl text-center shadow-inner">
               <div class="text-3xl mb-1">&#127942;</div>
               <div class="text-[11px] font-black uppercase tracking-widest text-slate-800">Pack 130 Champion</div>
-              <div class="text-xl font-black text-[#004587] mt-1">${champ.cubName}</div>
-              <div class="text-xs font-bold text-slate-800 mt-0.5"><span class="font-black">${champ.carId}</span> (${champ.carName}) &bull; ${champ.den}</div>
+              <div class="text-xl font-black text-[#004587] mt-1">${escapeHtml(champ.cubName)}</div>
+              <div class="text-xs font-bold text-slate-800 mt-0.5"><span class="font-black">${escapeHtml(champ.carId)}</span> (${escapeHtml(champ.carName)}) &bull; ${escapeHtml(champ.den)}</div>
             </div>
           ` : ''}
           <div class="space-y-1.5 text-xs">
@@ -915,9 +956,9 @@
               <div class="p-2.5 rounded border flex items-center justify-between gap-2 ${i === 0 && r.racesCompleted && finalsTies.length === 0 ? 'bg-amber-50 border-[#fbba07] font-black' : 'bg-slate-50 border-slate-200'}">
                 <div class="truncate">
                   <span class="text-slate-400 mr-1">#${i+1}</span>
-                  <span class="font-black text-[#004587] mr-1">${r.carId}</span>
-                  <strong class="text-slate-900">${r.cubName}</strong>
-                  <span class="text-slate-500 ml-1">(${r.carName})</span>
+                  <span class="font-black text-[#004587] mr-1">${escapeHtml(r.carId)}</span>
+                  <strong class="text-slate-900">${escapeHtml(r.cubName)}</strong>
+                  <span class="text-slate-500 ml-1">(${escapeHtml(r.carName)})</span>
                 </div>
                 <span class="shrink-0 font-extrabold">${engine.state.rulesMode === 'AVERAGE' ? `Avg: ${r.avgFinish}` : `Pts: ${r.pointsSum}`}</span>
               </div>
@@ -957,6 +998,7 @@
             engine.state.finalRuns = 3;
           }
           engine.saveState();
+          syncTapOrderFromActiveHeat();
           renderAll();
           alert('Backup restored successfully!');
         } catch (err) {
