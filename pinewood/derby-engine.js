@@ -32,20 +32,20 @@ class DerbyEngine {
   constructor() {
     this.state = this.loadState() || this.getInitialState();
     // Backfill new settings if loading an older saved state
-    letneedsSave = false;
+    let needsSave = false;
     if (!this.state.denQualifiers) {
       this.state.denQualifiers = this.getDefaultDenQualifiers();
-      letneedsSave = true;
+      needsSave = true;
     }
     if (!this.state.semiFormat) {
       this.state.semiFormat = 'AUTO'; // 'AUTO' | '2_GROUPS' | '3_GROUPS'
-      letneedsSave = true;
+      needsSave = true;
     }
     if (typeof this.state.finalRuns !== 'number') {
       this.state.finalRuns = 3; // Default to 3 heats in Grand Final (editable 1..6)
-      letneedsSave = true;
+      needsSave = true;
     }
-    if (letneedsSave) {
+    if (needsSave) {
       this.saveState();
     }
   }
