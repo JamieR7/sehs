@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Making Thinking Visible in Physical Education</title>
+  <style>
+    :root {
+      --navy: #004587;
+      --navy-dark: #003161;
+      --gold: #fbba07;
+      --gold-soft: #fff8e1;
+      --gold-text: #8a6200;
+      --cyan: #1eb9dc;
+      --cyan-soft: #e6f8fc;
+      --cyan-text: #006680;
+      --red: #e73037;
+      --blue-soft: #ebf3fa;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --radius: 12px;
+      --shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Sticky Top Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-brand {
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--navy);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-brand span {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.15rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--navy);
+    }
+
+    /* Hero */
+    header {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+      color: #ffffff;
+      padding: 4.5rem 1.25rem 4rem;
+      text-align: center;
+      position: relative;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--cyan) 50%, var(--red) 100%);
+    }
+
+    .hero-inner {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--gold);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      margin-bottom: 1.1rem;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 4vw, 2.85rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    header p.subtitle {
+      font-size: 1.1rem;
+      color: #dbeafe;
+      max-width: 650px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-quote {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      max-width: 680px;
+      margin: 0 auto 1.35rem;
+      font-size: 1.12rem;
+      font-weight: 500;
+      color: #ffffff;
+    }
+
+    .hero-quote strong {
+      color: var(--gold);
+      font-weight: 800;
+    }
+
+    .hero-quote cite {
+      display: block;
+      margin-top: 0.45rem;
+      font-size: 0.86rem;
+      font-style: normal;
+      font-weight: 700;
+      color: #dbeafe;
+      letter-spacing: 0.03em;
+    }
+
+    .hero-premise {
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 10px;
+      padding: 1rem 1.35rem;
+      max-width: 720px;
+      margin: 0 auto 2rem;
+      font-size: 0.96rem;
+      color: #f1f5f9;
+      text-align: left;
+    }
+
+    .hero-premise strong {
+      color: var(--gold);
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.72rem 1.35rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #111827;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.14);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3.5rem 1.25rem;
+    }
+
+    section {
+      margin-bottom: 4.5rem;
+      scroll-margin-top: 4.5rem;
+    }
+
+    .section-header {
+      margin-bottom: 1.75rem;
+    }
+
+    .section-kicker {
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan-text);
+      margin-bottom: 0.3rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--navy);
+      letter-spacing: -0.015em;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      max-width: 760px;
+      margin-top: 0.5rem;
+      font-size: 1.02rem;
+    }
+
+    /* Contrast Box (Why PE) */
+    .contrast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .contrast-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .contrast-card.highlight {
+      border-top: 4px solid var(--navy);
+    }
+
+    .contrast-card.muted-card {
+      border-top: 4px solid #94a3b8;
+    }
+
+    .contrast-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .speech-bubble {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0.75rem 0;
+    }
+
+    .mantra-callout {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.95rem;
+    }
+
+    .check-list {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+
+    .check-list li {
+      padding-left: 1.4rem;
+      position: relative;
+      font-size: 0.96rem;
+    }
+
+    .check-list li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    /* Transfer Table */
+    .table-wrap {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 0.95rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    th {
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+
+    .transfer-note {
+      padding: 1rem 1.25rem;
+      background: #f8fafc;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .transfer-dimensions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-top: 0.6rem;
+    }
+
+    .dim-pill {
+      background: var(--blue-soft);
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 0.22rem 0.65rem;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* Definition Box (Awareness, Regulation, Transfer) */
+    .definition-card {
+      background: var(--blue-soft);
+      border: 1px solid #cbd5e1;
+      border-radius: var(--radius);
+      padding: 1.4rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .definition-quote {
+      font-size: 1.04rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.85rem;
+    }
+
+    .art-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .art-item {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .art-item strong {
+      color: var(--navy);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Three Pillars Cards */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .pillar-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      box-shadow: var(--shadow);
+    }
+
+    .pillar-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--navy);
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .pillar-card h3 {
+      font-size: 1.15rem;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+    }
+
+    .pillar-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    /* Learner Ambitions Banner & Controls */
+    .ambitions-banner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--navy);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .ambitions-banner h3 {
+      font-size: 1.05rem;
+      color: var(--navy);
+      margin-bottom: 0.4rem;
+    }
+
+    .ambitions-banner p {
+      font-size: 0.94rem;
+      color: var(--text);
+      margin-bottom: 0.95rem;
+    }
+
+    .ambitions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .ambition-card {
+      background: var(--blue-soft);
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 0.65rem 0.8rem;
+    }
+
+    .ambition-card strong {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .ambition-card span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .list-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .routine-count {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .toggle-all-btn {
+      background: var(--card);
+      border: 1px solid var(--navy);
+      color: var(--navy);
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .toggle-all-btn:hover {
+      background: var(--blue-soft);
+    }
+
+    /* Accordion Routines */
+    .routines-list {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    details.routine {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+
+    details.routine[open] {
+      border-color: var(--navy);
+    }
+
+    details.routine summary {
+      list-style: none;
+      padding: 1.05rem 1.25rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      font-weight: 700;
+      font-size: 1.04rem;
+      color: var(--navy);
+      user-select: none;
+    }
+
+    details.routine summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .chevron {
+      font-size: 0.85rem;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+
+    details.routine[open] .chevron {
+      transform: rotate(180deg);
+      color: var(--navy);
+    }
+
+    .routine-body {
+      padding: 1.1rem 1.25rem 1.3rem;
+      border-top: 1px solid var(--border);
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .routine-purpose {
+      font-weight: 700;
+      color: var(--navy);
+      font-size: 0.96rem;
+    }
+
+    .routine-desc {
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .example-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--cyan);
+      border-radius: 0 8px 8px 0;
+      padding: 0.95rem 1.1rem;
+      font-size: 0.93rem;
+    }
+
+    .example-title {
+      font-weight: 800;
+      color: var(--navy);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.35rem;
+      display: block;
+    }
+
+    .example-box p {
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .example-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    .prompt-quote {
+      font-style: italic;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    /* Monitoring & Feedback Callout */
+    .monitoring-callout {
+      background: var(--gold-soft);
+      border: 1px solid #fde68a;
+      border-left: 5px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.5rem;
+      margin-bottom: 1.75rem;
+      box-shadow: var(--shadow);
+    }
+
+    .monitoring-badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--gold-text);
+      margin-bottom: 0.35rem;
+    }
+
+    .monitoring-callout h3 {
+      font-size: 1.12rem;
+      color: var(--navy);
+      margin-bottom: 0.45rem;
+    }
+
+    .monitoring-callout p {
+      font-size: 0.96rem;
+      color: var(--text);
+    }
+
+    /* Questioning Ladder */
+    .ladder {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .ladder-step {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--navy);
+      border-radius: 10px;
+      padding: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .ladder-step:nth-child(2) { border-top-color: #0b5ea8; }
+    .ladder-step:nth-child(3) { border-top-color: var(--cyan); }
+    .ladder-step:nth-child(4) { border-top-color: var(--gold); }
+    .ladder-step:nth-child(5) { border-top-color: var(--red); }
+
+    .step-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .ladder-step h4 {
+      font-size: 1.02rem;
+      color: var(--navy);
+      margin: 0.2rem 0 0.25rem;
+    }
+
+    .ladder-step p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .prompts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .prompt-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      box-shadow: var(--shadow);
+    }
+
+    .prompt-card h3 {
+      font-size: 1.02rem;
+      color: var(--navy);
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.45rem;
+      border-bottom: 2px solid var(--blue-soft);
+    }
+
+    .prompt-card ul {
+      padding-left: 1.15rem;
+      color: var(--text);
+      font-size: 0.92rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    /* Mosston Style C */
+    .mosston-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 6px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .mosston-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+      gap: 1.1rem;
+      margin-top: 1.5rem;
+    }
+
+    .mini-example {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.15rem;
+      font-size: 0.93rem;
+    }
+
+    .mini-example h4 {
+      color: var(--navy);
+      font-size: 0.96rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .mini-example p {
+      color: var(--text);
+    }
+
+    /* Suggest a Lesson Padlet Card */
+    .padlet-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--cyan);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .padlet-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.1rem;
+    }
+
+    .padlet-hint {
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    .padlet-hint strong {
+      color: var(--navy);
+    }
+
+    .padlet-open-link {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--navy);
+      text-decoration: none;
+      background: var(--blue-soft);
+      padding: 0.45rem 0.85rem;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+
+    .padlet-open-link:hover {
+      background: #dbeafe;
+    }
+
+    .padlet-embed {
+      border: 1px solid var(--border) !important;
+      border-radius: 10px !important;
+      box-sizing: border-box;
+      overflow: hidden;
+      position: relative;
+      width: 100%;
+      background: #f4f4f4;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--navy-dark);
+      color: #e2e8f0;
+      padding: 3.5rem 1.25rem;
+      text-align: center;
+    }
+
+    .footer-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    footer h2 {
+      color: #ffffff;
+      margin-bottom: 0.85rem;
+    }
+
+    footer p {
+      color: #cbd5e1;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .footer-callout {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-left: 4px solid var(--gold);
+      border-radius: 10px;
+      padding: 1.15rem 1.4rem;
+      margin: 1.5rem 0;
+      text-align: left;
+      color: #f8fafc;
+      font-size: 0.97rem;
+    }
+
+    .footer-callout strong {
+      color: var(--gold);
+    }
+
+    .footer-mantra {
+      display: inline-block;
+      margin-top: 0.5rem;
+      color: var(--gold);
+      font-weight: 800;
+      font-size: 1.12rem;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-brand"><span></span> Thinking Through Movement</a>
+      <div class="nav-links">
+        <a href="#why-pe">Why PE?</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#routines">Thinking Routines</a>
+        <a href="#questioning">Questioning</a>
+        <a href="#style-c">Mosston Style C</a>
+        <a href="#suggest-lesson">Suggest a Lesson</a>
+      </div>
+    </div>
+  </nav>
+
+  <header>
+    <div class="hero-inner">
+      <div class="eyebrow">Making Learning Visible in Physical Education</div>
+      <h1>Making Thinking Visible in PE</h1>
+      <p class="subtitle">
+        Helping students recognise, discuss and transfer the thinking that happens through physical activity.
+      </p>
+      <blockquote class="hero-quote">
+        “Stupid people are always sure of themselves, whereas intelligent people are full of doubt <strong>...and that is an absolute fact!</strong>”
+        <cite>Bertrand Russell, 1933</cite>
+      </blockquote>
+      <div class="hero-premise">
+        <strong>A key starting point:</strong> While we can weave thinking vocabulary into all of our teaching, we should not expect students to be able to reflect well on their own. We need to <strong>collect their reflections and give them feedback</strong> to move them from simply describing what happened to thinking about implications and connections.
+      </div>
+      <div class="hero-actions">
+        <a href="#routines" class="btn btn-primary">Explore Thinking Routines</a>
+        <a href="#suggest-lesson" class="btn btn-secondary">Suggest a Lesson</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- SECTION 1: WHY PE? -->
+    <section id="why-pe">
+      <div class="section-header">
+        <div class="section-kicker">More Than Physical Performance</div>
+        <h2>Why PE?</h2>
+        <p class="section-lead">
+          Physical Education is often misunderstood as a subject where students simply perform. In reality, students are constantly analysing, evaluating, adapting, communicating and solving problems.
+        </p>
+      </div>
+
+      <div class="contrast-grid">
+        <div class="contrast-card muted-card">
+          <div class="contrast-label">Students often leave a lesson saying</div>
+          <div class="speech-bubble">“We played volleyball.”</div>
+          <p style="color: var(--muted); font-size: 0.95rem;">
+            The goal is not simply to learn sport. The goal is to learn through sport.
+          </p>
+          <p class="mantra-callout">
+            Students often remember the activity. Metacognition helps them recognise the learning.
+          </p>
+        </div>
+
+        <div class="contrast-card highlight">
+          <div class="contrast-label">What they also did</div>
+          <ul class="check-list">
+            <li>Made decisions under pressure</li>
+            <li>Tested strategies</li>
+            <li>Adapted their approaches</li>
+            <li>Provided evidence-based feedback</li>
+            <li>Considered different perspectives</li>
+            <li>Solved movement challenges</li>
+            <li>Reflected on success and failure</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>In PE</th>
+              <th>Transfer Between PE, Other Subjects &amp; Hobbies</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Analysing tactics</td>
+              <td>Analysing arguments</td>
+            </tr>
+            <tr>
+              <td>Adapting a strategy</td>
+              <td>Revising an approach</td>
+            </tr>
+            <tr>
+              <td>Providing feedback</td>
+              <td>Peer assessment</td>
+            </tr>
+            <tr>
+              <td>Evaluating performance</td>
+              <td>Evaluating evidence</td>
+            </tr>
+            <tr>
+              <td>Solving movement challenges</td>
+              <td>Solving academic problems</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="transfer-note">
+          <strong>Teaching for Transfer:</strong> Students rarely connect learning across contexts on their own; revisiting familiar routines supports a two-way transfer <strong>both from PE into other school subjects and hobbies, and from those pursuits back into PE</strong>, across four areas:
+          <div class="transfer-dimensions">
+            <span class="dim-pill">Content</span>
+            <span class="dim-pill">Skills</span>
+            <span class="dim-pill">Strategies</span>
+            <span class="dim-pill">Attitudes</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: THREE WAYS WE DEVELOP THINKING -->
+    <section id="how-it-works">
+      <div class="section-header">
+        <div class="section-kicker">Lesson Architecture</div>
+        <h2>Three Ways We Develop Thinking in PE</h2>
+        <p class="section-lead">
+          Thinking routines work best when they are woven organically into lessons, and when student reflections are collected, monitored, and met with feedback rather than left unguided.
+        </p>
+      </div>
+
+      <div class="definition-card">
+        <div class="definition-quote">
+          “Metacognition is understanding how you learn best and using this knowledge to adapt your thinking to thrive in different situations.”
+        </div>
+        <div class="art-grid">
+          <div class="art-item">
+            <strong>1. Awareness</strong>
+            Recognising the task, goals, available strategies, and which Learner Ambitions and strengths are being used before, during, and after activity.
+          </div>
+          <div class="art-item">
+            <strong>2. Regulation</strong>
+            Monitoring effort, confidence, and performance in the moment and adjusting strategy when something isn’t working.
+          </div>
+          <div class="art-item">
+            <strong>3. Transfer</strong>
+            Applying content, skills, strategies, and attitudes both from PE into other school subjects and hobbies, and from those pursuits back into PE.
+          </div>
+        </div>
+      </div>
+
+      <div class="pillars-grid">
+        <div class="pillar-card">
+          <div class="pillar-num">1</div>
+          <h3>Through Performance</h3>
+          <p>Students solve movement problems, make decisions and adapt strategies in real time.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-num">2</div>
+          <h3>Through Observation</h3>
+          <p>Students observe peers, identify evidence and provide structured feedback.</p>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-num">3</div>
+          <h3>Through Discussion</h3>
+          <p>Students challenge ideas, explain reasoning and consider alternative viewpoints.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: THINKING ROUTINES -->
+    <section id="routines">
+      <div class="section-header">
+        <div class="section-kicker">Project Zero &amp; Learner Ambitions</div>
+        <h2>Thinking Routines We Use</h2>
+        <p class="section-lead">
+          Select any routine below to see how it works in PE.
+        </p>
+      </div>
+
+      <div class="ambitions-banner">
+        <h3>How Routines Connect to the Six Learner Ambitions</h3>
+        <p>
+          Rather than pre-labelling every routine, we generally <strong>let students identify for themselves</strong> which Learner Ambition they are displaying, and build toward students choosing the right routine for the task themselves. At times, we also tell students the target ambition explicitly (for example, using <strong>Creative Questions</strong> to focus on <em>Creativity</em> when adapting volleyball).
+        </p>
+        <div class="ambitions-grid">
+          <div class="ambition-card">
+            <strong>Critical</strong>
+            <span>Observe · Analyse · Evaluate</span>
+          </div>
+          <div class="ambition-card">
+            <strong>Curious</strong>
+            <span>Question · Explore · Connect</span>
+          </div>
+          <div class="ambition-card">
+            <strong>Creative</strong>
+            <span>Innovate · Express · Problem Solve</span>
+          </div>
+          <div class="ambition-card">
+            <strong>Collaborative</strong>
+            <span>Communicate · Participate · Relate</span>
+          </div>
+          <div class="ambition-card">
+            <strong>Compassionate</strong>
+            <span>Understand · Care · Support</span>
+          </div>
+          <div class="ambition-card">
+            <strong>Committed</strong>
+            <span>Engage · Persist · Adapt</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="list-toolbar">
+        <div class="routine-count">10 Thinking Routines</div>
+        <button class="toggle-all-btn" id="toggleAllBtn">Expand All</button>
+      </div>
+
+      <div class="routines-list" id="routinesList">
+
+        <!-- 1 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>Claim, Support, Question</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Move students from quick opinions to evidence-backed reasoning.</p>
+            <p class="routine-desc">
+              Instead of offering vague praise or unsupported statements, students make a clear <strong>claim</strong> about performance or technique, back it up with concrete <strong>support</strong> from what they observed, and pose a <strong>question</strong> to test whether that idea holds up or how the movement could be refined next.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE: Gymnastics Feedback (Partner or Video)</span>
+              <p>Well suited to giving feedback on a <strong>gymnastics routine</strong>, either watching a partner live or reviewing your own performance from a video, grounding observations in specific evidence rather than simply saying “good routine.”</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 2 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>See, Think, Wonder</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Observe carefully before jumping to interpretation or advice.</p>
+            <p class="routine-desc">
+              This routine slows down observation by separating objective facts from interpretation. Students first state strictly what they <strong>see</strong> happening, explain what they <strong>think</strong> is driving it, and ask what they <strong>wonder</strong> about how things might unfold or be improved.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE: Unpacking a Tournament or Event</span>
+              <p>Can be used to describe and analyse a <strong>tournament or sporting event</strong>, noticing patterns in how games, teams, or competition structures play out before jumping to conclusions.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 3 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>Creative Questions</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Generate imaginative, open-ended questions to explore new possibilities.</p>
+            <p class="routine-desc">
+              Students brainstorm open-ended <em>“What would it be like if...?”</em> questions to challenge conventional rules and invent fresh variations of a game, encouraging divergent thinking before testing an idea in play.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE: Adapting Volleyball Rules</span>
+              <p>An example of explicitly setting <strong>Creativity</strong> as the target ambition, asking students to generate creative questions to adapt volleyball, such as:</p>
+              <p class="prompt-quote">“What would it be like if the ball was huge, the net was low, there were no boundaries, we could catch...?”</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 4 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>How Else and Why?</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Develop flexibility, adaptation, and purposeful coaching communication.</p>
+            <p class="routine-desc">
+              Rather than treating drills or ways of explaining as fixed, students are challenged to think like coaches and adapt what they are doing, justifying <em>why</em> a different structure or approach works better.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE: Adapting Drills &amp; Coaching Communication</span>
+              <p><strong>Adapting a drill:</strong> Students are given a simple drill for a ball game (such as <strong>pass and move in football</strong>) and have to adapt it and explain why.</p>
+              <p><strong>Coach communication:</strong> Asking <em>“How else can I help my partner or team understand?”</em> (for example, <strong>showing them vs. telling them</strong>).</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 5 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>Think That, Stand Back, Push Back</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Examine initial assumptions and test them against evidence.</p>
+            <p class="routine-desc">
+              Students first capture an initial instinct or hypothesis (<strong>Think That</strong>), step back to ask what evidence actually supports it (<strong>Stand Back</strong>), and deliberately look for flaws, variables, or counter-arguments (<strong>Push Back</strong>).
+            </p>
+            <div class="example-box">
+              <span class="example-title">In Sports Science</span>
+              <p>Well suited to <strong>Sports Science classroom lessons</strong>, such as examining <strong>experiment design</strong>, questioning assumptions, and spotting limitations in how data is collected.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 6 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>What? So What? Now What?</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Turn performance reflection into implications and concrete next steps.</p>
+            <p class="routine-desc">
+              Left unguided, students often stop at <strong>What?</strong> (describing what happened). Adding <strong>So What?</strong> pushes them to analyse the implications of their effort or strategy, while <strong>Now What?</strong> commits them to a specific adjustment for next time.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE</span>
+              <p>Well suited to reflecting on a <strong>cross-country run performance</strong>, examining pacing, effort, and energy management (often prompting students to identify <em>Committed</em>), as well as adapting tactics during unfamiliar games.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 7 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>Think, Pair, Share</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Give every student processing time before testing ideas with a partner and group.</p>
+            <p class="routine-desc">
+              Students first take time to form their own idea (<strong>Think</strong>), compare and refine it with a partner (<strong>Pair</strong>), and then share with the wider group before putting their solution into action (<strong>Share</strong>).
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE: Blindness Simulation Glasses</span>
+              <p>Students try <strong>tunnel vision, blurry, and other simulators of blindness</strong>, individually <strong>think</strong> about how to adapt the rules to include somebody wearing the glasses, discuss with a <strong>pair</strong>, and then <strong>share</strong> their adaptation with the group before trying it out.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 8 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>What They Said</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Build active listening, empathy, and accurate perspective-taking.</p>
+            <p class="routine-desc">
+              Instead of sharing their own opinion, students must listen closely and accurately report their partner’s thinking to the group. Knowing they will represent someone else’s viewpoint encourages respectful dialogue and deeper attention during discussions.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE</span>
+              <p>Works well as a <strong>walk-and-talk warm-up</strong> discussing an issue, such as <strong>transgender inclusion in sport</strong>, or something lower-stakes like <strong>what we should change about our PE programme</strong>.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 9 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>Headlines</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Distil the core learning of a lesson into a single memorable statement.</p>
+            <p class="routine-desc">
+              Rather than answering <em>“What did we do today?”</em> with the name of a sport, students write a concise newspaper-style headline that captures the most important tactical, technical, or collaborative takeaway from the session.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE</span>
+              <p>Can be used in the <strong>plenary of any lesson</strong> as a quick, high-impact check on whether students recognised the learning behind the activity.</p>
+            </div>
+          </div>
+        </details>
+
+        <!-- 10 -->
+        <details class="routine">
+          <summary>
+            <div class="summary-left">
+              <span>I Used to Think... Now I Think...</span>
+            </div>
+            <span class="chevron">▼</span>
+          </summary>
+          <div class="routine-body">
+            <p class="routine-purpose">Purpose: Make conceptual shifts explicit so students recognise how their thinking has evolved.</p>
+            <p class="routine-desc">
+              By comparing what they believed at the start of a block of work with how they understand the activity now, students become aware of their own learning progression rather than viewing the unit simply as a series of games or drills.
+            </p>
+            <div class="example-box">
+              <span class="example-title">In PE</span>
+              <p>Used at the <strong>end of a unit</strong> to help students articulate how their understanding of tactics, skill execution, or teamwork has changed over time.</p>
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </section>
+
+    <!-- SECTION 4: QUESTIONING & MONITORING REFLECTIONS -->
+    <section id="questioning">
+      <div class="section-header">
+        <div class="section-kicker">Language Habits &amp; Teacher Feedback</div>
+        <h2>Questions That Promote Thinking</h2>
+        <p class="section-lead">
+          Changing our questioning vocabulary across all teaching helps prompt better thinking, from <em>“What happened?”</em> to <em>“What makes you say that?”</em>
+        </p>
+      </div>
+
+      <div class="monitoring-callout">
+        <div class="monitoring-badge">Essential Practice</div>
+        <h3>Collect Reflections &amp; Give Feedback</h3>
+        <p>
+          While our vocabulary can change throughout all teaching, we should not expect students to be able to reflect well automatically. When left alone, they tend to <strong>describe</strong> what happened rather than reflect. Collecting their reflections and giving timely feedback is what moves them from surface description to thinking about <strong>implications and connections</strong>.
+        </p>
+      </div>
+
+      <div class="ladder">
+        <div class="ladder-step">
+          <div class="step-badge">Stage 1</div>
+          <h4>Describing</h4>
+          <p>Stating what happened</p>
+        </div>
+        <div class="ladder-step">
+          <div class="step-badge">Stage 2</div>
+          <h4>Explaining</h4>
+          <p>Identifying why it happened</p>
+        </div>
+        <div class="ladder-step">
+          <div class="step-badge">Stage 3</div>
+          <h4>Justifying</h4>
+          <p>Backing claims with evidence</p>
+        </div>
+        <div class="ladder-step">
+          <div class="step-badge">Stage 4</div>
+          <h4>Implications</h4>
+          <p>Evaluating why it matters</p>
+        </div>
+        <div class="ladder-step">
+          <div class="step-badge">Stage 5</div>
+          <h4>Connections</h4>
+          <p>Adapting and transferring next time</p>
+        </div>
+      </div>
+
+      <div class="prompts-grid">
+        <div class="prompt-card">
+          <h3>Evidence</h3>
+          <ul>
+            <li>What makes you say that?</li>
+            <li>What evidence supports that?</li>
+            <li>How do you know?</li>
+          </ul>
+        </div>
+
+        <div class="prompt-card">
+          <h3>Explanation</h3>
+          <ul>
+            <li>Why do you think that happened?</li>
+            <li>What led you to that conclusion?</li>
+            <li>Can you explain your thinking?</li>
+          </ul>
+        </div>
+
+        <div class="prompt-card">
+          <h3>Adaptation</h3>
+          <ul>
+            <li>How else could you do it?</li>
+            <li>What would you change?</li>
+            <li>Why might that work better?</li>
+          </ul>
+        </div>
+
+        <div class="prompt-card">
+          <h3>Transfer</h3>
+          <ul>
+            <li>Where else could this be useful?</li>
+            <li>What other activities use this idea?</li>
+            <li>How might this help outside PE?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: MOSSTON STYLE C -->
+    <section id="style-c">
+      <div class="mosston-box">
+        <div class="section-kicker">Partner Observation &amp; Feedback</div>
+        <h2>Mosston Style C: Practice Style</h2>
+        <p style="color: var(--muted); margin-top: 0.5rem;">
+          Many of these routines fit naturally within partner observation and feedback tasks when one student practises a skill and a partner observes. <strong>The performer develops the skill. The observer develops the thinking.</strong>
+        </p>
+
+        <div class="mosston-grid">
+          <div class="mini-example">
+            <h4>Claim, Support, Question</h4>
+            <p>Partners state a clear claim about a gymnastics skill or routine they observed (or reviewed on video), support it with specific evidence from the attempt, and ask a question to test what to refine next.</p>
+          </div>
+
+          <div class="mini-example">
+            <h4>See, Think, Wonder</h4>
+            <p>When watching a partner practise a skill, observers separate what they physically see happening from what they think is causing it, before wondering what adjustment might help next.</p>
+          </div>
+
+          <div class="mini-example">
+            <h4>What Makes You Say That?</h4>
+            <p>Asking a partner <em>“What makes you say that?”</em> moves peer feedback away from casual opinion and requires them to justify their observation with evidence.</p>
+          </div>
+
+          <div class="mini-example">
+            <h4>How Else and Why?</h4>
+            <p>Partners think about how else to communicate feedback or adapt a drill (for example, showing vs. telling) and explain why that change helps the performer.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SUGGEST A LESSON (LIVE PADLET BOARD) -->
+    <section id="suggest-lesson">
+      <div class="section-header">
+        <div class="section-kicker">Shared Practice Board</div>
+        <h2>Suggest a Lesson</h2>
+        <p class="section-lead">
+          See lesson examples and images shared by others, and add your own activity, routine, or photo straight onto the board.
+        </p>
+      </div>
+
+      <div class="padlet-card">
+        <div class="padlet-header">
+          <p class="padlet-hint">
+            Click <strong>+</strong> anywhere on the board below to add a routine example, task card, or lesson photo.
+          </p>
+          <a href="https://padlet.com/embed/s025m4uqyfjmmpkgy5m4" target="_blank" rel="noopener" class="padlet-open-link">
+            Open Full Board ↗
+          </a>
+        </div>
+
+        <div class="padlet-embed" style="border:1px solid rgba(0,0,0,0.1);border-radius:2px;box-sizing:border-box;overflow:hidden;position:relative;width:100%;background:#F4F4F4">
+          <p style="padding:0;margin:0">
+            <iframe
+              src="https://padlet.com/embed/s025m4uqyfjmmpkgy5m4"
+              frameborder="0"
+              allow="camera;microphone;geolocation;display-capture;clipboard-write"
+              style="width:100%;height:608px;display:block;padding:0;margin:0"
+              title="Suggest a Lesson Padlet Board">
+            </iframe>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <h2>Final Thought</h2>
+      <p>
+        PE develops thinkers as well as performers.
+      </p>
+      <div class="footer-callout">
+        <strong>Remember:</strong> While our vocabulary can change throughout all teaching, we should not expect students to be able to reflect well on their own. We need to <strong>collect their reflections and give them feedback</strong> to move them from simply describing what happened to thinking about <strong>implications and connections</strong>.
+      </div>
+      <p>
+        Through deliberate routines, collected reflections, questioning, and structured feedback, students learn to justify ideas, challenge assumptions, adapt strategies, and transfer content, skills, strategies, and attitudes beyond the sports hall and playing field.
+      </p>
+      <div class="footer-mantra">
+        The goal is not simply to learn sport. The goal is to learn through sport.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const routines = document.querySelectorAll('details.routine');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+    let allExpanded = false;
+
+    toggleAllBtn.addEventListener('click', () => {
+      allExpanded = !allExpanded;
+      routines.forEach(item => {
+        item.open = allExpanded;
+      });
+      toggleAllBtn.textContent = allExpanded ? 'Collapse All' : 'Expand All';
+    });
+  </script>
+</body>
+</html>
