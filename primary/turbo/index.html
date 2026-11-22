@@ -1,0 +1,3438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Turbo Block Cup 3D</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Crisp Bold Gotham-Style Typography: Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Three.js r160 ESM Import Map -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #040714;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #ffffff;
+      user-select: none;
+    }
+
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+
+    #canvas-container canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Glassmorphic HUD & Panels */
+    .glass-hud {
+      background: rgba(8, 13, 32, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1.5px solid rgba(0, 245, 255, 0.4);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    /* Bottom-Left Anchored Question Deck for Unobstructed Track & Car Framing */
+    #spell-deck-wrapper {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      top: auto;
+      transform: translateX(0);
+      width: min(410px, 44vw);
+      z-index: 20;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.32s ease;
+    }
+
+    #spell-deck-wrapper.deck-hidden {
+      transform: translateX(-125%) !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    @media (max-width: 720px) {
+      #spell-deck-wrapper {
+        left: 10px;
+        bottom: 12px;
+        width: calc(100vw - 20px);
+        max-width: 420px;
+      }
+      #spell-deck-wrapper.deck-hidden {
+        transform: translateX(-120%) !important;
+      }
+    }
+
+    /* Oak-Plank / Neon Answer Cards */
+    .oak-card {
+      position: relative;
+      background: linear-gradient(180deg, #b8844c 0%, #8f5f2d 100%);
+      border: 3px solid #fde047;
+      box-shadow: 0 6px 0 #553413, 0 12px 24px rgba(0, 0, 0, 0.55);
+      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .oak-card:hover {
+      transform: translateY(-3px) scale(1.025);
+      filter: brightness(1.08);
+      box-shadow: 0 9px 0 #553413, 0 16px 32px rgba(250, 204, 21, 0.4);
+    }
+
+    .oak-card:active {
+      transform: translateY(3px) scale(0.98);
+      box-shadow: 0 2px 0 #553413, 0 6px 12px rgba(0, 0, 0, 0.45);
+    }
+
+    .neon-choice-btn {
+      position: relative;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+      border: 3px solid #00f5ff;
+      box-shadow: 0 6px 0 #0e7490, 0 0 22px rgba(0, 245, 255, 0.35);
+      transition: transform 0.14s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.14s ease, filter 0.14s ease;
+    }
+
+    .neon-choice-btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      filter: brightness(1.15);
+      box-shadow: 0 9px 0 #0e7490, 0 0 32px rgba(0, 245, 255, 0.65);
+    }
+
+    .neon-choice-btn:active {
+      transform: translateY(3px) scale(0.97);
+      box-shadow: 0 2px 0 #0e7490;
+    }
+
+    .neon-choice-magenta {
+      border-color: #ff00c8;
+      box-shadow: 0 6px 0 #86198f, 0 0 22px rgba(255, 0, 200, 0.35);
+    }
+
+    .neon-choice-magenta:hover {
+      box-shadow: 0 9px 0 #86198f, 0 0 32px rgba(255, 0, 200, 0.65);
+    }
+
+    .key-badge {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      font-size: 10px;
+      font-weight: 900;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: rgba(2, 6, 23, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #fde047;
+      pointer-events: none;
+    }
+
+    /* Keyboard active highlight for Squishies */
+    .sq-key-active {
+      border-color: #fde047 !important;
+      box-shadow: 0 0 24px rgba(253, 224, 71, 0.75) !important;
+      transform: scale(1.06);
+    }
+
+    /* Animations */
+    @keyframes snapPop {
+      0% { transform: scale(0.55); opacity: 0; }
+      60% { transform: scale(1.09); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-snap {
+      animation: snapPop 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes gentleShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-7px); }
+      80% { transform: translateX(7px); }
+    }
+    .animate-shake {
+      animation: gentleShake 0.42s ease-in-out;
+    }
+
+    @keyframes magicEGlide {
+      0% { transform: translateX(36px) scale(1.65); opacity: 0; }
+      65% { transform: translateX(-4px) scale(1.12); opacity: 1; }
+      100% { transform: translateX(0) scale(1); opacity: 1; }
+    }
+    .magic-e-letter {
+      display: inline-block;
+      color: #fde047;
+      text-shadow: 0 0 20px rgba(250, 204, 21, 0.95), 0 4px 0 rgba(0, 0, 0, 0.9);
+      animation: magicEGlide 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes blankSnap {
+      0% { transform: scale(1.8); color: #ffffff; text-shadow: 0 0 28px #fde047; }
+      100% { transform: scale(1); color: #fde047; text-shadow: 0 0 14px #facc15; }
+    }
+    .blank-filled {
+      display: inline-block;
+      color: #fde047;
+      font-weight: 900;
+      animation: blankSnap 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @keyframes hitFlash {
+      0% { opacity: 0.72; }
+      100% { opacity: 0; }
+    }
+    .flash-active {
+      animation: hitFlash 0.28s ease-out forwards;
+    }
+
+    @keyframes jellySquish {
+      0%   { transform: scale(1, 1); }
+      22%  { transform: scale(1.30, 0.70); }
+      45%  { transform: scale(0.80, 1.24); }
+      68%  { transform: scale(1.12, 0.88); }
+      85%  { transform: scale(0.95, 1.05); }
+      100% { transform: scale(1, 1); }
+    }
+    .squish-bounce {
+      animation: jellySquish 0.56s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes soundRipple {
+      0% { transform: scale(0.5); opacity: 0.95; }
+      100% { transform: scale(2.1); opacity: 0; }
+    }
+    .ripple-ring {
+      position: absolute;
+      inset: 8px;
+      border-radius: 9999px;
+      border: 3px solid #00f5ff;
+      pointer-events: none;
+      animation: soundRipple 0.55s ease-out forwards;
+    }
+
+    @keyframes floatNote {
+      0% { transform: translate(-50%, 0) scale(0.7); opacity: 1; }
+      100% { transform: translate(-50%, -34px) scale(1.25); opacity: 0; }
+    }
+    .float-note {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      pointer-events: none;
+      font-weight: 900;
+      font-size: 13px;
+      color: #fde047;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+      animation: floatNote 0.65s ease-out forwards;
+      white-space: nowrap;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.65);
+      border-radius: 999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0, 245, 255, 0.55);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 3D WebGL Canvas Mount -->
+  <div id="canvas-container"></div>
+
+  <!-- Screen Impact Flash -->
+  <div id="impact-flash" class="fixed inset-0 bg-white pointer-events-none opacity-0 z-30"></div>
+
+  <!-- TOP HUD BAR -->
+  <header class="fixed top-2 left-2 right-2 sm:top-3 sm:left-4 sm:right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+    <!-- Left: Game Title & Club Switcher -->
+    <div class="glass-hud rounded-2xl px-3 py-1.5 sm:px-4 sm:py-2 flex items-center gap-2 sm:gap-3 pointer-events-auto">
+      <div class="hidden lg:block pr-2.5 border-r border-slate-700">
+        <div class="text-xs font-black tracking-wider text-cyan-300 uppercase leading-none">Turbo Block Cup 3D</div>
+        <div class="text-[10px] font-extrabold text-fuchsia-300 tracking-wider mt-0.5">NEON LOOP-DE-GOAL</div>
+      </div>
+      <button id="btn-club-barca" class="px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2">
+        FC BARCELONA
+      </button>
+      <button id="btn-club-raith" class="px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2">
+        RAITH ROVERS
+      </button>
+    </div>
+
+    <!-- Right: Mode Pill, Goals, 3-in-a-Row Chest Streak, Belt, Squishy Vault & Mute -->
+    <div class="glass-hud rounded-2xl px-2.5 py-1.5 sm:px-4 sm:py-2 flex items-center gap-2 sm:gap-3 pointer-events-auto">
+      <!-- Active Mode Pill -->
+      <div id="hud-mode-pill" class="flex items-center gap-1.5 bg-cyan-500/20 border border-cyan-300/80 px-2.5 py-1 rounded-xl">
+        <span class="w-2 h-2 rounded-full bg-cyan-300 shadow-[0_0_8px_#00f5ff]"></span>
+        <span id="hud-mode-text" class="text-[10px] sm:text-xs font-black uppercase tracking-wide text-cyan-100">MODE 1: -Y ENDINGS</span>
+      </div>
+
+      <!-- Goals -->
+      <div class="text-center px-1">
+        <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-cyan-300 font-extrabold">Goals</div>
+        <div id="hud-goals" class="text-sm sm:text-lg font-black text-white leading-tight">0</div>
+      </div>
+
+      <!-- Chest Streak (3 in a row) -->
+      <div class="text-center px-1.5 border-l border-slate-700/80">
+        <div class="text-[9px] sm:text-[10px] uppercase tracking-wider text-amber-300 font-extrabold">Chest</div>
+        <div class="flex items-center justify-center gap-1 mt-0.5">
+          <span id="streak-dot-1" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-700 border border-amber-300/60 transition-all"></span>
+          <span id="streak-dot-2" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-700 border border-amber-300/60 transition-all"></span>
+          <span id="streak-dot-3" class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-700 border border-amber-300/60 transition-all"></span>
+        </div>
+      </div>
+
+      <!-- Dojo Belt -->
+      <div class="hidden sm:flex items-center gap-1.5 pl-2 border-l border-slate-700/80">
+        <span id="hud-belt-swatch" class="w-4 h-4 rounded-md border-2 border-white shadow"></span>
+        <div>
+          <div class="text-[9px] uppercase tracking-wider text-slate-300 font-bold leading-none">Belt</div>
+          <div id="hud-belt-name" class="text-xs font-black text-white leading-tight">White</div>
+        </div>
+      </div>
+
+      <!-- Squishy Gallery / Dojo Vault Button -->
+      <button id="btn-open-vault" title="Open Dojo Vault (V)" class="bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-110 text-slate-950 font-black text-xs sm:text-sm px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl shadow cursor-pointer flex items-center gap-1.5">
+        <span>🧸</span>
+        <span id="hud-squishy-count">0/18</span>
+      </button>
+
+      <!-- Mute Toggle -->
+      <button id="btn-mute" title="Toggle Sound (M)" class="bg-slate-800/90 hover:bg-slate-700 border border-slate-600 text-white w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center text-sm sm:text-base cursor-pointer">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- CENTER TOP FEEDBACK OVERLAYS -->
+  <div class="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center w-[94vw] max-w-2xl pointer-events-none">
+    <!-- Word Snap Confirmation Box -->
+    <div id="word-snap-box" class="hidden bg-slate-950/92 border-2 border-cyan-300 rounded-2xl px-6 py-2.5 shadow-[0_0_32px_rgba(0,245,255,0.65)] text-center mb-2">
+      <div id="word-snap-formula" class="text-xs sm:text-sm font-extrabold uppercase tracking-widest text-cyan-300"></div>
+      <div id="word-snap-result" class="text-2xl sm:text-4xl font-black text-white tracking-wider mt-0.5"></div>
+    </div>
+
+    <!-- Guest Alert Pill -->
+    <div id="guest-alert-pill" class="hidden mb-2 px-5 py-1.5 rounded-full font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-white shadow-xl"></div>
+
+    <!-- Spectacular Goal / Save / Miss Banner -->
+    <div id="goal-banner" class="hidden w-full rounded-3xl p-4 sm:p-6 border-4 border-white shadow-[0_14px_50px_rgba(0,0,0,0.78)] text-center pointer-events-auto">
+      <div id="goal-banner-title" class="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight text-white drop-shadow-[0_4px_0_rgba(0,0,0,0.65)]"></div>
+      <div id="goal-banner-sub" class="text-sm sm:text-lg font-extrabold text-white/95 mt-1.5 drop-shadow"></div>
+      <button id="btn-next-shot" class="hidden mt-4 bg-white hover:bg-yellow-200 text-slate-950 font-black text-sm sm:text-base px-6 py-2.5 rounded-full shadow-lg border-2 border-slate-900 cursor-pointer transition-transform hover:scale-105">
+        NEXT SHOT ▶ <span class="text-xs opacity-65 ml-1">[SPACE]</span>
+      </button>
+    </div>
+
+    <!-- Gentle Retry Pill -->
+    <div id="retry-pill" class="hidden mt-2 bg-amber-400 text-slate-950 font-extrabold text-sm sm:text-base px-5 py-2 rounded-full border-2 border-white shadow-xl text-center"></div>
+
+    <!-- Mode Rotation Celebration Toast -->
+    <div id="mode-rotate-pill" class="hidden mt-2 bg-gradient-to-r from-cyan-500 via-fuchsia-600 to-amber-500 text-white font-black text-sm sm:text-lg px-6 py-2.5 rounded-2xl border-2 border-yellow-300 shadow-[0_0_32px_rgba(0,245,255,0.75)] text-center"></div>
+  </div>
+
+  <!-- BOTTOM-LEFT QUESTION DECK -->
+  <aside id="spell-deck-wrapper">
+    <div id="spell-deck-card" class="glass-hud rounded-3xl p-4 sm:p-5 border-2 border-cyan-400/75 shadow-[0_0_36px_rgba(0,245,255,0.22)]">
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+        <span id="deck-badge" class="bg-gradient-to-r from-orange-500 to-amber-400 text-slate-950 text-[11px] sm:text-xs font-black px-3 py-1 rounded-xl uppercase tracking-wide">
+          ⚡ NITRO LAUNCH
+        </span>
+        <span id="deck-mode-pill" class="bg-slate-900/90 border border-fuchsia-400/70 text-fuchsia-200 text-[11px] sm:text-xs font-black px-3 py-1 rounded-xl uppercase tracking-wide">
+          MODE 1: -Y
+        </span>
+      </div>
+
+      <!-- Prompt / Sentence Area -->
+      <div id="deck-question" class="text-base sm:text-lg md:text-xl font-black text-white leading-snug mb-3"></div>
+
+      <!-- Optional Audio Button (Used in Mode 4 & Mode 5) -->
+      <div id="deck-audio-row" class="hidden mb-3">
+        <button id="btn-hear-sentence" class="w-full bg-gradient-to-r from-cyan-500/25 to-blue-600/25 hover:from-cyan-500/40 hover:to-blue-600/40 border-2 border-cyan-300 text-cyan-100 font-black text-xs sm:text-sm py-2 px-4 rounded-xl flex items-center justify-center gap-2 cursor-pointer transition-all">
+          <span class="text-base">🔊</span>
+          <span>HEAR SENTENCE</span>
+          <span class="text-[10px] bg-slate-950/70 border border-cyan-300/50 px-1.5 py-0.5 rounded text-yellow-300">[H]</span>
+        </button>
+      </div>
+
+      <!-- 2-Choice Answer Buttons -->
+      <div id="deck-choices-grid" class="grid grid-cols-2 gap-3 sm:gap-4"></div>
+
+      <!-- Subtle Keyboard Hint -->
+      <div class="mt-2.5 text-[10px] font-bold text-slate-400 flex items-center justify-between px-1">
+        <span>Keys: <span class="text-cyan-300">1 / 2</span> or <span class="text-cyan-300">← / →</span></span>
+        <span><span class="text-amber-300">V</span> Vault • <span class="text-amber-300">M</span> Mute</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MIXED-SUBJECT TREASURE CHEST MODAL (Every 3 in a Row) -->
+  <div id="chest-modal" class="hidden fixed inset-0 z-30 bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-hud w-full max-w-xl rounded-3xl p-5 sm:p-7 border-4 border-amber-400 shadow-[0_0_55px_rgba(250,204,21,0.45)]">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <span class="bg-amber-400 text-slate-950 font-black text-xs sm:text-sm px-3.5 py-1 rounded-full uppercase tracking-wider">
+          🏆 3-IN-A-ROW TREASURE CHEST!
+        </span>
+        <span id="chest-category-pill" class="bg-cyan-500/25 border border-cyan-300 text-cyan-200 font-black text-xs sm:text-sm px-3.5 py-1 rounded-full uppercase tracking-wider">
+          ANCIENT EGYPT
+        </span>
+      </div>
+
+      <h3 id="chest-question" class="text-lg sm:text-2xl font-black text-white mb-4 leading-snug"></h3>
+      <div id="chest-options" class="grid grid-cols-1 gap-3"></div>
+      <div id="chest-feedback" class="hidden mt-4 text-center font-extrabold text-sm sm:text-base rounded-2xl px-4 py-2.5"></div>
+    </div>
+  </div>
+
+  <!-- CHOOSE YOUR SQUISHY PICKER MODAL -->
+  <div id="squishy-pick-modal" class="hidden fixed inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-hud w-full max-w-3xl rounded-3xl p-5 sm:p-7 border-4 border-emerald-400 shadow-[0_0_60px_rgba(52,211,153,0.45)] max-h-[92vh] overflow-y-auto custom-scroll">
+      <div class="text-center mb-4">
+        <div class="inline-block bg-gradient-to-r from-emerald-400 to-cyan-300 text-slate-950 font-black text-xs sm:text-sm px-4 py-1 rounded-full uppercase tracking-wider mb-2">
+          ✨ CHEST UNLOCKED!
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black text-white">CHOOSE YOUR SQUISHY!</h2>
+        <p class="text-xs sm:text-sm font-bold text-slate-300 mt-1">Click or press <span class="text-yellow-300">1, 2, or 3</span> to pick your squishy!</p>
+      </div>
+
+      <div id="squishy-pick-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4"></div>
+
+      <div id="squishy-chosen-banner" class="hidden bg-emerald-500/20 border-2 border-emerald-400 rounded-2xl p-4 text-center">
+        <div id="squishy-chosen-text" class="text-sm sm:text-lg font-black text-emerald-200 mb-3"></div>
+        <button id="btn-squishy-continue" class="bg-gradient-to-r from-amber-400 to-yellow-300 hover:brightness-110 text-slate-950 font-black text-sm sm:text-base px-7 py-2.5 rounded-full shadow-lg cursor-pointer transition-transform hover:scale-105">
+          BACK TO STADIUM ▶ <span class="text-xs opacity-70 ml-1">[SPACE]</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOJO VAULT & 18-SQUISHY MUSICAL GALLERY MODAL -->
+  <div id="vault-modal" class="hidden fixed inset-0 z-40 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-5">
+    <div class="glass-hud w-full max-w-5xl rounded-3xl p-5 sm:p-7 border-2 border-cyan-400/70 max-h-[92vh] overflow-y-auto custom-scroll">
+      <div class="flex flex-wrap items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-700/80">
+        <div>
+          <h2 class="text-xl sm:text-3xl font-black text-white">🏆 DOJO VAULT &amp; MUSICAL SQUISHY GALLERY</h2>
+          <p class="text-xs sm:text-sm font-bold text-cyan-300 mt-0.5">Click any unlocked Squishy — or press its keyboard letter (A–R) — to play its musical tone!</p>
+        </div>
+        <button id="btn-close-vault" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white font-black text-sm px-4 py-2 rounded-xl cursor-pointer">
+          ✕ CLOSE [ESC]
+        </button>
+      </div>
+
+      <!-- Dojo Belt Progress & Stats -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+        <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-3.5">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-extrabold">Current Dojo Belt</div>
+          <div class="flex items-center gap-2 mt-1">
+            <span id="vault-belt-swatch" class="w-5 h-5 rounded-md border-2 border-white"></span>
+            <span id="vault-belt-name" class="text-lg font-black text-white">White Belt</span>
+          </div>
+          <div id="vault-belt-quote" class="text-xs font-bold text-amber-300 mt-1"></div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-3.5">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-extrabold">Chests Opened</div>
+          <div id="vault-chests-count" class="text-2xl font-black text-amber-300 mt-1">0</div>
+          <div class="text-xs font-bold text-slate-300 mt-0.5">Every 3 goals in a row!</div>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-700 rounded-2xl p-3.5">
+          <div class="text-[11px] uppercase tracking-wider text-slate-400 font-extrabold">Squishies Collected</div>
+          <div id="shelf-count-text" class="text-2xl font-black text-emerald-300 mt-1">0/18</div>
+          <div class="text-xs font-bold text-slate-300 mt-0.5">Press keys A–R to play!</div>
+        </div>
+      </div>
+
+      <!-- 5-Mode Spelling Selector & Auto-Rotate Toggle -->
+      <div class="mb-5 bg-slate-900/80 border border-cyan-400/40 rounded-2xl p-4">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h3 class="text-xs sm:text-sm uppercase tracking-wider text-cyan-300 font-black">🎯 Pitch Shootout Spelling Mode</h3>
+          <button id="btn-toggle-autorotate" class="text-xs font-black px-3.5 py-1.5 rounded-full border cursor-pointer transition-all bg-emerald-500/25 border-emerald-400 text-emerald-200">
+            🔄 Auto-Rotate After Chests: ON
+          </button>
+        </div>
+        <div id="focus-selector-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5"></div>
+      </div>
+
+      <!-- 18-Squishy Musical Collection Shelf -->
+      <div class="mb-4">
+        <h3 class="text-xs sm:text-sm uppercase tracking-wider text-amber-300 font-black mb-3">🧸 Your 18-Animal Squishy Shelf (Click or Press A–R to Squeeze!)</h3>
+        <div id="squishy-shelf-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3"></div>
+      </div>
+
+      <!-- Safe Two-Step Progress Reset -->
+      <div class="flex justify-end pt-3 border-t border-slate-800">
+        <button id="btn-reset-save" class="text-xs font-bold text-rose-300 hover:text-rose-200 bg-rose-950/50 border border-rose-500/40 px-3.5 py-1.5 rounded-xl cursor-pointer">
+          Reset Saved Progress
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN 3D WEBGL GAME ENGINE -->
+  <script type="module">
+    import * as THREE from 'three';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    /*************************************************************************
+     * 1. CLUB THEMES, 8 DOJO BELTS & EXPANDED 5-MODE SPELLING BANKS
+     *************************************************************************/
+    const CLUBS = {
+      barca: {
+        name: "FC Barcelona",
+        primary: 0x004587,
+        secondary: 0xa50044,
+        accent: 0xfbba07,
+        underglow: 0x00f5ff
+      },
+      raith: {
+        name: "Raith Rovers",
+        primary: 0x0b2545,
+        secondary: 0xffffff,
+        accent: 0xe73037,
+        underglow: 0xff00c8
+      }
+    };
+
+    const DOJO_BELTS = [
+      { name: "White",  hex: "#FFFFFF", color: 0xffffff, quote: "Sensei Rudy: 'Welcome to the Bobby Wasabi Dojo!'" },
+      { name: "Yellow", hex: "#FACC15", color: 0xfacc15, quote: "Eddie: 'Yellow Belt! Better than Falafel Phil's!'" },
+      { name: "Orange", hex: "#F97316", color: 0xf97316, quote: "Jerry: 'Orange Belt! Hot Wheels nitro speed!'" },
+      { name: "Green",  hex: "#22C55E", color: 0x22c55e, quote: "Milton: 'Green Belt achieved with 100% precision!'" },
+      { name: "Blue",   hex: "#3B82F6", color: 0x3b82f6, quote: "Jack Brewer: 'Blue Belt! Pure Wasabi Warrior focus!'" },
+      { name: "Purple", hex: "#A855F7", color: 0xa855f7, quote: "Kim Crawford: 'Purple Belt! Ninja reflexes unlocked!'" },
+      { name: "Brown",  hex: "#92400E", color: 0x92400e, quote: "Sensei Rudy: 'Brown Belt! One step from Master!'" },
+      { name: "Black",  hex: "#111827", color: 0x111827, quote: "Bobby Wasabi: 'TRUE BLACK BELT LEGEND!'" }
+    ];
+
+    const KICKIN_IT_QUIPS = [
+      "Sensei Rudy: 'That's the Bobby Wasabi way!'",
+      "Eddie: 'Even better than Falafel Phil's!'",
+      "Bobby Wasabi approves!",
+      "Jack Brewer: 'Pure Wasabi Warrior power!'",
+      "Kim Crawford: 'Unstoppable black-belt strike!'",
+      "Milton: 'Statistically legendary!'",
+      "Jerry: 'Did you see that move?!'"
+    ];
+    const randomKickinItQuip = () => KICKIN_IT_QUIPS[Math.floor(Math.random() * KICKIN_IT_QUIPS.length)];
+
+    const MODE_ORDER = ["y_only", "magic_e", "patterns", "th_vs_s", "voiced_th"];
+    const FOCUS_MODES = [
+      { id: "y_only",    hud: "MODE 1: -Y ENDINGS",         short: "MODE 1: -Y",         label: "1. -y Endings",         sub: "spy, fly, sky, spry..." },
+      { id: "magic_e",   hud: "MODE 2: MAGIC 'E'",          short: "MODE 2: MAGIC 'E'",  label: "2. Magic 'e'",          sub: "tub → tube, plan → plane..." },
+      { id: "patterns",  hud: "MODE 3: -ILD / -OLD / -IND", short: "MODE 3: -ILD/-OLD",  label: "3. -ild / -old / -ind", sub: "wild, scold, grind..." },
+      { id: "th_vs_s",   hud: "MODE 4: TH vs S",            short: "MODE 4: TH vs S",    label: "4. Blank: TH vs S",     sub: "path, thunder, bus, star..." },
+      { id: "voiced_th", hud: "MODE 5: VOICED TH & CHAINS", short: "MODE 5: VOICED TH",  label: "5. Voiced 'th' Chains", sub: "that → than → then, they/their" }
+    ];
+
+    // Mode 1: End-of-Word -y
+    const VALID_Y_STARTERS = [
+      { valid: "sp_",  distractor: "sn_",  word: "spy" },
+      { valid: "fl_",  distractor: "gl_",  word: "fly" },
+      { valid: "sk_",  distractor: "sm_",  word: "sky" },
+      { valid: "cr_",  distractor: "cl_",  word: "cry" },
+      { valid: "tr_",  distractor: "tw_",  word: "try" },
+      { valid: "dr_",  distractor: "dw_",  word: "dry" },
+      { valid: "fr_",  distractor: "fw_",  word: "fry" },
+      { valid: "sh_",  distractor: "sw_",  word: "shy" },
+      { valid: "sl_",  distractor: "sm_",  word: "sly" },
+      { valid: "wh_",  distractor: "wk_",  word: "why" },
+      { valid: "pr_",  distractor: "pw_",  word: "pry" },
+      { valid: "spr_", distractor: "spl_", word: "spry" },
+      { valid: "b_",   distractor: "v_",   word: "by" },
+      { valid: "m_",   distractor: "n_",   word: "my" },
+      { valid: "st_",  distractor: "sf_",  word: "sty" },
+      { valid: "wr_",  distractor: "wl_",  word: "wry" }
+    ];
+
+    // Mode 2: Magic 'e'
+    const MAGIC_E_BANK = [
+      { base: "tub",  word: "tube",  distractor: "bus" },
+      { base: "kit",  word: "kite",  distractor: "kid" },
+      { base: "cap",  word: "cape",  distractor: "cab" },
+      { base: "hop",  word: "hope",  distractor: "hot" },
+      { base: "fin",  word: "fine",  distractor: "fig" },
+      { base: "cub",  word: "cube",  distractor: "cup" },
+      { base: "tap",  word: "tape",  distractor: "tag" },
+      { base: "pin",  word: "pine",  distractor: "pig" },
+      { base: "cut",  word: "cute",  distractor: "rug" },
+      { base: "mad",  word: "made",  distractor: "map" },
+      { base: "bit",  word: "bite",  distractor: "big" },
+      { base: "not",  word: "note",  distractor: "box" },
+      { base: "hat",  word: "hate",  distractor: "bag" },
+      { base: "rid",  word: "ride",  distractor: "rib" },
+      { base: "rob",  word: "robe",  distractor: "fog" },
+      { base: "man",  word: "mane",  distractor: "mug" },
+      { base: "plan", word: "plane", distractor: "plug" },
+      { base: "spin", word: "spine", distractor: "spot" },
+      { base: "slim", word: "slime", distractor: "slug" },
+      { base: "glob", word: "globe", distractor: "frog" },
+      { base: "dim",  word: "dime",  distractor: "dig" },
+      { base: "can",  word: "cane",  distractor: "cat" },
+      { base: "hid",  word: "hide",  distractor: "hip" },
+      { base: "rip",  word: "ripe",  distractor: "bug" }
+    ];
+
+    // Mode 3: -ild / -old / -ind
+    const PATTERN_BANK = [
+      { ending: "ild", valid: "w_",  distractor: "b_",  word: "wild" },
+      { ending: "ild", valid: "ch_", distractor: "sh_", word: "child" },
+      { ending: "ild", valid: "m_",  distractor: "n_",  word: "mild" },
+      { ending: "old", valid: "g_",  distractor: "d_",  word: "gold" },
+      { ending: "old", valid: "c_",  distractor: "p_",  word: "cold" },
+      { ending: "old", valid: "h_",  distractor: "l_",  word: "hold" },
+      { ending: "old", valid: "t_",  distractor: "z_",  word: "told" },
+      { ending: "old", valid: "b_",  distractor: "v_",  word: "bold" },
+      { ending: "old", valid: "f_",  distractor: "j_",  word: "fold" },
+      { ending: "old", valid: "s_",  distractor: "k_",  word: "sold" },
+      { ending: "old", valid: "m_",  distractor: "r_",  word: "mold" },
+      { ending: "old", valid: "sc_", distractor: "sm_", word: "scold" },
+      { ending: "ind", valid: "f_",  distractor: "v_",  word: "find" },
+      { ending: "ind", valid: "k_",  distractor: "p_",  word: "kind" },
+      { ending: "ind", valid: "m_",  distractor: "n_",  word: "mind" },
+      { ending: "ind", valid: "bl_", distractor: "cl_", word: "blind" },
+      { ending: "ind", valid: "gr_", distractor: "gl_", word: "grind" },
+      { ending: "ind", valid: "w_",  distractor: "t_",  word: "wind" },
+      { ending: "ind", valid: "b_",  distractor: "d_",  word: "bind" },
+      { ending: "ind", valid: "r_",  distractor: "z_",  word: "rind" }
+    ];
+
+    // Mode 4: Missing Blank in a Sentence ("TH" vs "S")
+    const TH_VS_S_BANK = [
+      { before: "Walk down the muddy pa",             after: ".",                           answer: "TH", word: "path",     full: "Walk down the muddy path." },
+      { before: "The car zoomed ",                    after: "rough the neon loop!",        answer: "TH", word: "through",  full: "The car zoomed through the neon loop!" },
+      { before: "I lost my front too",                after: " yesterday.",                 answer: "TH", word: "tooth",    full: "I lost my front tooth yesterday." },
+      { before: "Let's count to ",                    after: "ree and launch!",             answer: "TH", word: "three",    full: "Let's count to three and launch!" },
+      { before: "Jump in the warm ba",                after: " after football.",            answer: "TH", word: "bath",     full: "Jump in the warm bath after football." },
+      { before: "Open your mou",                      after: " wide for the dentist.",      answer: "TH", word: "mouth",    full: "Open your mouth wide for the dentist." },
+      { before: "Give a big ",                        after: "umbs up for that goal!",      answer: "TH", word: "thumbs",   full: "Give a big thumbs up for that goal!" },
+      { before: "Please ",                            after: "row the ball to the striker.",answer: "TH", word: "throw",    full: "Please throw the ball to the striker." },
+      { before: "Use your brain to ",                 after: "ink carefully.",              answer: "TH", word: "think",    full: "Use your brain to think carefully." },
+      { before: "Watch out for the sharp ",           after: "orn on the rose.",            answer: "TH", word: "thorn",    full: "Watch out for the sharp thorn on the rose." },
+      { before: "A fuzzy mo",                         after: " fluttered near the lights.", answer: "TH", word: "moth",     full: "A fuzzy moth fluttered near the lights." },
+      { before: "We heard loud ",                     after: "under during the storm.",     answer: "TH", word: "thunder",  full: "We heard loud thunder during the storm." },
+      { before: "That goalie wears ",                 after: "ick padded gloves.",          answer: "TH", word: "thick",    full: "That goalie wears thick padded gloves." },
+      { before: "Our home planet is called Ear",      after: ".",                           answer: "TH", word: "Earth",    full: "Our home planet is called Earth." },
+      { before: "The compass needle points nor",      after: ".",                           answer: "TH", word: "north",    full: "The compass needle points north." },
+      { before: "My sister just turned ",             after: "irteen today.",               answer: "TH", word: "thirteen", full: "My sister just turned thirteen today." },
+      { before: "The big red bu",                     after: " drove to the stadium.",      answer: "S",  word: "bus",      full: "The big red bus drove to the stadium." },
+      { before: "A tiny grey mou",                    after: "e ran across the grass.",     answer: "S",  word: "mouse",    full: "A tiny grey mouse ran across the grass." },
+      { before: "Wash your hands in the kitchen ",    after: "ink.",                        answer: "S",  word: "sink",     full: "Wash your hands in the kitchen sink." },
+      { before: "I can only find one football ",      after: "ock!",                        answer: "S",  word: "sock",     full: "I can only find one football sock!" },
+      { before: "The bright yellow ",                 after: "un shone on the pitch.",      answer: "S",  word: "sun",      full: "The bright yellow sun shone on the pitch." },
+      { before: "Make a quick pa",                    after: "s to your teammate!",         answer: "S",  word: "pass",     full: "Make a quick pass to your teammate!" },
+      { before: "Green mo",                           after: "s grew on the old stone wall.",answer: "S", word: "moss",     full: "Green moss grew on the old stone wall." },
+      { before: "We built a castle in the ",          after: "and at the beach.",           answer: "S",  word: "sand",     full: "We built a castle in the sand at the beach." },
+      { before: "Look at that shooting ",             after: "tar in the night sky!",       answer: "S",  word: "star",     full: "Look at that shooting star in the night sky!" },
+      { before: "The pitch is covered in green gra",  after: "s.",                          answer: "S",  word: "grass",    full: "The pitch is covered in green grass." },
+      { before: "Pour some cold water in the gla",    after: "s.",                          answer: "S",  word: "glass",    full: "Pour some cold water in the glass." },
+      { before: "That Hot Wheels car is super fa",    after: "t!",                          answer: "S",  word: "fast",     full: "That Hot Wheels car is super fast!" }
+    ];
+
+    // Mode 5: UFLI Voiced 'th' (that, then, them, this, than), Word Work Chains & Irregular Heart Words (they, their)
+    const VOICED_TH_BANK = [
+      // Word Work Chains
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>that</span>. Change <span class='text-cyan-300'>t</span> to <span class='text-cyan-300'>n</span>!", correct: "than", distractor: "them", formula: "that → change t to n", full: "Change the t in that to n to make than." },
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>than</span>. Change <span class='text-cyan-300'>a</span> to <span class='text-cyan-300'>e</span>!", correct: "then", distractor: "this", formula: "than → change a to e", full: "Change the a in than to e to make then." },
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>then</span>. Change <span class='text-cyan-300'>n</span> to <span class='text-cyan-300'>m</span>!", correct: "them", distractor: "that", formula: "then → change n to m", full: "Change the n in then to m to make them." },
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>them</span>. Change <span class='text-cyan-300'>m</span> to <span class='text-cyan-300'>n</span>!", correct: "then", distractor: "than", formula: "them → change m to n", full: "Change the m in them to n to make then." },
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>than</span>. Change <span class='text-cyan-300'>n</span> to <span class='text-cyan-300'>t</span>!", correct: "that", distractor: "this", formula: "than → change n to t", full: "Change the n in than to t to make that." },
+      { kind: "chain", prompt: "Word Chain: Start with <span class='text-yellow-300'>that</span>. Change <span class='text-cyan-300'>at</span> to <span class='text-cyan-300'>is</span>!", correct: "this", distractor: "then", formula: "that → change at to is", full: "Change at in that to is to make this." },
+      // Irregular Heart Words (they / their) & Voiced 'th' Sentences
+      { kind: "sentence", before: "", after: " is their dish.", correct: "This", distractor: "Then", formula: "VOICED TH WORD", full: "This is their dish." },
+      { kind: "sentence", before: "This is ", after: " dish.", correct: "their", distractor: "they", formula: "HEART WORD ❤️", full: "This is their dish." },
+      { kind: "sentence", before: "", after: " got them a ball.", correct: "They", distractor: "Their", formula: "HEART WORD ❤️", full: "They got them a ball." },
+      { kind: "sentence", before: "They got ", after: " a ball.", correct: "them", distractor: "then", formula: "VOICED TH WORD", full: "They got them a ball." },
+      { kind: "sentence", before: "Kick ", after: " ball into the net!", correct: "that", distractor: "than", formula: "VOICED TH WORD", full: "Kick that ball into the net!" },
+      { kind: "sentence", before: "First we pass, ", after: " we shoot!", correct: "then", distractor: "them", formula: "VOICED TH WORD", full: "First we pass, then we shoot!" },
+      { kind: "sentence", before: "My car is faster ", after: " a rocket!", correct: "than", distractor: "that", formula: "VOICED TH WORD", full: "My car is faster than a rocket!" },
+      { kind: "sentence", before: "", after: " love playing at the stadium.", correct: "They", distractor: "Their", formula: "HEART WORD ❤️", full: "They love playing at the stadium." },
+      { kind: "sentence", before: "The team cheered for ", after: " goalie.", correct: "their", distractor: "they", formula: "HEART WORD ❤️", full: "The team cheered for their goalie." },
+      { kind: "sentence", before: "Look at ", after: " neon loop!", correct: "this", distractor: "them", formula: "VOICED TH WORD", full: "Look at this neon loop!" },
+      { kind: "sentence", before: "Pass the ball to ", after: "!", correct: "them", distractor: "then", formula: "VOICED TH WORD", full: "Pass the ball to them!" },
+      { kind: "sentence", before: "", after: " was a massive goal!", correct: "That", distractor: "Than", formula: "VOICED TH WORD", full: "That was a massive goal!" }
+    ];
+
+    // Expanded Mixed-Subject Treasure Chest Questions (42 total: 7 per subject)
+    const CHEST_SUBJECTS = ["English", "Maths", "Ancient Egypt", "Natural History", "Samuel Morse", "Scotland"];
+    const CHEST_QUESTIONS = {
+      "English": [
+        { q: "Which word has a silent 'k' at the start?", opts: ["knight", "kite", "kick"], ans: 0 },
+        { q: "Add Magic 'e' to 'hop'. What new word do you get?", opts: ["hoped", "hope", "hoop"], ans: 1 },
+        { q: "Which word rhymes with 'gold' and 'cold'?", opts: ["bold", "bird", "boot"], ans: 0 },
+        { q: "Which word uses unvoiced 'th' at the end?", opts: ["path", "pass", "pan"], ans: 0 },
+        { q: "Which word is a doing word (a verb)?", opts: ["jump", "stadium", "blue"], ans: 0 },
+        { q: "Add Magic 'e' to 'cub'. What new 3D shape do you get?", opts: ["cup", "cube", "club"], ans: 1 },
+        { q: "Which word ends with the long 'i' sound spelled '-y'?", opts: ["happy", "fly", "toy"], ans: 1 }
+      ],
+      "Maths": [
+        { q: "A striker scores 3 goals in each of 4 matches. How many goals in total?", opts: ["12", "7", "14"], ans: 0 },
+        { q: "What is 25 + 18?", opts: ["33", "43", "45"], ans: 1 },
+        { q: "A Hot Wheels loop is 60 cm long. Halfway around is how many cm?", opts: ["20 cm", "30 cm", "40 cm"], ans: 1 },
+        { q: "What is 9 × 5?", opts: ["40", "45", "54"], ans: 1 },
+        { q: "A football match has two halves of 45 minutes. How many minutes in total?", opts: ["80", "90", "100"], ans: 1 },
+        { q: "What is 100 − 37?", opts: ["63", "67", "73"], ans: 0 },
+        { q: "How many sides does a hexagon have?", opts: ["5", "6", "8"], ans: 1 }
+      ],
+      "Ancient Egypt": [
+        { q: "Which mighty river helped Ancient Egypt grow crops in the desert?", opts: ["The Amazon", "The Nile", "The Thames"], ans: 1 },
+        { q: "What were the picture-symbols used for Ancient Egyptian writing called?", opts: ["Hieroglyphs", "Runes", "Emojis"], ans: 0 },
+        { q: "Which boy-king pharaoh had a famous golden burial mask?", opts: ["Tutankhamun", "Julius Caesar", "Alexander"], ans: 0 },
+        { q: "What giant stone tombs were built for the Egyptian pharaohs?", opts: ["Castles", "Pyramids", "Colosseums"], ans: 1 },
+        { q: "What mythical statue in Giza has the body of a lion and a human head?", opts: ["The Sphinx", "The Minotaur", "The Griffin"], ans: 0 },
+        { q: "What reed plant did Ancient Egyptians turn into early paper?", opts: ["Bamboo", "Papyrus", "Cactus"], ans: 1 },
+        { q: "Which animal was considered sacred and deeply loved in Ancient Egypt?", opts: ["Cat", "Penguin", "Kangaroo"], ans: 0 }
+      ],
+      "Natural History": [
+        { q: "What is the largest animal to have EVER lived on Earth?", opts: ["T-Rex", "Blue Whale", "African Elephant"], ans: 1 },
+        { q: "How many hearts does an octopus have?", opts: ["1", "2", "3"], ans: 2 },
+        { q: "Which dinosaur name means 'Three-Horned Face'?", opts: ["Triceratops", "Stegosaurus", "Velociraptor"], ans: 0 },
+        { q: "What do we call animals that eat ONLY plants?", opts: ["Carnivores", "Herbivores", "Omnivores"], ans: 1 },
+        { q: "Which is the fastest land animal in the world?", opts: ["Cheetah", "Lion", "Greyhound"], ans: 0 },
+        { q: "What do caterpillars transform into inside a chrysalis?", opts: ["Beetles", "Butterflies", "Dragonflies"], ans: 1 },
+        { q: "Which bird is famous for being unable to fly, but an amazing swimmer?", opts: ["Eagle", "Penguin", "Owl"], ans: 1 }
+      ],
+      "Samuel Morse": [
+        { q: "Samuel Morse helped invent a famous code made of...", opts: ["Dots and dashes", "Triangles and stars", "Numbers only"], ans: 0 },
+        { q: "In Morse Code, what famous rescue signal is • • • — — — • • • ?", opts: ["WIN", "SOS", "GOAL"], ans: 1 },
+        { q: "What electrical machine did Samuel Morse help build to send messages over wires?", opts: ["Telegraph", "Microwave", "Submarine"], ans: 0 },
+        { q: "Before inventing Morse Code, what other job was Samuel Morse famous for?", opts: ["Portrait painter", "Astronaut", "Football referee"], ans: 0 },
+        { q: "Which letter is just ONE single dot (•) in Morse Code?", opts: ["E", "Z", "Q"], ans: 0 },
+        { q: "What did Morse operators tap to send dots and dashes?", opts: ["A telegraph key", "A drumstick", "A piano pedal"], ans: 0 },
+        { q: "In Morse Code, how is a dash (—) different from a dot (•)?", opts: ["It is longer", "It is quieter", "It is blue"], ans: 0 }
+      ],
+      "Scotland": [
+        { q: "What is the national animal of Scotland?", opts: ["Dragon", "Unicorn", "Lion"], ans: 1 },
+        { q: "Which Scottish football team plays at Stark's Park in Kirkcaldy?", opts: ["Raith Rovers", "FC Barcelona", "Real Madrid"], ans: 0 },
+        { q: "What is the highest mountain in Scotland and the UK?", opts: ["Mount Everest", "Ben Nevis", "Snowdon"], ans: 1 },
+        { q: "What famous Scottish loch is home to the legend of 'Nessie'?", opts: ["Loch Ness", "Loch Lomond", "Loch Tay"], ans: 0 },
+        { q: "What is the capital city of Scotland?", opts: ["Glasgow", "Edinburgh", "Aberdeen"], ans: 1 },
+        { q: "What traditional Scottish musical instrument uses a bag and pipes?", opts: ["Bagpipes", "Trumpet", "Ukulele"], ans: 0 },
+        { q: "What is the famous checkered Scottish fabric pattern called?", opts: ["Tartan", "Denim", "Velvet"], ans: 0 }
+      ]
+    };
+
+    /*************************************************************************
+     * 2. 18-ANIMAL SQUISHY GALLERY WITH UNIQUE MUSICAL TONES & KEYS (A–R)
+     *************************************************************************/
+    const SQUISHIES = [
+      { id: "dino",       key: "A", name: "Mint Dino",           body: "#34d399", belly: "#d1fae5", accent: "#facc15", type: "dino",       note: "C3",  freq: 130.8, bend: 1.45, wave: "triangle", style: "bass" },
+      { id: "cow",        key: "B", name: "Violet Highland Cow", body: "#a78bfa", belly: "#ede9fe", accent: "#fde047", type: "cow",        note: "D3",  freq: 146.8, bend: 1.35, wave: "sawtooth", style: "warm" },
+      { id: "shark",      key: "C", name: "Cobalt Shark",        body: "#3b82f6", belly: "#dbeafe", accent: "#1d4ed8", type: "shark",      note: "E3",  freq: 164.8, bend: 1.60, wave: "triangle", style: "chomp" },
+      { id: "redpanda",   key: "D", name: "Coral Red Panda",     body: "#fb7185", belly: "#ffe4e6", accent: "#7c2d12", type: "redpanda",   note: "G3",  freq: 196.0, bend: 1.55, wave: "sine",     style: "boing" },
+      { id: "corgi",      key: "E", name: "Peach Corgi",         body: "#fb923c", belly: "#ffedd5", accent: "#9a3412", type: "corgi",      note: "A3",  freq: 220.0, bend: 1.65, wave: "triangle", style: "bark" },
+      { id: "fox",        key: "F", name: "Tangerine Fox",       body: "#f97316", belly: "#fef3c7", accent: "#7c2d12", type: "fox",        note: "B3",  freq: 246.9, bend: 1.70, wave: "sine",     style: "chirp" },
+      { id: "owl",        key: "G", name: "Indigo Owl",          body: "#6366f1", belly: "#e0e7ff", accent: "#facc15", type: "owl",        note: "C4",  freq: 261.6, bend: 1.30, wave: "sine",     style: "hoot" },
+      { id: "frog",       key: "H", name: "Emerald Frog",        body: "#10b981", belly: "#d1fae5", accent: "#065f46", type: "frog",       note: "D4",  freq: 293.7, bend: 1.85, wave: "triangle", style: "ribbit" },
+      { id: "penguin",    key: "I", name: "Turquoise Penguin",   body: "#2dd4bf", belly: "#f0fdfa", accent: "#fb923c", type: "penguin",    note: "E4",  freq: 329.6, bend: 1.55, wave: "sine",     style: "waddle" },
+      { id: "octopus",    key: "J", name: "Lavender Octopus",    body: "#c084fc", belly: "#f3e8ff", accent: "#9333ea", type: "octopus",    note: "F4",  freq: 349.2, bend: 1.75, wave: "sine",     style: "bubble" },
+      { id: "narwhal",    key: "K", name: "Sky Narwhal",         body: "#38bdf8", belly: "#e0f2fe", accent: "#fde047", type: "narwhal",    note: "G4",  freq: 392.0, bend: 1.60, wave: "sine",     style: "shimmer" },
+      { id: "flamingo",   key: "L", name: "Rose Flamingo",       body: "#f472b6", belly: "#fce7f3", accent: "#be185d", type: "flamingo",   note: "A4",  freq: 440.0, bend: 1.50, wave: "triangle", style: "melodic" },
+      { id: "axolotl",    key: "M", name: "Berry Axolotl",       body: "#ec4899", belly: "#fce7f3", accent: "#38bdf8", type: "axolotl",    note: "B4",  freq: 493.9, bend: 1.80, wave: "sine",     style: "bubble" },
+      { id: "duck",       key: "N", name: "Sunny Duck",          body: "#fde047", belly: "#fef9c3", accent: "#f97316", type: "duck",       note: "C5",  freq: 523.3, bend: 1.65, wave: "triangle", style: "quack" },
+      { id: "ladybug",    key: "O", name: "Crimson Ladybug",     body: "#ef4444", belly: "#fee2e2", accent: "#111827", type: "ladybug",    note: "D5",  freq: 587.3, bend: 1.55, wave: "sine",     style: "bell" },
+      { id: "bunny",      key: "P", name: "Lilac Bunny",         body: "#d8b4fe", belly: "#faf5ff", accent: "#f472b6", type: "bunny",      note: "E5",  freq: 659.3, bend: 1.75, wave: "sine",     style: "hop" },
+      { id: "hamster",    key: "Q", name: "Apricot Hamster",     body: "#fdba74", belly: "#fff7ed", accent: "#ea580c", type: "hamster",    note: "G5",  freq: 784.0, bend: 1.90, wave: "sine",     style: "tiny" },
+      { id: "bee",        key: "R", name: "Lemon Bee",           body: "#facc15", belly: "#fef08a", accent: "#1e293b", type: "bee",        note: "A5",  freq: 880.0, bend: 1.70, wave: "triangle", style: "buzz" }
+    ];
+
+    function buildSquishySVG(sq) {
+      let extras = "";
+      if (sq.type === "axolotl") {
+        extras = `
+          <g fill="${sq.accent}">
+            <ellipse cx="14" cy="46" rx="10" ry="5" transform="rotate(-25 14 46)"/>
+            <ellipse cx="12" cy="58" rx="10" ry="5"/>
+            <ellipse cx="86" cy="46" rx="10" ry="5" transform="rotate(25 86 46)"/>
+            <ellipse cx="88" cy="58" rx="10" ry="5"/>
+          </g>`;
+      } else if (sq.type === "redpanda" || sq.type === "hamster") {
+        extras = `
+          <circle cx="24" cy="26" r="11" fill="${sq.accent}"/>
+          <circle cx="76" cy="26" r="11" fill="${sq.accent}"/>
+          <circle cx="24" cy="26" r="5" fill="${sq.belly}"/>
+          <circle cx="76" cy="26" r="5" fill="${sq.belly}"/>`;
+      } else if (sq.type === "dino") {
+        extras = `
+          <polygon points="34,18 42,6 49,18" fill="${sq.accent}"/>
+          <polygon points="51,18 59,6 66,18" fill="${sq.accent}"/>
+          <polygon points="18,28 12,14 28,22" fill="${sq.accent}"/>
+          <polygon points="82,28 88,14 72,22" fill="${sq.accent}"/>`;
+      } else if (sq.type === "cow") {
+        extras = `
+          <path d="M22 28 Q10 14 24 10" fill="none" stroke="${sq.accent}" stroke-width="6" stroke-linecap="round"/>
+          <path d="M78 28 Q90 14 76 10" fill="none" stroke="${sq.accent}" stroke-width="6" stroke-linecap="round"/>
+          <ellipse cx="50" cy="25" rx="22" ry="8" fill="#7c3aed"/>`;
+      } else if (sq.type === "fox" || sq.type === "corgi") {
+        extras = `
+          <polygon points="18,34 22,8 40,22" fill="${sq.body}"/>
+          <polygon points="82,34 78,8 60,22" fill="${sq.body}"/>
+          <polygon points="23,30 25,15 35,23" fill="${sq.accent}"/>
+          <polygon points="77,30 75,15 65,23" fill="${sq.accent}"/>`;
+      } else if (sq.type === "bunny") {
+        extras = `
+          <ellipse cx="34" cy="18" rx="8" ry="18" transform="rotate(-10 34 18)" fill="${sq.body}"/>
+          <ellipse cx="66" cy="18" rx="8" ry="18" transform="rotate(10 66 18)" fill="${sq.body}"/>
+          <ellipse cx="34" cy="18" rx="4" ry="11" transform="rotate(-10 34 18)" fill="${sq.accent}"/>
+          <ellipse cx="66" cy="18" rx="4" ry="11" transform="rotate(10 66 18)" fill="${sq.accent}"/>`;
+      } else if (sq.type === "narwhal") {
+        extras = `<polygon points="46,24 50,2 54,24" fill="${sq.accent}"/>`;
+      } else if (sq.type === "frog") {
+        extras = `
+          <circle cx="30" cy="24" r="11" fill="${sq.body}"/>
+          <circle cx="70" cy="24" r="11" fill="${sq.body}"/>`;
+      } else if (sq.type === "shark") {
+        extras = `<path d="M46 22 Q52 2 62 24 Z" fill="${sq.accent}"/>`;
+      } else if (sq.type === "octopus") {
+        extras = `
+          <circle cx="24" cy="84" r="7" fill="${sq.accent}"/>
+          <circle cx="40" cy="88" r="7" fill="${sq.accent}"/>
+          <circle cx="60" cy="88" r="7" fill="${sq.accent}"/>
+          <circle cx="76" cy="84" r="7" fill="${sq.accent}"/>`;
+      } else if (sq.type === "flamingo") {
+        extras = `
+          <path d="M44 22 Q50 6 58 22" fill="${sq.accent}"/>
+          <ellipse cx="14" cy="54" rx="8" ry="14" fill="${sq.accent}" opacity="0.65"/>
+          <ellipse cx="86" cy="54" rx="8" ry="14" fill="${sq.accent}" opacity="0.65"/>`;
+      } else if (sq.type === "bee") {
+        extras = `
+          <ellipse cx="28" cy="20" rx="12" ry="7" transform="rotate(-20 28 20)" fill="#e0f2fe" opacity="0.9"/>
+          <ellipse cx="72" cy="20" rx="12" ry="7" transform="rotate(20 72 20)" fill="#e0f2fe" opacity="0.9"/>`;
+      } else if (sq.type === "ladybug") {
+        extras = `
+          <line x1="38" y1="22" x2="32" y2="10" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+          <line x1="62" y1="22" x2="68" y2="10" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="32" cy="10" r="3.5" fill="#111827"/>
+          <circle cx="68" cy="10" r="3.5" fill="#111827"/>`;
+      }
+
+      const bodyStripes = sq.type === "bee"
+        ? `<rect x="18" y="40" width="64" height="7" fill="#1e293b" opacity="0.82"/>
+           <rect x="18" y="56" width="64" height="7" fill="#1e293b" opacity="0.82"/>`
+        : sq.type === "ladybug"
+        ? `<circle cx="26" cy="44" r="5" fill="#111827"/><circle cx="74" cy="44" r="5" fill="#111827"/>`
+        : "";
+
+      const beakOrMouth = (sq.type === "penguin" || sq.type === "duck" || sq.type === "owl" || sq.type === "flamingo")
+        ? `<polygon points="43,54 57,54 50,64" fill="${sq.accent}"/>`
+        : `<path d="M43 58 Q50 65 57 58" fill="none" stroke="#1e293b" stroke-width="3.2" stroke-linecap="round"/>`;
+
+      return `
+        <svg viewBox="0 0 100 100" class="w-16 h-16 sm:w-20 sm:h-20 mx-auto drop-shadow-[0_8px_12px_rgba(0,0,0,0.45)]">
+          ${extras}
+          <rect x="16" y="22" width="68" height="64" rx="31" fill="${sq.body}" stroke="#ffffff" stroke-width="3"/>
+          ${bodyStripes}
+          <ellipse cx="50" cy="68" rx="22" ry="13" fill="${sq.belly}" opacity="0.9"/>
+          <ellipse cx="34" cy="34" rx="12" ry="6" transform="rotate(-22 34 34)" fill="#ffffff" opacity="0.55"/>
+          <circle cx="36" cy="48" r="5.3" fill="#0f172a"/>
+          <circle cx="64" cy="48" r="5.3" fill="#0f172a"/>
+          <circle cx="34" cy="46" r="2.1" fill="#ffffff"/>
+          <circle cx="62" cy="46" r="2.1" fill="#ffffff"/>
+          <ellipse cx="26" cy="56" rx="5.2" ry="3" fill="#fb7185" opacity="0.65"/>
+          <ellipse cx="74" cy="56" rx="5.2" ry="3" fill="#fb7185" opacity="0.65"/>
+          ${beakOrMouth}
+        </svg>
+      `;
+    }
+
+    /*************************************************************************
+     * 3. PERSISTENT SAVE STATE (localStorage)
+     *************************************************************************/
+    const SAVE_KEY = "turbo_block_cup_3d_v1";
+    let save = {
+      club: "barca",
+      goals: 0,
+      streak: 0,
+      chestsOpened: 0,
+      beltIndex: 0,
+      squishies: [],
+      trainingFocus: "y_only",
+      autoRotate: true,
+      subjectIndex: 0,
+      shotsTaken: 0,
+      muted: false
+    };
+
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (raw) save = { ...save, ...JSON.parse(raw) };
+    } catch (e) { /* Ignore storage restrictions */ }
+
+    function persistSave() {
+      try {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(save));
+      } catch (e) { /* Ignore storage restrictions */ }
+    }
+
+    /*************************************************************************
+     * 4. WEB AUDIO API SYNTHESIZER + UNIQUE SQUISHY TONES + SPEECH SYNTHESIS
+     *************************************************************************/
+    let audioCtx = null;
+    function ensureAudio() {
+      if (!audioCtx) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioCtx = new AC();
+      }
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume().catch(() => {});
+      }
+    }
+
+    function playSquishyTone(sq) {
+      if (save.muted) return;
+      ensureAudio();
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+
+      const osc = audioCtx.createOscillator();
+      const osc2 = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      const g2 = audioCtx.createGain();
+
+      osc.type = sq.wave || "sine";
+      osc2.type = "sine";
+
+      const f0 = sq.freq;
+      const peak = f0 * sq.bend;
+
+      osc.frequency.setValueAtTime(f0 * 0.88, t);
+      osc.frequency.exponentialRampToValueAtTime(peak, t + 0.085);
+      osc.frequency.exponentialRampToValueAtTime(f0 * 0.96, t + 0.18);
+      osc.frequency.exponentialRampToValueAtTime(f0 * (sq.bend * 0.88), t + 0.27);
+
+      osc2.frequency.setValueAtTime(f0 * 2.0, t);
+      osc2.frequency.exponentialRampToValueAtTime(peak * 1.5, t + 0.14);
+
+      g.gain.setValueAtTime(0.001, t);
+      g.gain.linearRampToValueAtTime(0.24, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.004, t + 0.32);
+
+      g2.gain.setValueAtTime(0.001, t);
+      g2.gain.linearRampToValueAtTime(0.07, t + 0.02);
+      g2.gain.exponentialRampToValueAtTime(0.002, t + 0.24);
+
+      osc.connect(g).connect(audioCtx.destination);
+      osc2.connect(g2).connect(audioCtx.destination);
+
+      osc.start(t);
+      osc2.start(t);
+      osc.stop(t + 0.34);
+      osc2.stop(t + 0.26);
+    }
+
+    function speakText(text) {
+      if (save.muted) return;
+      try {
+        if ("speechSynthesis" in window) {
+          window.speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(text);
+          u.rate = 0.92;
+          u.pitch = 1.05;
+          window.speechSynthesis.speak(u);
+        }
+      } catch (e) { /* Ignore speechSynthesis fallback */ }
+    }
+
+    function playSFX(name) {
+      if (save.muted) return;
+      ensureAudio();
+      if (!audioCtx) return;
+      const t = audioCtx.currentTime;
+
+      const tone = (type, f1, f2, dur, vol = 0.2) => {
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(f1, t);
+        if (f2 !== f1) osc.frequency.exponentialRampToValueAtTime(Math.max(20, f2), t + dur);
+        g.gain.setValueAtTime(vol, t);
+        g.gain.exponentialRampToValueAtTime(0.004, t + dur);
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + dur + 0.02);
+      };
+
+      if (name === "rev") {
+        tone("sawtooth", 85, 420, 0.38, 0.16);
+      } else if (name === "whoosh") {
+        tone("triangle", 220, 820, 0.55, 0.15);
+      } else if (name === "boing") {
+        tone("sine", 240, 95, 0.36, 0.22);
+      } else if (name === "clang") {
+        // Metallic crossbar clang!
+        tone("square", 740, 520, 0.32, 0.22);
+        tone("triangle", 1180, 990, 0.42, 0.16);
+      } else if (name === "misfire") {
+        tone("sawtooth", 140, 58, 0.26, 0.18);
+      } else if (name === "hit") {
+        tone("square", 175, 52, 0.18, 0.22);
+      } else if (name === "hiyah") {
+        tone("sawtooth", 540, 190, 0.22, 0.20);
+      } else if (name === "tnt") {
+        const bufSize = Math.floor(audioCtx.sampleRate * 0.45);
+        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+        const data = buf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / bufSize);
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buf;
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "lowpass";
+        filter.frequency.setValueAtTime(420, t);
+        const g = audioCtx.createGain();
+        g.gain.setValueAtTime(0.32, t);
+        g.gain.exponentialRampToValueAtTime(0.01, t + 0.45);
+        noise.connect(filter).connect(g).connect(audioCtx.destination);
+        noise.start(t);
+      } else if (name === "goal") {
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, t + i * 0.08);
+          g.gain.setValueAtTime(0.22, t + i * 0.08);
+          g.gain.exponentialRampToValueAtTime(0.005, t + i * 0.08 + 0.36);
+          osc.connect(g).connect(audioCtx.destination);
+          osc.start(t + i * 0.08);
+          osc.stop(t + i * 0.08 + 0.38);
+        });
+      } else if (name === "save") {
+        tone("sine", 920, 620, 0.16, 0.20);
+        setTimeout(() => playSFX("goal"), 180);
+      } else if (name === "zap") {
+        tone("sawtooth", 1450, 220, 0.28, 0.18);
+      } else if (name === "pinball") {
+        tone("triangle", 680, 1360, 0.14, 0.22);
+      } else if (name === "laser") {
+        tone("sawtooth", 1700, 260, 0.42, 0.18);
+      } else if (name === "teleport") {
+        tone("sine", 280, 1480, 0.22, 0.18);
+      } else if (name === "meteor") {
+        tone("sine", 1120, 120, 0.52, 0.16);
+      } else if (name === "chest") {
+        [392, 493.88, 587.33, 783.99, 987.77].forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const g = audioCtx.createGain();
+          osc.type = "square";
+          osc.frequency.setValueAtTime(freq, t + i * 0.09);
+          g.gain.setValueAtTime(0.14, t + i * 0.09);
+          g.gain.exponentialRampToValueAtTime(0.004, t + i * 0.09 + 0.35);
+          osc.connect(g).connect(audioCtx.destination);
+          osc.start(t + i * 0.09);
+          osc.stop(t + i * 0.09 + 0.37);
+        });
+      }
+    }
+
+    /*************************************************************************
+     * 5. PROCEDURAL 16x16 PIXEL-ART CANVAS TEXTURES (THREE.NearestFilter)
+     *************************************************************************/
+    function makePixelTexture(drawFn, size = 16) {
+      const c = document.createElement("canvas");
+      c.width = size;
+      c.height = size;
+      const ctx = c.getContext("2d");
+      drawFn(ctx, size);
+      const tex = new THREE.CanvasTexture(c);
+      tex.magFilter = THREE.NearestFilter;
+      tex.minFilter = THREE.NearestFilter;
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    function makeGrassTexture() {
+      const tex = makePixelTexture((ctx, s) => {
+        for (let y = 0; y < s; y++) {
+          for (let x = 0; x < s; x++) {
+            const stripe = Math.floor(y / 8) % 2 === 0;
+            const n = ((x * 37 + y * 17) % 5) - 2;
+            ctx.fillStyle = stripe
+              ? `rgb(${30 + n * 4}, ${138 + n * 5}, ${54 + n * 3})`
+              : `rgb(${22 + n * 4}, ${118 + n * 5}, ${44 + n * 3})`;
+            ctx.fillRect(x, y, 1, 1);
+          }
+        }
+      }, 16);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(16, 22);
+      return tex;
+    }
+
+    function makeOakTexture() {
+      const tex = makePixelTexture((ctx, s) => {
+        ctx.fillStyle = "#9c6d3b";
+        ctx.fillRect(0, 0, s, s);
+        for (let y = 0; y < s; y += 4) {
+          ctx.fillStyle = "#6e4822";
+          ctx.fillRect(0, y, s, 1);
+          ctx.fillStyle = "#b5844e";
+          ctx.fillRect(0, y + 1, s, 1);
+        }
+      }, 16);
+      tex.wrapS = THREE.RepeatWrapping;
+      tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(8, 2);
+      return tex;
+    }
+
+    function makeTNTTexture() {
+      return makePixelTexture((ctx, s) => {
+        ctx.fillStyle = "#dc2626";
+        ctx.fillRect(0, 0, s, s);
+        ctx.fillStyle = "#b91c1c";
+        for (let x = 0; x < s; x += 2) ctx.fillRect(x, 0, 1, s);
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(0, 5, s, 6);
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(2, 6, 3, 1); ctx.fillRect(3, 7, 1, 3);
+        ctx.fillRect(6, 6, 1, 4); ctx.fillRect(7, 7, 1, 1); ctx.fillRect(8, 8, 1, 1); ctx.fillRect(9, 6, 1, 4);
+        ctx.fillRect(11, 6, 3, 1); ctx.fillRect(12, 7, 1, 3);
+      }, 16);
+    }
+
+    function makeCreeperFaceTexture() {
+      return makePixelTexture((ctx, s) => {
+        ctx.fillStyle = "#22c55e";
+        ctx.fillRect(0, 0, s, s);
+        ctx.fillStyle = "#16a34a";
+        for (let i = 0; i < 16; i += 3) ctx.fillRect(i, (i * 5) % 16, 2, 2);
+        ctx.fillStyle = "#052e16";
+        ctx.fillRect(3, 3, 3, 3);
+        ctx.fillRect(10, 3, 3, 3);
+        ctx.fillRect(6, 6, 4, 4);
+        ctx.fillRect(4, 8, 2, 5);
+        ctx.fillRect(10, 8, 2, 5);
+        ctx.fillRect(6, 10, 4, 2);
+      }, 16);
+    }
+
+    function makeChestFrontTexture() {
+      return makePixelTexture((ctx, s) => {
+        ctx.fillStyle = "#9a662b";
+        ctx.fillRect(0, 0, s, s);
+        ctx.fillStyle = "#451a03";
+        ctx.fillRect(0, 0, s, 1);
+        ctx.fillRect(0, s - 1, s, 1);
+        ctx.fillRect(0, 0, 1, s);
+        ctx.fillRect(s - 1, 0, 1, s);
+        ctx.fillRect(0, 5, s, 1);
+        ctx.fillStyle = "#e2e8f0";
+        ctx.fillRect(6, 4, 4, 4);
+        ctx.fillStyle = "#475569";
+        ctx.fillRect(7, 5, 2, 2);
+      }, 16);
+    }
+
+    /*************************************************************************
+     * 6. THREE.JS 3D CYBER-VOXEL STADIUM & BLOOM RENDERER
+     *************************************************************************/
+    const container = document.getElementById("canvas-container");
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x040714);
+    scene.fog = new THREE.FogExp2(0x040714, 0.008);
+
+    const camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 300);
+    camera.position.set(-7.0, 4.4, 41.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.18;
+    container.appendChild(renderer.domElement);
+
+    let composer = null;
+    try {
+      composer = new EffectComposer(renderer);
+      composer.addPass(new RenderPass(scene, camera));
+      const bloomPass = new UnrealBloomPass(
+        new THREE.Vector2(window.innerWidth, window.innerHeight),
+        0.72,
+        0.58,
+        0.65
+      );
+      composer.addPass(bloomPass);
+    } catch (err) {
+      composer = null;
+    }
+
+    // Stadium Lighting
+    scene.add(new THREE.AmbientLight(0x9ab4ff, 0.85));
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.45);
+    dirLight.position.set(16, 44, 30);
+    scene.add(dirLight);
+    const carKeyLight = new THREE.PointLight(0x00f5ff, 2.2, 32);
+    carKeyLight.position.set(3, 8, 35);
+    scene.add(carKeyLight);
+    const goalRimLight = new THREE.PointLight(0xff00c8, 2.2, 85);
+    goalRimLight.position.set(0, 18, -32);
+    scene.add(goalRimLight);
+
+    // Starfield Night Sky
+    (() => {
+      const starGeo = new THREE.BufferGeometry();
+      const verts = [];
+      for (let i = 0; i < 700; i++) {
+        verts.push(
+          (Math.random() - 0.5) * 250,
+          18 + Math.random() * 98,
+          (Math.random() - 0.5) * 250
+        );
+      }
+      starGeo.setAttribute("position", new THREE.Float32BufferAttribute(verts, 3));
+      scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xe0f2fe, size: 0.72 })));
+    })();
+
+    // Voxel Grass Pitch + Crisp White Lines
+    const pitch = new THREE.Mesh(
+      new THREE.PlaneGeometry(76, 120),
+      new THREE.MeshStandardMaterial({ map: makeGrassTexture(), roughness: 0.88 })
+    );
+    pitch.rotation.x = -Math.PI / 2;
+    pitch.position.set(0, 0, -4);
+    scene.add(pitch);
+
+    const lineMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const addPitchLine = (w, d, x, z) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), lineMat);
+      m.rotation.x = -Math.PI / 2;
+      m.position.set(x, 0.03, z);
+      scene.add(m);
+    };
+    addPitchLine(36, 0.35, 0, -39.5);
+    addPitchLine(22, 0.35, 0, -24.0);
+    addPitchLine(0.35, 15.5, -11, -31.75);
+    addPitchLine(0.35, 15.5, 11, -31.75);
+    addPitchLine(36, 0.35, 0, -5.2);
+
+    // 4 Glowing Stadium Floodlight Towers
+    const towerMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.5, roughness: 0.4 });
+    const bulbMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe });
+    [[-32, -46], [32, -46], [-32, 34], [32, 34]].forEach(([tx, tz]) => {
+      const grp = new THREE.Group();
+      const pole = new THREE.Mesh(new THREE.BoxGeometry(1.4, 30, 1.4), towerMat);
+      pole.position.y = 15;
+      const head = new THREE.Mesh(new THREE.BoxGeometry(6.6, 3.2, 1.6), towerMat);
+      head.position.set(0, 30, 0);
+      const glow = new THREE.Mesh(new THREE.BoxGeometry(5.8, 2.4, 0.5), bulbMat);
+      glow.position.set(0, 30, tz < 0 ? 0.8 : -0.8);
+      grp.add(pole, head, glow);
+      grp.position.set(tx, 0, tz);
+      scene.add(grp);
+    });
+
+    // Oak Grandstands + Club Banners + Animated Cheering Voxel Fans
+    const oakMat = new THREE.MeshStandardMaterial({ map: makeOakTexture(), roughness: 0.8 });
+    const clubBannerMats = [
+      new THREE.MeshStandardMaterial({ color: CLUBS.barca.primary, emissive: CLUBS.barca.primary, emissiveIntensity: 0.35 }),
+      new THREE.MeshStandardMaterial({ color: CLUBS.barca.secondary, emissive: CLUBS.barca.secondary, emissiveIntensity: 0.35 }),
+      new THREE.MeshStandardMaterial({ color: CLUBS.barca.accent, emissive: CLUBS.barca.accent, emissiveIntensity: 0.4 })
+    ];
+    const crowdFans = [];
+
+    function buildStand(x, z, rotY, width) {
+      const grp = new THREE.Group();
+      for (let tier = 0; tier < 3; tier++) {
+        const step = new THREE.Mesh(new THREE.BoxGeometry(width, 2.4, 3.4), oakMat);
+        step.position.set(0, 1.2 + tier * 2.4, -tier * 3.0);
+        grp.add(step);
+
+        for (let fx = -width / 2 + 2; fx <= width / 2 - 2; fx += 2.8) {
+          const fanColorMat = clubBannerMats[Math.abs(Math.floor(fx + tier)) % 3];
+          const fan = new THREE.Group();
+          const body = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.25, 0.65), fanColorMat);
+          body.position.y = 0.65;
+          const head = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.75, 0.75), new THREE.MeshStandardMaterial({ color: 0xfde68a }));
+          head.position.y = 1.65;
+          fan.add(body, head);
+          fan.position.set(fx, 2.4 + tier * 2.4, -tier * 3.0);
+          fan.userData = { baseY: 2.4 + tier * 2.4, phase: Math.random() * Math.PI * 2 };
+          grp.add(fan);
+          crowdFans.push(fan);
+        }
+      }
+      const banner = new THREE.Mesh(new THREE.BoxGeometry(width, 1.4, 0.4), clubBannerMats[0]);
+      banner.position.set(0, 0.9, 1.9);
+      grp.add(banner);
+      grp.position.set(x, 0, z);
+      grp.rotation.y = rotY;
+      scene.add(grp);
+    }
+
+    buildStand(-27, -12, Math.PI / 2, 58);
+    buildStand(27, -12, -Math.PI / 2, 58);
+    buildStand(0, -51, 0, 50);
+
+    // 3D Football Goal & Net (z = -38)
+    const goalGrp = new THREE.Group();
+    const postMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x00f5ff, emissiveIntensity: 0.35, metalness: 0.3, roughness: 0.2 });
+    const leftPost = new THREE.Mesh(new THREE.BoxGeometry(0.55, 7.6, 0.55), postMat); leftPost.position.set(-7.5, 3.8, 0);
+    const rightPost = new THREE.Mesh(new THREE.BoxGeometry(0.55, 7.6, 0.55), postMat); rightPost.position.set(7.5, 3.8, 0);
+    const crossbar = new THREE.Mesh(new THREE.BoxGeometry(15.55, 0.55, 0.55), postMat); crossbar.position.set(0, 7.6, 0);
+    const netMat = new THREE.MeshBasicMaterial({ color: 0x94a3b8, wireframe: true, transparent: true, opacity: 0.5 });
+    const netBack = new THREE.Mesh(new THREE.PlaneGeometry(15, 7.6, 15, 8), netMat); netBack.position.set(0, 3.8, -3.5);
+    const netRoof = new THREE.Mesh(new THREE.PlaneGeometry(15, 3.5, 15, 4), netMat); netRoof.rotation.x = Math.PI / 2; netRoof.position.set(0, 7.6, -1.75);
+    goalGrp.add(leftPost, rightPost, crossbar, netBack, netRoof);
+    goalGrp.position.set(0, 0, -38);
+    scene.add(goalGrp);
+
+    // TNT Blocks inside & beside the goal
+    const tntMat = new THREE.MeshStandardMaterial({ map: makeTNTTexture(), roughness: 0.7 });
+    const tntHomeCoords = [
+      [-5.2, 1.0, -39.8], [-3.2, 1.0, -39.8], [-4.2, 3.0, -39.8],
+      [5.2, 1.0, -39.8],  [3.2, 1.0, -39.8],  [4.2, 3.0, -39.8]
+    ];
+    const tntBlocks = tntHomeCoords.map(([x, y, z]) => {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(1.9, 1.9, 1.9), tntMat);
+      b.position.set(x, y, z);
+      scene.add(b);
+      return b;
+    });
+
+    // 3 Creeper Defenders Wall (z = -21)
+    const creeperGroups = [];
+    const creeperSkinMat = new THREE.MeshStandardMaterial({ color: 0x22c55e, roughness: 0.8 });
+    const creeperHeadMats = [
+      creeperSkinMat, creeperSkinMat, creeperSkinMat, creeperSkinMat,
+      new THREE.MeshStandardMaterial({ map: makeCreeperFaceTexture() }),
+      creeperSkinMat
+    ];
+    [-3.6, 0, 3.6].forEach((cx) => {
+      const cGrp = new THREE.Group();
+      const feet = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.1, 1.4), new THREE.MeshStandardMaterial({ color: 0x15803d })); feet.position.y = 0.55;
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.1, 2.0, 0.9), creeperSkinMat); body.position.y = 2.05;
+      const head = new THREE.Mesh(new THREE.BoxGeometry(1.35, 1.35, 1.35), creeperHeadMats); head.position.y = 3.7;
+      cGrp.add(feet, body, head);
+      cGrp.position.set(cx, 0, -21);
+      scene.add(cGrp);
+      creeperGroups.push(cGrp);
+    });
+
+    // Enderman Goalkeeper (z = -36.6)
+    const endermanGrp = new THREE.Group();
+    const enderMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.7 });
+    const enderEyeMat = new THREE.MeshBasicMaterial({ color: 0xe879f9 });
+    const eLegL = new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.6, 0.45), enderMat); eLegL.position.set(-0.4, 1.3, 0);
+    const eLegR = new THREE.Mesh(new THREE.BoxGeometry(0.45, 2.6, 0.45), enderMat); eLegR.position.set(0.4, 1.3, 0);
+    const eBody = new THREE.Mesh(new THREE.BoxGeometry(1.3, 1.8, 0.75), enderMat); eBody.position.y = 3.5;
+    const eHead = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.25, 1.25), enderMat); eHead.position.y = 5.05;
+    const eEyeL = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.16, 0.1), enderEyeMat); eEyeL.position.set(-0.3, 5.1, 0.64);
+    const eEyeR = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.16, 0.1), enderEyeMat); eEyeR.position.set(0.3, 5.1, 0.64);
+    const eArmL = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.4, 0.4), enderMat); eArmL.position.set(-0.95, 3.2, 0.2); eArmL.rotation.z = 0.25;
+    const eArmR = new THREE.Mesh(new THREE.BoxGeometry(0.4, 2.4, 0.4), enderMat); eArmR.position.set(0.95, 3.2, 0.2); eArmR.rotation.z = -0.25;
+    endermanGrp.add(eLegL, eLegR, eBody, eHead, eEyeL, eEyeR, eArmL, eArmR);
+    endermanGrp.position.set(0, 0, -36.6);
+    scene.add(endermanGrp);
+
+    // RARE GUEST GOALKEEPER: Hamish McAlpine
+    const hamishGrp = new THREE.Group();
+    const hJerseyMat = new THREE.MeshStandardMaterial({ color: 0x15803d, roughness: 0.6 });
+    const hTrimMat = new THREE.MeshStandardMaterial({ color: 0xfacc15, roughness: 0.5 });
+    const hSkinMat = new THREE.MeshStandardMaterial({ color: 0xfdba74, roughness: 0.7 });
+    const hHairMat = new THREE.MeshStandardMaterial({ color: 0x78350f, roughness: 0.8 });
+    const hGloveMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xfacc15, emissiveIntensity: 0.35 });
+    const hShorts = new THREE.Mesh(new THREE.BoxGeometry(1.4, 1.3, 0.9), new THREE.MeshStandardMaterial({ color: 0x111827 })); hShorts.position.y = 1.4;
+    const hLegs = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 0.7), hSkinMat); hLegs.position.y = 0.55;
+    const hTorso = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.9, 0.95), hJerseyMat); hTorso.position.y = 2.95;
+    const hCollar = new THREE.Mesh(new THREE.BoxGeometry(1.56, 0.32, 1.0), hTrimMat); hCollar.position.y = 3.8;
+    const hHead = new THREE.Mesh(new THREE.BoxGeometry(1.25, 1.25, 1.25), hSkinMat); hHead.position.y = 4.6;
+    const hHair = new THREE.Mesh(new THREE.BoxGeometry(1.32, 0.42, 1.32), hHairMat); hHair.position.y = 5.2;
+    const hStache = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.22, 0.2), hHairMat); hStache.position.set(0, 4.3, 0.66);
+    const hGloveL = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.75, 0.65), hGloveMat); hGloveL.position.set(-1.35, 3.4, 0.4);
+    const hGloveR = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.75, 0.65), hGloveMat); hGloveR.position.set(1.35, 3.4, 0.4);
+    hamishGrp.add(hLegs, hShorts, hTorso, hCollar, hHead, hHair, hStache, hGloveL, hGloveR);
+    hamishGrp.position.set(0, 0, -36.5);
+    hamishGrp.visible = false;
+    scene.add(hamishGrp);
+
+    // Kickin' It Martial Arts Striker (Jack / Jerry)
+    const strikerGrp = new THREE.Group();
+    const giMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.6 });
+    const strikerBeltMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    const sLegs = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.5, 0.7), giMat); sLegs.position.y = 0.75;
+    const sBody = new THREE.Mesh(new THREE.BoxGeometry(1.35, 1.65, 0.8), giMat); sBody.position.y = 2.3;
+    const sBelt = new THREE.Mesh(new THREE.BoxGeometry(1.42, 0.28, 0.86), strikerBeltMat); sBelt.position.y = 1.75;
+    const sHead = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), hSkinMat); sHead.position.y = 3.7;
+    const sBand = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.24, 1.18), new THREE.MeshBasicMaterial({ color: 0xef4444 })); sBand.position.y = 4.02;
+    const dragonRing = new THREE.Mesh(new THREE.TorusGeometry(2.1, 0.14, 8, 28), new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+    dragonRing.position.y = 2.2;
+    dragonRing.visible = false;
+    strikerGrp.add(sLegs, sBody, sBelt, sHead, sBand, dragonRing);
+    strikerGrp.position.set(3.5, 0, -10.5);
+    strikerGrp.visible = false;
+    scene.add(strikerGrp);
+
+    // GUEST STRIKER: Lamine Yamal #19
+    const yamalGrp = new THREE.Group();
+    const yBlue = new THREE.MeshStandardMaterial({ color: 0x004587 });
+    const yRed = new THREE.MeshStandardMaterial({ color: 0xa50044 });
+    const yLegs = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.5, 0.7), yBlue); yLegs.position.y = 0.75;
+    const yTorsoL = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.65, 0.8), yBlue); yTorsoL.position.set(-0.35, 2.3, 0);
+    const yTorsoR = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.65, 0.8), yRed); yTorsoR.position.set(0.35, 2.3, 0);
+    const yHead = new THREE.Mesh(new THREE.BoxGeometry(1.1, 1.1, 1.1), new THREE.MeshStandardMaterial({ color: 0xc68642 })); yHead.position.y = 3.7;
+    const yHair = new THREE.Mesh(new THREE.BoxGeometry(1.18, 0.45, 1.18), new THREE.MeshStandardMaterial({ color: 0x111827 })); yHair.position.y = 4.25;
+    yamalGrp.add(yLegs, yTorsoL, yTorsoR, yHead, yHair);
+    yamalGrp.position.set(-4.2, 0, -13.2);
+    yamalGrp.visible = false;
+    scene.add(yamalGrp);
+
+    // 3D Minecraft Treasure Chest
+    const chestGrp = new THREE.Group();
+    const chestFrontMat = new THREE.MeshStandardMaterial({ map: makeChestFrontTexture() });
+    const chestWoodMat = new THREE.MeshStandardMaterial({ color: 0x9a662b, roughness: 0.75 });
+    const chestBase = new THREE.Mesh(
+      new THREE.BoxGeometry(3.2, 2.0, 2.6),
+      [chestWoodMat, chestWoodMat, chestWoodMat, chestWoodMat, chestFrontMat, chestWoodMat]
+    );
+    chestBase.position.y = 1.0;
+    const chestLidPivot = new THREE.Group();
+    chestLidPivot.position.set(0, 2.0, -1.3);
+    const chestLid = new THREE.Mesh(new THREE.BoxGeometry(3.2, 1.0, 2.6), chestWoodMat);
+    chestLid.position.set(0, 0.5, 1.3);
+    const chestClasp = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.7, 0.25), new THREE.MeshStandardMaterial({ color: 0xfacc15, metalness: 0.6, roughness: 0.3 }));
+    chestClasp.position.set(0, 0.15, 2.65);
+    chestLidPivot.add(chestLid, chestClasp);
+    chestGrp.add(chestBase, chestLidPivot);
+    chestGrp.position.set(0, 18, -11);
+    chestGrp.visible = false;
+    scene.add(chestGrp);
+
+    /*************************************************************************
+     * 7. ULTRA-NEON 360-DEGREE HOT WHEELS TRACK
+     *************************************************************************/
+    const LOOP_R = 6.2;
+    const LOOP_CENTER_Z = 15.5;
+    const LOOP_CENTER_Y = 0.9 + LOOP_R;
+
+    function getTrackFrame(u) {
+      u = Math.max(0, Math.min(1, u));
+      let pos = new THREE.Vector3();
+      let tangent = new THREE.Vector3();
+      let normal = new THREE.Vector3();
+
+      if (u < 0.24) {
+        const t = u / 0.24;
+        pos.set(-1.35, 0.9, 34.0 - t * (34.0 - LOOP_CENTER_Z));
+        tangent.set(0, 0, -1);
+        normal.set(0, 1, 0);
+      } else if (u < 0.78) {
+        const t = (u - 0.24) / 0.54;
+        const theta = -Math.PI / 2 + t * Math.PI * 2;
+        const x = -1.35 + t * 2.7;
+        const y = LOOP_CENTER_Y + Math.sin(theta) * LOOP_R;
+        const z = LOOP_CENTER_Z - Math.cos(theta) * LOOP_R;
+        pos.set(x, y, z);
+        tangent.set(0.08, Math.cos(theta), Math.sin(theta)).normalize();
+        normal.set(0, -Math.sin(theta), Math.cos(theta)).normalize();
+      } else {
+        const t = (u - 0.78) / 0.22;
+        pos.set(1.35 * (1 - t), 0.9 + Math.sin(t * Math.PI * 0.5) * 0.45, LOOP_CENTER_Z - t * (LOOP_CENTER_Z + 4.4));
+        tangent.set(-0.08, 0.03, -1).normalize();
+        normal.set(0, 1, 0);
+      }
+
+      const binormal = new THREE.Vector3().crossVectors(tangent, normal).normalize();
+      return { pos, tangent, normal, binormal };
+    }
+
+    const boostChevrons = [];
+    const neonHaloMaterials = [];
+
+    (() => {
+      const trackGrp = new THREE.Group();
+      const segs = 140;
+      const halfW = 1.62;
+      const bedVerts = [];
+      const bedIndices = [];
+      const wallLVerts = [], wallLIndices = [];
+      const wallRVerts = [], wallRIndices = [];
+      const railL_top = [], railL_mid = [], railL_bot = [];
+      const railR_top = [], railR_mid = [], railR_bot = [];
+
+      for (let i = 0; i <= segs; i++) {
+        const u = i / segs;
+        const { pos, tangent, normal, binormal } = getTrackFrame(u);
+
+        const pL = pos.clone().addScaledVector(binormal, -halfW);
+        const pR = pos.clone().addScaledVector(binormal, halfW);
+        bedVerts.push(pL.x, pL.y, pL.z, pR.x, pR.y, pR.z);
+
+        const wLTop = pL.clone().addScaledVector(normal, 0.48).addScaledVector(binormal, -0.05);
+        const wRTop = pR.clone().addScaledVector(normal, 0.48).addScaledVector(binormal, 0.05);
+        wallLVerts.push(pL.x, pL.y, pL.z, wLTop.x, wLTop.y, wLTop.z);
+        wallRVerts.push(pR.x, pR.y, pR.z, wRTop.x, wRTop.y, wRTop.z);
+
+        railL_top.push(pL.clone().addScaledVector(normal, 0.50).addScaledVector(binormal, -0.08));
+        railL_mid.push(pL.clone().addScaledVector(normal, 0.26).addScaledVector(binormal, -0.16));
+        railL_bot.push(pL.clone().addScaledVector(normal, 0.04).addScaledVector(binormal, -0.18));
+
+        railR_top.push(pR.clone().addScaledVector(normal, 0.50).addScaledVector(binormal, 0.08));
+        railR_mid.push(pR.clone().addScaledVector(normal, 0.26).addScaledVector(binormal, 0.16));
+        railR_bot.push(pR.clone().addScaledVector(normal, 0.04).addScaledVector(binormal, 0.18));
+
+        if (i < segs) {
+          const a = i * 2, b = i * 2 + 1, c = (i + 1) * 2, d = (i + 1) * 2 + 1;
+          bedIndices.push(a, b, c, b, d, c);
+          wallLIndices.push(a, b, c, b, d, c);
+          wallRIndices.push(a, b, c, b, d, c);
+        }
+
+        if (i > 4 && i < segs - 2 && i % 5 === 0) {
+          const isCyan = (i / 5) % 2 === 0;
+          const bar = new THREE.Mesh(
+            new THREE.BoxGeometry(1.75, 0.06, 0.36),
+            new THREE.MeshBasicMaterial({ color: isCyan ? 0x00ffff : 0xffe600 })
+          );
+          const m = new THREE.Matrix4().makeBasis(binormal, normal, tangent.clone().negate());
+          bar.quaternion.setFromRotationMatrix(m);
+          bar.position.copy(pos).addScaledVector(normal, 0.08);
+          bar.userData = { index: i };
+          trackGrp.add(bar);
+          boostChevrons.push(bar);
+        }
+      }
+
+      const bedGeo = new THREE.BufferGeometry();
+      bedGeo.setAttribute("position", new THREE.Float32BufferAttribute(bedVerts, 3));
+      bedGeo.setIndex(bedIndices);
+      bedGeo.computeVertexNormals();
+
+      const bedMesh = new THREE.Mesh(
+        bedGeo,
+        new THREE.MeshStandardMaterial({
+          color: 0xff6a00,
+          emissive: 0xd94600,
+          emissiveIntensity: 0.52,
+          roughness: 0.28,
+          metalness: 0.12,
+          side: THREE.DoubleSide
+        })
+      );
+      trackGrp.add(bedMesh);
+
+      const wallLGeo = new THREE.BufferGeometry();
+      wallLGeo.setAttribute("position", new THREE.Float32BufferAttribute(wallLVerts, 3));
+      wallLGeo.setIndex(wallLIndices);
+      trackGrp.add(new THREE.Mesh(wallLGeo, new THREE.MeshBasicMaterial({
+        color: 0x00f5ff, transparent: true, opacity: 0.42, side: THREE.DoubleSide
+      })));
+
+      const wallRGeo = new THREE.BufferGeometry();
+      wallRGeo.setAttribute("position", new THREE.Float32BufferAttribute(wallRVerts, 3));
+      wallRGeo.setIndex(wallRIndices);
+      trackGrp.add(new THREE.Mesh(wallRGeo, new THREE.MeshBasicMaterial({
+        color: 0xff00dd, transparent: true, opacity: 0.42, side: THREE.DoubleSide
+      })));
+
+      const matWhiteCyan = new THREE.MeshBasicMaterial({ color: 0xbffeff });
+      const matWhiteMagenta = new THREE.MeshBasicMaterial({ color: 0xffc4f5 });
+      const matCyan = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+      const matMagenta = new THREE.MeshBasicMaterial({ color: 0xff00dd });
+      const matGold = new THREE.MeshBasicMaterial({ color: 0xffe600 });
+
+      const haloCyan = new THREE.MeshBasicMaterial({
+        color: 0x00f5ff, transparent: true, opacity: 0.34, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const haloMagenta = new THREE.MeshBasicMaterial({
+        color: 0xff00c8, transparent: true, opacity: 0.34, blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      neonHaloMaterials.push(haloCyan, haloMagenta);
+
+      const curveLTop = new THREE.CatmullRomCurve3(railL_top);
+      const curveLMid = new THREE.CatmullRomCurve3(railL_mid);
+      const curveLBot = new THREE.CatmullRomCurve3(railL_bot);
+      const curveRTop = new THREE.CatmullRomCurve3(railR_top);
+      const curveRMid = new THREE.CatmullRomCurve3(railR_mid);
+      const curveRBot = new THREE.CatmullRomCurve3(railR_bot);
+
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveLTop, 140, 0.12, 8, false), matWhiteCyan));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveLTop, 140, 0.30, 8, false), haloCyan));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveLMid, 140, 0.14, 8, false), matCyan));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveLBot, 140, 0.11, 6, false), matGold));
+
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveRTop, 140, 0.12, 8, false), matWhiteMagenta));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveRTop, 140, 0.30, 8, false), haloMagenta));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveRMid, 140, 0.14, 8, false), matMagenta));
+      trackGrp.add(new THREE.Mesh(new THREE.TubeGeometry(curveRBot, 140, 0.11, 6, false), matGold));
+
+      const pillarMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.6, roughness: 0.35 });
+      [0.05, 0.18, 0.84, 0.95].forEach((su) => {
+        const f = getTrackFrame(su);
+        const h = Math.max(0.18, f.pos.y - 0.55);
+        const p = new THREE.Mesh(new THREE.BoxGeometry(0.55, h, 0.55), pillarMat);
+        p.position.set(f.pos.x, h / 2, f.pos.z);
+        trackGrp.add(p);
+      });
+
+      scene.add(trackGrp);
+    })();
+
+    /*************************************************************************
+     * 8. SLEEK 3D HOT WHEELS HYPERCAR
+     *************************************************************************/
+    const carGrp = new THREE.Group();
+    const carBodyPivot = new THREE.Group();
+    carGrp.add(carBodyPivot);
+
+    const carBodyMat = new THREE.MeshStandardMaterial({ color: CLUBS.barca.primary, metalness: 0.72, roughness: 0.18 });
+    const carStripeMat = new THREE.MeshStandardMaterial({ color: CLUBS.barca.secondary, metalness: 0.55, roughness: 0.22 });
+    const carAccentMat = new THREE.MeshBasicMaterial({ color: CLUBS.barca.accent });
+    const carbonMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.45, roughness: 0.38 });
+    const chromeMat = new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.92, roughness: 0.12 });
+    const glassMat = new THREE.MeshStandardMaterial({ color: 0x020617, metalness: 0.95, roughness: 0.08, transparent: true, opacity: 0.88 });
+    const underglowMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff });
+    const neonRimMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff });
+
+    const floorpan = new THREE.Mesh(new THREE.BoxGeometry(2.02, 0.16, 3.85), carbonMat); floorpan.position.set(0, 0.28, 0);
+    const frontSplitter = new THREE.Mesh(new THREE.BoxGeometry(2.12, 0.09, 0.55), carbonMat); frontSplitter.position.set(0, 0.22, -1.92);
+    const mainChassis = new THREE.Mesh(new THREE.BoxGeometry(1.78, 0.44, 2.75), carBodyMat); mainChassis.position.set(0, 0.54, 0.15);
+    const noseWedge = new THREE.Mesh(new THREE.BoxGeometry(1.66, 0.30, 1.35), carBodyMat); noseWedge.position.set(0, 0.44, -1.32); noseWedge.rotation.x = 0.14;
+    const centerStripe = new THREE.Mesh(new THREE.BoxGeometry(0.54, 0.46, 2.78), carStripeMat); centerStripe.position.set(0, 0.55, 0.15);
+    const noseStripe = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.32, 1.38), carStripeMat); noseStripe.position.set(0, 0.45, -1.32); noseStripe.rotation.x = 0.14;
+    const accentPinL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.47, 2.78), carAccentMat); accentPinL.position.set(-0.31, 0.55, 0.15);
+    const accentPinR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.47, 2.78), carAccentMat); accentPinR.position.set(0.31, 0.55, 0.15);
+    const podL = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 1.85), carBodyMat); podL.position.set(-0.98, 0.48, 0.12);
+    const podR = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.38, 1.85), carBodyMat); podR.position.set(0.98, 0.48, 0.12);
+    const intakeL = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.22), carbonMat); intakeL.position.set(-0.98, 0.48, -0.82);
+    const intakeR = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.22), carbonMat); intakeR.position.set(0.98, 0.48, -0.82);
+    const cockpit = new THREE.Mesh(new THREE.BoxGeometry(1.26, 0.44, 1.48), glassMat); cockpit.position.set(0, 0.90, 0.05);
+    const windshield = new THREE.Mesh(new THREE.BoxGeometry(1.22, 0.36, 0.65), glassMat); windshield.position.set(0, 0.80, -0.78); windshield.rotation.x = 0.42;
+    const diffuser = new THREE.Mesh(new THREE.BoxGeometry(1.86, 0.26, 0.42), carbonMat); diffuser.position.set(0, 0.30, 1.84);
+    const strutL = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.54, 0.28), carbonMat); strutL.position.set(-0.58, 0.96, 1.62); strutL.rotation.x = 0.18;
+    const strutR = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.54, 0.28), carbonMat); strutR.position.set(0.58, 0.96, 1.62); strutR.rotation.x = 0.18;
+    const rearWing = new THREE.Mesh(new THREE.BoxGeometry(2.24, 0.12, 0.50), carAccentMat); rearWing.position.set(0, 1.24, 1.72); rearWing.rotation.x = -0.10;
+    const wingEndL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.32, 0.58), carBodyMat); wingEndL.position.set(-1.12, 1.22, 1.72);
+    const wingEndR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.32, 0.58), carBodyMat); wingEndR.position.set(1.12, 1.22, 1.72);
+
+    const headlightMat = new THREE.MeshBasicMaterial({ color: 0xe0f2fe });
+    const hlL = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.13, 0.12), headlightMat); hlL.position.set(-0.56, 0.48, -1.96);
+    const hlR = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.13, 0.12), headlightMat); hlR.position.set(0.56, 0.48, -1.96);
+    const coneMat = new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.16, depthWrite: false });
+    const coneGeo = new THREE.ConeGeometry(0.75, 4.2, 12, 1, true);
+    coneGeo.rotateX(Math.PI / 2);
+    const beamL = new THREE.Mesh(coneGeo, coneMat); beamL.position.set(-0.56, 0.45, -4.05);
+    const beamR = new THREE.Mesh(coneGeo, coneMat); beamR.position.set(0.56, 0.45, -4.05);
+
+    const tailBar = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.12, 0.10), new THREE.MeshBasicMaterial({ color: 0xff1e42 }));
+    tailBar.position.set(0, 0.62, 1.92);
+
+    const pipeGeo = new THREE.CylinderGeometry(0.11, 0.11, 0.42, 10);
+    pipeGeo.rotateX(Math.PI / 2);
+    const pipeL = new THREE.Mesh(pipeGeo, chromeMat); pipeL.position.set(-0.36, 0.36, 1.98);
+    const pipeR = new THREE.Mesh(pipeGeo, chromeMat); pipeR.position.set(0.36, 0.36, 1.98);
+
+    const flameGeo = new THREE.ConeGeometry(0.16, 0.85, 8);
+    flameGeo.rotateX(Math.PI / 2);
+    const flameMat = new THREE.MeshBasicMaterial({ color: 0x00f5ff, transparent: true, opacity: 0.88 });
+    const exhaustFlameL = new THREE.Mesh(flameGeo, flameMat); exhaustFlameL.position.set(-0.36, 0.36, 2.52);
+    const exhaustFlameR = new THREE.Mesh(flameGeo, flameMat); exhaustFlameR.position.set(0.36, 0.36, 2.52);
+
+    const underStripL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.07, 2.9), underglowMat); underStripL.position.set(-0.98, 0.21, 0);
+    const underStripR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.07, 2.9), underglowMat); underStripR.position.set(0.98, 0.21, 0);
+    const carUnderglowLight = new THREE.PointLight(0x00f5ff, 3.2, 10);
+    carUnderglowLight.position.set(0, 0.18, 0);
+
+    carBodyPivot.add(
+      floorpan, frontSplitter, mainChassis, noseWedge,
+      centerStripe, noseStripe, accentPinL, accentPinR,
+      podL, podR, intakeL, intakeR,
+      cockpit, windshield, diffuser,
+      strutL, strutR, rearWing, wingEndL, wingEndR,
+      hlL, hlR, beamL, beamR, tailBar,
+      pipeL, pipeR, exhaustFlameL, exhaustFlameR,
+      underStripL, underStripR, carUnderglowLight
+    );
+
+    const carWheels = [];
+    const tireGeo = new THREE.CylinderGeometry(0.42, 0.42, 0.40, 18);
+    tireGeo.rotateZ(Math.PI / 2);
+    const rimGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.42, 12);
+    rimGeo.rotateZ(Math.PI / 2);
+    const rimRingGeo = new THREE.TorusGeometry(0.27, 0.045, 8, 20);
+    rimRingGeo.rotateY(Math.PI / 2);
+    const tireMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.82 });
+
+    [[-1.02, 0.42, -1.18], [1.02, 0.42, -1.18], [-1.06, 0.44, 1.16], [1.06, 0.44, 1.16]].forEach(([wx, wy, wz]) => {
+      const wGrp = new THREE.Group();
+      const tire = new THREE.Mesh(tireGeo, tireMat);
+      const rim = new THREE.Mesh(rimGeo, chromeMat);
+      const ring = new THREE.Mesh(rimRingGeo, neonRimMat);
+      ring.position.x = wx < 0 ? -0.21 : 0.21;
+      wGrp.add(tire, rim, ring);
+      wGrp.position.set(wx, wy, wz);
+      carGrp.add(wGrp);
+      carWheels.push(wGrp);
+    });
+    scene.add(carGrp);
+
+    // Giant Voxel Football (z = -5.2)
+    const ballMesh = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.12, 1),
+      new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.35, metalness: 0.1, flatShading: true })
+    );
+    ballMesh.position.set(0, 1.12, -5.2);
+    const ballGlow = new THREE.PointLight(0x00f5ff, 2.2, 14);
+    ballMesh.add(ballGlow);
+    scene.add(ballMesh);
+
+    // Special 3D Finisher Props
+    const sonicRing = new THREE.Mesh(
+      new THREE.TorusGeometry(1.6, 0.16, 10, 32),
+      new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.9 })
+    );
+    sonicRing.visible = false;
+    scene.add(sonicRing);
+
+    const lightningGroup = new THREE.Group();
+    const boltMat = new THREE.MeshBasicMaterial({ color: 0x67e8f9 });
+    for (let i = 0; i < 6; i++) {
+      const seg = new THREE.Mesh(new THREE.BoxGeometry(0.45, 5.5, 0.45), boltMat);
+      seg.position.set(i % 2 === 0 ? -0.9 : 0.9, i * 4.5, 0);
+      seg.rotation.z = i % 2 === 0 ? 0.3 : -0.3;
+      lightningGroup.add(seg);
+    }
+    lightningGroup.visible = false;
+    scene.add(lightningGroup);
+
+    const diamondMesh = new THREE.Mesh(
+      new THREE.OctahedronGeometry(1.25, 0),
+      new THREE.MeshStandardMaterial({ color: 0x22d3ee, emissive: 0x00f5ff, emissiveIntensity: 1.8, roughness: 0.15 })
+    );
+    diamondMesh.visible = false;
+    scene.add(diamondMesh);
+
+    const laserBeamMesh = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.35, 0.35, 34, 12),
+      new THREE.MeshBasicMaterial({ color: 0x67e8f9, transparent: true, opacity: 0.92 })
+    );
+    laserBeamMesh.rotation.x = Math.PI / 2;
+    laserBeamMesh.visible = false;
+    scene.add(laserBeamMesh);
+
+    const wasabiWaveMesh = new THREE.Mesh(
+      new THREE.TorusGeometry(2.1, 0.24, 10, 36),
+      new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.95 })
+    );
+    wasabiWaveMesh.visible = false;
+    scene.add(wasabiWaveMesh);
+
+    /*************************************************************************
+     * 9. VOXEL PARTICLE SYSTEM
+     *************************************************************************/
+    const particles = [];
+    const partGeo = new THREE.BoxGeometry(1, 1, 1);
+
+    function spawnParticle(pos, vel, hexColor, size = 0.45, life = 0.6, gravity = 14) {
+      const m = new THREE.Mesh(partGeo, new THREE.MeshBasicMaterial({ color: hexColor }));
+      m.position.copy(pos);
+      m.scale.setScalar(size);
+      scene.add(m);
+      particles.push({ mesh: m, vel: vel.clone(), life, maxLife: life, gravity });
+    }
+
+    function spawnVoxelExplosion(origin, colors, count = 55, speed = 20) {
+      for (let i = 0; i < count; i++) {
+        const col = colors[i % colors.length];
+        const vel = new THREE.Vector3(
+          (Math.random() - 0.5) * speed,
+          Math.random() * speed * 0.7 + 3,
+          (Math.random() - 0.5) * speed
+        );
+        spawnParticle(origin, vel, col, 0.35 + Math.random() * 0.45, 0.7 + Math.random() * 0.6, 18);
+      }
+    }
+
+    const RAINBOW_HEX = [0xef4444, 0xf97316, 0xfacc15, 0x22c55e, 0x06b6d4, 0xa855f7, 0xec4899];
+
+    /*************************************************************************
+     * 10. SHUFFLE-BAG QUESTION DECK & GAME STATE MACHINE
+     *************************************************************************/
+    const shuffleBags = {};
+    const lastBagItem = {};
+
+    function pickFromShuffleBag(arr, key) {
+      if (!shuffleBags[key] || shuffleBags[key].length === 0) {
+        const indices = arr.map((_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        if (indices.length > 1 && indices[indices.length - 1] === lastBagItem[key]) {
+          const swapIdx = Math.floor(Math.random() * (indices.length - 1));
+          [indices[indices.length - 1], indices[swapIdx]] = [indices[swapIdx], indices[indices.length - 1]];
+        }
+        shuffleBags[key] = indices;
+      }
+      const nextIdx = shuffleBags[key].pop();
+      lastBagItem[key] = nextIdx;
+      return arr[nextIdx];
+    }
+
+    const game = {
+      phase: "idle", // idle | prelaunch | looping | shooting | miss_hold | celebrate | chest
+      timer: 0,
+      celebrateDuration: 4.5,
+      carU: 0.02,
+      finisherType: "tnt",
+      isMissShot: false,
+      missType: "crossbar", // crossbar | wide
+      missSide: 1,
+      hamishShotType: "curler", // curler | rocket | lob | knuckle | volley
+      hamishBeaten: false,
+      guestYamal: false,
+      guestHamish: false,
+      sub1: false,
+      sub2: false,
+      sub3: false,
+      shakeTime: 0,
+      shakePower: 0,
+      crowdExcitement: 0,
+      currentSentenceObj: null,
+      snapFormula: "",
+      snapResult: "",
+      snapMagicBase: "",
+      camPos: new THREE.Vector3(-7.0, 4.4, 41.2),
+      camLook: new THREE.Vector3(-3.0, 3.2, 16.0),
+      targetFov: 52
+    };
+
+    function positionCarOnTrack(u) {
+      const { pos, tangent, normal, binormal } = getTrackFrame(u);
+      carGrp.position.copy(pos).addScaledVector(normal, 0.14);
+      const m = new THREE.Matrix4().makeBasis(binormal, normal, tangent.clone().negate());
+      carGrp.quaternion.setFromRotationMatrix(m);
+    }
+
+    function applyClubTheme(clubId) {
+      save.club = clubId;
+      persistSave();
+      const c = CLUBS[clubId];
+      carBodyMat.color.setHex(c.primary);
+      carStripeMat.color.setHex(c.secondary);
+      carAccentMat.color.setHex(c.accent);
+      underglowMat.color.setHex(c.underglow);
+      neonRimMat.color.setHex(c.underglow);
+      carUnderglowLight.color.setHex(c.underglow);
+
+      clubBannerMats[0].color.setHex(c.primary);
+      clubBannerMats[0].emissive.setHex(c.primary);
+      clubBannerMats[1].color.setHex(c.secondary);
+      clubBannerMats[1].emissive.setHex(c.secondary);
+      clubBannerMats[2].color.setHex(c.accent);
+      clubBannerMats[2].emissive.setHex(c.accent);
+
+      const bBarca = document.getElementById("btn-club-barca");
+      const bRaith = document.getElementById("btn-club-raith");
+      if (clubId === "barca") {
+        bBarca.className = "px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2 bg-gradient-to-r from-[#004587] to-[#a50044] text-yellow-300 border-yellow-300 shadow-[0_0_14px_rgba(251,186,7,0.5)]";
+        bRaith.className = "px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2 bg-slate-900/80 text-slate-300 border-slate-700 hover:border-slate-500";
+      } else {
+        bRaith.className = "px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2 bg-gradient-to-r from-[#0b2545] to-[#1e3a8a] text-white border-red-500 shadow-[0_0_14px_rgba(231,48,55,0.5)]";
+        bBarca.className = "px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-xl text-xs sm:text-sm font-black tracking-wide transition-all cursor-pointer border-2 bg-slate-900/80 text-slate-300 border-slate-700 hover:border-slate-500";
+      }
+    }
+
+    function updateHUD() {
+      document.getElementById("hud-goals").textContent = save.goals;
+      document.getElementById("hud-squishy-count").textContent = `${save.squishies.length}/18`;
+
+      for (let i = 1; i <= 3; i++) {
+        const dot = document.getElementById(`streak-dot-${i}`);
+        dot.className = save.streak >= i
+          ? "w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-400 border border-white shadow-[0_0_10px_#facc15] transition-all"
+          : "w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-slate-700 border border-amber-300/60 transition-all";
+      }
+
+      const belt = DOJO_BELTS[save.beltIndex] || DOJO_BELTS[0];
+      document.getElementById("hud-belt-swatch").style.backgroundColor = belt.hex;
+      document.getElementById("hud-belt-name").textContent = belt.name;
+
+      const modeObj = FOCUS_MODES.find(m => m.id === save.trainingFocus) || FOCUS_MODES[0];
+      document.getElementById("hud-mode-text").textContent = modeObj.hud;
+      document.getElementById("deck-mode-pill").textContent = modeObj.short;
+    }
+
+    function triggerImpactFlash() {
+      const f = document.getElementById("impact-flash");
+      f.classList.remove("flash-active");
+      void f.offsetWidth;
+      f.classList.add("flash-active");
+    }
+
+    function showRetryPill(msg) {
+      const el = document.getElementById("retry-pill");
+      el.textContent = msg;
+      el.classList.remove("hidden", "animate-snap");
+      void el.offsetWidth;
+      el.classList.add("animate-snap");
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.classList.add("hidden"), 2600);
+    }
+
+    function showModeRotateBanner(label) {
+      const el = document.getElementById("mode-rotate-pill");
+      el.textContent = `🔄 NEXT SPELLING MODE: ${label}!`;
+      el.classList.remove("hidden", "animate-snap");
+      void el.offsetWidth;
+      el.classList.add("animate-snap");
+      clearTimeout(el._t);
+      el._t = setTimeout(() => el.classList.add("hidden"), 3600);
+    }
+
+    function showWordSnap(formula, result, magicBase = "") {
+      const box = document.getElementById("word-snap-box");
+      document.getElementById("word-snap-formula").textContent = formula;
+      const resEl = document.getElementById("word-snap-result");
+      if (magicBase) {
+        resEl.innerHTML = `<span>${magicBase}</span><span class="magic-e-letter">E</span><span>!</span>`;
+      } else {
+        resEl.textContent = result;
+      }
+      box.classList.remove("hidden", "animate-snap");
+      void box.offsetWidth;
+      box.classList.add("animate-snap");
+    }
+
+    function showFinisherBanner(title, sub, gradientClass) {
+      const banner = document.getElementById("goal-banner");
+      banner.className = `w-full rounded-3xl p-4 sm:p-6 border-4 border-white shadow-[0_14px_50px_rgba(0,0,0,0.78)] text-center pointer-events-auto bg-gradient-to-r ${gradientClass} animate-snap`;
+      document.getElementById("goal-banner-title").textContent = title;
+      document.getElementById("goal-banner-sub").textContent = sub;
+      document.getElementById("btn-next-shot").classList.add("hidden");
+      banner.classList.remove("hidden");
+    }
+
+    function resetArenaEntities() {
+      game.carU = 0.02;
+      positionCarOnTrack(0.02);
+      ballMesh.visible = true;
+      ballMesh.position.set(0, 1.12, -5.2);
+      ballMesh.rotation.set(0, 0, 0);
+      ballGlow.color.setHex(0x00f5ff);
+
+      endermanGrp.visible = !game.guestHamish;
+      endermanGrp.position.set(0, 0, -36.6);
+      endermanGrp.rotation.set(0, 0, 0);
+
+      hamishGrp.visible = game.guestHamish;
+      hamishGrp.position.set(0, 0, -36.5);
+      hamishGrp.rotation.set(0, 0, 0);
+
+      strikerGrp.visible = false;
+      strikerGrp.position.set(3.5, 0, -10.5);
+      strikerGrp.rotation.set(0, 0, 0);
+      dragonRing.visible = false;
+
+      yamalGrp.visible = game.guestYamal;
+      yamalGrp.position.set(-4.2, 0, -13.2);
+      yamalGrp.rotation.set(0, 0, 0);
+
+      sonicRing.visible = false;
+      lightningGroup.visible = false;
+      diamondMesh.visible = false;
+      laserBeamMesh.visible = false;
+      wasabiWaveMesh.visible = false;
+      chestGrp.visible = false;
+      goalGrp.position.set(0, 0, -38);
+
+      creeperGroups.forEach((c, idx) => {
+        c.position.set([-3.6, 0, 3.6][idx], 0, -21);
+        c.rotation.set(0, 0, 0);
+      });
+      tntBlocks.forEach((b, i) => {
+        b.visible = true;
+        b.position.set(...tntHomeCoords[i]);
+      });
+
+      document.getElementById("word-snap-box").classList.add("hidden");
+      document.getElementById("goal-banner").classList.add("hidden");
+      document.getElementById("btn-next-shot").classList.add("hidden");
+    }
+
+    function rollGuestsForShot() {
+      game.guestYamal = Math.random() < 0.25;
+      // Hamish appears more often in Mode 5 (35%) and 15% in other modes after shot 1
+      const hamishChance = save.trainingFocus === "voiced_th" ? 0.35 : 0.15;
+      game.guestHamish = save.shotsTaken >= 1 && Math.random() < hamishChance;
+
+      const pill = document.getElementById("guest-alert-pill");
+      if (game.guestHamish) {
+        pill.textContent = "🧤 LEGEND IN GOAL: HAMISH McALPINE! (1 IN 5 BEATS HIM!)";
+        pill.className = "mb-2 px-5 py-1.5 rounded-full font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-white shadow-xl bg-gradient-to-r from-emerald-600 to-amber-500 text-white animate-snap";
+        pill.classList.remove("hidden");
+      } else if (game.guestYamal) {
+        pill.textContent = "⭐ GUEST STRIKER ON PITCH: LAMINE YAMAL #19!";
+        pill.className = "mb-2 px-5 py-1.5 rounded-full font-black text-xs sm:text-sm uppercase tracking-wider border-2 border-yellow-300 shadow-xl bg-gradient-to-r from-[#004587] to-[#a50044] text-yellow-300 animate-snap";
+        pill.classList.remove("hidden");
+      } else {
+        pill.classList.add("hidden");
+      }
+    }
+
+    function setupNextQuestion() {
+      rollGuestsForShot();
+      resetArenaEntities();
+      updateHUD();
+
+      const qEl = document.getElementById("deck-question");
+      const audioRow = document.getElementById("deck-audio-row");
+      const grid = document.getElementById("deck-choices-grid");
+      grid.innerHTML = "";
+      game.snapMagicBase = "";
+      game.currentSentenceObj = null;
+      audioRow.classList.add("hidden");
+
+      // MODE 1: -y Endings
+      if (save.trainingFocus === "y_only") {
+        const item = pickFromShuffleBag(VALID_Y_STARTERS, "y");
+        const leftValid = Math.random() < 0.5;
+        const choices = leftValid
+          ? [{ display: item.valid, sub: "+ y = ?", correct: true }, { display: item.distractor, sub: "+ y = ?", correct: false }]
+          : [{ display: item.distractor, sub: "+ y = ?", correct: false }, { display: item.valid, sub: "+ y = ?", correct: true }];
+        game.snapFormula = `${item.valid.replace("_", "")} + y`;
+        game.snapResult = `${item.word.toUpperCase()}!`;
+        qEl.innerHTML = `Which word can end with <span class="text-yellow-300 underline decoration-cyan-400 decoration-4 underline-offset-4">-y</span>?`;
+
+        choices.forEach((choice, idx) => {
+          const btn = document.createElement("button");
+          btn.dataset.choiceIndex = idx;
+          btn.className = "oak-card rounded-2xl py-3.5 px-3 text-center cursor-pointer";
+          btn.innerHTML = `
+            <span class="key-badge">${idx + 1}</span>
+            <div class="text-3xl sm:text-4xl font-black text-white tracking-wider drop-shadow-[0_3px_0_rgba(0,0,0,0.65)]">${choice.display}</div>
+            <div class="text-xs font-extrabold text-yellow-200 mt-1">${choice.sub}</div>
+          `;
+          btn.addEventListener("click", () => handleChoice(choice.correct));
+          grid.appendChild(btn);
+        });
+      }
+
+      // MODE 2: Magic 'e'
+      else if (save.trainingFocus === "magic_e") {
+        const item = pickFromShuffleBag(MAGIC_E_BANK, "magic_e");
+        const leftValid = Math.random() < 0.5;
+        const choices = leftValid
+          ? [{ display: item.base, sub: "+ magic e = ?", correct: true }, { display: item.distractor, sub: "+ magic e = ?", correct: false }]
+          : [{ display: item.distractor, sub: "+ magic e = ?", correct: false }, { display: item.base, sub: "+ magic e = ?", correct: true }];
+        game.snapFormula = `${item.base} + magic e`;
+        game.snapResult = `${item.word.toUpperCase()}!`;
+        game.snapMagicBase = item.base.toUpperCase();
+        qEl.innerHTML = `Add <span class="text-yellow-300 underline decoration-amber-400 decoration-4 underline-offset-4">Magic 'e'</span> to make a real word!`;
+
+        choices.forEach((choice, idx) => {
+          const btn = document.createElement("button");
+          btn.dataset.choiceIndex = idx;
+          btn.className = "oak-card rounded-2xl py-3.5 px-3 text-center cursor-pointer";
+          btn.innerHTML = `
+            <span class="key-badge">${idx + 1}</span>
+            <div class="text-3xl sm:text-4xl font-black text-white tracking-wider drop-shadow-[0_3px_0_rgba(0,0,0,0.65)]">${choice.display}</div>
+            <div class="text-xs font-extrabold text-yellow-200 mt-1">${choice.sub}</div>
+          `;
+          btn.addEventListener("click", () => handleChoice(choice.correct));
+          grid.appendChild(btn);
+        });
+      }
+
+      // MODE 3: -ild / -old / -ind
+      else if (save.trainingFocus === "patterns") {
+        const item = pickFromShuffleBag(PATTERN_BANK, "patterns");
+        const leftValid = Math.random() < 0.5;
+        const choices = leftValid
+          ? [{ display: item.valid, sub: `+ ${item.ending} = ?`, correct: true }, { display: item.distractor, sub: `+ ${item.ending} = ?`, correct: false }]
+          : [{ display: item.distractor, sub: `+ ${item.ending} = ?`, correct: false }, { display: item.valid, sub: `+ ${item.ending} = ?`, correct: true }];
+        game.snapFormula = `${item.valid.replace("_", "")} + ${item.ending}`;
+        game.snapResult = `${item.word.toUpperCase()}!`;
+        qEl.innerHTML = `Target ending <span class="inline-block bg-amber-400 text-slate-950 font-black px-2.5 py-0.5 rounded-xl mx-1">+ ${item.ending}</span> — pick the real starter!`;
+
+        choices.forEach((choice, idx) => {
+          const btn = document.createElement("button");
+          btn.dataset.choiceIndex = idx;
+          btn.className = "oak-card rounded-2xl py-3.5 px-3 text-center cursor-pointer";
+          btn.innerHTML = `
+            <span class="key-badge">${idx + 1}</span>
+            <div class="text-3xl sm:text-4xl font-black text-white tracking-wider drop-shadow-[0_3px_0_rgba(0,0,0,0.65)]">${choice.display}</div>
+            <div class="text-xs font-extrabold text-yellow-200 mt-1">${choice.sub}</div>
+          `;
+          btn.addEventListener("click", () => handleChoice(choice.correct));
+          grid.appendChild(btn);
+        });
+      }
+
+      // MODE 4: Missing Blank in a Sentence ("TH" vs "S")
+      else if (save.trainingFocus === "th_vs_s") {
+        const item = pickFromShuffleBag(TH_VS_S_BANK, "th_vs_s");
+        game.currentSentenceObj = item;
+        game.snapFormula = `MISSING LETTERS: ${item.answer}`;
+        game.snapResult = `${item.word.toUpperCase()}!`;
+
+        qEl.innerHTML = `
+          <div class="text-[11px] uppercase tracking-wider text-cyan-300 font-extrabold mb-1.5">Fill in the blank: TH or S?</div>
+          <div class="bg-slate-950/75 border border-slate-700 rounded-2xl p-3 text-base sm:text-lg font-extrabold text-white leading-relaxed">
+            ${item.before}<span id="sentence-blank" class="inline-block bg-amber-400/25 border-b-4 border-amber-400 text-amber-300 px-2 mx-0.5 rounded-md font-black">___</span>${item.after}
+          </div>
+        `;
+        audioRow.classList.remove("hidden");
+
+        ["TH", "S"].forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.dataset.choiceIndex = idx;
+          btn.className = `neon-choice-btn ${idx === 1 ? "neon-choice-magenta" : ""} rounded-2xl py-4 px-4 text-center cursor-pointer`;
+          btn.innerHTML = `
+            <span class="key-badge">${idx + 1}</span>
+            <div class="text-3xl sm:text-4xl font-black text-white tracking-wider">${opt}</div>
+            <div class="text-[11px] font-extrabold ${idx === 0 ? "text-cyan-300" : "text-fuchsia-300"} mt-0.5">${idx === 0 ? "Unvoiced TH" : "Crisp S"}</div>
+          `;
+          btn.addEventListener("click", () => handleMode4Choice(opt));
+          grid.appendChild(btn);
+        });
+      }
+
+      // MODE 5: UFLI Voiced 'th' Word Chains & Irregular Heart Words (they / their)
+      else {
+        const item = pickFromShuffleBag(VOICED_TH_BANK, "voiced_th");
+        game.currentSentenceObj = item;
+        game.snapFormula = item.formula;
+        game.snapResult = `${item.correct.toUpperCase()}!`;
+
+        if (item.kind === "chain") {
+          qEl.innerHTML = `
+            <div class="text-[11px] uppercase tracking-wider text-amber-300 font-extrabold mb-1.5">🔗 UFLI Word Work Chain</div>
+            <div class="bg-slate-950/75 border border-amber-400/50 rounded-2xl p-3 text-base sm:text-lg font-extrabold text-white leading-relaxed">
+              ${item.prompt}
+            </div>
+          `;
+        } else {
+          qEl.innerHTML = `
+            <div class="text-[11px] uppercase tracking-wider text-cyan-300 font-extrabold mb-1.5">❤️ Voiced 'th' &amp; Heart Words</div>
+            <div class="bg-slate-950/75 border border-slate-700 rounded-2xl p-3 text-base sm:text-lg font-extrabold text-white leading-relaxed">
+              ${item.before}<span id="sentence-blank" class="inline-block bg-amber-400/25 border-b-4 border-amber-400 text-amber-300 px-2 mx-0.5 rounded-md font-black">___</span>${item.after}
+            </div>
+          `;
+        }
+        audioRow.classList.remove("hidden");
+
+        const leftValid = Math.random() < 0.5;
+        const choices = leftValid
+          ? [{ display: item.correct, correct: true }, { display: item.distractor, correct: false }]
+          : [{ display: item.distractor, correct: false }, { display: item.correct, correct: true }];
+
+        choices.forEach((choice, idx) => {
+          const btn = document.createElement("button");
+          btn.dataset.choiceIndex = idx;
+          btn.className = `neon-choice-btn ${idx === 1 ? "neon-choice-magenta" : ""} rounded-2xl py-4 px-3 text-center cursor-pointer`;
+          btn.innerHTML = `
+            <span class="key-badge">${idx + 1}</span>
+            <div class="text-2xl sm:text-3xl font-black text-white tracking-wide">${choice.display}</div>
+          `;
+          btn.addEventListener("click", () => handleMode5Choice(choice));
+          grid.appendChild(btn);
+        });
+      }
+
+      document.getElementById("spell-deck-wrapper").classList.remove("deck-hidden");
+    }
+
+    function handleMode4Choice(picked) {
+      if (game.phase !== "idle" || !game.currentSentenceObj) return;
+      ensureAudio();
+
+      if (picked !== game.currentSentenceObj.answer) {
+        launchMissShot();
+        return;
+      }
+
+      const blank = document.getElementById("sentence-blank");
+      if (blank) {
+        blank.textContent = picked.toLowerCase();
+        blank.className = "blank-filled px-1";
+      }
+      speakText(game.currentSentenceObj.word);
+      playSFX("rev");
+
+      game.phase = "prelaunch";
+      setTimeout(() => {
+        if (game.phase === "prelaunch") {
+          game.phase = "idle";
+          launchCorrectShot();
+        }
+      }, 420);
+    }
+
+    function handleMode5Choice(choice) {
+      if (game.phase !== "idle" || !game.currentSentenceObj) return;
+      ensureAudio();
+
+      if (!choice.correct) {
+        launchMissShot();
+        return;
+      }
+
+      const blank = document.getElementById("sentence-blank");
+      if (blank) {
+        blank.textContent = choice.display;
+        blank.className = "blank-filled px-1";
+      }
+      speakText(choice.display);
+      playSFX("rev");
+
+      game.phase = "prelaunch";
+      setTimeout(() => {
+        if (game.phase === "prelaunch") {
+          game.phase = "idle";
+          launchCorrectShot();
+        }
+      }, 420);
+    }
+
+    function handleChoice(isCorrect) {
+      if (game.phase !== "idle") return;
+      ensureAudio();
+
+      if (!isCorrect) {
+        launchMissShot();
+        return;
+      }
+
+      launchCorrectShot();
+    }
+
+    // Wrong answer STILL launches the car around the loop, then hits the crossbar or misses wide!
+    function launchMissShot() {
+      save.streak = 0;
+      persistSave();
+      updateHUD();
+
+      document.getElementById("spell-deck-wrapper").classList.add("deck-hidden");
+      game.isMissShot = true;
+      game.missType = Math.random() < 0.55 ? "crossbar" : "wide";
+      game.missSide = Math.random() < 0.5 ? -1 : 1;
+      game.phase = "looping";
+      game.timer = 0;
+      game.sub1 = false;
+      game.sub2 = false;
+      game.sub3 = false;
+      playSFX("rev");
+      setTimeout(() => playSFX("whoosh"), 240);
+    }
+
+    function launchCorrectShot() {
+      save.shotsTaken += 1;
+      persistSave();
+
+      document.getElementById("spell-deck-wrapper").classList.add("deck-hidden");
+      document.getElementById("guest-alert-pill").classList.add("hidden");
+      showWordSnap(game.snapFormula, game.snapResult, game.snapMagicBase);
+
+      game.isMissShot = false;
+      if (game.guestHamish) {
+        game.finisherType = "hamish_save";
+        const hamishShots = ["curler", "rocket", "lob", "knuckle", "volley"];
+        game.hamishShotType = hamishShots[Math.floor(Math.random() * hamishShots.length)];
+        game.hamishBeaten = Math.random() < 0.20; // 1 in 5 chance to beat Hamish!
+      } else if (game.guestYamal) {
+        game.finisherType = "yamal";
+      } else {
+        const allTwelve = [
+          "tnt", "dragon", "rocket", "rainbow", "lightning", "tornado",
+          "jerry", "meteor", "pinball", "milton", "kim", "rudy"
+        ];
+        game.finisherType = allTwelve[Math.floor(Math.random() * allTwelve.length)];
+      }
+
+      game.phase = "looping";
+      game.timer = 0;
+      game.sub1 = false;
+      game.sub2 = false;
+      game.sub3 = false;
+      playSFX("rev");
+      setTimeout(() => playSFX("whoosh"), 240);
+    }
+
+    function scoreGoal(holdSeconds = 4.5) {
+      save.goals += 1;
+      save.streak += 1;
+      save.beltIndex = Math.min(DOJO_BELTS.length - 1, Math.floor(save.goals / 3));
+      strikerBeltMat.color.setHex(DOJO_BELTS[save.beltIndex].color);
+      persistSave();
+      updateHUD();
+
+      game.phase = "celebrate";
+      game.timer = 0;
+      game.celebrateDuration = holdSeconds;
+      game.crowdExcitement = 1.0;
+    }
+
+    function advanceAfterCelebrate() {
+      if (save.streak >= 3) {
+        save.streak = 0;
+        persistSave();
+        updateHUD();
+        triggerTreasureChestRound();
+      } else {
+        game.phase = "idle";
+        setupNextQuestion();
+      }
+    }
+
+    document.getElementById("btn-next-shot").addEventListener("click", () => {
+      if (game.phase === "celebrate") advanceAfterCelebrate();
+    });
+
+    document.getElementById("btn-hear-sentence").addEventListener("click", () => {
+      if (game.currentSentenceObj) {
+        ensureAudio();
+        speakText(game.currentSentenceObj.full);
+      }
+    });
+
+    /*************************************************************************
+     * 11. 3-IN-A-ROW MIXED-SUBJECT TREASURE CHEST & MUSICAL SQUISHY PICKER
+     *************************************************************************/
+    function triggerSquishVisual(containerEl, sq) {
+      playSquishyTone(sq);
+      const svgWrap = containerEl.querySelector(".sq-svg-wrap");
+      if (svgWrap) {
+        svgWrap.classList.remove("squish-bounce");
+        void svgWrap.offsetWidth;
+        svgWrap.classList.add("squish-bounce");
+      }
+
+      containerEl.classList.add("sq-key-active");
+      clearTimeout(containerEl._keyTimer);
+      containerEl._keyTimer = setTimeout(() => containerEl.classList.remove("sq-key-active"), 260);
+
+      const ripple = document.createElement("span");
+      ripple.className = "ripple-ring";
+      containerEl.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 580);
+
+      const noteEl = document.createElement("span");
+      noteEl.className = "float-note";
+      noteEl.textContent = `♪ ${sq.note}`;
+      containerEl.appendChild(noteEl);
+      setTimeout(() => noteEl.remove(), 680);
+    }
+
+    function triggerTreasureChestRound() {
+      game.phase = "chest";
+      game.timer = 0;
+      document.getElementById("goal-banner").classList.add("hidden");
+      document.getElementById("word-snap-box").classList.add("hidden");
+      chestGrp.visible = true;
+      chestGrp.position.set(0, 16, -11);
+      chestLidPivot.rotation.x = 0;
+      playSFX("chest");
+
+      const subject = CHEST_SUBJECTS[save.subjectIndex % CHEST_SUBJECTS.length];
+      save.subjectIndex = (save.subjectIndex + 1) % CHEST_SUBJECTS.length;
+      persistSave();
+
+      const bank = CHEST_QUESTIONS[subject];
+      const qObj = pickFromShuffleBag(bank, `chest_${subject}`);
+
+      document.getElementById("chest-category-pill").textContent = subject.toUpperCase();
+      document.getElementById("chest-question").textContent = qObj.q;
+      const optBox = document.getElementById("chest-options");
+      const fb = document.getElementById("chest-feedback");
+      fb.classList.add("hidden");
+      optBox.innerHTML = "";
+
+      qObj.opts.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.dataset.chestIdx = idx;
+        btn.className = "w-full text-left bg-slate-900/90 hover:bg-cyan-950 border-2 border-cyan-400/50 hover:border-yellow-300 rounded-2xl px-5 py-3.5 text-base sm:text-lg font-black text-white transition-all cursor-pointer";
+        btn.textContent = `${["A", "B", "C"][idx]}.  ${optText}`;
+        btn.addEventListener("click", () => {
+          if (idx === qObj.ans) {
+            playSFX("chest");
+            fb.className = "mt-4 text-center font-black text-base rounded-2xl px-4 py-2.5 bg-emerald-500/25 border border-emerald-400 text-emerald-200";
+            fb.textContent = "🎉 CORRECT! Popping open the Minecraft Treasure Chest!";
+            fb.classList.remove("hidden");
+            chestLidPivot.rotation.x = -1.15;
+            spawnVoxelExplosion(new THREE.Vector3(0, 2.5, -11), [0xfacc15, 0xfde047, 0x34d399, 0x00f5ff], 75, 22);
+            save.chestsOpened += 1;
+            persistSave();
+            setTimeout(() => {
+              document.getElementById("chest-modal").classList.add("hidden");
+              openSquishyPicker();
+            }, 900);
+          } else {
+            playSFX("boing");
+            btn.classList.add("opacity-40");
+            fb.className = "mt-4 text-center font-extrabold text-sm sm:text-base rounded-2xl px-4 py-2.5 bg-amber-500/25 border border-amber-400 text-amber-200";
+            fb.textContent = "Not that one — try another answer to unlock the chest!";
+            fb.classList.remove("hidden");
+          }
+        });
+        optBox.appendChild(btn);
+      });
+
+      setTimeout(() => {
+        document.getElementById("chest-modal").classList.remove("hidden");
+      }, 650);
+    }
+
+    function openSquishyPicker() {
+      const modal = document.getElementById("squishy-pick-modal");
+      const grid = document.getElementById("squishy-pick-grid");
+      const chosenBanner = document.getElementById("squishy-chosen-banner");
+      chosenBanner.classList.add("hidden");
+      grid.innerHTML = "";
+
+      const unowned = SQUISHIES.filter(s => !save.squishies.includes(s.id));
+      const pool = unowned.length >= 3 ? [...unowned] : [...SQUISHIES];
+      const picks = [];
+      while (picks.length < 3 && pool.length > 0) {
+        const i = Math.floor(Math.random() * pool.length);
+        picks.push(pool.splice(i, 1)[0]);
+      }
+
+      let pickedAlready = false;
+      picks.forEach((sq, idx) => {
+        const card = document.createElement("button");
+        card.dataset.pickIdx = idx;
+        card.className = "relative overflow-visible bg-slate-900/90 hover:bg-slate-800 border-2 border-cyan-400/50 hover:border-emerald-400 rounded-3xl p-4 text-center cursor-pointer transition-all hover:scale-105";
+        card.innerHTML = `
+          <span class="absolute top-2.5 left-2.5 bg-slate-950/90 border border-yellow-300/80 text-yellow-300 text-xs font-black px-2 py-0.5 rounded-lg">[${idx + 1}]</span>
+          <span class="absolute top-2.5 right-2.5 bg-slate-950/90 border border-cyan-400/70 text-cyan-200 text-xs font-black px-2 py-0.5 rounded-lg">Key ${sq.key}</span>
+          <div class="sq-svg-wrap mt-2">${buildSquishySVG(sq)}</div>
+          <div class="text-base sm:text-lg font-black text-white mt-2">${sq.name}</div>
+          <div class="text-xs font-extrabold text-amber-300 mt-0.5">♪ Tone ${sq.note} • ${save.squishies.includes(sq.id) ? "Favorite" : "NEW!"}</div>
+        `;
+        card.addEventListener("click", () => {
+          triggerSquishVisual(card, sq);
+          if (!pickedAlready) {
+            pickedAlready = true;
+            if (!save.squishies.includes(sq.id)) save.squishies.push(sq.id);
+            persistSave();
+            updateHUD();
+            card.style.borderColor = "#34d399";
+            card.style.boxShadow = "0 0 32px rgba(52, 211, 153, 0.7)";
+            const belt = DOJO_BELTS[save.beltIndex];
+            document.getElementById("squishy-chosen-text").textContent =
+              `🎉 ${sq.name} (Key ${sq.key}) joined your shelf! (${save.squishies.length}/18) • ${belt.quote}`;
+            chosenBanner.classList.remove("hidden");
+          }
+        });
+        grid.appendChild(card);
+      });
+
+      modal.classList.remove("hidden");
+    }
+
+    document.getElementById("btn-squishy-continue").addEventListener("click", () => {
+      document.getElementById("squishy-pick-modal").classList.add("hidden");
+      let rotatedLabel = "";
+      if (save.autoRotate) {
+        const nextIdx = (MODE_ORDER.indexOf(save.trainingFocus) + 1) % MODE_ORDER.length;
+        save.trainingFocus = MODE_ORDER[nextIdx];
+        persistSave();
+        updateHUD();
+        rotatedLabel = FOCUS_MODES[nextIdx].hud;
+      }
+      game.phase = "idle";
+      setupNextQuestion();
+      if (rotatedLabel) showModeRotateBanner(rotatedLabel);
+    });
+
+    /*************************************************************************
+     * 12. DOJO VAULT & FULL KEYBOARD CONTROLS
+     *************************************************************************/
+    function renderVaultModal() {
+      const belt = DOJO_BELTS[save.beltIndex] || DOJO_BELTS[0];
+      document.getElementById("vault-belt-swatch").style.backgroundColor = belt.hex;
+      document.getElementById("vault-belt-name").textContent = `${belt.name} Belt`;
+      document.getElementById("vault-belt-quote").textContent = belt.quote;
+      document.getElementById("vault-chests-count").textContent = save.chestsOpened;
+      document.getElementById("shelf-count-text").textContent = `${save.squishies.length}/18`;
+
+      const autoBtn = document.getElementById("btn-toggle-autorotate");
+      if (save.autoRotate) {
+        autoBtn.textContent = "🔄 Auto-Rotate After Chests: ON";
+        autoBtn.className = "text-xs font-black px-3.5 py-1.5 rounded-full border cursor-pointer transition-all bg-emerald-500/25 border-emerald-400 text-emerald-200";
+      } else {
+        autoBtn.textContent = "⏸️ Auto-Rotate After Chests: OFF";
+        autoBtn.className = "text-xs font-black px-3.5 py-1.5 rounded-full border cursor-pointer transition-all bg-slate-800 border-slate-600 text-slate-300";
+      }
+
+      const focusGrid = document.getElementById("focus-selector-grid");
+      focusGrid.innerHTML = "";
+      FOCUS_MODES.forEach((fm) => {
+        const active = save.trainingFocus === fm.id;
+        const btn = document.createElement("button");
+        btn.className = `p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
+          active
+            ? "bg-cyan-500/25 border-cyan-300 text-white shadow-[0_0_14px_rgba(0,245,255,0.4)]"
+            : "bg-slate-950/75 border-slate-700 text-slate-300 hover:border-slate-500"
+        }`;
+        btn.innerHTML = `
+          <div class="text-xs sm:text-sm font-black">${fm.label}</div>
+          <div class="text-[11px] font-semibold opacity-80 mt-0.5">${fm.sub}</div>
+        `;
+        btn.addEventListener("click", () => {
+          save.trainingFocus = fm.id;
+          persistSave();
+          updateHUD();
+          renderVaultModal();
+          if (game.phase === "idle") setupNextQuestion();
+        });
+        focusGrid.appendChild(btn);
+      });
+
+      const shelf = document.getElementById("squishy-shelf-grid");
+      shelf.innerHTML = "";
+      SQUISHIES.forEach((sq) => {
+        const owned = save.squishies.includes(sq.id);
+        const slot = document.createElement("button");
+        slot.dataset.squishyKey = sq.key;
+        slot.className = `relative overflow-visible rounded-2xl p-2.5 pt-3.5 border-2 text-center transition-all ${
+          owned
+            ? "bg-slate-900/90 border-emerald-400/75 hover:border-yellow-300 cursor-pointer"
+            : "bg-slate-950/60 border-slate-800 opacity-45 cursor-default"
+        }`;
+
+        const keyBadge = `<span class="absolute top-1.5 left-1.5 min-w-[22px] h-[22px] px-1 rounded-md text-[11px] font-black flex items-center justify-center border ${
+          owned
+            ? "bg-slate-950/90 border-yellow-300/80 text-yellow-300 shadow-[0_2px_0_rgba(0,0,0,0.7)]"
+            : "bg-slate-900/80 border-slate-700 text-slate-500"
+        }">${sq.key}</span>`;
+
+        slot.innerHTML = owned
+          ? `${keyBadge}
+             <div class="sq-svg-wrap">${buildSquishySVG(sq)}</div>
+             <div class="text-[11px] font-black text-white mt-1 leading-tight">${sq.name}</div>
+             <div class="inline-block mt-1 px-2 py-0.5 rounded-full bg-cyan-500/20 border border-cyan-400/50 text-[10px] font-black text-cyan-200">♪ ${sq.note}</div>`
+          : `${keyBadge}
+             <div class="w-16 h-16 mx-auto rounded-full bg-slate-800/90 flex items-center justify-center text-2xl font-black text-slate-500">?</div>
+             <div class="text-[11px] font-bold text-slate-500 mt-1.5">Locked</div>`;
+
+        if (owned) {
+          slot.addEventListener("click", () => triggerSquishVisual(slot, sq));
+        }
+        shelf.appendChild(slot);
+      });
+    }
+
+    // Unified Keyboard Controller (Gameplay + Modals + Vault Squishies)
+    window.addEventListener("keydown", (e) => {
+      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      const key = e.key;
+      const upper = key.toUpperCase();
+
+      const vaultModal = document.getElementById("vault-modal");
+      const chestModal = document.getElementById("chest-modal");
+      const pickModal = document.getElementById("squishy-pick-modal");
+
+      // 1. Dojo Vault open
+      if (!vaultModal.classList.contains("hidden")) {
+        if (upper === "ESCAPE" || upper === "V") {
+          vaultModal.classList.add("hidden");
+          return;
+        }
+        const sq = SQUISHIES.find(s => s.key === upper);
+        if (sq && save.squishies.includes(sq.id)) {
+          const slot = document.querySelector(`#squishy-shelf-grid [data-squishy-key="${upper}"]`);
+          if (slot) {
+            e.preventDefault();
+            triggerSquishVisual(slot, sq);
+          }
+        }
+        return;
+      }
+
+      // 2. Squishy Picker open
+      if (!pickModal.classList.contains("hidden")) {
+        if (key === "1" || key === "2" || key === "3") {
+          const card = document.querySelector(`#squishy-pick-grid [data-pick-idx="${Number(key) - 1}"]`);
+          if (card) { e.preventDefault(); card.click(); }
+        } else if (key === " " || key === "Enter") {
+          const cont = document.getElementById("btn-squishy-continue");
+          if (!document.getElementById("squishy-chosen-banner").classList.contains("hidden")) {
+            e.preventDefault();
+            cont.click();
+          }
+        }
+        return;
+      }
+
+      // 3. Treasure Chest open
+      if (!chestModal.classList.contains("hidden")) {
+        const map = { "1": 0, "A": 0, "2": 1, "B": 1, "3": 2, "C": 2 };
+        if (upper in map) {
+          const btn = document.querySelector(`#chest-options [data-chest-idx="${map[upper]}"]`);
+          if (btn) { e.preventDefault(); btn.click(); }
+        }
+        return;
+      }
+
+      // 4. Global shortcuts during stadium play
+      if (upper === "V") {
+        e.preventDefault();
+        renderVaultModal();
+        vaultModal.classList.remove("hidden");
+        return;
+      }
+      if (upper === "M") {
+        e.preventDefault();
+        document.getElementById("btn-mute").click();
+        return;
+      }
+
+      // 5. Celebrate phase: Space / Enter -> Next Shot
+      if (game.phase === "celebrate" && (key === " " || key === "Enter")) {
+        e.preventDefault();
+        advanceAfterCelebrate();
+        return;
+      }
+
+      // 6. Idle phase: Answer choices & Hear Sentence
+      if (game.phase === "idle") {
+        if (key === "1" || key === "ArrowLeft") {
+          const btn = document.querySelector('#deck-choices-grid [data-choice-index="0"]');
+          if (btn) { e.preventDefault(); btn.click(); }
+        } else if (key === "2" || key === "ArrowRight") {
+          const btn = document.querySelector('#deck-choices-grid [data-choice-index="1"]');
+          if (btn) { e.preventDefault(); btn.click(); }
+        } else if (upper === "H" || key === " ") {
+          const audioRow = document.getElementById("deck-audio-row");
+          if (!audioRow.classList.contains("hidden")) {
+            e.preventDefault();
+            document.getElementById("btn-hear-sentence").click();
+          }
+        }
+      }
+    });
+
+    /*************************************************************************
+     * 13. 60FPS ANIMATION LOOP, MISS SHOTS, HAMISH VARIETY & 12 FINISHERS
+     *************************************************************************/
+    const clock = new THREE.Clock();
+
+    function updateGame(dt, elapsed) {
+      game.timer += dt;
+
+      // Animated Neon Boost Chevrons & Pulsing Neon Track Halos
+      boostChevrons.forEach((c) => {
+        const wave = Math.sin(elapsed * 8 - c.userData.index * 0.45);
+        c.scale.x = 1.0 + Math.max(0, wave) * 0.16;
+      });
+      neonHaloMaterials.forEach((m, idx) => {
+        m.opacity = 0.28 + Math.sin(elapsed * 5.0 + idx * Math.PI) * 0.12;
+      });
+      carUnderglowLight.intensity = 2.6 + Math.sin(elapsed * 6.0) * 0.8;
+
+      // Cheering crowd bounce
+      const bounceAmp = 0.18 + game.crowdExcitement * 0.65;
+      crowdFans.forEach((f) => {
+        f.position.y = f.userData.baseY + Math.abs(Math.sin(elapsed * (3.5 + game.crowdExcitement * 6) + f.userData.phase)) * bounceAmp;
+      });
+      game.crowdExcitement = Math.max(0, game.crowdExcitement - dt * 0.25);
+
+      // Update particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.life -= dt;
+        if (p.life <= 0) {
+          scene.remove(p.mesh);
+          particles.splice(i, 1);
+        } else {
+          p.vel.y -= p.gravity * dt;
+          p.mesh.position.addScaledVector(p.vel, dt);
+          p.mesh.rotation.x += dt * 6;
+          p.mesh.rotation.y += dt * 5;
+          p.mesh.scale.setScalar((p.life / p.maxLife) * 0.55);
+        }
+      }
+
+      // Hero Idle Camera
+      let desiredCamPos = new THREE.Vector3(-7.0, 4.4, 41.2);
+      let desiredCamLook = new THREE.Vector3(-3.0, 3.2, 16.0);
+      game.targetFov = 52;
+
+      // --- IDLE / PRELAUNCH ---
+      if (game.phase === "idle" || game.phase === "prelaunch") {
+        positionCarOnTrack(0.02);
+        carBodyPivot.position.y = Math.sin(elapsed * 32) * 0.018;
+        const fScale = 0.65 + Math.sin(elapsed * 26) * 0.28;
+        exhaustFlameL.scale.set(1, 1, fScale);
+        exhaustFlameR.scale.set(1, 1, fScale * 0.92);
+        carWheels.forEach((w) => { w.rotation.x -= dt * 1.4; });
+
+        if (Math.random() < 0.22) {
+          const ex = carGrp.position.clone().add(new THREE.Vector3((Math.random() < 0.5 ? -0.36 : 0.36), 0.38, 2.35));
+          spawnParticle(ex, new THREE.Vector3((Math.random() - 0.5) * 0.5, 0.8, 2.4), CLUBS[save.club].underglow, 0.16, 0.28, 0);
+        }
+
+        desiredCamPos.set(-7.1 + Math.sin(elapsed * 0.45) * 0.55, 4.35 + Math.cos(elapsed * 0.6) * 0.18, 41.0);
+        desiredCamLook.set(-3.1, 3.1, 16.0);
+      }
+
+      // --- LOOPING ---
+      else if (game.phase === "looping") {
+        carBodyPivot.position.y = 0;
+        const loopDur = 1.45;
+        const p = Math.min(1, game.timer / loopDur);
+        game.carU = 0.02 + p * 0.98;
+        positionCarOnTrack(game.carU);
+
+        carWheels.forEach((w) => { w.rotation.x -= dt * 28; });
+        exhaustFlameL.scale.set(1.25, 1.25, 2.2 + Math.sin(elapsed * 40) * 0.4);
+        exhaustFlameR.scale.set(1.25, 1.25, 2.2 + Math.cos(elapsed * 40) * 0.4);
+
+        const f = getTrackFrame(game.carU);
+        const exhaust = carGrp.position.clone().addScaledVector(f.tangent, -2.0);
+        spawnParticle(exhaust, f.tangent.clone().multiplyScalar(-7), Math.random() < 0.5 ? 0x00f5ff : 0xff00c8, 0.38, 0.28, 0);
+
+        desiredCamPos.copy(carGrp.position)
+          .addScaledVector(f.tangent, -8.5)
+          .addScaledVector(f.normal, 3.6)
+          .addScaledVector(f.binormal, -2.2);
+        desiredCamLook.copy(carGrp.position).addScaledVector(f.tangent, 5.5);
+        game.targetFov = 68;
+
+        if (p >= 1) {
+          playSFX("hit");
+          triggerImpactFlash();
+          game.phase = "shooting";
+          game.timer = 0;
+          if (!game.isMissShot && (game.finisherType === "dragon" || game.finisherType === "jerry")) {
+            strikerGrp.visible = true;
+          }
+        }
+      }
+
+      // --- SHOOTING (Miss Shots OR 12 Finishers + Yamal + Hamish Variety) ---
+      else if (game.phase === "shooting") {
+        const t = game.timer;
+        game.targetFov = 60;
+
+        // WRONG ANSWER: CROSSBAR CLANG OR WIDE MISS
+        if (game.isMissShot) {
+          if (game.missType === "crossbar") {
+            const hitTime = 0.72;
+            if (t < hitTime) {
+              const p = t / hitTime;
+              ballMesh.position.set(game.missSide * p * 2.2, 1.12 + p * 6.55 + Math.sin(p * Math.PI) * 1.4, -5.2 - p * 32.6);
+              ballMesh.rotation.x -= dt * 22;
+              spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.5, 2), 0xf97316, 0.32, 0.25, 0);
+            } else {
+              if (!game.sub1) {
+                game.sub1 = true;
+                playSFX("clang");
+                triggerImpactFlash();
+                game.shakeTime = 0.45;
+                game.shakePower = 0.9;
+                spawnVoxelExplosion(new THREE.Vector3(game.missSide * 2.2, 7.6, -37.8), [0xfacc15, 0xffffff, 0xf97316], 40, 16);
+                showFinisherBanner("💥 CLANG! OFF THE CROSSBAR!", "So close! Try the other answer to bury it!", "from-amber-600 via-orange-600 to-rose-600");
+              }
+              const b = t - hitTime;
+              ballMesh.position.set(game.missSide * (2.2 + b * 4.5), 7.6 + b * 8.5 - b * b * 12.0, -37.8 + b * 10.0);
+              ballMesh.rotation.x += dt * 18;
+            }
+            desiredCamPos.set(-6, 6.5, -14);
+            desiredCamLook.copy(ballMesh.position);
+            if (t >= 1.55) {
+              game.phase = "miss_hold";
+              game.timer = 0;
+            }
+          } else {
+            const p = Math.min(1, t / 0.85);
+            ballMesh.position.set(game.missSide * (p * 11.2), 1.12 + Math.sin(p * Math.PI) * 4.2 + p * 2.2, -5.2 - p * 38.0);
+            ballMesh.rotation.y += dt * 20;
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.4, 2), 0x94a3b8, 0.3, 0.25, 0);
+            desiredCamPos.set(game.missSide * -4, 6.0, -12 - p * 14);
+            desiredCamLook.copy(ballMesh.position);
+            if (p >= 1) {
+              playSFX("boing");
+              showFinisherBanner("💨 JUST WIDE OF THE POST!", "Almost! Try the other answer to score!", "from-slate-700 via-amber-600 to-orange-600");
+              game.phase = "miss_hold";
+              game.timer = 0;
+            }
+          }
+        }
+
+        // HAMISH McALPINE: 5 SHOT TYPES & 1-IN-5 LEGENDARY GOAL!
+        else if (game.finisherType === "hamish_save") {
+          const p = Math.min(1, t / 0.88);
+          const sType = game.hamishShotType;
+          const side = sType === "curler" || sType === "knuckle" ? 1 : -1;
+
+          // Distinct 3D ball trajectory per shot type
+          if (sType === "curler") {
+            const x = Math.sin(p * Math.PI) * 6.5 + p * 4.8 * side;
+            ballMesh.position.set(x, 1.12 + Math.sin(p * Math.PI) * 3.8 + p * 4.4, -5.2 - p * 31.8);
+            ballMesh.rotation.y += dt * 28;
+          } else if (sType === "rocket") {
+            ballMesh.position.set(p * 5.2 * side, 1.12 + p * 1.4, -5.2 - p * 32.0);
+            ballMesh.rotation.x -= dt * 36;
+          } else if (sType === "lob") {
+            ballMesh.position.set(p * 2.4 * side, 1.12 + Math.sin(p * Math.PI) * 9.8 + p * 4.2, -5.2 - p * 31.8);
+            ballMesh.rotation.x -= dt * 16;
+          } else if (sType === "knuckle") {
+            const wobble = Math.sin(p * Math.PI * 5) * 2.2 * (1 - p * 0.4);
+            ballMesh.position.set(p * 4.5 * side + wobble, 1.12 + Math.sin(p * Math.PI) * 4.5 + p * 3.2, -5.2 - p * 31.8);
+            ballMesh.rotation.z += dt * 24;
+          } else {
+            // Power volley
+            ballMesh.position.set(p * 5.6 * side, 1.12 + Math.sin(p * Math.PI) * 2.5 + p * 4.8, -5.2 - p * 31.8);
+            ballMesh.rotation.x -= dt * 30;
+          }
+
+          spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.5, 2), game.hamishBeaten ? 0xfacc15 : 0x34d399, 0.42, 0.32, 0);
+
+          // Hamish animation: dives to ball if saving, or dives wrong way / just misses if beaten!
+          if (!game.hamishBeaten) {
+            hamishGrp.position.x = ballMesh.position.x * p;
+            hamishGrp.position.y = Math.min(3.2, Math.sin(p * Math.PI) * (sType === "lob" ? 3.2 : 1.8));
+            hamishGrp.rotation.z = -Math.sign(ballMesh.position.x || 1) * p * 1.2;
+          } else {
+            // Dives slightly late / opposite side!
+            hamishGrp.position.x = -Math.sign(ballMesh.position.x || 1) * p * 3.8;
+            hamishGrp.position.y = Math.sin(p * Math.PI) * 1.5;
+            hamishGrp.rotation.z = Math.sign(ballMesh.position.x || 1) * p * 1.3;
+          }
+
+          desiredCamPos.set(-6, 6.2, -10 - p * 18);
+          desiredCamLook.copy(ballMesh.position);
+
+          if (p >= 1) {
+            if (game.hamishBeaten) {
+              // 1 IN 5: BIG CELEBRATION GOAL AGAINST HAMISH!
+              playSFX("tnt");
+              playSFX("goal");
+              setTimeout(() => playSFX("chest"), 240);
+              triggerImpactFlash();
+              game.shakeTime = 1.05;
+              game.shakePower = 1.55;
+              ballMesh.position.z = -40.2;
+              spawnVoxelExplosion(ballMesh.position, RAINBOW_HEX, 110, 30);
+              setTimeout(() => spawnVoxelExplosion(new THREE.Vector3(-4, 6, -38), [0xfacc15, 0x00f5ff, 0xffffff], 65, 24), 260);
+              setTimeout(() => spawnVoxelExplosion(new THREE.Vector3(4, 6, -38), [0xff00c8, 0x34d399, 0xfacc15], 65, 24), 480);
+              const shotLabels = { curler: "TOP-CORNER CURLER", rocket: "LOW ROCKET", lob: "GENIUS CHIP", knuckle: "KNUCKLEBALL", volley: "THUNDER VOLLEY" };
+              showFinisherBanner(
+                "🏆 YOU BEAT HAMISH McALPINE!!",
+                `UNBELIEVABLE ${shotLabels[sType]}! ${game.snapResult} flies past the legend!`,
+                "from-yellow-400 via-amber-500 to-fuchsia-600"
+              );
+              scoreGoal(5.6);
+            } else {
+              // 4 IN 5: HEROIC HAMISH SAVE
+              playSFX("save");
+              triggerImpactFlash();
+              game.shakeTime = 0.45;
+              game.shakePower = 0.8;
+              spawnVoxelExplosion(ballMesh.position, [0x34d399, 0xfacc15, 0xffffff], 70, 20);
+              const saveLines = {
+                curler: "Hamish flies across goal to tip the curler away!",
+                rocket: "Hamish gets a strong glove to the low rocket!",
+                lob: "Hamish backpedals and tips the lob over the bar!",
+                knuckle: "Hamish reads the wobbling knuckleball!",
+                volley: "Hamish catches the thunder volley one-handed!"
+              };
+              showFinisherBanner(
+                "🧤 HAMISH McALPINE SAVE!",
+                `${saveLines[sType]} +1 POINT ANYWAY!`,
+                "from-emerald-600 via-green-500 to-amber-500"
+              );
+              scoreGoal(4.8);
+            }
+          }
+        }
+
+        else if (game.finisherType === "yamal") {
+          if (t < 0.55) {
+            const p = t / 0.55;
+            ballMesh.position.set(-p * 3.8, 1.12 + Math.sin(p * Math.PI) * 1.5, -5.2 - p * 8.0);
+            desiredCamPos.set(-10, 5.4, -7);
+            desiredCamLook.copy(yamalGrp.position).add(new THREE.Vector3(0, 2, 0));
+          } else {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("hiyah");
+              playSFX("hit");
+              triggerImpactFlash();
+              yamalGrp.rotation.x = -0.35;
+              spawnVoxelExplosion(ballMesh.position, [0x004587, 0xa50044, 0xfbba07], 35, 14);
+            }
+            const p = Math.min(1, (t - 0.55) / 0.85);
+            const curveX = -3.8 + p * 9.5 - Math.sin(p * Math.PI) * 5.6;
+            ballMesh.position.set(curveX, 1.12 + Math.sin(p * Math.PI) * 4.8 + p * 3.8, -13.2 - p * 26.4);
+            ballMesh.rotation.y += dt * 26;
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.5, 2), Math.random() < 0.5 ? 0xfbba07 : 0xa50044, 0.45, 0.35, 0);
+            desiredCamPos.set(-4 + p * 8, 6.4, -10 - p * 18);
+            desiredCamLook.copy(ballMesh.position);
+            if (p >= 1) {
+              playSFX("goal");
+              game.shakeTime = 0.55;
+              game.shakePower = 1.0;
+              endermanGrp.rotation.z = -1.25;
+              spawnVoxelExplosion(ballMesh.position, [0x004587, 0xa50044, 0xfbba07], 75, 24);
+              showFinisherBanner("⭐ YAMAL CURLER!", `Lamine Yamal #19 bends ${game.snapResult} top bins! ${randomKickinItQuip()}`, "from-[#004587] via-[#a50044] to-amber-500");
+              scoreGoal(4.6);
+            }
+          }
+        }
+
+        else if (game.finisherType === "tnt") {
+          const p = Math.min(1, t / 0.85);
+          ballMesh.position.set(p * 4.5, 1.12 + Math.sin(p * Math.PI) * 4.8 + p * 2.8, -5.2 - p * 34.4);
+          ballMesh.rotation.x -= dt * 18;
+          spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.5, 2), 0xf97316, 0.42, 0.3, 0);
+          desiredCamPos.set(-8 + p * 3, 6.2, -4 - p * 22);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("tnt");
+            playSFX("goal");
+            triggerImpactFlash();
+            game.shakeTime = 0.85;
+            game.shakePower = 1.45;
+            tntBlocks.forEach(b => b.visible = false);
+            spawnVoxelExplosion(new THREE.Vector3(4.5, 2.5, -39.5), [0xef4444, 0xffffff, 0xfacc15, 0xf97316], 95, 28);
+            endermanGrp.rotation.z = -1.35;
+            showFinisherBanner("💥 TNT BLAST!", `${game.snapResult} blows up the net! ${randomKickinItQuip()}`, "from-red-600 via-orange-500 to-amber-500");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "dragon") {
+          if (t < 0.72) {
+            const p = t / 0.72;
+            ballMesh.position.set(p * 2.2, 1.12 + Math.sin(p * Math.PI * 0.58) * 7.6, -5.2 - p * 5.5);
+            strikerGrp.position.set(3.5 - p * 1.1, Math.sin(p * Math.PI * 0.6) * 7.0, -10.5);
+            strikerGrp.rotation.x = -p * Math.PI * 2.0;
+            dragonRing.visible = true;
+            dragonRing.rotation.y += dt * 10;
+            desiredCamPos.set(2.4 + Math.cos(p * 1.4) * 9.5, 6.2, -10.5 + Math.sin(p * 1.4) * 9.5);
+            desiredCamLook.copy(strikerGrp.position).add(new THREE.Vector3(0, 1.5, 0));
+          } else {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("hiyah");
+              playSFX("hit");
+              triggerImpactFlash();
+              spawnVoxelExplosion(ballMesh.position, [0xfacc15, 0xf97316, 0x38bdf8], 40, 16);
+            }
+            const p = Math.min(1, (t - 0.72) / 0.62);
+            ballMesh.position.set(2.2 - p * 6.8, 8.3 - p * 3.6, -10.7 - p * 29.0);
+            strikerGrp.position.y = Math.max(0, 6.8 * (1 - p * 1.4));
+            strikerGrp.rotation.x = 0;
+            dragonRing.visible = false;
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, 0, 3), 0xfacc15, 0.48, 0.35, 0);
+            desiredCamPos.set(6.5, 7.2, -12 - p * 18);
+            desiredCamLook.copy(ballMesh.position);
+            if (p >= 1) {
+              playSFX("goal");
+              game.shakeTime = 0.55;
+              game.shakePower = 1.0;
+              endermanGrp.rotation.z = 1.25;
+              spawnVoxelExplosion(ballMesh.position, [0xfacc15, 0x38bdf8, 0xf97316], 65, 22);
+              showFinisherBanner("🥋 JACK'S DRAGON KICK!", `Jack Brewer blasts ${game.snapResult}! Bobby Wasabi approves!`, "from-amber-500 via-orange-600 to-rose-600");
+              scoreGoal(4.5);
+            }
+          }
+        }
+
+        else if (game.finisherType === "rocket") {
+          const p = Math.min(1, t / 0.68);
+          ballMesh.position.set(-p * 4.8, 1.2 + p * 4.6, -5.2 - p * 34.4);
+          ballMesh.rotation.x -= dt * 32;
+          sonicRing.visible = true;
+          sonicRing.position.set(0, 2.8, -14);
+          sonicRing.scale.setScalar(1 + p * 4.5);
+          sonicRing.material.opacity = Math.max(0, 1 - p * 1.2);
+          spawnParticle(ballMesh.position, new THREE.Vector3((Math.random() - 0.5) * 3, (Math.random() - 0.5) * 3, 5), Math.random() < 0.5 ? 0xf97316 : 0xfacc15, 0.5, 0.4, 0);
+          desiredCamPos.set(-6, 5.5, -2 - p * 26);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("tnt");
+            playSFX("goal");
+            triggerImpactFlash();
+            game.shakeTime = 0.7;
+            game.shakePower = 1.2;
+            sonicRing.visible = false;
+            endermanGrp.rotation.z = 1.3;
+            spawnVoxelExplosion(ballMesh.position, [0xf97316, 0xfacc15, 0xffffff], 75, 25);
+            showFinisherBanner("🚀 ROCKET SHOT!", `Hot Wheels nitro ${game.snapResult}! ${randomKickinItQuip()}`, "from-orange-600 via-red-500 to-yellow-500");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "rainbow") {
+          const p = Math.min(1, t / 0.95);
+          const curveX = Math.sin(p * Math.PI) * 11.0;
+          ballMesh.position.set(curveX, 1.12 + Math.sin(p * Math.PI) * 5.4 + p * 3.5, -5.2 - p * 34.4);
+          ballMesh.rotation.y += dt * 24;
+          const rCol = RAINBOW_HEX[Math.floor(p * 18) % RAINBOW_HEX.length];
+          ballGlow.color.setHex(rCol);
+          spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.4, 1), rCol, 0.5, 0.65, 0);
+          desiredCamPos.set(curveX * 0.35 - 7, 7.2, -4 - p * 24);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("goal");
+            game.shakeTime = 0.55;
+            game.shakePower = 0.95;
+            endermanGrp.rotation.z = -1.25;
+            spawnVoxelExplosion(ballMesh.position, RAINBOW_HEX, 80, 24);
+            showFinisherBanner("🌈 RAINBOW CURVE!", `Neon curler ${game.snapResult}! ${randomKickinItQuip()}`, "from-pink-500 via-purple-500 to-cyan-500");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "lightning") {
+          const p = Math.min(1, t / 0.82);
+          ballMesh.position.set(p * 3.5, 1.2 + Math.sin(p * Math.PI) * 4.0 + p * 3.4, -5.2 - p * 34.4);
+          if (p > 0.32 && p < 0.56) {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("zap");
+              triggerImpactFlash();
+              game.shakeTime = 0.35;
+              game.shakePower = 0.9;
+            }
+            lightningGroup.visible = true;
+            lightningGroup.position.copy(ballMesh.position);
+          } else {
+            lightningGroup.visible = false;
+          }
+          ballGlow.color.setHex(0x00f5ff);
+          spawnParticle(ballMesh.position, new THREE.Vector3(0, 0, 3), 0x00f5ff, 0.45, 0.35, 0);
+          desiredCamPos.set(8, 7.0, -5 - p * 22);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("zap");
+            playSFX("goal");
+            game.shakeTime = 0.6;
+            game.shakePower = 1.1;
+            endermanGrp.rotation.z = 1.3;
+            spawnVoxelExplosion(ballMesh.position, [0x00f5ff, 0x38bdf8, 0xffffff, 0xfacc15], 75, 24);
+            showFinisherBanner("⚡ LIGHTNING STRIKE!", `Electric ${game.snapResult} zaps the net! ${randomKickinItQuip()}`, "from-cyan-500 via-blue-600 to-indigo-600");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "tornado") {
+          const p = Math.min(1, t / 0.92);
+          const swirlR = (1 - p * 0.65) * 3.8;
+          const ang = p * Math.PI * 5.0;
+          ballMesh.position.set(Math.cos(ang) * swirlR, 1.4 + p * 4.4 + Math.sin(ang) * 0.8, -5.2 - p * 34.4);
+          ballMesh.rotation.y += dt * 35;
+          for (let k = 0; k < 2; k++) {
+            const va = ang + k * Math.PI;
+            const vPos = ballMesh.position.clone().add(new THREE.Vector3(Math.cos(va) * 2.2, (Math.random() - 0.5) * 2.4, Math.sin(va) * 2.2));
+            spawnParticle(vPos, new THREE.Vector3(-Math.sin(va) * 6, 3, Math.cos(va) * 6), k === 0 ? 0x38bdf8 : 0xa855f7, 0.4, 0.45, 0);
+          }
+          desiredCamPos.set(-8, 7.2, -4 - p * 24);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("goal");
+            game.shakeTime = 0.6;
+            game.shakePower = 1.0;
+            endermanGrp.rotation.z = -1.3;
+            spawnVoxelExplosion(ballMesh.position, [0x38bdf8, 0xa855f7, 0x22d3ee, 0xffffff], 75, 22);
+            showFinisherBanner("🌪️ TORNADO SPIN!", `Whirlwind ${game.snapResult}! ${randomKickinItQuip()}`, "from-purple-600 via-cyan-500 to-teal-500");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "jerry") {
+          if (t < 0.72) {
+            const p = t / 0.72;
+            ballMesh.position.set(p * 2.0, 1.12 + Math.sin(p * Math.PI * 0.5) * 4.5, -5.2 - p * 5.5);
+            strikerGrp.position.set(3.5 - p * 1.5, 2.2 + Math.sin(p * Math.PI) * 2.4, -10.5);
+            strikerGrp.rotation.z = Math.PI;
+            strikerGrp.rotation.y += dt * 26;
+            wasabiWaveMesh.visible = true;
+            wasabiWaveMesh.material.color.setHex(0xff00c8);
+            wasabiWaveMesh.position.set(strikerGrp.position.x, 1.5, -10.5);
+            wasabiWaveMesh.rotation.x = Math.PI / 2;
+            wasabiWaveMesh.scale.setScalar(0.6 + p * 3.0);
+            desiredCamPos.set(8.5, 5.5, -4);
+            desiredCamLook.copy(strikerGrp.position);
+          } else {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("hiyah");
+              playSFX("hit");
+              triggerImpactFlash();
+              spawnVoxelExplosion(ballMesh.position, [0xff00c8, 0x00f5ff, 0xfacc15], 45, 18);
+            }
+            const p = Math.min(1, (t - 0.72) / 0.65);
+            ballMesh.position.set(2.0 - p * 5.8, 5.2 - p * 1.2, -10.7 - p * 29.0);
+            strikerGrp.position.y = Math.max(0, 2.2 * (1 - p * 1.5));
+            strikerGrp.rotation.set(0, Math.PI, 0);
+            wasabiWaveMesh.visible = false;
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, 0, 3), 0xff00c8, 0.45, 0.35, 0);
+            desiredCamPos.set(-6, 6.2, -12 - p * 18);
+            desiredCamLook.copy(ballMesh.position);
+            if (p >= 1) {
+              playSFX("goal");
+              game.shakeTime = 0.6;
+              game.shakePower = 1.0;
+              endermanGrp.rotation.z = 1.25;
+              spawnVoxelExplosion(ballMesh.position, [0xff00c8, 0x22d3ee, 0xfacc15], 75, 22);
+              showFinisherBanner("🕺 JERRY'S BREAKDANCE VOLLEY!", `Jerry Martinez spins ${game.snapResult} in! Eddie: 'Better than Falafel Phil's!'`, "from-fuchsia-600 via-pink-500 to-cyan-500");
+              scoreGoal(4.5);
+            }
+          }
+        }
+
+        else if (game.finisherType === "meteor") {
+          if (t < 0.65) {
+            const p = t / 0.65;
+            ballMesh.position.set(0, 1.12 + p * 34.0, -5.2 - p * 16.0);
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, -4, 0), 0xf97316, 0.55, 0.4, 0);
+            desiredCamPos.set(-10, 7 + p * 10, -2);
+            desiredCamLook.copy(ballMesh.position);
+          } else {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("meteor");
+            }
+            const p = Math.min(1, (t - 0.65) / 0.58);
+            ballMesh.position.set(0, 35.0 * (1 - p) + 1.8 * p, -21.2 - p * 18.8);
+            ballGlow.color.setHex(0xef4444);
+            spawnParticle(ballMesh.position, new THREE.Vector3((Math.random() - 0.5) * 4, 6, (Math.random() - 0.5) * 4), Math.random() < 0.5 ? 0xef4444 : 0xfacc15, 0.6, 0.45, 0);
+            desiredCamPos.set(10, 14 - p * 6, -20);
+            desiredCamLook.copy(ballMesh.position);
+            if (p >= 1) {
+              playSFX("tnt");
+              playSFX("goal");
+              triggerImpactFlash();
+              game.shakeTime = 0.9;
+              game.shakePower = 1.5;
+              endermanGrp.rotation.z = -1.4;
+              spawnVoxelExplosion(new THREE.Vector3(0, 2.0, -39.5), [0xef4444, 0xf97316, 0xfacc15, 0xffffff], 100, 30);
+              showFinisherBanner("☄️ METEOR SMASH!", `${game.snapResult} crashes from outer space! ${randomKickinItQuip()}`, "from-red-700 via-orange-600 to-yellow-400");
+              scoreGoal(4.5);
+            }
+          }
+        }
+
+        else if (game.finisherType === "pinball") {
+          const pts = [
+            new THREE.Vector3(0, 1.12, -5.2),
+            new THREE.Vector3(-3.6, 2.8, -20.0),
+            new THREE.Vector3(0, 3.4, -20.0),
+            new THREE.Vector3(3.6, 3.8, -20.0),
+            new THREE.Vector3(-4.8, 5.4, -39.6)
+          ];
+          const segDur = 0.28;
+          const seg = Math.min(3, Math.floor(t / segDur));
+          const segP = Math.min(1, (t - seg * segDur) / segDur);
+          ballMesh.position.lerpVectors(pts[seg], pts[seg + 1], segP);
+          ballMesh.rotation.y += dt * 30;
+          spawnParticle(ballMesh.position, new THREE.Vector3(0, 1, 0), 0x4ade80, 0.4, 0.3, 0);
+
+          if (seg >= 1 && !game.sub1) {
+            game.sub1 = true;
+            playSFX("pinball");
+            creeperGroups[0].rotation.z = 0.35;
+            spawnVoxelExplosion(pts[1], [0x4ade80, 0xfacc15, 0xffffff], 24, 14);
+          }
+          if (seg >= 2 && !game.sub2) {
+            game.sub2 = true;
+            playSFX("pinball");
+            creeperGroups[1].rotation.z = -0.35;
+            spawnVoxelExplosion(pts[2], [0x4ade80, 0x00f5ff, 0xffffff], 24, 14);
+          }
+          if (seg >= 3 && !game.sub3) {
+            game.sub3 = true;
+            playSFX("pinball");
+            creeperGroups[2].rotation.z = 0.35;
+            spawnVoxelExplosion(pts[3], [0x4ade80, 0xf97316, 0xffffff], 24, 14);
+          }
+
+          desiredCamPos.set(0, 9.5, -8 - (t / (segDur * 4)) * 14);
+          desiredCamLook.copy(ballMesh.position);
+
+          if (t >= segDur * 4) {
+            playSFX("goal");
+            triggerImpactFlash();
+            game.shakeTime = 0.6;
+            game.shakePower = 1.05;
+            endermanGrp.rotation.z = 1.3;
+            spawnVoxelExplosion(ballMesh.position, [0x22c55e, 0xfacc15, 0x00f5ff], 80, 24);
+            showFinisherBanner("👾 CREEPER PINBALL!", `DING! DING! DING! ${game.snapResult} pinballs top bins! ${randomKickinItQuip()}`, "from-emerald-600 via-green-500 to-lime-400");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "milton") {
+          const p = Math.min(1, t / 0.95);
+          ballMesh.visible = false;
+          diamondMesh.visible = true;
+          diamondMesh.position.set(0, 3.6, -12.0);
+          diamondMesh.rotation.y += dt * 16;
+          diamondMesh.rotation.x += dt * 8;
+          if (p > 0.32) {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("laser");
+              triggerImpactFlash();
+              game.shakeTime = 0.55;
+              game.shakePower = 0.95;
+            }
+            laserBeamMesh.visible = true;
+            laserBeamMesh.position.set(0, 3.6, -29.0);
+            laserBeamMesh.scale.set(1 + Math.sin(t * 45) * 0.25, 1, 1);
+            spawnParticle(new THREE.Vector3((Math.random() - 0.5) * 2, 3.6 + (Math.random() - 0.5) * 2, -39.5), new THREE.Vector3((Math.random() - 0.5) * 8, 4, 4), 0x00f5ff, 0.45, 0.4, 0);
+          }
+          desiredCamPos.set(9.0, 6.2, -16);
+          desiredCamLook.set(0, 3.6, -26);
+          if (p >= 1) {
+            playSFX("goal");
+            diamondMesh.visible = false;
+            laserBeamMesh.visible = false;
+            endermanGrp.rotation.z = -1.3;
+            spawnVoxelExplosion(new THREE.Vector3(0, 3.6, -39.5), [0x00f5ff, 0x67e8f9, 0xffffff, 0x3b82f6], 85, 25);
+            showFinisherBanner("💎 MILTON'S DIAMOND LASER!", `Milton Krupnick blasts ${game.snapResult} with pure science!`, "from-cyan-400 via-sky-500 to-blue-600");
+            scoreGoal(4.5);
+          }
+        }
+
+        else if (game.finisherType === "kim") {
+          if (t < 0.55) {
+            const p = t / 0.55;
+            ballMesh.position.set(0, 1.2 + Math.sin(p * Math.PI * 0.5) * 2.5, -5.2 - p * 25.0);
+            spawnParticle(ballMesh.position, new THREE.Vector3(0, 0.5, 2), 0xa855f7, 0.4, 0.3, 0);
+            desiredCamPos.set(-7.5, 5.8, -14);
+            desiredCamLook.copy(ballMesh.position);
+          } else if (t < 0.92) {
+            if (!game.sub1) {
+              game.sub1 = true;
+              playSFX("teleport");
+              ballMesh.visible = false;
+              spawnVoxelExplosion(new THREE.Vector3(0, 3.4, -30.2), [0xa855f7, 0xd946ef, 0xffffff], 50, 14);
+            }
+            endermanGrp.rotation.y = Math.sin(t * 25) * 0.85;
+            desiredCamPos.set(6.5, 6.2, -26);
+            desiredCamLook.set(0, 3.5, -38);
+          } else {
+            if (!game.sub2) {
+              game.sub2 = true;
+              playSFX("teleport");
+              playSFX("goal");
+              triggerImpactFlash();
+              ballMesh.visible = true;
+              ballMesh.position.set(0, 3.8, -40.2);
+              endermanGrp.rotation.y = 0;
+              endermanGrp.rotation.z = 1.2;
+              game.shakeTime = 0.55;
+              game.shakePower = 0.9;
+              spawnVoxelExplosion(ballMesh.position, [0xc084fc, 0xf472b6, 0xfacc15, 0xffffff], 85, 24);
+              showFinisherBanner("🥷 KIM'S NINJA TELEPORT!", `Kim Crawford teleports ${game.snapResult} right past the keeper!`, "from-purple-700 via-fuchsia-600 to-pink-500");
+              scoreGoal(4.5);
+            }
+          }
+        }
+
+        else {
+          const p = Math.min(1, t / 0.85);
+          ballMesh.position.set(0, 2.5 + Math.sin(p * Math.PI) * 2.2, -5.2 - p * 34.4);
+          wasabiWaveMesh.visible = true;
+          wasabiWaveMesh.material.color.setHex(0xfacc15);
+          wasabiWaveMesh.rotation.set(0, 0, 0);
+          wasabiWaveMesh.position.set(0, 3.2, -5.2 - p * 34.4);
+          wasabiWaveMesh.scale.setScalar(1.0 + p * 3.8);
+          spawnParticle(ballMesh.position, new THREE.Vector3((Math.random() - 0.5) * 6, 3, 2), 0xfacc15, 0.48, 0.4, 0);
+          desiredCamPos.set(-8.5, 6.5, -6 - p * 20);
+          desiredCamLook.copy(ballMesh.position);
+          if (p >= 1) {
+            playSFX("tnt");
+            playSFX("goal");
+            triggerImpactFlash();
+            wasabiWaveMesh.visible = false;
+            game.shakeTime = 0.85;
+            game.shakePower = 1.4;
+            endermanGrp.rotation.z = -1.35;
+            spawnVoxelExplosion(ballMesh.position, [0xfacc15, 0xf59e0b, 0x22c55e, 0xffffff], 90, 26);
+            showFinisherBanner("🥋 RUDY'S WASABI SHOCKWAVE!", `Sensei Rudy: 'That's the Bobby Wasabi way!' ${game.snapResult}`, "from-yellow-500 via-amber-500 to-emerald-500");
+            scoreGoal(4.5);
+          }
+        }
+      }
+
+      // --- MISS HOLD (Reset car & ball, re-show same question) ---
+      else if (game.phase === "miss_hold") {
+        desiredCamPos.set(-6, 6.2, -16);
+        desiredCamLook.set(0, 4.2, -38);
+        if (game.timer >= 1.45) {
+          game.isMissShot = false;
+          game.phase = "idle";
+          resetArenaEntities();
+          document.getElementById("spell-deck-wrapper").classList.remove("deck-hidden");
+        }
+      }
+
+      // --- CELEBRATE ---
+      else if (game.phase === "celebrate") {
+        if (game.finisherType === "rudy" && game.timer < 0.8) {
+          goalGrp.position.x = Math.sin(game.timer * 55) * 0.45;
+        } else {
+          goalGrp.position.x = 0;
+        }
+        if (game.timer >= 1.4) {
+          document.getElementById("btn-next-shot").classList.remove("hidden");
+        }
+        desiredCamPos.set(Math.sin(elapsed * 1.2) * 10, 8.2, -24);
+        desiredCamLook.set(0, 3.8, -38);
+        if (game.timer >= game.celebrateDuration) {
+          advanceAfterCelebrate();
+        }
+      }
+
+      // --- CHEST DROP ---
+      else if (game.phase === "chest") {
+        chestGrp.position.y = Math.max(0, chestGrp.position.y - dt * 28);
+        chestGrp.rotation.y = Math.sin(elapsed * 2.2) * 0.2;
+        desiredCamPos.set(0, 4.8, -3.2);
+        desiredCamLook.set(0, 1.8, -11);
+      }
+
+      // Smooth Camera Interpolation + Screen Shake
+      game.camPos.lerp(desiredCamPos, Math.min(1, dt * 5.2));
+      game.camLook.lerp(desiredCamLook, Math.min(1, dt * 6.5));
+      camera.fov += (game.targetFov - camera.fov) * Math.min(1, dt * 5.0);
+      camera.updateProjectionMatrix();
+
+      camera.position.copy(game.camPos);
+      if (game.shakeTime > 0) {
+        game.shakeTime -= dt;
+        camera.position.x += (Math.random() - 0.5) * game.shakePower;
+        camera.position.y += (Math.random() - 0.5) * game.shakePower;
+      }
+      camera.lookAt(game.camLook);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(0.05, clock.getDelta());
+      const elapsed = clock.elapsedTime;
+      updateGame(dt, elapsed);
+      if (composer) {
+        composer.render();
+      } else {
+        renderer.render(scene, camera);
+      }
+    }
+
+    /*************************************************************************
+     * 14. UI EVENT LISTENERS & RESPONSIVE RESIZE
+     *************************************************************************/
+    document.getElementById("btn-club-barca").addEventListener("click", () => applyClubTheme("barca"));
+    document.getElementById("btn-club-raith").addEventListener("click", () => applyClubTheme("raith"));
+
+    document.getElementById("btn-mute").addEventListener("click", () => {
+      save.muted = !save.muted;
+      persistSave();
+      document.getElementById("btn-mute").textContent = save.muted ? "🔇" : "🔊";
+    });
+
+    document.getElementById("btn-open-vault").addEventListener("click", () => {
+      renderVaultModal();
+      document.getElementById("vault-modal").classList.remove("hidden");
+    });
+
+    document.getElementById("btn-close-vault").addEventListener("click", () => {
+      document.getElementById("vault-modal").classList.add("hidden");
+    });
+
+    document.getElementById("btn-toggle-autorotate").addEventListener("click", () => {
+      save.autoRotate = !save.autoRotate;
+      persistSave();
+      renderVaultModal();
+    });
+
+    let resetConfirmArmed = false;
+    document.getElementById("btn-reset-save").addEventListener("click", (e) => {
+      if (!resetConfirmArmed) {
+        resetConfirmArmed = true;
+        e.target.textContent = "Click Again to Confirm Reset";
+        setTimeout(() => {
+          resetConfirmArmed = false;
+          e.target.textContent = "Reset Saved Progress";
+        }, 3500);
+      } else {
+        resetConfirmArmed = false;
+        e.target.textContent = "Reset Saved Progress";
+        save = {
+          club: save.club,
+          goals: 0,
+          streak: 0,
+          chestsOpened: 0,
+          beltIndex: 0,
+          squishies: [],
+          trainingFocus: "y_only",
+          autoRotate: true,
+          subjectIndex: 0,
+          shotsTaken: 0,
+          muted: save.muted
+        };
+        persistSave();
+        updateHUD();
+        renderVaultModal();
+        if (game.phase === "idle") setupNextQuestion();
+      }
+    });
+
+    window.addEventListener("resize", () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      if (composer) composer.setSize(w, h);
+    });
+
+    function startApp() {
+      document.getElementById("btn-mute").textContent = save.muted ? "🔇" : "🔊";
+      strikerBeltMat.color.setHex((DOJO_BELTS[save.beltIndex] || DOJO_BELTS[0]).color);
+      applyClubTheme(save.club || "barca");
+      updateHUD();
+      setupNextQuestion();
+      animate();
+    }
+
+    if (document.readyState === "complete") {
+      startApp();
+    } else {
+      window.addEventListener("load", startApp);
+    }
+  </script>
+</body>
+</html>
